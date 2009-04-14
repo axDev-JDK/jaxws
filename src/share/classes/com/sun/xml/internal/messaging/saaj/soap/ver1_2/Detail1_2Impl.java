@@ -1,5 +1,5 @@
 /*
- * $Id: Detail1_2Impl.java,v 1.24 2006/01/27 12:49:45 vj135062 Exp $
+ *
  */
 
 /*
@@ -46,7 +46,7 @@ import com.sun.xml.internal.messaging.saaj.soap.name.NameImpl;
 
 public class Detail1_2Impl extends DetailImpl {
 
-    protected static Logger log =
+    protected static final Logger log =
         Logger.getLogger(Detail1_2Impl.class.getName(),
                          "com.sun.xml.internal.messaging.saaj.soap.ver1_2.LocalStrings");
 
