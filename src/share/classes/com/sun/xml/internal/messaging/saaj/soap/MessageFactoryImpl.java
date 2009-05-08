@@ -28,6 +28,13 @@
  * CA 95054 USA or visit www.sun.com if you need additional information or
  * have any questions.
  */
+/*
+ * $Id: MessageFactoryImpl.java,v 1.23 2006/01/27 12:49:27 vj135062 Exp $
+ * $Revision: 1.23 $
+ * $Date: 2006/01/27 12:49:27 $
+ */
+
+
 package com.sun.xml.internal.messaging.saaj.soap;
 
 import java.io.*;

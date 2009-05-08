@@ -28,6 +28,13 @@
  * CA 95054 USA or visit www.sun.com if you need additional information or
  * have any questions.
  */
+/*
+ * $Id: CommentImpl.java,v 1.17 2006/01/27 12:49:34 vj135062 Exp $
+ * $Revision: 1.17 $
+ * $Date: 2006/01/27 12:49:34 $
+ */
+
+
 package com.sun.xml.internal.messaging.saaj.soap.impl;
 
 import java.util.ResourceBundle;

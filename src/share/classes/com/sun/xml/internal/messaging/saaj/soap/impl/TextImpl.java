@@ -28,6 +28,13 @@
  * CA 95054 USA or visit www.sun.com if you need additional information or
  * have any questions.
  */
+/*
+ * $Id: TextImpl.java,v 1.19 2006/01/27 12:49:36 vj135062 Exp $
+ * $Revision: 1.19 $
+ * $Date: 2006/01/27 12:49:36 $
+ */
+
+
 package com.sun.xml.internal.messaging.saaj.soap.impl;
 
 import java.util.logging.Logger;

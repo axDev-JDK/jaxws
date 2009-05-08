@@ -28,6 +28,13 @@
  * CA 95054 USA or visit www.sun.com if you need additional information or
  * have any questions.
  */
+/*
+ * $Id: SOAPPartImpl.java,v 1.1.1.1 2006/01/27 13:10:55 kumarjayanti Exp $
+ * $Revision: 1.1.1.1 $
+ * $Date: 2006/01/27 13:10:55 $
+ */
+
+
 package com.sun.xml.internal.messaging.saaj.soap;
 
 import java.io.*;

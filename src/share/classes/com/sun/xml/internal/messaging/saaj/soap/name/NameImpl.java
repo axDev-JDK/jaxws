@@ -28,6 +28,13 @@
  * CA 95054 USA or visit www.sun.com if you need additional information or
  * have any questions.
  */
+/*
+ * $Id: NameImpl.java,v 1.48 2006/01/27 12:49:38 vj135062 Exp $
+ * $Revision: 1.48 $
+ * $Date: 2006/01/27 12:49:38 $
+ */
+
+
 package com.sun.xml.internal.messaging.saaj.soap.name;
 
 import java.util.logging.Level;

@@ -28,6 +28,13 @@
  * CA 95054 USA or visit www.sun.com if you need additional information or
  * have any questions.
  */
+/*
+ * $Id: EnvelopeFactory.java,v 1.24 2006/01/27 12:49:26 vj135062 Exp $
+ * $Revision: 1.24 $
+ * $Date: 2006/01/27 12:49:26 $
+ */
+
+
 package com.sun.xml.internal.messaging.saaj.soap;
 
 import java.util.logging.Logger;

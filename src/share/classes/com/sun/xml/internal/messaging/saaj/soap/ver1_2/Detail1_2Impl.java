@@ -26,6 +26,11 @@
  * CA 95054 USA or visit www.sun.com if you need additional information or
  * have any questions.
  */
+/*
+ * $Id: Detail1_2Impl.java,v 1.24 2006/01/27 12:49:45 vj135062 Exp $
+ */
+
+
 
 /**
 *
