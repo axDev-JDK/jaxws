@@ -45,7 +45,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * because they are not legal in SOAP.  If the user of this class sets a
  * LexicalHandler, then it forwards events to that handler.
  *
- * 
+ *
  * @author Edwin Goei
  */
 

@@ -29,9 +29,9 @@
  * have any questions.
  */
 /*
- * $Id: MessageFactoryImpl.java,v 1.23 2006/01/27 12:49:27 vj135062 Exp $
- * $Revision: 1.23 $
- * $Date: 2006/01/27 12:49:27 $
+ *
+ *
+ *
  */
 
 
@@ -64,11 +64,11 @@ public class MessageFactoryImpl extends MessageFactory {
         Logger.getLogger(LogDomainConstants.SOAP_DOMAIN,
                          "com.sun.xml.internal.messaging.saaj.soap.LocalStrings");
 
-    protected OutputStream listener;
+    protected  OutputStream listener;
 
     protected boolean lazyAttachments = false;
 
-    public OutputStream listen(OutputStream newListener) {
+    public  OutputStream listen(OutputStream newListener) {
         OutputStream oldListener = listener;
         listener = newListener;
         return oldListener;

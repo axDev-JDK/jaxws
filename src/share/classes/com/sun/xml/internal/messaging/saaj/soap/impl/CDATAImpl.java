@@ -29,9 +29,9 @@
  * have any questions.
  */
 /*
- * $Id: CDATAImpl.java,v 1.19 2006/01/27 12:49:34 vj135062 Exp $
- * $Revision: 1.19 $
- * $Date: 2006/01/27 12:49:34 $
+ *
+ *
+ *
  */
 
 

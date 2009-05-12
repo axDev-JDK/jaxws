@@ -27,7 +27,7 @@
  * have any questions.
  */
 /*
- * $Id: Fault1_2Impl.java,v 1.1.1.1 2006/01/27 13:10:57 kumarjayanti Exp $
+ *
  */
 
 
@@ -55,7 +55,7 @@ import com.sun.xml.internal.messaging.saaj.util.LogDomainConstants;
 
 public class Fault1_2Impl extends FaultImpl {
 
-    protected static Logger log =
+    protected static final Logger log =
         Logger.getLogger(
             LogDomainConstants.SOAP_VER1_2_DOMAIN,
             "com.sun.xml.internal.messaging.saaj.soap.ver1_2.LocalStrings");

@@ -27,7 +27,7 @@
  * have any questions.
  */
 /*
- * $Id: Detail1_2Impl.java,v 1.24 2006/01/27 12:49:45 vj135062 Exp $
+ *
  */
 
 

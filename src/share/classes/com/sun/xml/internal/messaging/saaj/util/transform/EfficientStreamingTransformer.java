@@ -69,15 +69,15 @@ public class EfficientStreamingTransformer
 
    //removing support for Java 1.4 and 1.3 : CR6658158
     /*static {
-        version = System.getProperty("java.vm.version");
-        vendor = System.getProperty("java.vm.vendor");
-        if (vendor.startsWith("Sun") &&
-            (version.startsWith("1.4") || version.startsWith("1.3"))) {
-            transformerFactory =
-                new com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl();
-        }
-  }
-  */
+    version = System.getProperty("java.vm.version");
+    vendor = System.getProperty("java.vm.vendor");
+    if (vendor.startsWith("Sun") &&
+    (version.startsWith("1.4") || version.startsWith("1.3"))) {
+    transformerFactory =
+    new com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl();
+    }
+}
+*/
 
     /**
      * TransformerFactory instance.

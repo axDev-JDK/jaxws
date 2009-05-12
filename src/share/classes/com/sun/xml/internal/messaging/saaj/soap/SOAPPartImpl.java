@@ -29,9 +29,9 @@
  * have any questions.
  */
 /*
- * $Id: SOAPPartImpl.java,v 1.1.1.1 2006/01/27 13:10:55 kumarjayanti Exp $
- * $Revision: 1.1.1.1 $
- * $Date: 2006/01/27 13:10:55 $
+ *
+ *
+ *
  */
 
 

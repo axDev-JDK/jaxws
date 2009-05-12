@@ -29,9 +29,9 @@
  * have any questions.
  */
 /*
- * $Id: TextImpl.java,v 1.19 2006/01/27 12:49:36 vj135062 Exp $
- * $Revision: 1.19 $
- * $Date: 2006/01/27 12:49:36 $
+ *
+ *
+ *
  */
 
 

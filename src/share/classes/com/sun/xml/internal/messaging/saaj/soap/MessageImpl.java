@@ -29,9 +29,9 @@
  * have any questions.
  */
 /*
- * $Id: MessageImpl.java,v 1.5 2006/12/12 10:16:33 kumarjayanti Exp $
- * $Revision: 1.5 $
- * $Date: 2006/12/12 10:16:33 $
+ *
+ *
+ *
  */
 
 
