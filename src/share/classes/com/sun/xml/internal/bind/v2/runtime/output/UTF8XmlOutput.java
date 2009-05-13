@@ -395,10 +395,6 @@ public class UTF8XmlOutput extends XmlOutputAbstractImpl {
         out.flush();
     }
 
-    public void setHeader(String header) {
-        this.header = header;
-    }
-
 
     static byte[] toBytes(String s) {
         byte[] buf = new byte[s.length()];
