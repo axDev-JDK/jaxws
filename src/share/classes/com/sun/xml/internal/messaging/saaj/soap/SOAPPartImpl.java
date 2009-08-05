@@ -28,11 +28,6 @@
  * CA 95054 USA or visit www.sun.com if you need additional information or
  * have any questions.
  */
-/*
- *
- *
- *
- */
 
 
 package com.sun.xml.internal.messaging.saaj.soap;
@@ -618,20 +613,20 @@ public abstract class SOAPPartImpl extends SOAPPart implements SOAPDocument {
 
             InputStream inputStream = ((StreamSource) source).getInputStream();
             if (inputStream != null) {
-                if (sourceCharsetEncoding == null) {
+                if (getSourceCharsetEncoding() == null) {
                     reader = new InputStreamReader(inputStream);
                 } else {
                     try {
                         reader =
                             new InputStreamReader(
-                                inputStream, sourceCharsetEncoding);
+                                inputStream, getSourceCharsetEncoding());
                     } catch (UnsupportedEncodingException uee) {
                         log.log(
                             Level.SEVERE,
                             "SAAJ0551.soap.unsupported.encoding",
-                            new Object[] {sourceCharsetEncoding});
+                            new Object[] {getSourceCharsetEncoding()});
                         throw new SOAPExceptionImpl(
-                            "Unsupported encoding " + sourceCharsetEncoding,
+                            "Unsupported encoding " + getSourceCharsetEncoding(),
                             uee);
                     }
                 }
@@ -802,5 +797,9 @@ public abstract class SOAPPartImpl extends SOAPPart implements SOAPDocument {
 
     public void detachNode() {
         // Nothing seems to be required to be done here
+    }
+
+    public String getSourceCharsetEncoding() {
+        return sourceCharsetEncoding;
     }
 }

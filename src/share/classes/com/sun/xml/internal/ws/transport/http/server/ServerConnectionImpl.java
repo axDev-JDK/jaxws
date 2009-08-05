@@ -81,9 +81,7 @@ final class ServerConnectionImpl extends WSHTTPConnection implements WebServiceC
         for(Map.Entry <String, List<String>> entry : headers.entrySet()) {
             String name = entry.getKey();
             List<String> values = entry.getValue();
-            if (name.equalsIgnoreCase("Content-Length") || name.equalsIgnoreCase("Content-Type")) {
-                continue;  // ignore headers that interfere with our correct operations
-            } else {
+            if (!name.equalsIgnoreCase("Content-Length") && !name.equalsIgnoreCase("Content-Type")) {
                 r.put(name,new ArrayList<String>(values));
             }
         }
@@ -114,14 +112,16 @@ final class ServerConnectionImpl extends WSHTTPConnection implements WebServiceC
         // Light weight http server's InputStream.close() throws exception if
         // all the bytes are not read. Work around until it is fixed.
         return new FilterInputStream(httpExchange.getRequestBody()) {
+            // Workaround for "SJSXP XMLStreamReader.next() closes stream".
+            boolean closed;
+
             @Override
             public void close() throws IOException {
-                try {
+                if (!closed) {
                     while (read() != -1);
-                } catch(IOException e) {
-                    //Ignore
+                    super.close();
+                    closed = true;
                 }
-                super.close();
             }
         };
     }
@@ -146,6 +146,12 @@ final class ServerConnectionImpl extends WSHTTPConnection implements WebServiceC
                     // Ignoring purposefully.
                 }
             }
+
+            // Otherwise, FilterOutpuStream writes byte by byte
+            @Override
+            public void write(byte[] buf, int start, int len) throws IOException {
+                out.write(buf, start, len);
+            }
         };
     }
 
@@ -162,7 +168,14 @@ final class ServerConnectionImpl extends WSHTTPConnection implements WebServiceC
     }
 
     public @NotNull String getEPRAddress(Packet request, WSEndpoint endpoint) {
-        return WSHttpHandler.getRequestAddress(httpExchange);
+      //return WSHttpHandler.getRequestAddress(httpExchange);
+
+        PortAddressResolver resolver = adapter.owner.createPortAddressResolver(getBaseAddress());
+        String address = resolver.getAddressFor(endpoint.getServiceName(), endpoint.getPortName().getLocalPart());
+        if(address==null)
+            throw new WebServiceException(WsservletMessages.SERVLET_NO_ADDRESS_AVAILABLE(endpoint.getPortName()));
+        return address;
+
     }
 
     public String getWSDLAddress(@NotNull Packet request, @NotNull WSEndpoint endpoint) {
@@ -204,6 +217,16 @@ final class ServerConnectionImpl extends WSHTTPConnection implements WebServiceC
             return reqPath.substring(ctxtPath.length());
         }
         return null;
+    }
+
+    @Property(JAXWSProperties.HTTP_EXCHANGE)
+    public HttpExchange getExchange() {
+        return httpExchange;
+    }
+
+    @Override @NotNull
+    public String getBaseAddress() {
+        return WSHttpHandler.getRequestAddress(httpExchange);
     }
 
     @Override
