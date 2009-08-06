@@ -349,7 +349,7 @@ final class HttpClientTransport {
      * is kept in memory. This wraps the ChunkedOuputStream so that it writes only small
      * chunks.
      */
-    private static final class WSChunkedOuputStream extends OutputStream {
+    private static final class WSChunkedOuputStream extends FilterOutputStream {
         final int chunkSize;
 
         WSChunkedOuputStream(OutputStream actual, int chunkSize) {
