@@ -1,5 +1,11 @@
 /*
- * Copyright 2005-2006 Sun Microsystems, Inc.  All Rights Reserved.
+ *
+ *
+ *
+ */
+
+/*
+ * Copyright 2006 Sun Microsystems, Inc.  All Rights Reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -21,11 +27,6 @@
  * Please contact Sun Microsystems, Inc., 4150 Network Circle, Santa Clara,
  * CA 95054 USA or visit www.sun.com if you need additional information or
  * have any questions.
- */
-/*
- *
- *
- *
  */
 
 
@@ -151,7 +152,7 @@ public abstract class MessageImpl
      *      must be all lower case
      */
     private static boolean isSoap1_1Type(String primary, String sub) {
-        return primary.equals("text") && sub.equals("xml")
+        return primary.equalsIgnoreCase("text") && sub.equalsIgnoreCase("xml")
             || primary.equals("application")
                && sub.equals("fastinfoset");
     }
@@ -848,6 +849,7 @@ public abstract class MessageImpl
             }
         }
         attachments = f;
+       // needsSave();
     }
 
     public AttachmentPart createAttachmentPart() {
