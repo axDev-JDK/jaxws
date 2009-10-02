@@ -30,6 +30,7 @@ import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpsExchange;
 import com.sun.xml.internal.ws.api.message.Packet;
+import com.sun.xml.internal.ws.api.server.PortAddressResolver;
 import com.sun.xml.internal.ws.api.server.WSEndpoint;
 import com.sun.xml.internal.ws.api.server.WebServiceContextDelegate;
 import com.sun.xml.internal.ws.api.server.PortAddressResolver;
@@ -38,6 +39,7 @@ import com.sun.xml.internal.ws.transport.http.WSHTTPConnection;
 import com.sun.xml.internal.ws.developer.JAXWSProperties;
 import com.sun.xml.internal.ws.resources.WsservletMessages;
 
+import javax.xml.ws.WebServiceException;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.WebServiceException;
 import java.io.FilterInputStream;
