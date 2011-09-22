@@ -55,7 +55,7 @@ final class ParameterList {
      * Note that an empty parameter-list string is valid and will be
      * parsed into an empty ParameterList.
      *
-     * @param   s       the parameter-list string.
+     * @param	s	the parameter-list string.
      * @exception WebServiceException if the parse fails.
      */
     ParameterList(String s) {
@@ -108,20 +108,20 @@ final class ParameterList {
      * @return  number of parameters.
      */
     int size() {
-            return list.size();
+	    return list.size();
     }
 
     /**
      * Returns the value of the specified parameter. Note that
      * parameter names are case-insensitive.
      *
-     * @param name      parameter name.
-     * @return          Value of the parameter. Returns
-     *                  <code>null</code> if the parameter is not
-     *                  present.
+     * @param name	parameter name.
+     * @return		Value of the parameter. Returns
+     *			<code>null</code> if the parameter is not
+     *			present.
      */
     String get(String name) {
-            return list.get(name.trim().toLowerCase());
+	    return list.get(name.trim().toLowerCase());
     }
 
 
@@ -132,7 +132,7 @@ final class ParameterList {
      * @return Enumeration of all parameter names in this list.
      */
     Iterator<String> getNames() {
-            return list.keySet().iterator();
+	    return list.keySet().iterator();
     }
 
 }

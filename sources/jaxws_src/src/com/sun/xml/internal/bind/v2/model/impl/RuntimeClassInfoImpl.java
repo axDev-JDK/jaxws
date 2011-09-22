@@ -129,7 +129,7 @@ class RuntimeClassInfoImpl extends ClassInfoImpl<Type,Class,Field,Method>
     public Method getFactoryMethod(){
         return super.getFactoryMethod();
     }
-
+    
     public final RuntimeClassInfoImpl getBaseClass() {
         return (RuntimeClassInfoImpl)super.getBaseClass();
     }
@@ -220,7 +220,7 @@ class RuntimeClassInfoImpl extends ClassInfoImpl<Type,Class,Field,Method>
             return null;
         if( !valuep.getTarget().isSimpleType() )
             return null;    // if there's an error, recover from it by returning null.
-
+        
         return new TransducerImpl(getClazz(),TransducedAccessor.get(
                 ((RuntimeModelBuilder)builder).context,valuep));
     }
@@ -318,7 +318,7 @@ class RuntimeClassInfoImpl extends ClassInfoImpl<Type,Class,Field,Method>
     }
 
 
-
+    
     /**
      * {@link Transducer} implementation used when this class maps to PCDATA in XML.
      *

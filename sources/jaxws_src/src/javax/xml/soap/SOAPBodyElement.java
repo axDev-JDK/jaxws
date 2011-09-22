@@ -22,24 +22,17 @@
  * CA 95054 USA or visit www.sun.com if you need additional information or
  * have any questions.
  */
-/*
- * $Id: SOAPBodyElement.java,v 1.4 2006/03/30 00:59:40 ofung Exp $
- * $Revision: 1.4 $
- * $Date: 2006/03/30 00:59:40 $
- */
-
-
 package javax.xml.soap;
 
 /**
- * A <code>SOAPBodyElement</code> object represents the contents in
+ * A <code>SOAPBodyElement</code> object represents the contents in 
  * a <code>SOAPBody</code> object.  The <code>SOAPFault</code> interface
  * is a <code>SOAPBodyElement</code> object that has been defined.
  * <P>
  * A new <code>SOAPBodyElement</code> object can be created and added
  * to a <code>SOAPBody</code> object with the <code>SOAPBody</code>
  * method <code>addBodyElement</code>. In the following line of code,
- * <code>sb</code> is a <code>SOAPBody</code> object, and
+ * <code>sb</code> is a <code>SOAPBody</code> object, and 
  * <code>myName</code> is a <code>Name</code> object.
  * <PRE>
  *    SOAPBodyElement sbe = sb.addBodyElement(myName);

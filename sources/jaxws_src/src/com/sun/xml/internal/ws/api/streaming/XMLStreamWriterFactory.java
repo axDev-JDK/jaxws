@@ -309,7 +309,7 @@ public abstract class XMLStreamWriterFactory {
 
         public void doRecycle(XMLStreamWriter r) {
             if(zephyrClass.isInstance(r)) {
-                // this flushes the underlying stream, so it might cause chunking issue
+                // this flushes the underlying stream, so it might cause chunking issue 
                 try {
                     r.close();
                 } catch (XMLStreamException e) {

@@ -27,16 +27,14 @@ package com.sun.xml.internal.ws.api.pipe;
 
 import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
-import com.sun.xml.internal.ws.addressing.WsaClientTube;
-import com.sun.xml.internal.ws.addressing.W3CWsaServerTube;
 import com.sun.xml.internal.ws.addressing.W3CWsaClientTube;
-import com.sun.xml.internal.ws.addressing.v200408.MemberSubmissionWsaServerTube;
 import com.sun.xml.internal.ws.addressing.v200408.MemberSubmissionWsaClientTube;
 import com.sun.xml.internal.ws.api.EndpointAddress;
 import com.sun.xml.internal.ws.api.WSBinding;
 import com.sun.xml.internal.ws.api.WSService;
 import com.sun.xml.internal.ws.api.addressing.AddressingVersion;
 import com.sun.xml.internal.ws.api.client.ClientPipelineHook;
+import com.sun.xml.internal.ws.api.client.WSPortInfo;
 import com.sun.xml.internal.ws.api.model.SEIModel;
 import com.sun.xml.internal.ws.api.model.wsdl.WSDLPort;
 import com.sun.xml.internal.ws.api.pipe.helper.PipeAdapter;
@@ -44,6 +42,7 @@ import com.sun.xml.internal.ws.api.server.Container;
 import com.sun.xml.internal.ws.binding.BindingImpl;
 import com.sun.xml.internal.ws.client.ClientSchemaValidationTube;
 import com.sun.xml.internal.ws.developer.SchemaValidationFeature;
+import com.sun.xml.internal.ws.developer.WSBindingProvider;
 import com.sun.xml.internal.ws.handler.ClientLogicalHandlerTube;
 import com.sun.xml.internal.ws.handler.ClientMessageHandlerTube;
 import com.sun.xml.internal.ws.handler.ClientSOAPHandlerTube;
@@ -72,10 +71,23 @@ public class ClientTubeAssemblerContext {
     private final @NotNull Container container;
     private @NotNull Codec codec;
 
+    //Nullable only to maintain comaptibility with old constructors of this class.
+    private final @Nullable WSBindingProvider bindingProvider;
+
+    /**
+     * This constructor should be used only by JAX-WS Runtime and is not meant for external consumption.
+     * @deprecated
+     *      Use {@link #ClientTubeAssemblerContext(EndpointAddress, WSDLPort, WSBindingProvider, WSBinding, Container, Codec, SEIModel)}
+     */
     public ClientTubeAssemblerContext(@NotNull EndpointAddress address, @Nullable WSDLPort wsdlModel, @NotNull WSService rootOwner, @NotNull WSBinding binding) {
         this(address, wsdlModel, rootOwner, binding, Container.NONE);
     }
 
+    /**
+     * This constructor should be used only by JAX-WS Runtime and is not meant for external consumption.
+     * @deprecated
+     *      Use {@link #ClientTubeAssemblerContext(EndpointAddress, WSDLPort, WSBindingProvider, WSBinding, Container, Codec, SEIModel)}.
+     */
     public ClientTubeAssemblerContext(@NotNull EndpointAddress address, @Nullable WSDLPort wsdlModel,
                                       @NotNull WSService rootOwner, @NotNull WSBinding binding,
                                       @NotNull Container container) {
@@ -83,24 +95,54 @@ public class ClientTubeAssemblerContext {
         this(address, wsdlModel, rootOwner, binding, container, ((BindingImpl)binding).createCodec() );
     }
 
+    /**
+     * This constructor should be used only by JAX-WS Runtime and is not meant for external consumption.
+     * @deprecated
+     *      Use {@link #ClientTubeAssemblerContext(EndpointAddress, WSDLPort, WSBindingProvider, WSBinding, Container, Codec,SEIModel)}.
+     */
     public ClientTubeAssemblerContext(@NotNull EndpointAddress address, @Nullable WSDLPort wsdlModel,
                                       @NotNull WSService rootOwner, @NotNull WSBinding binding,
                                       @NotNull Container container, Codec codec) {
         this(address, wsdlModel, rootOwner, binding, container, codec, null);
     }
 
+    /**
+     * This constructor should be used only by JAX-WS Runtime and is not meant for external consumption.
+     * @deprecated
+     *      Use {@link #ClientTubeAssemblerContext(EndpointAddress, WSDLPort, WSBindingProvider, WSBinding, Container, Codec, SEIModel)}.
+     */
     public ClientTubeAssemblerContext(@NotNull EndpointAddress address, @Nullable WSDLPort wsdlModel,
                                       @NotNull WSService rootOwner, @NotNull WSBinding binding,
+                                      @NotNull Container container, Codec codec, SEIModel seiModel) {
+        this(address, wsdlModel, rootOwner, null/* no info on which port it is, so pass null*/, binding, container, codec,seiModel);
+    }
+
+    /**
+     * This constructor should be used only by JAX-WS Runtime and is not meant for external consumption.
+     *
+     * @since JAX-WS 2.2
+     */
+    public ClientTubeAssemblerContext(@NotNull EndpointAddress address, @Nullable WSDLPort wsdlModel,
+                                      @NotNull WSBindingProvider bindingProvider, @NotNull WSBinding binding,
+                                      @NotNull Container container, Codec codec, SEIModel seiModel) {
+        this(address, wsdlModel, (bindingProvider==null? null: bindingProvider.getPortInfo().getOwner()), bindingProvider, binding, container, codec,seiModel);
+
+    }
+
+    //common constructor
+    //WSService is null, when ClientTubeAssemblerContext is created for sending non-anonymous responses.
+    private ClientTubeAssemblerContext(@NotNull EndpointAddress address, @Nullable WSDLPort wsdlModel,
+                                       @Nullable WSService rootOwner, @Nullable WSBindingProvider bindingProvider, @NotNull WSBinding binding,
                                       @NotNull Container container, Codec codec, SEIModel seiModel) {
         this.address = address;
         this.wsdlModel = wsdlModel;
         this.rootOwner = rootOwner;
+        this.bindingProvider = bindingProvider;
         this.binding = binding;
         this.container = container;
         this.codec = codec;
         this.seiModel = seiModel;
     }
-
 
     /**
      * The endpoint address. Always non-null. This parameter is taken separately
@@ -127,6 +169,23 @@ public class ClientTubeAssemblerContext {
      */
     public @NotNull WSService getService() {
         return rootOwner;
+    }
+
+    /**
+     * The pipeline is created for this {@link com.sun.xml.internal.ws.api.client.WSPortInfo}.
+     * Nullable incase of backwards compatible usages of this class.
+     */
+    public @Nullable WSPortInfo getPortInfo() {
+        return bindingProvider == null? null: bindingProvider.getPortInfo();
+    }
+
+
+    /**
+     * The pipeline is created for this {@link WSBindingProvider}.
+     * Nullable incase of backwards compatible usages of this class.
+     */
+    public @Nullable WSBindingProvider getBindingProvider() {
+        return bindingProvider;
     }
 
     /**
@@ -181,7 +240,7 @@ public class ClientTubeAssemblerContext {
     public Tube createWsaTube(Tube next) {
         if (binding instanceof SOAPBinding && AddressingVersion.isEnabled(binding) && wsdlModel!=null)
             if(AddressingVersion.fromBinding(binding) == AddressingVersion.MEMBER) {
-                return new MemberSubmissionWsaClientTube(wsdlModel, binding, next);
+                return new MemberSubmissionWsaClientTube(wsdlModel, binding, next);    
             } else {
                 return new W3CWsaClientTube(wsdlModel, binding, next);
             }
@@ -201,10 +260,10 @@ public class ClientTubeAssemblerContext {
             next = cousinHandlerTube = messageHandlerTube;
 
             //Add SOAPHandlerTuber
-            HandlerTube soapHandlerTube = new ClientSOAPHandlerTube(binding, next, cousinHandlerTube);
+            HandlerTube soapHandlerTube = new ClientSOAPHandlerTube(binding, next, cousinHandlerTube);            
             next = cousinHandlerTube = soapHandlerTube;
         }
-        return new ClientLogicalHandlerTube(binding, next, cousinHandlerTube);
+        return new ClientLogicalHandlerTube(binding, seiModel, next, cousinHandlerTube);
     }
 
     /**

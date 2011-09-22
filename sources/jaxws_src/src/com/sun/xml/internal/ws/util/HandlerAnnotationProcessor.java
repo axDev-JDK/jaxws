@@ -50,7 +50,7 @@ import java.util.logging.Logger;
  * from annotated class. The public methods all return a
  * HandlerChainInfo that contains the handlers and role information
  * needed at runtime.
- *
+ * 
  * <p>All of the handler chain descriptors follow the same schema,
  * whether they are wsdl customizations, handler files specified
  * by an annotation, or are included in the sun-jaxws.xml file.

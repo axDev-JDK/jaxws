@@ -32,8 +32,8 @@ import com.sun.xml.internal.xsom.parser.AnnotationParser;
 /**
  * <a href="http://www.w3.org/TR/xmlschema-1/#Annotation_details">
  * XML Schema annotation</a>.
- *
- *
+ * 
+ * 
  */
 public interface XSAnnotation
 {
@@ -42,7 +42,7 @@ public interface XSAnnotation
      * <p>
      * annotations are parsed by the user-specified
      * {@link AnnotationParser}.
-     *
+     * 
      * @return may return null
      */
     Object getAnnotation();

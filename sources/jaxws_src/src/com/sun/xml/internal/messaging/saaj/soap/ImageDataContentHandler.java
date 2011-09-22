@@ -47,7 +47,7 @@ public class ImageDataContentHandler extends Component
     protected static final Logger log =
         Logger.getLogger(LogDomainConstants.SOAP_DOMAIN,
                          "com.sun.xml.internal.messaging.saaj.soap.LocalStrings");
-
+    
     private DataFlavor[] flavor;
 
     public ImageDataContentHandler() {
@@ -67,7 +67,7 @@ public class ImageDataContentHandler extends Component
      *
      * @return The DataFlavors.
      */
-    public DataFlavor[] getTransferDataFlavors() {
+    public DataFlavor[] getTransferDataFlavors() { 
         return flavor;
     }
 
@@ -123,7 +123,7 @@ public class ImageDataContentHandler extends Component
                 bufImage = render((Image)obj);
             } else {
                 log.log(Level.SEVERE,
-                    "SAAJ0520.soap.invalid.obj.type",
+                    "SAAJ0520.soap.invalid.obj.type", 
                     new String[] { obj.getClass().toString() });
                 throw new IOException(
                     "ImageDataContentHandler requires Image object, "

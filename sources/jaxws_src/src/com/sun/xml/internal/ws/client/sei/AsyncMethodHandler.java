@@ -109,7 +109,7 @@ abstract class AsyncMethodHandler extends SEIMethodHandler {
             }
         }
         asyncBeanClass = tempWrap;
-
+        
         switch(size) {
             case 0 :
                 responseBuilder = buildResponseBuilder(sync, ValueSetterFactory.NONE);
@@ -120,11 +120,11 @@ abstract class AsyncMethodHandler extends SEIMethodHandler {
             default :
                 responseBuilder = buildResponseBuilder(sync, new ValueSetterFactory.AsyncBeanValueSetterFactory(asyncBeanClass));
         }
-
+       
     }
 
     protected final Response<Object> doInvoke(Object proxy, Object[] args, AsyncHandler handler) {
-
+        
         AsyncInvoker invoker = new SEIAsyncInvoker(proxy, args);
         AsyncResponseImpl<Object> ft = new AsyncResponseImpl<Object>(invoker,handler);
         invoker.setReceiver(ft);
@@ -184,7 +184,7 @@ abstract class AsyncMethodHandler extends SEIMethodHandler {
                         responseImpl.set(null, new WebServiceException(t));
                     }
                 }
-
+                
 
                 public void onCompletion(@NotNull Throwable error) {
                     if (error instanceof WebServiceException) {

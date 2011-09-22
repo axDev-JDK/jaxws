@@ -100,9 +100,7 @@ abstract class WsaTube extends AbstractFilterTubeImpl {
     }
 
     @Override
-    public
-    @NotNull
-    NextAction processException(Throwable t) {
+    public @NotNull NextAction processException(Throwable t) {
         return super.processException(t);
     }
 
@@ -165,9 +163,9 @@ abstract class WsaTube extends AbstractFilterTubeImpl {
      *
      * Override this method if you need to additional checking of headers other than just existence of the headers.
      * For ex: On server-side, check Anonymous and Non-Anonymous semantics in addition to checking cardinality.
-     *
+     * 
      * Override checkMandatoryHeaders(Packet p) to have different validation rules for different versions
-     *
+     * 
      * @param packet
      */
     protected void checkMessageAddressingProperties(Packet packet) {
@@ -326,7 +324,7 @@ abstract class WsaTube extends AbstractFilterTubeImpl {
                 return;
             */
             checkMandatoryHeaders(packet, foundAction, foundTo, foundReplyTo,
-                    foundFaultTo, foundMessageId, foundRelatesTo);
+                    foundFaultTo, foundMessageId, foundRelatesTo);            
         }
     }
 
@@ -341,10 +339,13 @@ abstract class WsaTube extends AbstractFilterTubeImpl {
     }
 
     protected final WSDLBoundOperation getWSDLBoundOperation(Packet packet) {
-        //we can find Req/Response or Oneway only with WSDLModel
+        //we can find Req/Response or Oneway only with WSDLModel        
         if(wsdlPort == null)
             return null;
-        return packet.getMessage().getOperation(wsdlPort);
+        QName opName = packet.getWSDLOperation();
+        if(opName != null)
+            return wsdlPort.getBinding().get(opName);
+        return null;
     }
 
     protected void validateSOAPAction(Packet packet) {
@@ -364,7 +365,7 @@ abstract class WsaTube extends AbstractFilterTubeImpl {
      * Checks only for presence of wsa:Action and validates that wsa:Action
      * equals SOAPAction header when non-empty
      * Should be overridden if other wsa headers need to be checked based on version.
-     *
+     * 
      * @param packet
      * @param foundAction
      * @param foundTo

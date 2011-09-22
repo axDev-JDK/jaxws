@@ -48,25 +48,25 @@ import com.sun.xml.internal.xsom.visitor.XSFunction;
 /**
  * Filter implementation of XSFilter.
  * This class forwards all the method calls to another XSFunction.
- *
+ * 
  * <p>
  * This class is intended to be derived by client application
  * to add some meaningful behavior.
- *
+ * 
  * @author
  *     Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
 public class XSFunctionFilter<T> implements XSFunction<T> {
-
+    
     /** This object will receive all forwarded calls. */
     protected XSFunction<T> core;
-
+    
     public XSFunctionFilter( XSFunction<T> _core ) {
         this.core = _core;
     }
-
+    
     public XSFunctionFilter() {}
-
+    
     public T annotation(XSAnnotation ann) {
         return core.annotation(ann);
     }
@@ -78,7 +78,7 @@ public class XSFunctionFilter<T> implements XSFunction<T> {
     public T attributeDecl(XSAttributeDecl decl) {
         return core.attributeDecl(decl);
     }
-
+    
     public T attributeUse(XSAttributeUse use) {
         return core.attributeUse(use);
     }

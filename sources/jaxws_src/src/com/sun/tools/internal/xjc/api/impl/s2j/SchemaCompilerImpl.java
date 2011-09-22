@@ -62,12 +62,12 @@ import org.xml.sax.helpers.LocatorImpl;
 
 /**
  * {@link SchemaCompiler} implementation.
- *
+ * 
  * This class builds a {@link DOMForest} until the {@link #bind()} method,
  * then this method does the rest of the hard work.
- *
+ * 
  * @see ModelLoader
- *
+ * 
  * @author
  *     Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
@@ -130,7 +130,7 @@ public final class SchemaCompilerImpl extends ErrorReceiver implements SchemaCom
                 e.getMessage(), null, systemId,-1,-1, e));
         }
     }
-
+    
     public void parseSchema(InputSource source) {
         checkAbsoluteness(source.getSystemId());
         try {
@@ -174,7 +174,7 @@ public final class SchemaCompilerImpl extends ErrorReceiver implements SchemaCom
 
     public void setEntityResolver(EntityResolver entityResolver) {
         forest.setEntityResolver(entityResolver);
-        opts.entityResolver = entityResolver;
+        opts.entityResolver = entityResolver; 
     }
 
     public void setDefaultPackageName(String packageName) {
@@ -205,7 +205,7 @@ public final class SchemaCompilerImpl extends ErrorReceiver implements SchemaCom
         // this also takes care of the binding files given in the -episode option.
         for (InputSource is : opts.getBindFiles())
             parseSchema(is);
-
+        
         // internalization
         SCDBasedBindingSet scdBasedBindingSet = forest.transform(opts.isExtensionMode());
 
@@ -221,7 +221,6 @@ public final class SchemaCompilerImpl extends ErrorReceiver implements SchemaCom
         JCodeModel codeModel = new JCodeModel();
 
         ModelLoader gl = new ModelLoader(opts,codeModel,this);
-
         try {
             XSSchemaSet result = gl.createXSOM(forest, scdBasedBindingSet);
             if(result==null)
@@ -236,6 +235,8 @@ public final class SchemaCompilerImpl extends ErrorReceiver implements SchemaCom
             if(model==null)   return null;
 
             if(hadError)        return null;    // if we have any error by now, abort
+
+            model.setPackageLevelAnnotations(opts.packageLevelAnnotations);
 
             Outline context = model.generateCode(opts,this);
             if(context==null)   return null;

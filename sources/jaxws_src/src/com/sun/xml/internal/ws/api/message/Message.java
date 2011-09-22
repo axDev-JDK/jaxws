@@ -243,6 +243,10 @@ public abstract class Message {
      * This method relies on {@link WSDLBoundPortType#getOperation(String, String)} but
      * it does so in an efficient way.
      *
+     * @deprecated  It is not always possible to uniquely identify the WSDL Operation from just the
+     * information in the Message. Instead, Use {@link com.sun.xml.internal.ws.api.message.Packet#getWSDLOperation()}
+     * to get it correctly.
+     *
      * <p>
      * This method works only for a request. A pipe can determine an operation for a request,
      * and then keep it in a local variable to use it with a response, so there should be
@@ -259,6 +263,7 @@ public abstract class Message {
      *      or when we are on the client and the user appliation sends a random DOM through
      *      {@link Dispatch}, so this error needs to be handled gracefully.
      */
+    @Deprecated
     public final @Nullable WSDLBoundOperation getOperation(@NotNull WSDLBoundPortType boundPortType) {
         if(operation==null)
             operation = boundPortType.getOperation(getPayloadNamespaceURI(),getPayloadLocalPart());
@@ -268,7 +273,12 @@ public abstract class Message {
     /**
      * The same as {@link #getOperation(WSDLBoundPortType)} but
      * takes {@link WSDLPort} for convenience.
+     *
+     * @deprecated  It is not always possible to uniquely identify the WSDL Operation from just the
+     * information in the Message. Instead, Use {@link com.sun.xml.internal.ws.api.message.Packet#getWSDLOperation()}
+     * to get it correctly.
      */
+    @Deprecated
     public final @Nullable WSDLBoundOperation getOperation(@NotNull WSDLPort port) {
         return getOperation(port.getBinding());
     }
@@ -276,6 +286,9 @@ public abstract class Message {
     /**
      * Returns the java Method of which this message is an instance of.
      *
+     * It is not always possible to uniquely identify the WSDL Operation from just the
+     * information in the Message. Instead, Use {@link com.sun.xml.internal.ws.api.message.Packet#getWSDLOperation()}
+     * to get the QName of the associated wsdl operation correctly.
      *
      * <p>
      * This method works only for a request. A pipe can determine a {@link Method}
@@ -295,6 +308,7 @@ public abstract class Message {
      *      DOM through {@link Dispatch}, so this error needs to be handled
      *      gracefully.
      */
+    @Deprecated
     public final @Nullable JavaMethod getMethod(@NotNull SEIModel seiModel) {
         String localPart = getPayloadLocalPart();
         String nsUri;
@@ -535,6 +549,10 @@ public abstract class Message {
      * <p>
      * This method provides an opportunity for implementations to reuse
      * any reusable resources needed for representing the payload.
+     *
+     * <p>
+     * This method may not be called more than once since it may have
+     * released the reusable resources.
      */
     public void consume() {}
 

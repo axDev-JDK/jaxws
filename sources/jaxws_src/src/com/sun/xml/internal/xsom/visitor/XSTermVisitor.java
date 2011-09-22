@@ -33,7 +33,7 @@ import com.sun.xml.internal.xsom.XSWildcard;
 
 /**
  * Visitor that works on {@link com.sun.xml.internal.xsom.XSTerm}.
- *
+ * 
  * @author
  *  Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */

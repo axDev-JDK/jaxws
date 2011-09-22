@@ -42,13 +42,13 @@ import javax.xml.stream.XMLStreamWriter;
 /**
  * A processor of a {@link XMLStreamBuffer} that writes the XML infoset to a
  * {@link XMLStreamWriter}.
- *
+ * 
  * @author Paul.Sandoz@Sun.Com
  * @author K.Venugopal@sun.com
  */
 public class StreamWriterBufferProcessor extends AbstractProcessor {
-
-
+    
+    
     public StreamWriterBufferProcessor() {
     }
 
@@ -73,7 +73,7 @@ public class StreamWriterBufferProcessor extends AbstractProcessor {
         setXMLStreamBuffer(buffer,buffer.isFragment());
         process(writer);
     }
-
+    
     public void process(XMLStreamWriter writer) throws XMLStreamException {
         if(_fragmentMode){
             writeFragment(writer);
@@ -116,7 +116,7 @@ public class StreamWriterBufferProcessor extends AbstractProcessor {
         while(true) {
             int item = getEIIState(peekStructure());
             writer.flush();
-
+            
             switch(item) {
                 case STATE_DOCUMENT:
                     readStructure(); //skip
@@ -161,7 +161,7 @@ public class StreamWriterBufferProcessor extends AbstractProcessor {
                     throw new XMLStreamException("Invalid State "+item);
             }
         }
-
+        
     }
 
     /**
@@ -179,7 +179,7 @@ public class StreamWriterBufferProcessor extends AbstractProcessor {
             writeFragmentNoEx(writer);
         }
     }
-
+    
     public void writeFragmentEx(XMLStreamWriterEx writer) throws XMLStreamException {
         int depth = 0;  // used to determine when we are done with a tree.
 
@@ -188,9 +188,9 @@ public class StreamWriterBufferProcessor extends AbstractProcessor {
             readStructure();    // skip STATE_DOCUMENT
 
         do {
-
+            
             item = readEiiState();
-
+            
             switch(item) {
                 case STATE_DOCUMENT:
                     throw new AssertionError();
@@ -351,7 +351,7 @@ public class StreamWriterBufferProcessor extends AbstractProcessor {
                     char[] c = readContentCharactersCopy();
                     writer.writeCharacters(c,0,c.length);
                     break;
-                }
+                }                
                 case STATE_TEXT_AS_STRING: {
                     final String s = readContentString();
                     writer.writeCharacters(s);
@@ -393,8 +393,8 @@ public class StreamWriterBufferProcessor extends AbstractProcessor {
                 default:
                     throw new XMLStreamException("Invalid State "+item);
             }
-        } while(depth > 0 && _treeCount>0);
-
+        } while(depth > 0 || _treeCount>0);
+        
     }
 
     private boolean isInscope(int depth) {
@@ -438,7 +438,7 @@ public class StreamWriterBufferProcessor extends AbstractProcessor {
             }
         }
     }
-
+    
     private int writeNamespaceAttributes(int item, XMLStreamWriter writer, boolean collectPrefixes, Set<String> prefixSet) throws XMLStreamException {
         do {
             switch(getNIIState(item)){
@@ -472,16 +472,16 @@ public class StreamWriterBufferProcessor extends AbstractProcessor {
                     if (collectPrefixes) {
                         prefixSet.add("");
                     }
-                    break;
+                    break;                
             }
             readStructure();
-
+            
             item = peekStructure();
         } while((item & TYPE_MASK) == T_NAMESPACE_ATTRIBUTE);
-
+                
         return item;
     }
-
+    
     private void writeAttributes(int item, XMLStreamWriter writer) throws XMLStreamException {
         do {
             switch(getAIIState(item)) {
@@ -493,7 +493,7 @@ public class StreamWriterBufferProcessor extends AbstractProcessor {
                     break;
                 }
                 case STATE_ATTRIBUTE_P_U_LN:
-                    writer.writeAttribute(readStructureString(), readStructureString(),
+                    writer.writeAttribute(readStructureString(), readStructureString(), 
                             readStructureString(), readContentString());
                     break;
                 case STATE_ATTRIBUTE_U_LN:
@@ -505,9 +505,9 @@ public class StreamWriterBufferProcessor extends AbstractProcessor {
             }
             // Ignore the attribute type
             readStructureString();
-
+            
             readStructure();
-
+            
             item = peekStructure();
         } while((item & TYPE_MASK) == T_ATTRIBUTE);
     }

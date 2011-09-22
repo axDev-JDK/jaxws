@@ -45,6 +45,7 @@ import com.sun.xml.internal.messaging.saaj.packaging.mime.MessagingException;
 import com.sun.xml.internal.messaging.saaj.SOAPExceptionImpl;
 import com.sun.xml.internal.messaging.saaj.soap.impl.EnvelopeImpl;
 import com.sun.xml.internal.messaging.saaj.util.*;
+import com.sun.xml.internal.org.jvnet.mimepull.MIMEPart;
 
 /**
  * The message implementation for SOAP messages with
@@ -72,12 +73,15 @@ public abstract class MessageImpl
     protected static final int MIME_MULTIPART_FLAG = 2;      // 00010
     protected static final int SOAP1_1_FLAG = 4;             // 00100
     protected static final int SOAP1_2_FLAG = 8;             // 01000
-    protected static final int MIME_MULTIPART_XOP_FLAG = 14; // 01110
+    //protected static final int MIME_MULTIPART_XOP_FLAG = 14; // 01110
+    protected static final int MIME_MULTIPART_XOP_SOAP1_1_FLAG = 6;  // 00110
+    protected static final int MIME_MULTIPART_XOP_SOAP1_2_FLAG = 10; // 01010
     protected static final int XOP_FLAG = 13;                // 01101
     protected static final int FI_ENCODED_FLAG     = 16;     // 10000
-
+    
     protected MimeHeaders headers;
-    protected SOAPPartImpl soapPart;
+    protected ContentType contentType;
+    protected SOAPPartImpl soapPartImpl;
     protected FinalArrayList attachments;
     protected boolean saved = false;
     protected byte[] messageBytes;
@@ -92,22 +96,25 @@ public abstract class MessageImpl
      * True if this part is encoded using Fast Infoset.
      * MIME -> application/fastinfoset
      */
-    protected boolean isFastInfoset = false;
-
+    protected boolean isFastInfoset = false;  
+    
     /**
      * True if the Accept header of this message includes
      * application/fastinfoset
      */
     protected boolean acceptFastInfoset = false;
-
+    
     protected MimeMultipart mmp = null;
-
+    
     // if attachments are present, don't read the entire message in byte stream in saveTo()
     private boolean optimizeAttachmentProcessing = true;
+
+    private InputStream inputStreamAfterSaveChanges = null;
 
     // switch back to old MimeMultipart incase of problem
     private static boolean switchOffBM = false;
     private static boolean switchOffLazyAttachment = false;
+    private static boolean useMimePull = false;
 
     static {
         try {
@@ -119,6 +126,7 @@ public abstract class MessageImpl
             if ((s != null) && s.equals("false")) {
                 switchOffLazyAttachment = true;
             }
+            useMimePull = Boolean.getBoolean("saaj.use.mimepull");
         } catch (SecurityException ex) {
             // ignore it
         }
@@ -189,7 +197,7 @@ public abstract class MessageImpl
         this(false, false);
         attachmentsInitialized = true;
     }
-
+    
     /**
       * Construct a new message. This will be invoked before message
       * sends.
@@ -197,9 +205,10 @@ public abstract class MessageImpl
     protected MessageImpl(boolean isFastInfoset, boolean acceptFastInfoset) {
         this.isFastInfoset = isFastInfoset;
         this.acceptFastInfoset = acceptFastInfoset;
-
+        
         headers = new MimeHeaders();
         headers.setHeader("Accept", getExpectedAcceptHeader());
+        contentType = new ContentType();
     }
 
     /**
@@ -211,12 +220,13 @@ public abstract class MessageImpl
         }
         MessageImpl src = (MessageImpl) msg;
         this.headers = src.headers;
-        this.soapPart = src.soapPart;
+        this.soapPartImpl = src.soapPartImpl;
         this.attachments = src.attachments;
         this.saved = src.saved;
         this.messageBytes = src.messageBytes;
         this.messageByteCount = src.messageByteCount;
         this.properties = src.properties;
+        this.contentType = src.contentType;
     }
 
     /**
@@ -235,22 +245,41 @@ public abstract class MessageImpl
         return (stat & SOAP1_2_FLAG) != 0;
     }
 
-     private static boolean isMimeMultipartXOPPackage(ContentType contentType) {
+     private static boolean isMimeMultipartXOPSoap1_2Package(ContentType contentType) {
+        String type = contentType.getParameter("type");
+        if (type == null) {
+            return false;
+        }
+        type = type.toLowerCase();
+        if (!type.startsWith("application/xop+xml")) {
+            return false;
+        }
+        String startinfo = contentType.getParameter("start-info");
+        if (startinfo == null) {
+            return false;
+        }
+        startinfo = startinfo.toLowerCase();
+        return isEqualToSoap1_2Type(startinfo);
+    }
+
+
+     //private static boolean isMimeMultipartXOPPackage(ContentType contentType) {
+     private static boolean isMimeMultipartXOPSoap1_1Package(ContentType contentType) {
         String type = contentType.getParameter("type");
         if(type==null)
             return false;
-
+                                                                                                                             
         type = type.toLowerCase();
         if(!type.startsWith("application/xop+xml"))
             return false;
-
+                                                                                                                             
         String startinfo = contentType.getParameter("start-info");
         if(startinfo == null)
             return false;
         startinfo = startinfo.toLowerCase();
-        return isEqualToSoap1_2Type(startinfo) || isEqualToSoap1_1Type(startinfo);
+        return isEqualToSoap1_1Type(startinfo);
     }
-
+ 
     private static boolean isSOAPBodyXOPPackage(ContentType contentType){
         String primary = contentType.getPrimaryType();
         String sub = contentType.getSubType();
@@ -263,7 +292,7 @@ public abstract class MessageImpl
         }
         return false;
     }
-
+    
     /**
      * Construct a message from an input stream. When messages are
      * received, there's two parts -- the transport headers and the
@@ -271,8 +300,8 @@ public abstract class MessageImpl
      */
     protected MessageImpl(MimeHeaders headers, final InputStream in)
         throws SOAPExceptionImpl {
-        ContentType ct = parseContentType(headers);
-        init(headers,identifyContentType(ct),ct,in);
+        contentType = parseContentType(headers);
+        init(headers,identifyContentType(contentType),contentType,in);
     }
 
     private static ContentType parseContentType(MimeHeaders headers) throws SOAPExceptionImpl {
@@ -386,7 +415,9 @@ public abstract class MessageImpl
                 };
 
                 multiPart = null;
-                if (switchOffBM) {
+                if (useMimePull) {
+                    multiPart = new MimePullMultipart(ds,contentType);
+                } else if (switchOffBM) {
                     multiPart = new MimeMultipart(ds,contentType);
                 } else {
                     multiPart = new BMMimeMultipart(ds,contentType);
@@ -394,6 +425,7 @@ public abstract class MessageImpl
 
                 String startParam = contentType.getParameter("start");
                 MimeBodyPart soapMessagePart = null;
+                InputStream soapPartInputStream = null;
                 String contentID = null;
                 if (switchOffBM || switchOffLazyAttachment) {
                     if(startParam == null) {
@@ -410,36 +442,47 @@ public abstract class MessageImpl
                         }
                     }
                 } else {
-                    BMMimeMultipart bmMultipart =
-                        (BMMimeMultipart)multiPart;
-                    InputStream stream = bmMultipart.initStream();
-
-                    SharedInputStream sin = null;
-                    if (stream instanceof SharedInputStream) {
-                        sin = (SharedInputStream)stream;
-                    }
-
-                    String boundary = "--" +
-                        contentType.getParameter("boundary");
-                    byte[] bndbytes = ASCIIUtility.getBytes(boundary);
-                    if (startParam == null) {
-                        soapMessagePart =
-                            bmMultipart.getNextPart(stream, bndbytes, sin);
-                        bmMultipart.removeBodyPart(soapMessagePart);
+                    if (useMimePull) {
+                        MimePullMultipart mpMultipart = (MimePullMultipart)multiPart;
+                        MIMEPart sp = mpMultipart.readAndReturnSOAPPart();
+                        soapMessagePart = new MimeBodyPart(sp);
+                        soapPartInputStream = sp.readOnce();
                     } else {
-                        MimeBodyPart bp = null;
-                        try {
-                            while(!startParam.equals(contentID)) {
-                                bp = bmMultipart.getNextPart(
-                                    stream, bndbytes, sin);
-                                contentID = bp.getContentID();
+                        BMMimeMultipart bmMultipart =
+                                (BMMimeMultipart) multiPart;
+                        InputStream stream = bmMultipart.initStream();
+
+                        SharedInputStream sin = null;
+                        if (stream instanceof SharedInputStream) {
+                            sin = (SharedInputStream) stream;
+                        }
+
+                        String boundary = "--" +
+                                contentType.getParameter("boundary");
+                        byte[] bndbytes = ASCIIUtility.getBytes(boundary);
+                        if (startParam == null) {
+                            soapMessagePart =
+                                    bmMultipart.getNextPart(stream, bndbytes, sin);
+                            bmMultipart.removeBodyPart(soapMessagePart);
+                        } else {
+                            MimeBodyPart bp = null;
+                            try {
+                                while (!startParam.equals(contentID)) {
+                                    bp = bmMultipart.getNextPart(
+                                            stream, bndbytes, sin);
+                                    contentID = bp.getContentID();
+                                }
+                                soapMessagePart = bp;
+                                bmMultipart.removeBodyPart(bp);
+                            } catch (Exception e) {
+                                throw new SOAPExceptionImpl(e);
                             }
-                            soapMessagePart = bp;
-                            bmMultipart.removeBodyPart(bp);
-                        } catch (Exception e) {
-                            throw new SOAPExceptionImpl(e);
                         }
                     }
+                }
+
+                if (soapPartInputStream == null && soapMessagePart != null) {
+                    soapPartInputStream = soapMessagePart.getInputStream();
                 }
 
                 ContentType soapPartCType = new ContentType(
@@ -461,8 +504,8 @@ public abstract class MessageImpl
                 setMimeHeaders(soapPart, soapMessagePart);
                 soapPart.setContent(isFastInfoset ?
                      (Source) FastInfosetReflection.FastInfosetSource_new(
-                         soapMessagePart.getInputStream()) :
-                     (Source) new StreamSource(soapMessagePart.getInputStream()));
+                         soapPartInputStream) :
+                     (Source) new StreamSource(soapPartInputStream));
             } else {
                 log.severe("SAAJ0534.soap.unknown.Content-Type");
                 throw new SOAPExceptionImpl("Unrecognized Content-Type");
@@ -481,7 +524,7 @@ public abstract class MessageImpl
     public boolean acceptFastInfoset() {
         return acceptFastInfoset;
     }
-
+    
     public void setIsFastInfoset(boolean value) {
         if (value != isFastInfoset) {
             isFastInfoset = value;
@@ -491,7 +534,7 @@ public abstract class MessageImpl
             saved = false;      // ensure transcoding if necessary
         }
     }
-
+    
     public Object getProperty(String property) {
         return (String) properties.get(property);
     }
@@ -515,7 +558,7 @@ public abstract class MessageImpl
                     env.setOmitXmlDecl("yes");
                 }
             } catch (Exception e) {
-                log.log(Level.SEVERE, "SAAJ0591.soap.exception.in.set.property",
+                log.log(Level.SEVERE, "SAAJ0591.soap.exception.in.set.property", 
                     new Object[] {e.getMessage(), "javax.xml.soap.write-xml-declaration"});
                 throw new RuntimeException(e);
             }
@@ -526,7 +569,7 @@ public abstract class MessageImpl
             try {
                 ((EnvelopeImpl) getSOAPPart().getEnvelope()).setCharsetEncoding((String)value);
             } catch (Exception e) {
-                log.log(Level.SEVERE, "SAAJ0591.soap.exception.in.set.property",
+                log.log(Level.SEVERE, "SAAJ0591.soap.exception.in.set.property", 
                     new Object[] {e.getMessage(), "javax.xml.soap.character-set-encoding"});
                 throw new RuntimeException(e);
             }
@@ -534,7 +577,7 @@ public abstract class MessageImpl
     }
 
     protected abstract boolean isCorrectSoapVersion(int contentTypeId);
-
+    
     protected abstract String getExpectedContentType();
     protected abstract String getExpectedAcceptHeader();
 
@@ -551,26 +594,30 @@ public abstract class MessageImpl
      *      combination of flags, such as PLAIN_XML_CODE and MIME_MULTIPART_CODE.
      */
     // SOAP1.2 allow SOAP1.2 content type
-    static int identifyContentType(ContentType contentType)
+    static int identifyContentType(ContentType ct)
         throws SOAPExceptionImpl {
         // TBD
         //    Is there anything else we need to verify here?
 
-        String primary = contentType.getPrimaryType().toLowerCase();
-        String sub = contentType.getSubType().toLowerCase();
+        String primary = ct.getPrimaryType().toLowerCase();
+        String sub = ct.getSubType().toLowerCase();
 
         if (primary.equals("multipart")) {
             if (sub.equals("related")) {
-                String type = getTypeParameter(contentType);
+                String type = getTypeParameter(ct);
                 if (isEqualToSoap1_1Type(type)) {
                     return (type.equals("application/fastinfoset") ?
                            FI_ENCODED_FLAG : 0) | MIME_MULTIPART_FLAG | SOAP1_1_FLAG;
-                }
+                } 
                 else if (isEqualToSoap1_2Type(type)) {
                     return (type.equals("application/soap+fastinfoset") ?
                            FI_ENCODED_FLAG : 0) | MIME_MULTIPART_FLAG | SOAP1_2_FLAG;
-                } else if (isMimeMultipartXOPPackage(contentType)) {
-                    return MIME_MULTIPART_XOP_FLAG;
+                /*} else if (isMimeMultipartXOPPackage(ct)) {
+                    return MIME_MULTIPART_XOP_FLAG;*/
+                } else if (isMimeMultipartXOPSoap1_1Package(ct)) {
+                    return MIME_MULTIPART_XOP_SOAP1_1_FLAG;
+                } else if (isMimeMultipartXOPSoap1_2Package(ct)) {
+                    return MIME_MULTIPART_XOP_SOAP1_2_FLAG;
                 } else {
                     log.severe("SAAJ0536.soap.content-type.mustbe.multipart");
                     throw new SOAPExceptionImpl(
@@ -583,19 +630,19 @@ public abstract class MessageImpl
                 throw new SOAPExceptionImpl(
                     "Invalid Content-Type: " + primary + '/' + sub);
             }
-        }
+        } 
         else if (isSoap1_1Type(primary, sub)) {
             return (primary.equalsIgnoreCase("application")
                     && sub.equalsIgnoreCase("fastinfoset") ?
-                        FI_ENCODED_FLAG : 0)
+                        FI_ENCODED_FLAG : 0) 
                    | PLAIN_XML_FLAG | SOAP1_1_FLAG;
-        }
+        } 
         else if (isSoap1_2Type(primary, sub)) {
             return (primary.equalsIgnoreCase("application")
                     && sub.equalsIgnoreCase("soap+fastinfoset") ?
-                        FI_ENCODED_FLAG : 0)
+                        FI_ENCODED_FLAG : 0) 
                    | PLAIN_XML_FLAG | SOAP1_2_FLAG;
-        } else if(isSOAPBodyXOPPackage(contentType)){
+        } else if(isSOAPBodyXOPPackage(ct)){
             return XOP_FLAG;
         } else {
             log.severe("SAAJ0537.soap.invalid.content-type");
@@ -630,7 +677,7 @@ public abstract class MessageImpl
         else
             return values[0];
     }
-
+    
     /*
      * Get the complete ContentType value along with optional parameters.
      */
@@ -643,10 +690,14 @@ public abstract class MessageImpl
         needsSave();
     }
 
-    private ContentType ContentType() {
+    private ContentType contentType() {
         ContentType ct = null;
         try {
-            ct = new ContentType(getContentType());
+            String currentContent = getContentType();
+            if (currentContent == null) {
+                return this.contentType;
+            }
+            ct = new ContentType(currentContent);
         } catch (Exception e) {
             // what to do here?
         }
@@ -657,33 +708,33 @@ public abstract class MessageImpl
      * Return the MIME type string, without the parameters.
      */
     public String getBaseType() {
-        return ContentType().getBaseType();
+        return contentType().getBaseType();
     }
 
     public void setBaseType(String type) {
-        ContentType ct = ContentType();
+        ContentType ct = contentType();
         ct.setParameter("type", type);
         headers.setHeader("Content-Type", ct.toString());
         needsSave();
     }
 
     public String getAction() {
-        return ContentType().getParameter("action");
+        return contentType().getParameter("action");
     }
 
     public void setAction(String action) {
-        ContentType ct = ContentType();
+        ContentType ct = contentType();
         ct.setParameter("action", action);
         headers.setHeader("Content-Type", ct.toString());
         needsSave();
     }
 
     public String getCharset() {
-        return ContentType().getParameter("charset");
+        return contentType().getParameter("charset");
     }
 
     public void setCharset(String charset) {
-        ContentType ct = ContentType();
+        ContentType ct = contentType();
         ct.setParameter("charset", charset);
         headers.setHeader("Content-Type", ct.toString());
         needsSave();
@@ -743,6 +794,7 @@ public abstract class MessageImpl
     public void addAttachmentPart(AttachmentPart attachment) {
         try {
             initializeAllAttachments();
+            this.optimizeAttachmentProcessing = true;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -765,6 +817,18 @@ public abstract class MessageImpl
         if (attachments == null)
             return nullIter;
         return attachments.iterator();
+    }
+
+    private void setFinalContentType(String charset) {
+        ContentType ct = contentType();
+        if (ct == null) {
+            ct = new ContentType();
+        }
+        String[] split = getExpectedContentType().split("/");
+        ct.setPrimaryType(split[0]);
+        ct.setSubType(split[1]);
+        ct.setParameter("charset", charset);
+        headers.setHeader("Content-Type", ct.toString());
     }
 
     private class MimeMatchingIterator implements Iterator {
@@ -850,7 +914,7 @@ public abstract class MessageImpl
         return new AttachmentPartImpl();
     }
 
-    public  AttachmentPart getAttachment(SOAPElement element)
+    public  AttachmentPart getAttachment(SOAPElement element) 
         throws SOAPException {
         try {
             initializeAllAttachments();
@@ -889,24 +953,24 @@ public abstract class MessageImpl
         return null;
     }
 
-
+    
     private AttachmentPart getAttachmentPart(String uri) throws SOAPException {
         AttachmentPart _part;
         try {
             if (uri.startsWith("cid:")) {
                 // rfc2392
                 uri = '<'+uri.substring("cid:".length())+'>';
-
+                
                 MimeHeaders headersToMatch = new MimeHeaders();
                 headersToMatch.addHeader(CONTENT_ID, uri);
-
+                
                 Iterator i = this.getAttachments(headersToMatch);
                 _part = (i == null) ? null : (AttachmentPart)i.next();
             } else {
                 // try content-location
                 MimeHeaders headersToMatch = new MimeHeaders();
                 headersToMatch.addHeader(CONTENT_LOCATION, uri);
-
+                   
                 Iterator i = this.getAttachments(headersToMatch);
                 _part = (i == null) ? null : (AttachmentPart)i.next();
             }
@@ -914,11 +978,11 @@ public abstract class MessageImpl
             // try  auto-generated JAXRPC CID
             if (_part == null) {
                 Iterator j = this.getAttachments();
-
+                    
                 while (j.hasNext()) {
                     AttachmentPart p = (AttachmentPart)j.next();
                     String cl = p.getContentId();
-                    if (cl != null) {
+                    if (cl != null) {    
                         // obtain the partname
                         int eqIndex = cl.indexOf("=");
                         if (eqIndex > -1) {
@@ -928,18 +992,18 @@ public abstract class MessageImpl
                                  break;
                             }
                         }
-                    }
+                    } 
                 }
             }
-
+            
         } catch (Exception se) {
             log.log(Level.SEVERE, "SAAJ0590.soap.unable.to.locate.attachment", new Object[] {uri});
             throw new SOAPExceptionImpl(se);
         }
         return _part;
     }
-
-    private final ByteInputStream getHeaderBytes()
+    
+    private final InputStream getHeaderBytes()
         throws IOException {
         SOAPPartImpl sp = (SOAPPartImpl) getSOAPPart();
         return sp.getContentAsStream();
@@ -959,13 +1023,13 @@ public abstract class MessageImpl
         try {
             SOAPPartImpl soapPart = (SOAPPartImpl) getSOAPPart();
             MimeBodyPart mimeSoapPart = soapPart.getMimePart();
-
+            
             /*
              * Get content type from this message instead of soapPart
              * to ensure agreement if soapPart is transcoded (XML <-> FI)
              */
-            ContentType soapPartCtype = new ContentType(getExpectedContentType());
-
+            ContentType soapPartCtype = new ContentType(getExpectedContentType());          
+            
             if (!isFastInfoset) {
                 soapPartCtype.setParameter("charset", initCharset());
             }
@@ -973,11 +1037,11 @@ public abstract class MessageImpl
 
             MimeMultipart headerAndBody = null;
 
-            if (!switchOffBM && !switchOffLazyAttachment &&
+            if (!switchOffBM && !switchOffLazyAttachment && 
                    (multiPart != null) && !attachmentsInitialized) {
                 headerAndBody = new BMMimeMultipart();
                 headerAndBody.addBodyPart(mimeSoapPart);
-                if (attachments != null) {
+                if (attachments != null) { 
                     for (Iterator eachAttachment = attachments.iterator();
                          eachAttachment.hasNext();) {
                         headerAndBody.addBodyPart(
@@ -995,7 +1059,7 @@ public abstract class MessageImpl
                         setLazyAttachments(lazyAttachments);
                 }
 
-            } else {
+            } else { 
                 headerAndBody = new MimeMultipart();
                 headerAndBody.addBodyPart(mimeSoapPart);
 
@@ -1077,7 +1141,7 @@ public abstract class MessageImpl
         /*if (countAttachments() == 0) {*/
         int attachmentCount = (attachments == null) ? 0 : attachments.size();
         if (attachmentCount == 0) {
-            if (!switchOffBM && !switchOffLazyAttachment &&
+            if (!switchOffBM && !switchOffLazyAttachment && 
                 !attachmentsInitialized && (multiPart != null)) {
                 // so there might be attachments
                 attachmentCount = 1;
@@ -1086,7 +1150,7 @@ public abstract class MessageImpl
 
         try {
             if ((attachmentCount == 0) && !hasXOPContent()) {
-                ByteInputStream in;
+                InputStream in;
                 try{
                 /*
                  * Not sure why this is called getHeaderBytes(), but it actually
@@ -1096,6 +1160,9 @@ public abstract class MessageImpl
                     in = getHeaderBytes();
                     // no attachments, hence this property can be false
                     this.optimizeAttachmentProcessing = false;
+                    if (SOAPPartImpl.lazyContentLength) {
+                        inputStreamAfterSaveChanges = in;
+                    }
                 } catch (IOException ex) {
                     log.severe("SAAJ0539.soap.cannot.get.header.stream");
                     throw new SOAPExceptionImpl(
@@ -1103,16 +1170,23 @@ public abstract class MessageImpl
                             ex);
                 }
 
-                messageBytes = in.getBytes();
-                messageByteCount = in.getCount();
+                if (in instanceof ByteInputStream) {
+                    ByteInputStream bIn = (ByteInputStream)in;
+                    messageBytes = bIn.getBytes();
+                    messageByteCount = bIn.getCount();
+                }
 
+                setFinalContentType(charset);
+                /*
                 headers.setHeader(
                         "Content-Type",
                         getExpectedContentType() +
-                        (isFastInfoset ? "" : "; charset=" + charset));
-                headers.setHeader(
-                    "Content-Length",
-                    Integer.toString(messageByteCount));
+                        (isFastInfoset ? "" : "; charset=" + charset));*/
+                if (messageByteCount > 0) {
+                    headers.setHeader(
+                            "Content-Length",
+                            Integer.toString(messageByteCount));
+                }
             } else {
                 if(hasXOPContent())
                     mmp = getXOPMessage();
@@ -1135,7 +1209,7 @@ public abstract class MessageImpl
             if (soapAction == null || soapAction.length == 0)
                 headers.setHeader("SOAPAction", "\"\"");
 
-        }
+        } 
         */
 
         saved = true;
@@ -1153,7 +1227,7 @@ public abstract class MessageImpl
             soapPartCtype.setParameter("charset", charset);
             mimeSoapPart.setHeader("Content-Type", soapPartCtype.toString());
             headerAndBody.addBodyPart(mimeSoapPart);
-
+                                                                                                                                
             for (Iterator eachAttachement = getAttachments();
                 eachAttachement.hasNext();
                 ) {
@@ -1161,23 +1235,23 @@ public abstract class MessageImpl
                     ((AttachmentPartImpl) eachAttachement.next())
                         .getMimePart());
             }
-
+                                                                                                                                
             ContentType contentType = headerAndBody.getContentType();
-
+                                                                                                                                
             ParameterList l = contentType.getParameterList();
-
+                                                                                                                                
             //lets not write start-info for now till we get servlet fix done
             l.set("start-info", getExpectedContentType());//+";charset="+initCharset());
-
+                                                                                                                                
             // set content type depending on SOAP version
             l.set("type", "application/xop+xml");
 
-            if (isCorrectSoapVersion(SOAP1_2_FLAG)) {
+            if (isCorrectSoapVersion(SOAP1_2_FLAG)) { 
                  String action = getAction();
                  if(action != null)
                      l.set("action", action);
             }
-
+       
             l.set("boundary", contentType.getParameter("boundary"));
             ContentType nct = new ContentType("Multipart", "Related", l);
             headers.setHeader(
@@ -1185,7 +1259,7 @@ public abstract class MessageImpl
                 convertToSingleLine(nct.toString()));
             // TBD
             //    Set content length MIME header here.
-
+                                                                                                                                
             return headerAndBody;
         } catch (SOAPException ex) {
             throw ex;
@@ -1196,7 +1270,7 @@ public abstract class MessageImpl
                     + "a MimeMultipart object",
                 ex);
         }
-
+                                                                                                                                
     }
 
     private boolean hasXOPContent() throws ParseException {
@@ -1204,7 +1278,10 @@ public abstract class MessageImpl
         if(type == null)
             return false;
         ContentType ct = new ContentType(type);
-        return isMimeMultipartXOPPackage(ct) || isSOAPBodyXOPPackage(ct);
+        //return isMimeMultipartXOPPackage(ct) || isSOAPBodyXOPPackage(ct);
+        return isMimeMultipartXOPSoap1_1Package(ct) ||
+            isMimeMultipartXOPSoap1_2Package(ct) || isSOAPBodyXOPPackage(ct);
+
     }
 
     public void writeTo(OutputStream out) throws SOAPException, IOException {
@@ -1214,7 +1291,22 @@ public abstract class MessageImpl
         }
 
         if(!optimizeAttachmentProcessing){
-            out.write(messageBytes, 0, messageByteCount);
+            if (SOAPPartImpl.lazyContentLength && messageByteCount <= 0) {
+                byte[] buf = new byte[1024];
+
+                int length = 0;
+                while( (length = inputStreamAfterSaveChanges.read(buf)) != -1) {
+                    out.write(buf,0, length);
+                    messageByteCount += length;
+                }
+                if (messageByteCount > 0) {
+                    headers.setHeader(
+                            "Content-Length",
+                            Integer.toString(messageByteCount));
+                }
+            } else {
+                out.write(messageBytes, 0, messageByteCount);
+            }
         }
         else{
             try{
@@ -1227,12 +1319,12 @@ public abstract class MessageImpl
                         ((BMMimeMultipart)multiPart).setInputStream(
                                 ((BMMimeMultipart)mmp).getInputStream());
                     }
-                }
+                } 
             } catch(Exception ex){
                 log.severe("SAAJ0540.soap.err.saving.multipart.msg");
                 throw new SOAPExceptionImpl(
                         "Error during saving a multipart message",
-                        ex);
+                        ex);                
             }
         }
 
@@ -1243,12 +1335,12 @@ public abstract class MessageImpl
             if (soapAction == null || soapAction.length == 0)
                 headers.setHeader("SOAPAction", "\"\"");
 
-        }
-
+        } 
+        
         messageBytes = null;
         needsSave();
     }
-
+    
     public SOAPBody getSOAPBody() throws SOAPException {
         SOAPBody body = getSOAPPart().getEnvelope().getBody();
         /*if (body == null) {
@@ -1265,7 +1357,7 @@ public abstract class MessageImpl
         return hdr;
     }
 
-    private void initializeAllAttachments ()
+    private void initializeAllAttachments () 
         throws MessagingException, SOAPException {
         if (switchOffBM || switchOffLazyAttachment) {
             return;
@@ -1274,10 +1366,10 @@ public abstract class MessageImpl
         if (attachmentsInitialized || (multiPart == null)) {
             return;
         }
-
+                                                                                
         if (attachments == null)
             attachments = new FinalArrayList();
-
+                                                                                
         int count = multiPart.getCount();
         for (int i=0; i < count; i++ ) {
             initializeAttachment(multiPart.getBodyPart(i));
@@ -1286,12 +1378,12 @@ public abstract class MessageImpl
         //multiPart = null;
         needsSave();
      }
-
+                                                                                
     private void initializeAttachment(MimeBodyPart mbp) throws SOAPException {
         AttachmentPartImpl attachmentPart = new AttachmentPartImpl();
         DataHandler attachmentHandler = mbp.getDataHandler();
         attachmentPart.setDataHandler(attachmentHandler);
-
+                                                                                
         AttachmentPartImpl.copyMimeHeaders(mbp, attachmentPart);
         attachments.add(attachmentPart);
     }

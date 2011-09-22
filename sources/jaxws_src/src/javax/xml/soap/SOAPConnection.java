@@ -22,13 +22,6 @@
  * CA 95054 USA or visit www.sun.com if you need additional information or
  * have any questions.
  */
-/*
- * $Id: SOAPConnection.java,v 1.13 2006/03/30 00:59:40 ofung Exp $
- * $Revision: 1.13 $
- * $Date: 2006/03/30 00:59:40 $
- */
-
-
 package javax.xml.soap;
 
 
@@ -90,12 +83,12 @@ public abstract class SOAPConnection {
                                 throws SOAPException {
         throw new UnsupportedOperationException("All subclasses of SOAPConnection must override get()");
     }
-
+    
     /**
      * Closes this <code>SOAPConnection</code> object.
      *
      * @throws SOAPException if there is a SOAP error
      */
-    public abstract void close()
-        throws SOAPException;
+    public abstract void close() 
+        throws SOAPException; 
 }

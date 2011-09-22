@@ -51,7 +51,7 @@ public interface JavaMethod {
      * {@link @WebService}(endpointInterface="I")
      * class A { }
      *
-     * In this case, it retuns A's method
+     * In this case, it retuns A's method 
      *
      * <p>
      * {@link @WebService}(endpointInterface="I")
@@ -62,7 +62,7 @@ public interface JavaMethod {
      * {@link @WebService}
      * class A { }
      * In this case, it returns A's method
-     *
+     *  
      * @return Returns the java {@link Method}
      */
     @NotNull Method getMethod();

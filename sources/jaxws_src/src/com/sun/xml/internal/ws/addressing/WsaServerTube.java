@@ -26,15 +26,15 @@
 package com.sun.xml.internal.ws.addressing;
 
 import com.sun.istack.internal.NotNull;
-import static com.sun.xml.internal.ws.addressing.W3CAddressingConstants.ONLY_ANONYMOUS_ADDRESS_SUPPORTED;
-import static com.sun.xml.internal.ws.addressing.W3CAddressingConstants.ONLY_NON_ANONYMOUS_ADDRESS_SUPPORTED;
+import com.sun.istack.internal.Nullable;
 import com.sun.xml.internal.ws.addressing.model.ActionNotSupportedException;
 import com.sun.xml.internal.ws.addressing.model.InvalidAddressingHeaderException;
-import com.sun.xml.internal.ws.addressing.model.MissingAddressingHeaderException;
 import com.sun.xml.internal.ws.api.EndpointAddress;
 import com.sun.xml.internal.ws.api.SOAPVersion;
 import com.sun.xml.internal.ws.api.WSBinding;
-import com.sun.xml.internal.ws.api.addressing.AddressingVersion;
+import com.sun.xml.internal.ws.api.WSService;
+import com.sun.xml.internal.ws.api.client.WSPortInfo;
+
 import com.sun.xml.internal.ws.api.addressing.WSEndpointReference;
 import com.sun.xml.internal.ws.api.message.HeaderList;
 import com.sun.xml.internal.ws.api.message.Message;
@@ -45,8 +45,10 @@ import com.sun.xml.internal.ws.api.model.wsdl.WSDLPort;
 import com.sun.xml.internal.ws.api.pipe.*;
 import com.sun.xml.internal.ws.api.server.WSEndpoint;
 import com.sun.xml.internal.ws.developer.JAXWSProperties;
+import com.sun.xml.internal.ws.developer.WSBindingProvider;
 import com.sun.xml.internal.ws.message.FaultDetailHeader;
 import com.sun.xml.internal.ws.resources.AddressingMessages;
+import com.sun.xml.internal.ws.binding.BindingImpl;
 
 import javax.xml.soap.SOAPFault;
 import javax.xml.ws.WebServiceException;
@@ -70,7 +72,7 @@ public class WsaServerTube extends WsaTube {
     private boolean isAnonymousRequired = false;
     /**
      * WSDLBoundOperation calculated on the Request payload.
-     * Used for determining ReplyTo or Fault Action for non-anonymous responses     *
+     * Used for determining ReplyTo or Fault Action for non-anonymous responses     * 
      */
     private WSDLBoundOperation wbo;
     public WsaServerTube(WSEndpoint endpoint, @NotNull WSDLPort wsdlPort, WSBinding binding, Tube next) {
@@ -88,11 +90,12 @@ public class WsaServerTube extends WsaTube {
         return new WsaServerTube(this, cloner);
     }
 
+    @Override
     public @NotNull NextAction processRequest(Packet request) {
         Message msg = request.getMessage();
         if(msg==null)   return doInvoke(next,request); // hmm?
 
-        // expose bunch of addressing related properties for advanced applications
+        // expose bunch of addressing related properties for advanced applications 
         request.addSatellite(new WsaPropertyBag(addressingVersion,soapVersion,request));
 
         // Store request ReplyTo and FaultTo in requestPacket.invocationProperties
@@ -128,8 +131,8 @@ public class WsaServerTube extends WsaTube {
         if (faultTo == null)    faultTo = replyTo;
 
         wbo = getWSDLBoundOperation(request);
-        if(wbo != null && wbo.getAnonymous()== WSDLBoundOperation.ANONYMOUS.required)
-            isAnonymousRequired = true;
+        isAnonymousRequired = isAnonymousRequired(wbo);
+
         Packet p = validateInboundHeaders(request);
         // if one-way message and WS-A header processing fault has occurred,
         // then do no further processing
@@ -153,6 +156,15 @@ public class WsaServerTube extends WsaTube {
                 request.transportBackChannel != null)
             request.transportBackChannel.close();
         return doInvoke(next,p);
+    }
+
+    protected boolean isAnonymousRequired(@Nullable WSDLBoundOperation wbo) {
+        //this requirement can only be specified in W3C case, Override this in W3C case.
+        return false;
+    }
+
+    protected void checkAnonymousSemantics(WSDLBoundOperation wbo, WSEndpointReference replyTo, WSEndpointReference faultTo) {
+        //this requirement can only be specified in W3C case, Override this in W3C case.
     }
 
     @Override
@@ -217,7 +229,7 @@ public class WsaServerTube extends WsaTube {
         // we need to assemble a pipeline to talk to this endpoint.
         // TODO: what to pass as WSService?
         Tube transport = TransportTubeFactory.create(Thread.currentThread().getContextClassLoader(),
-            new ClientTubeAssemblerContext(adrs, wsdlPort, null, binding,endpoint.getContainer()));
+            new ClientTubeAssemblerContext(adrs, wsdlPort, (WSService) null, binding,endpoint.getContainer(),((BindingImpl)binding).createCodec(),null));
 
         packet.endpointAddress = adrs;
         String action = packet.getMessage().isFault() ?
@@ -233,9 +245,9 @@ public class WsaServerTube extends WsaTube {
     protected void validateAction(Packet packet) {
         //There may not be a WSDL operation.  There may not even be a WSDL.
         //For instance this may be a RM CreateSequence message.
-        WSDLBoundOperation wbo = getWSDLBoundOperation(packet);
+        WSDLBoundOperation wsdlBoundOperation = getWSDLBoundOperation(packet);
 
-        if (wbo == null)
+        if (wsdlBoundOperation == null)
             return;
 
         String gotA = packet.getMessage().getHeaders().getAction(addressingVersion, soapVersion);
@@ -253,12 +265,13 @@ public class WsaServerTube extends WsaTube {
         }
     }
 
+    @Override
     protected void checkMessageAddressingProperties(Packet packet) {
         super.checkMessageAddressingProperties(packet);
 
         // wsaw:Anonymous validation
-        WSDLBoundOperation wbo = getWSDLBoundOperation(packet);
-        checkAnonymousSemantics(wbo, replyTo, faultTo);
+        WSDLBoundOperation wsdlBoundOperation = getWSDLBoundOperation(packet);
+        checkAnonymousSemantics(wsdlBoundOperation, replyTo, faultTo);
          // check if addresses are valid
         checkNonAnonymousAddresses(replyTo,faultTo);
     }
@@ -269,7 +282,7 @@ public class WsaServerTube extends WsaTube {
                 new EndpointAddress(URI.create(replyTo.getAddress()));
             } catch (Exception e) {
                 throw new InvalidAddressingHeaderException(addressingVersion.replyToTag, addressingVersion.invalidAddressTag);
-            }
+            } 
         }
         //for now only validate ReplyTo
         /*
@@ -283,50 +296,7 @@ public class WsaServerTube extends WsaTube {
         */
 
     }
-
-    final void checkAnonymousSemantics(WSDLBoundOperation wbo, WSEndpointReference replyTo, WSEndpointReference faultTo) {
-        // no check if Addressing is not enabled or is Member Submission
-        if (addressingVersion == null || addressingVersion == AddressingVersion.MEMBER)
-            return;
-
-        if (wbo == null)
-            return;
-
-        WSDLBoundOperation.ANONYMOUS anon = wbo.getAnonymous();
-
-        String replyToValue = null;
-        String faultToValue = null;
-
-        if (replyTo != null)
-            replyToValue = replyTo.getAddress();
-
-        if (faultTo != null)
-            faultToValue = faultTo.getAddress();
-
-        switch (anon) {
-        case optional:
-            // no check is required
-            break;
-        case prohibited:
-            if (replyToValue != null && replyToValue.equals(addressingVersion.anonymousUri))
-                throw new InvalidAddressingHeaderException(addressingVersion.replyToTag, ONLY_NON_ANONYMOUS_ADDRESS_SUPPORTED);
-
-            if (faultToValue != null && faultToValue.equals(addressingVersion.anonymousUri))
-                throw new InvalidAddressingHeaderException(addressingVersion.faultToTag, ONLY_NON_ANONYMOUS_ADDRESS_SUPPORTED);
-            break;
-        case required:
-            if (replyToValue != null && !replyToValue.equals(addressingVersion.anonymousUri))
-                throw new InvalidAddressingHeaderException(addressingVersion.replyToTag, ONLY_ANONYMOUS_ADDRESS_SUPPORTED);
-
-            if (faultToValue != null && !faultToValue.equals(addressingVersion.anonymousUri))
-                throw new InvalidAddressingHeaderException(addressingVersion.faultToTag, ONLY_ANONYMOUS_ADDRESS_SUPPORTED);
-            break;
-        default:
-            // cannot reach here
-            throw new WebServiceException(AddressingMessages.INVALID_WSAW_ANONYMOUS(anon.toString()));
-        }
-    }
-
+    
     /**
      * @deprecated
      *      Use {@link JAXWSProperties#ADDRESSING_MESSAGEID}.

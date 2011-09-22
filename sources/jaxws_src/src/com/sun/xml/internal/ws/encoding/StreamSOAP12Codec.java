@@ -27,6 +27,8 @@ package com.sun.xml.internal.ws.encoding;
 
 import com.sun.xml.internal.stream.buffer.XMLStreamBuffer;
 import com.sun.xml.internal.ws.api.SOAPVersion;
+import com.sun.xml.internal.ws.api.message.Packet;
+import com.sun.xml.internal.ws.api.message.AttachmentSet;
 import com.sun.xml.internal.ws.api.pipe.ContentType;
 import com.sun.xml.internal.ws.message.stream.StreamHeader;
 import com.sun.xml.internal.ws.message.stream.StreamHeader12;
@@ -34,6 +36,8 @@ import com.sun.xml.internal.ws.message.stream.StreamHeader12;
 import javax.xml.stream.XMLStreamReader;
 import java.util.Collections;
 import java.util.List;
+import java.io.InputStream;
+import java.io.IOException;
 
 /**
  * {@link StreamSOAPCodec} for SOAP 1.2.
@@ -42,7 +46,7 @@ import java.util.List;
  */
 final class StreamSOAP12Codec extends StreamSOAPCodec {
     public static final String SOAP12_MIME_TYPE = "application/soap+xml";
-    public static final String SOAP12_CONTENT_TYPE = SOAP12_MIME_TYPE+";charset=\"utf-8\"";
+    public static final String SOAP12_CONTENT_TYPE = SOAP12_MIME_TYPE+";charset=utf-8";
 
     private static final List<String> expectedContentTypes = Collections.singletonList(SOAP12_MIME_TYPE);
 
@@ -53,7 +57,7 @@ final class StreamSOAP12Codec extends StreamSOAPCodec {
     public String getMimeType() {
         return SOAP12_MIME_TYPE;
     }
-
+    
     @Override
     protected final StreamHeader createHeader(XMLStreamReader reader, XMLStreamBuffer mark) {
         return new StreamHeader12(reader, mark);
@@ -68,10 +72,29 @@ final class StreamSOAP12Codec extends StreamSOAPCodec {
         if (soapAction == null) {
             return defaultContentType;
         } else {
-            return new ContentTypeImpl(SOAP12_CONTENT_TYPE + ";action=\""+soapAction+"\"");
+            return new ContentTypeImpl(SOAP12_CONTENT_TYPE + ";action="+fixQuotesAroundSoapAction(soapAction));
         }
     }
 
+    @Override
+    public void decode(InputStream in, String contentType, Packet packet, AttachmentSet att ) throws IOException {
+        com.sun.xml.internal.ws.encoding.ContentType ct = new com.sun.xml.internal.ws.encoding.ContentType(contentType);
+        packet.soapAction = fixQuotesAroundSoapAction(ct.getParameter("action"));
+        super.decode(in,contentType,packet,att);
+    }
+
+    private String fixQuotesAroundSoapAction(String soapAction) {
+        if(soapAction != null && (!soapAction.startsWith("\"") || !soapAction.endsWith("\"")) ) {
+            String fixedSoapAction = soapAction;
+            if(!soapAction.startsWith("\""))
+                fixedSoapAction = "\"" + fixedSoapAction;
+            if(!soapAction.endsWith("\""))
+                fixedSoapAction = fixedSoapAction + "\"";
+            return fixedSoapAction;
+        }
+        return soapAction;
+    }
+    
     protected List<String> getExpectedContentTypes() {
         return expectedContentTypes;
     }

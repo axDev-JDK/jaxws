@@ -33,7 +33,7 @@ import java.util.Collections;
  * A special {@link JClass} that represents an unknown class (except its name.)
  *
  * @author Kohsuke Kawaguchi
- * @see JCodeModel#directClass(String)
+ * @see JCodeModel#directClass(String) 
  */
 final class JDirectClass extends JClass {
 

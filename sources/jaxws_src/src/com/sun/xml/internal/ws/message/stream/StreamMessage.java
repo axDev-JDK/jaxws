@@ -75,7 +75,7 @@ public final class StreamMessage extends AbstractMessageImpl {
     private @NotNull XMLStreamReader reader;
 
     // lazily created
-    private @Nullable HeaderList headers;
+    private @Nullable HeaderList headers;    
 
     private final String payloadLocalName;
 
@@ -155,7 +155,7 @@ public final class StreamMessage extends AbstractMessageImpl {
         this(headers,attachmentSet,reader,soapVersion);
         assert envelopeTag!=null && bodyTag!=null;
         this.envelopeTag = envelopeTag;
-        this.headerTag = headerTag!=null ? headerTag :
+        this.headerTag = headerTag!=null ? headerTag : 
             new TagInfoset(envelopeTag.nsUri,"Header",envelopeTag.prefix,EMPTY_ATTS);
         this.bodyTag = bodyTag;
     }
@@ -170,12 +170,7 @@ public final class StreamMessage extends AbstractMessageImpl {
         }
         return headers;
     }
-
-    @Override
-    public @NotNull AttachmentSet getAttachments() {
-        return attachmentSet;
-    }
-
+    
     public String getPayloadLocalPart() {
         return payloadLocalName;
     }
@@ -334,7 +329,7 @@ public final class StreamMessage extends AbstractMessageImpl {
                 return; // no body
 
             XMLStreamReaderToContentHandler conv =
-                new XMLStreamReaderToContentHandler(reader,contentHandler,true,fragment);
+                new XMLStreamReaderToContentHandler(reader,contentHandler,true,fragment,getInscopeNamespaces());
 
             while(reader.getEventType() != XMLStreamConstants.END_DOCUMENT){
                 String name = reader.getLocalName();
@@ -368,7 +363,7 @@ public final class StreamMessage extends AbstractMessageImpl {
                 e.getMessage(),loc.getPublicId(),loc.getSystemId(),loc.getLineNumber(),loc.getColumnNumber(),e);
             errorHandler.error(x);
         }
-    }
+    }        
 
     public Message copy() {
         try {

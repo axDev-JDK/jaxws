@@ -110,7 +110,7 @@ class TypeInfoSetImpl<T,C,F,M> implements TypeInfoSet<T,C,F,M> {
      */
     private final Map<C,Map<QName,ElementInfoImpl<T,C,F,M>>> elementMappings =
         new LinkedHashMap<C,Map<QName,ElementInfoImpl<T,C,F,M>>>();
-
+    
     private final Iterable<? extends ElementInfoImpl<T,C,F,M>> allElements =
         new Iterable<ElementInfoImpl<T,C,F,M>>() {
             public Iterator<ElementInfoImpl<T,C,F,M>> iterator() {

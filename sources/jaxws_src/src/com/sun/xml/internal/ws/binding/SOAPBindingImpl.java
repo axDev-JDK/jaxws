@@ -75,7 +75,7 @@ public final class SOAPBindingImpl extends BindingImpl implements SOAPBinding {
      * @param features
      *      These features have a precedence over
      *      {@link BindingID#createBuiltinFeatureList() the implicit features}
-     *      associated with the {@link BindingID}.
+     *      associated with the {@link BindingID}. 
      */
     SOAPBindingImpl(BindingID bindingId, WebServiceFeature... features) {
         super(bindingId);
@@ -103,7 +103,7 @@ public final class SOAPBindingImpl extends BindingImpl implements SOAPBinding {
     }
 
     /**
-     * This method separates the logical and protocol handlers.
+     * This method separates the logical and protocol handlers. 
      * Also parses Headers understood by SOAPHandlers and
      * sets the HandlerConfiguration.
      */

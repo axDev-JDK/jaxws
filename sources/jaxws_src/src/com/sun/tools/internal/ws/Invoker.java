@@ -28,13 +28,16 @@ package com.sun.tools.internal.ws;
 import com.sun.istack.internal.tools.MaskingClassLoader;
 import com.sun.istack.internal.tools.ParallelWorldClassLoader;
 import com.sun.tools.internal.ws.resources.WscompileMessages;
+import com.sun.tools.internal.ws.wscompile.Options;
 import com.sun.tools.internal.xjc.api.util.ToolsJarNotFoundException;
 import com.sun.xml.internal.bind.util.Which;
 
 import javax.xml.ws.Service;
 import javax.xml.ws.WebServiceFeature;
+import javax.xml.namespace.QName;
 import java.io.File;
 import java.io.OutputStream;
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -69,13 +72,25 @@ public final class Invoker {
             if(Arrays.asList(args).contains("-Xendorsed"))
                 cl = createClassLoader(cl); // perform JDK6 workaround hack
             else {
-                if(!checkIfLoading21API()) {
-                    if(Service.class.getClassLoader()==null)
-                        System.err.println(WscompileMessages.INVOKER_NEED_ENDORSED());
-                    else
-                        System.err.println(WscompileMessages.WRAPPER_TASK_LOADING_20_API(Which.which(Service.class)));
+                int targetArgIndex = Arrays.asList(args).indexOf("-target"); 
+                Options.Target targetVersion;
+                if (targetArgIndex != -1) {
+                    targetVersion = Options.Target.parse(args[targetArgIndex+1]);
+                } else {
+                    targetVersion = Options.Target.getDefault();
+                }
+                Options.Target loadedVersion = Options.Target.getLoadedAPIVersion();
+
+                //Check if the target version is supported by the loaded API version
+                if (!loadedVersion.isLaterThan(targetVersion)) {
+                    if (Service.class.getClassLoader() == null)
+                        System.err.println(WscompileMessages.INVOKER_NEED_ENDORSED(loadedVersion.getVersion(), targetVersion.getVersion()));
+                    else {
+                        System.err.println(WscompileMessages.WRAPPER_TASK_LOADING_INCORRECT_API(loadedVersion.getVersion(), Which.which(Service.class), targetVersion.getVersion()));
+                    }
                     return -1;
                 }
+
                 //find and load tools.jar
                 List<URL> urls = new ArrayList<URL>();
                 findToolsJar(cl, urls);
@@ -95,7 +110,7 @@ public final class Invoker {
                 }
 
             }
-
+            
             Thread.currentThread().setContextClassLoader(cl);
 
             Class compileTool = cl.loadClass(mainClass);
@@ -133,12 +148,28 @@ public final class Invoker {
     }
 
     /**
-     * Creates a classloader that can load JAXB/WS 2.1 API and tools.jar,
-     * and then return a classloader that can RI classes, which can see all those APIs and tools.jar.
-     */
-    public static ClassLoader createClassLoader(ClassLoader cl) throws ClassNotFoundException, MalformedURLException, ToolsJarNotFoundException {
+    * Returns true if the RI appears to be loading the JAX-WS 2.2 API.
+    */
+   public static boolean checkIfLoading22API() {
+       try {
+           Service.class.getMethod("create",java.net.URL.class, QName.class, WebServiceFeature[].class);
+           // yup. things look good.
+           return true;
+       } catch (NoSuchMethodException e) {
+       } catch (LinkageError e) {
+       }
+       // nope
+       return false;
+   }
 
-        URL[] urls = findIstackAPIs(cl);
+
+    /**
+     * Creates a classloader that can load JAXB/WS 2.2 API and tools.jar,
+     * and then return a classloader that can RI classes, which can see all those APIs and tools.jar.  
+     */
+    public static ClassLoader createClassLoader(ClassLoader cl) throws ClassNotFoundException, IOException, ToolsJarNotFoundException {
+
+        URL[] urls = findIstack22APIs(cl);
         if(urls.length==0)
             return cl;  // we seem to be able to load everything already. no need for the hack
 
@@ -165,7 +196,7 @@ public final class Invoker {
     /**
      * Creates a classloader for loading JAXB/WS 2.1 jar and tools.jar
      */
-    private static URL[] findIstackAPIs(ClassLoader cl) throws ClassNotFoundException, MalformedURLException, ToolsJarNotFoundException {
+    private static URL[] findIstack21APIs(ClassLoader cl) throws ClassNotFoundException, MalformedURLException, ToolsJarNotFoundException {
         List<URL> urls = new ArrayList<URL>();
 
         if(Service.class.getClassLoader()==null) {
@@ -178,6 +209,28 @@ public final class Invoker {
             res = cl.getResource("javax/xml/bind/annotation/XmlSeeAlso.class");
             if(res==null)
                 throw new ClassNotFoundException("There's no JAXB 2.1 API in the classpath");
+            urls.add(ParallelWorldClassLoader.toJarUrl(res));
+        }
+
+        findToolsJar(cl, urls);
+
+        return urls.toArray(new URL[urls.size()]);
+    }
+    /**
+     * Creates a classloader for loading JAXB/WS 2.2 jar and tools.jar
+     */
+    private static URL[] findIstack22APIs(ClassLoader cl) throws ClassNotFoundException, IOException, ToolsJarNotFoundException {
+        List<URL> urls = new ArrayList<URL>();
+
+        if(Service.class.getClassLoader()==null) {
+            // JAX-WS API is loaded from bootstrap classloader
+            URL res = cl.getResource("javax/xml/ws/EndpointContext.class");
+            if(res==null)
+                throw new ClassNotFoundException("There's no JAX-WS 2.2 API in the classpath");
+            urls.add(ParallelWorldClassLoader.toJarUrl(res));
+            res = cl.getResource("javax/xml/bind/JAXBPermission.class");
+            if(res==null)
+                throw new ClassNotFoundException("There's no JAXB 2.2 API in the classpath");
             urls.add(ParallelWorldClassLoader.toJarUrl(res));
         }
 

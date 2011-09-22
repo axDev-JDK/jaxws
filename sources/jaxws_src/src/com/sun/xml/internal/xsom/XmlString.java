@@ -83,9 +83,9 @@ public final class XmlString {
      * as defined in the XML Namespaces Recommendation.
      *
      * @return
-     *          namespace URI of this prefix.
-     *          If the specified prefix is not declared,
-     *          the implementation returns null.
+     *		namespace URI of this prefix.
+     *		If the specified prefix is not declared,
+     *		the implementation returns null.
      */
     public final String resolvePrefix(String prefix) {
         return context.resolveNamespacePrefix(prefix);

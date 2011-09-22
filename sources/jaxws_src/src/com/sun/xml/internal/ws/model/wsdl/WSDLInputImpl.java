@@ -55,7 +55,7 @@ public final class WSDLInputImpl extends AbstractExtensibleImpl implements WSDLI
     public String getName() {
         if(name != null)
             return name;
-
+        
         return (operation.isOneWay())?operation.getName().getLocalPart():operation.getName().getLocalPart()+"Request";
     }
 
@@ -87,7 +87,7 @@ public final class WSDLInputImpl extends AbstractExtensibleImpl implements WSDLI
     public void setDefaultAction(boolean defaultAction) {
         this.defaultAction = defaultAction;
     }
-
+    
     void freeze(WSDLModelImpl parent) {
         message = parent.getMessage(messageName);
     }

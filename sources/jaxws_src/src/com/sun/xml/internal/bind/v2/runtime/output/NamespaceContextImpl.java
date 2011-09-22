@@ -165,7 +165,9 @@ public final class NamespaceContextImpl implements NamespaceContext2 {
                                 break;
                             }
                         }
-                        current.setTagName(subst, current.elementLocalName, current.getOuterPeer());
+                        if (current.elementLocalName != null) {
+                            current.setTagName(subst, current.elementLocalName, current.getOuterPeer());
+                        }
                         return i;
                     } else {
                         // first, if the previous URI assigned to "" is
@@ -181,7 +183,10 @@ public final class NamespaceContextImpl implements NamespaceContext2 {
                                 break;
                             }
                         }
-
+                        if (current.elementLocalName!=null) {
+    						current.setTagName(size, current.elementLocalName, current.getOuterPeer());
+                        }
+                        
                         put(nsUris[i],null);
                         return put("", "");
                     }
@@ -195,7 +200,7 @@ public final class NamespaceContextImpl implements NamespaceContext2 {
             for( int i=size-1; i>=0; i-- ) {
                 String p = prefixes[i];
                 if(nsUris[i].equals(uri)) {
-                    if(!requirePrefix || p.length()>0)
+                    if (!requirePrefix || p.length()>0)
                         return i;
                     // declared but this URI is bound to empty. Look further
                 }
@@ -218,7 +223,7 @@ public final class NamespaceContextImpl implements NamespaceContext2 {
 
     public int force(@NotNull String uri, @NotNull String prefix) {
         // check for the existing binding
-
+        
         for( int i=size-1; i>=0; i-- ) {
             if(prefixes[i].equals(prefix)) {
                 if(nsUris[i].equals(uri))

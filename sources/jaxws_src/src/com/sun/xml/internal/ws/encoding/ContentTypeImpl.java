@@ -40,11 +40,11 @@ public final class ContentTypeImpl implements com.sun.xml.internal.ws.api.pipe.C
     public ContentTypeImpl(String contentType) {
         this(contentType, null, null);
     }
-
+    
     public ContentTypeImpl(String contentType, @Nullable String soapAction) {
         this(contentType, soapAction, null);
     }
-
+    
     public ContentTypeImpl(String contentType, @Nullable String soapAction, @Nullable String accept) {
         this.contentType = contentType;
         this.accept = accept;

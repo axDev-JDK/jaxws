@@ -53,6 +53,7 @@ public class MemberSubmissionWsaServerTube extends WsaServerTube {
         this.validation = that.validation;
     }
 
+    @Override
     public MemberSubmissionWsaServerTube copy(TubeCloner cloner) {
         return new MemberSubmissionWsaServerTube(this, cloner);
     }
@@ -63,7 +64,7 @@ public class MemberSubmissionWsaServerTube extends WsaServerTube {
 
         super.checkMandatoryHeaders(packet, foundAction, foundTo, foundReplyTo,
                 foundFaultTo, foundMessageId, foundRelatesTo);
-
+        
         // if no wsa:To header is found
         if (!foundTo)
             throw new MissingAddressingHeaderException(addressingVersion.toTag,packet);

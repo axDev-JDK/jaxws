@@ -22,6 +22,7 @@
  * CA 95054 USA or visit www.sun.com if you need additional information or
  * have any questions.
  */
+
 package com.sun.xml.internal.ws.developer;
 
 import com.sun.xml.internal.ws.api.FeatureConstructor;
@@ -31,10 +32,13 @@ import javax.xml.ws.WebServiceFeature;
 
 import com.sun.xml.internal.org.jvnet.mimepull.MIMEConfig;
 
+import com.sun.org.glassfish.gmbal.ManagedAttribute;
+import com.sun.org.glassfish.gmbal.ManagedData;
+
 /**
  * Proxy needs to be created with this feature to configure StreamingAttachment
  * attachments behaviour.
- *
+ * 
  * <pre>
  * for e.g.: To configure all StreamingAttachment attachments to be kept in memory
  * <p>
@@ -48,6 +52,7 @@ import com.sun.xml.internal.org.jvnet.mimepull.MIMEConfig;
  *
  * @author Jitendra Kotamraju
  */
+@ManagedData
 public final class StreamingAttachmentFeature extends WebServiceFeature {
     /**
      * Constant value identifying the {@link @StreamingAttachment} feature.
@@ -71,6 +76,7 @@ public final class StreamingAttachmentFeature extends WebServiceFeature {
         this.memoryThreshold = memoryThreshold;
     }
 
+    @ManagedAttribute
     public String getID() {
         return ID;
     }
@@ -81,6 +87,7 @@ public final class StreamingAttachmentFeature extends WebServiceFeature {
      *
      * @return
      */
+    @ManagedAttribute
     public MIMEConfig getConfig() {
         if (config == null) {
             config = new MIMEConfig();

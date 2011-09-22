@@ -41,8 +41,6 @@ import com.sun.xml.internal.ws.api.model.soap.SOAPBinding;
 import com.sun.xml.internal.ws.api.server.Container;
 import com.sun.xml.internal.ws.api.wsdl.writer.WSDLGeneratorExtension;
 import com.sun.xml.internal.ws.api.wsdl.writer.WSDLGenExtnContext;
-import com.sun.xml.internal.ws.encoding.soap.streaming.SOAP12NamespaceConstants;
-import com.sun.xml.internal.ws.encoding.soap.streaming.SOAPNamespaceConstants;
 import com.sun.xml.internal.ws.model.AbstractSEIModelImpl;
 import com.sun.xml.internal.ws.model.CheckedExceptionImpl;
 import com.sun.xml.internal.ws.model.JavaMethodImpl;
@@ -69,6 +67,8 @@ import com.sun.xml.internal.ws.wsdl.writer.document.soap.Header;
 import com.sun.xml.internal.ws.wsdl.writer.document.soap.SOAPAddress;
 import com.sun.xml.internal.ws.wsdl.writer.document.soap.SOAPFault;
 import com.sun.xml.internal.ws.util.RuntimeVersion;
+import com.sun.xml.internal.ws.policy.PolicyWSDLGeneratorExtension;
+import com.sun.xml.internal.ws.encoding.soap.streaming.SOAPNamespaceConstants;
 
 import javax.jws.soap.SOAPBinding.Style;
 import javax.jws.soap.SOAPBinding.Use;
@@ -122,7 +122,7 @@ public class WSDLGenerator {
     /**
      * The WSDL namespace
      */
-    private static final String WSDL_NAMESPACE   = WSDLConstants.NS_WSDL;
+    private static final String WSDL_NAMESPACE   = WSDLConstants.NS_WSDL; 
 
     /**
      * the XSD namespace
@@ -139,7 +139,7 @@ public class WSDLGenerator {
     /**
      * The SOAP 1.2 namespace
      */
-    private static final String SOAP12_NAMESPACE = SOAPConstants.NS_WSDL_SOAP12;
+    private static final String SOAP12_NAMESPACE = SOAPConstants.NS_WSDL_SOAP12; 
     /**
      * The namespace prefix to use for the SOAP 1.1 namespace
      */
@@ -152,14 +152,7 @@ public class WSDLGenerator {
      * The namespace prefix to use for the targetNamespace
      */
     private static final String TNS_PREFIX       = "tns";
-    /**
-     * The URI for the SOAP 1.1 HTTP Transport.  Used to create soapBindings
-     */
-    private static final String SOAP_HTTP_TRANSPORT = SOAPNamespaceConstants.TRANSPORT_HTTP;
-    /**
-     * The URI for the SOAP 1.2 HTTP Transport.  Used to create soapBindings
-     */
-    private static final String SOAP12_HTTP_TRANSPORT = SOAP12NamespaceConstants.TRANSPORT_HTTP;
+
     /**
      * Constant String "document" used to specify <code>document</code> style
      * soapBindings
@@ -195,7 +188,7 @@ public class WSDLGenerator {
      * @param model The {@link AbstractSEIModelImpl} used to generate the WSDL
      * @param wsdlResolver The {@link WSDLResolver} to use resovle names while generating the WSDL
      * @param binding specifies which {@link javax.xml.ws.BindingType} to generate
-     * @param extensions an array {@link WSDLGeneratorExtension} that will
+     * @param extensions an array {@link WSDLGeneratorExtension} that will 
      * be invoked to generate WSDL extensions
      */
     public WSDLGenerator(AbstractSEIModelImpl model, WSDLResolver wsdlResolver, WSBinding binding, Container container,
@@ -210,7 +203,8 @@ public class WSDLGenerator {
 
         // register handlers for default extensions
         register(new W3CAddressingWSDLGeneratorExtension());
-
+        register(new W3CAddressingMetadataWSDLGeneratorExtension());
+        register(new PolicyWSDLGeneratorExtension());
         for (WSDLGeneratorExtension w : extensions)
             register(w);
 
@@ -220,6 +214,8 @@ public class WSDLGenerator {
     /**
      * Sets the endpoint address string to be written.
      * Defaults to {@link #REPLACE_WITH_ACTUAL_URL}.
+     *
+     * @param address wsdl:port/soap:address/[@location] value
      */
     public void setEndpointAddress(String address) {
         this.endpointAddress = address;
@@ -235,7 +231,7 @@ public class WSDLGenerator {
         Result result = wsdlResolver.getWSDL(fileName+DOT_WSDL);
         wsdlLocation = result.getSystemId();
         serviceWriter = new CommentFilter(ResultFactory.createSerializer(result));
-        if (model.getServiceQName().getNamespaceURI().equals(model.getTargetNamespace())) {
+        if (model.getServiceQName().getNamespaceURI().equals(model.getTargetNamespace())) { 
             portWriter = serviceWriter;
             schemaPrefix = fileName+"_";
         } else {
@@ -245,7 +241,7 @@ public class WSDLGenerator {
             Holder<String> absWSDLName = new Holder<String>();
             absWSDLName.value = wsdlName+DOT_WSDL;
             result = wsdlResolver.getAbstractWSDL(absWSDLName);
-
+          
             if (result != null) {
                 portWSDLID = result.getSystemId();
                 if (portWSDLID.equals(wsdlLocation)) {
@@ -261,7 +257,7 @@ public class WSDLGenerator {
             if (idx > 0)
                 schemaPrefix = schemaPrefix.substring(0, idx);
             schemaPrefix = JAXBRIContext.mangleNameToClassName(schemaPrefix)+"_";
-        }
+        }    
         generateDocument(serviceWriter, portWriter);
     }
 
@@ -324,9 +320,9 @@ public class WSDLGenerator {
         public void flush() {
             serializer.flush();
         }
-
+        
     }
-
+    
     private void generateDocument(XmlSerializer serviceStream, XmlSerializer portStream) {
         serviceDefinitions = TXW.create(Definitions.class, serviceStream);
         serviceDefinitions._namespace(WSDL_NAMESPACE, "");//WSDL_PREFIX);
@@ -349,8 +345,8 @@ public class WSDLGenerator {
                 portDefinitions.targetNamespace(model.getTargetNamespace());
                 portDefinitions._namespace(model.getTargetNamespace(), TNS_PREFIX);
             }
-
-            String schemaLoc = relativize(portWSDLID, wsdlLocation);
+        
+            String schemaLoc = relativize(portWSDLID, wsdlLocation);            
             Import _import = serviceDefinitions._import().namespace(model.getTargetNamespace());
             _import.location(schemaLoc);
         } else if (portStream != null) {
@@ -358,9 +354,9 @@ public class WSDLGenerator {
             portDefinitions = serviceDefinitions;
         } else {
             // import a provided abstract wsdl
-            String schemaLoc = relativize(portWSDLID, wsdlLocation);
+            String schemaLoc = relativize(portWSDLID, wsdlLocation);            
             Import _import = serviceDefinitions._import().namespace(model.getTargetNamespace());
-            _import.location(schemaLoc);
+            _import.location(schemaLoc);            
         }
         extension.addDefinitionsExtension(serviceDefinitions);
 
@@ -394,7 +390,7 @@ public class WSDLGenerator {
             }
         }
     }
-
+    
     /**
      * Generates the WSDL messages
      */
@@ -421,13 +417,9 @@ public class WSDLGenerator {
             if (isDoclit) {
                 if (isHeaderParameter(param))
                     unwrappable = false;
-                if (param.isWrapperStyle()) {
-                    part = message.part().name(PARAMETERS);
-                    part.element(param.getName());
-                } else {
-                    part = message.part().name(param.getPartName());
-                    part.element(param.getName());
-                }
+
+                part = message.part().name(param.getPartName());
+                part.element(param.getName());
             } else {
                 if (param.isWrapperStyle()) {
                     for (ParameterImpl childParam : ((WrapperParameter)param).getWrapperChildren()) {
@@ -453,17 +445,9 @@ public class WSDLGenerator {
 
             for (ParameterImpl param : method.getResponseParameters()) {
                 if (isDoclit) {
-                    if (param.isWrapperStyle()) {
-                        // if its not really wrapper style dont use the same name as input message
-                        if (unwrappable)
-                            part = message.part().name(RESULT);
-                        else
-                            part = message.part().name(UNWRAPPABLE_RESULT);
-                        part.element(param.getName());
-                    } else {
-                        part = message.part().name(param.getPartName());
-                        part.element(param.getName());
-                    }
+                    part = message.part().name(param.getPartName());
+                    part.element(param.getName());
+
                 } else {
                     if (param.isWrapperStyle()) {
                         for (ParameterImpl childParam : ((WrapperParameter)param).getWrapperChildren()) {
@@ -519,7 +503,7 @@ public class WSDLGenerator {
                 QName messageName = new QName(model.getTargetNamespace(), exception.getMessageName());
                 FaultType paramType = operation.fault().message(messageName).name(exception.getMessageName());
                 extension.addOperationFaultExtension(paramType, method, exception);
-            }
+            }            
         }
     }
 
@@ -527,7 +511,7 @@ public class WSDLGenerator {
      * Determines if the <CODE>method</CODE> is wrapper style
      * @param method The {@link JavaMethod} to check if it is wrapper style
      * @return true if the method is wrapper style, otherwise, false.
-     */
+     */    
     protected boolean isWrapperStyle(JavaMethodImpl method) {
         if (method.getRequestParameters().size() > 0) {
             ParameterImpl param = method.getRequestParameters().iterator().next();
@@ -540,7 +524,7 @@ public class WSDLGenerator {
      * Determines if a {@link JavaMethod} is rpc/literal
      * @param method The method to check
      * @return true if method is rpc/literal, otherwise, false
-     */
+     */    
     protected boolean isRpcLit(JavaMethodImpl method) {
         return method.getBinding().getStyle() == Style.RPC;
     }
@@ -549,7 +533,7 @@ public class WSDLGenerator {
      * Generates the parameterOrder for a PortType operation
      * @param operation The operation to generate the parameterOrder for
      * @param method The {@link JavaMethod} to generate the parameterOrder from
-     */
+     */    
     protected void generateParameterOrder(Operation operation, JavaMethodImpl method) {
         if (method.getMEP() == MEP.ONE_WAY)
             return;
@@ -563,7 +547,7 @@ public class WSDLGenerator {
      * Generates the parameterOrder for a PortType operation
      * @param operation the operation to generate the parameterOrder for
      * @param method the {@link JavaMethod} to generate the parameterOrder from
-     */
+     */    
     protected void generateRpcParameterOrder(Operation operation, JavaMethodImpl method) {
         String partName;
         StringBuffer paramOrder = new StringBuffer();
@@ -591,7 +575,7 @@ public class WSDLGenerator {
      * Generates the parameterOrder for a PortType operation
      * @param operation the operation to generate the parameterOrder for
      * @param method the {@link JavaMethod} to generate the parameterOrder from
-     */
+     */    
     protected void generateDocumentParameterOrder(Operation operation, JavaMethodImpl method) {
         String partName;
         StringBuffer paramOrder = new StringBuffer();
@@ -603,17 +587,25 @@ public class WSDLGenerator {
 //            System.out.println("param: "+parameter.getIndex()+" name: "+parameter.getName().getLocalPart());
             if (parameter.getIndex() < 0)
                 continue;
+
+            // This should be safe change. if it affects compatibility,
+            // remove the following single statement and uncomment the code in block below.
+            partName = parameter.getPartName();
+            /*
             if (isWrapperStyle && isBodyParameter(parameter)) {
-//                System.out.println("isWrapper and is body");
+               System.out.println("isWrapper and is body");
                 if (method.getRequestParameters().contains(parameter))
                     partName = PARAMETERS;
                 else {
+                    //Rama: don't understand this logic "Response" below,
+
                     // really make sure this is a wrapper style wsdl we are creating
                     partName = RESPONSE;
                 }
             } else {
                partName = parameter.getPartName();
-            }
+            }*/
+
             if (!partNames.contains(partName)) {
                 if (i++ > 0)
                     paramOrder.append(' ');
@@ -630,7 +622,7 @@ public class WSDLGenerator {
      * Sorts the parameters for the method by their position
      * @param method the {@link JavaMethod} used to sort the parameters
      * @return the sorted {@link List} of parameters
-     */
+     */    
     protected List<ParameterImpl> sortMethodParameters(JavaMethodImpl method) {
         Set<ParameterImpl> paramSet = new HashSet<ParameterImpl>();
         List<ParameterImpl> sortedParams = new ArrayList<ParameterImpl>();
@@ -680,7 +672,7 @@ public class WSDLGenerator {
      * Determines if a parameter is associated with the message Body
      * @param parameter the parameter to check
      * @return true if the parameter is a <code>body</code> parameter
-     */
+     */    
     protected boolean isBodyParameter(ParameterImpl parameter) {
         ParameterBinding paramBinding = parameter.getBinding();
         return paramBinding.isBody();
@@ -699,7 +691,7 @@ public class WSDLGenerator {
 
     /**
      * Generates the Binding section of the WSDL
-     */
+     */    
     protected void generateBinding() {
         Binding binding = serviceDefinitions.binding().name(model.getBoundPortTypeName().getLocalPart());
         extension.addBindingExtension(binding);
@@ -763,8 +755,6 @@ public class WSDLGenerator {
                             parts.append(parameter.getPartName());
                         }
                         body.parts(parts.toString());
-                    } else if (param.isWrapperStyle()) {
-                        body.parts(PARAMETERS);
                     } else {
                        body.parts(param.getPartName());
                     }
@@ -805,20 +795,12 @@ public class WSDLGenerator {
                                 parts += parameter.getPartName();
                             }
                         } else {
-                            if (param.isWrapperStyle()) {
-                                // if its not really wrapper style dont use the same name as input message
-                                if (unwrappable)
-                                    parts = RESULT;
-                                else
-                                    parts = UNWRAPPABLE_RESULT;
-                            } else {
-                                parts = param.getPartName();
-                            }
+                            parts = param.getPartName();
                         }
                     }
                 }
                 body.parts(parts);
-                QName responseMessage = new QName(targetNamespace, method.getResponseMessageName());
+                QName responseMessage = new QName(targetNamespace, method.getResponseMessageName());                
                 generateSOAPHeaders(output, headerParams, responseMessage);
             }
             if (isRpc) {
@@ -830,7 +812,7 @@ public class WSDLGenerator {
             extension.addBindingOperationFaultExtension(fault, method, exception);
             SOAPFault soapFault = fault._element(SOAPFault.class).name(exception.getMessageName());
             soapFault.use(LITERAL);
-        }
+        }        
     }
 
     protected void generateSOAP12BindingOperation(JavaMethodImpl method, Binding binding) {
@@ -863,8 +845,6 @@ public class WSDLGenerator {
                             parts.append(parameter.getPartName());
                         }
                         body.parts(parts.toString());
-                    } else if (param.isWrapperStyle()) {
-                        body.parts(PARAMETERS);
                     } else {
                        body.parts(param.getPartName());
                     }
@@ -904,12 +884,6 @@ public class WSDLGenerator {
                             parts += parameter.getPartName();
                         }
                         body.parts(parts);
-                    } else if (param.isWrapperStyle()) {
-                        // if its not really wrapper style dont use the same name as input message
-                        if (unwrappable)
-                            body.parts(RESULT);
-                        else
-                            body.parts(UNWRAPPABLE_RESULT);
                     } else {
                         body.parts(param.getPartName());
                     }
@@ -931,12 +905,6 @@ public class WSDLGenerator {
         }
     }
 
-    /**
-     *
-     * @param bodyParams
-     * @param headerParams
-     * @param params
-     */
     protected void splitParameters(List<ParameterImpl> bodyParams, List<ParameterImpl>headerParams, List<ParameterImpl>params) {
         for (ParameterImpl parameter : params) {
             if (isBodyParameter(parameter)) {
@@ -947,12 +915,6 @@ public class WSDLGenerator {
         }
     }
 
-    /**
-     *
-     * @param writer
-     * @param parameters
-     * @param message
-     */
     protected void generateSOAPHeaders(TypedXmlWriter writer, List<ParameterImpl> parameters, QName message) {
 
         for (ParameterImpl headerParam : parameters) {
@@ -963,12 +925,6 @@ public class WSDLGenerator {
         }
     }
 
-    /**
-     *
-     * @param writer
-     * @param parameters
-     * @param message
-     */
     protected void generateSOAP12Headers(TypedXmlWriter writer, List<ParameterImpl> parameters, QName message) {
 
         for (ParameterImpl headerParam : parameters) {
@@ -983,7 +939,7 @@ public class WSDLGenerator {
 
     /**
      * Generates the Service section of the WSDL
-     */
+     */    
     protected void generateService() {
         QName portQName = model.getPortName();
         QName serviceQName = model.getServiceQName();
@@ -1004,11 +960,6 @@ public class WSDLGenerator {
         }
     }
 
-    /**
-     *
-     * @param operation
-     * @param method
-     */
     protected void generateInputMessage(Operation operation, JavaMethodImpl method) {
         ParamType paramType = operation.input();
         extension.addOperationInputExtension(paramType, method);
@@ -1016,11 +967,6 @@ public class WSDLGenerator {
         paramType.message(new QName(model.getTargetNamespace(), method.getRequestMessageName()));
     }
 
-    /**
-     *
-     * @param operation
-     * @param method
-     */
     protected void generateOutputMessage(Operation operation, JavaMethodImpl method) {
         ParamType paramType = operation.output();
         extension.addOperationOutputExtension(paramType, method);
@@ -1035,7 +981,7 @@ public class WSDLGenerator {
      * @param suggestedFileName the JAXB suggested file name for the schema file
      * @return the {@link Result} for JAXB to generate the schema into
      * @throws java.io.IOException thrown if on IO error occurs
-     */
+     */    
     public Result createOutputFile(String namespaceUri, String suggestedFileName) throws IOException {
         Result result;
         if (namespaceUri.equals("")) {
@@ -1060,20 +1006,20 @@ public class WSDLGenerator {
 
    /**
      * Relativizes a URI by using another URI (base URI.)
-     *
+     * 
      * <p>
      * For example, {@code relative("http://www.sun.com/abc/def","http://www.sun.com/pqr/stu") => "../abc/def"}
-     *
+     * 
      * <p>
      * This method only works on hierarchical URI's, not opaque URI's (refer to the
      * <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/net/URI.html">java.net.URI</a>
      * javadoc for complete definitions of these terms.
-     *
+     * 
      * <p>
      * This method will not normalize the relative URI.
      * @param uri the URI to relativize
-     *
-     *
+     * 
+     * 
      * @param baseUri the base URI to use for the relativization
      * @return the relative URI or the original URI if a relative one could not be computed
      */
@@ -1135,7 +1081,7 @@ public class WSDLGenerator {
 
     /**
      * Implements the SchemaOutputResolver used by JAXB to
-     */
+     */    
     protected class JAXWSOutputSchemaResolver extends SchemaOutputResolver {
 
         /**
@@ -1145,7 +1091,7 @@ public class WSDLGenerator {
          * @param suggestedFileName the JAXB suggested file name for the schema file
          * @return the {@link Result} for JAXB to generate the schema into
          * @throws java.io.IOException thrown if on IO error occurs
-         */
+         */        
         public Result createOutput(String namespaceUri, String suggestedFileName) throws IOException {
             return createOutputFile(namespaceUri, suggestedFileName);
         }

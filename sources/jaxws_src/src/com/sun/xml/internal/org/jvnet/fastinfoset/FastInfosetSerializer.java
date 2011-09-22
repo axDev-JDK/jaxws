@@ -36,27 +36,27 @@ import java.util.Map;
  * This interface contains common methods that are not specific to any
  * API associated with the serialization of XML Infoset to fast infoset
  * documents.
- *
+ * 
  * @author Paul.Sandoz@Sun.Com
  */
 public interface FastInfosetSerializer {
     /**
-     * The feature to ignore the document type declaration and the
+     * The feature to ignore the document type declaration and the 
      * internal subset.
      * <p>
      * The default value is false. If true a serializer shall ignore document
      * type declaration and the internal subset.
      */
-    public static final String IGNORE_DTD_FEATURE =
+    public static final String IGNORE_DTD_FEATURE = 
         "http://jvnet.org/fastinfoset/serializer/feature/ignore/DTD";
-
+    
     /**
      * The feature to ignore comments.
      * <p>
      * The default value is false. If true a serializer shall ignore comments
      * and shall not serialize them.
      */
-    public static final String IGNORE_COMMENTS_FEATURE =
+    public static final String IGNORE_COMMENTS_FEATURE = 
         "http://jvnet.org/fastinfoset/serializer/feature/ignore/comments";
 
     /**
@@ -65,9 +65,9 @@ public interface FastInfosetSerializer {
      * The default value is false. If true a serializer shall ignore processing
      * instructions and shall not serialize them.
      */
-    public static final String IGNORE_PROCESSING_INSTRUCTIONS_FEATURE =
+    public static final String IGNORE_PROCESSING_INSTRUCTIONS_FEATURE = 
         "http://jvnet.org/fastinfoset/serializer/feature/ignore/processingInstructions";
-
+    
     /**
      * The feature to ignore text content that consists completely of white
      * space characters.
@@ -75,38 +75,38 @@ public interface FastInfosetSerializer {
      * The default value is false. If true a serializer shall ignore text
      * content that consists completely of white space characters.
      */
-    public static final String IGNORE_WHITE_SPACE_TEXT_CONTENT_FEATURE =
+    public static final String IGNORE_WHITE_SPACE_TEXT_CONTENT_FEATURE = 
         "http://jvnet.org/fastinfoset/serializer/feature/ignore/whiteSpaceTextContent";
-
+    
     /**
      * The property name to be used for getting and setting the buffer size
      * of a parser.
      */
-    public static final String BUFFER_SIZE_PROPERTY =
+    public static final String BUFFER_SIZE_PROPERTY = 
         "http://jvnet.org/fastinfoset/parser/properties/buffer-size";
 
     /**
-     * The property name to be used for getting and setting the
+     * The property name to be used for getting and setting the 
      * Map containing encoding algorithms.
      *
-     */
+     */    
     public static final String REGISTERED_ENCODING_ALGORITHMS_PROPERTY =
         "http://jvnet.org/fastinfoset/parser/properties/registered-encoding-algorithms";
-
+    
    /**
-     * The property name to be used for getting and setting the
+     * The property name to be used for getting and setting the 
      * Map containing external vocabularies.
      *
-     */
+     */    
     public static final String EXTERNAL_VOCABULARIES_PROPERTY =
         "http://jvnet.org/fastinfoset/parser/properties/external-vocabularies";
-
+    
     /**
      * The default minimum size of the character content chunks,
      * that will be indexed.
      */
     public final static int MIN_CHARACTER_CONTENT_CHUNK_SIZE = 0;
-
+    
     /**
      * The default maximum size of the character content chunks,
      * that will be indexed.
@@ -123,7 +123,7 @@ public interface FastInfosetSerializer {
      * The default minimum size of the attribute values, that will be indexed.
      */
     public final static int MIN_ATTRIBUTE_VALUE_SIZE = 0;
-
+    
     /**
      * The default maximum size of the attribute values, that will be indexed.
      */
@@ -139,60 +139,60 @@ public interface FastInfosetSerializer {
      * The character encoding scheme string for UTF-8.
      */
     public static final String UTF_8 = "UTF-8";
-
+    
     /**
      * The character encoding scheme string for UTF-16BE.
      */
     public static final String UTF_16BE = "UTF-16BE";
-
+    
     /**
      * Set the {@link #IGNORE_DTD_FEATURE}.
      * @param ignoreDTD true if the feature shall be ignored.
      */
     public void setIgnoreDTD(boolean ignoreDTD);
-
+    
     /**
      * Get the {@link #IGNORE_DTD_FEATURE}.
      * @return true if the feature is ignored, false otherwise.
      */
     public boolean getIgnoreDTD();
-
+    
     /**
      * Set the {@link #IGNORE_COMMENTS_FEATURE}.
      * @param ignoreComments true if the feature shall be ignored.
      */
     public void setIgnoreComments(boolean ignoreComments);
-
+    
     /**
      * Get the {@link #IGNORE_COMMENTS_FEATURE}.
      * @return true if the feature is ignored, false otherwise.
      */
     public boolean getIgnoreComments();
-
+    
     /**
      * Set the {@link #IGNORE_PROCESSING_INSTRUCTIONS_FEATURE}.
      * @param ignoreProcesingInstructions true if the feature shall be ignored.
      */
     public void setIgnoreProcesingInstructions(boolean ignoreProcesingInstructions);
-
+    
     /**
      * Get the {@link #IGNORE_PROCESSING_INSTRUCTIONS_FEATURE}.
      * @return true if the feature is ignored, false otherwise.
      */
     public boolean getIgnoreProcesingInstructions();
-
+    
     /**
      * Set the {@link #IGNORE_WHITE_SPACE_TEXT_CONTENT_FEATURE}.
      * @param ignoreWhiteSpaceTextContent true if the feature shall be ignored.
      */
     public void setIgnoreWhiteSpaceTextContent(boolean ignoreWhiteSpaceTextContent);
-
+    
     /**
      * Get the {@link #IGNORE_WHITE_SPACE_TEXT_CONTENT_FEATURE}.
      * @return true if the feature is ignored, false otherwise.
      */
     public boolean getIgnoreWhiteSpaceTextContent();
-
+    
     /**
      * Sets the character encoding scheme.
      *
@@ -204,28 +204,28 @@ public interface FastInfosetSerializer {
      * @param characterEncodingScheme The set of registered algorithms.
      */
     public void setCharacterEncodingScheme(String characterEncodingScheme);
-
+    
     /**
      * Gets the character encoding scheme.
      *
      * @return The character encoding scheme.
      */
     public String getCharacterEncodingScheme();
-
+    
     /**
      * Sets the set of registered encoding algorithms.
      *
      * @param algorithms The set of registered algorithms.
      */
     public void setRegisteredEncodingAlgorithms(Map algorithms);
-
+    
     /**
      * Gets the set of registered encoding algorithms.
      *
      * @return The set of registered algorithms.
      */
     public Map getRegisteredEncodingAlgorithms();
-
+    
     /**
      * Gets the minimum size of character content chunks
      * that will be indexed.
@@ -257,7 +257,7 @@ public interface FastInfosetSerializer {
      * @param size the maximum character content chunk size.
      */
     public void setMaxCharacterContentChunkSize(int size);
-
+    
     /**
      * Gets the limit on the memory size of Map of attribute values
      * that will be indexed.
@@ -274,7 +274,7 @@ public interface FastInfosetSerializer {
      * that a length of size limit will be indexed.
      */
     public void setCharacterContentChunkMapMemoryLimit(int size);
-
+    
     /**
      * Gets the minimum size of attribute values
      * that will be indexed.
@@ -290,7 +290,7 @@ public interface FastInfosetSerializer {
      * @param size the minimum attribute values size.
      */
     public void setMinAttributeValueSize(int size);
-
+    
     /**
      * Gets the maximum size of attribute values
      * that will be indexed.
@@ -323,35 +323,35 @@ public interface FastInfosetSerializer {
      * that a length of size limit will be indexed.
      */
     public void setAttributeValueMapMemoryLimit(int size);
-
+    
     /**
      * Set the external vocabulary that shall be used when serializing.
-     *
-     * @param v the vocabulary.
+     * 
+     * @param v the vocabulary. 
      */
     public void setExternalVocabulary(ExternalVocabulary v);
-
+    
     /**
      * Set the application data to be associated with the serializer vocabulary.
-     *
-     * @param data the application data.
+     * 
+     * @param data the application data. 
      */
     public void setVocabularyApplicationData(VocabularyApplicationData data);
-
+    
     /**
      * Get the application data associated with the serializer vocabulary.
-     *
-     * @return the application data.
+     * 
+     * @return the application data. 
      */
     public VocabularyApplicationData getVocabularyApplicationData();
-
+    
     /**
      * Reset the serializer for reuse serializing another XML infoset.
      */
     public void reset();
-
+        
     /**
-     * Set the OutputStream to serialize the XML infoset to a
+     * Set the OutputStream to serialize the XML infoset to a 
      * fast infoset document.
      *
      * @param s the OutputStream where the fast infoset document is written to.

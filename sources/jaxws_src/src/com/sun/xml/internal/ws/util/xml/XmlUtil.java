@@ -72,7 +72,7 @@ import java.util.StringTokenizer;
  */
 public class XmlUtil {
     private final static String LEXICAL_HANDLER_PROPERTY =
-        "http://xml.org/sax/properties/lexical-handler";
+	"http://xml.org/sax/properties/lexical-handler";
 
     public static String getPrefix(String s) {
         int i = s.indexOf(':');

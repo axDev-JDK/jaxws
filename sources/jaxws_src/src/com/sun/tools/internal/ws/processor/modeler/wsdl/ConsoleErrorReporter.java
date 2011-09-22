@@ -31,6 +31,7 @@ import org.xml.sax.SAXParseException;
 
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.net.UnknownHostException;
 
 public class ConsoleErrorReporter extends ErrorReceiver {
 
@@ -54,7 +55,11 @@ public class ConsoleErrorReporter extends ErrorReceiver {
         if(debug)
             e.printStackTrace();
         hasError = true;
-        print(WscompileMessages.WSIMPORT_ERROR_MESSAGE(e.getMessage()), e);
+        if((e.getSystemId() == null && e.getPublicId() == null) && (e.getCause() instanceof UnknownHostException)) {
+            print(WscompileMessages.WSIMPORT_ERROR_MESSAGE(e.toString()), e);
+        } else {
+            print(WscompileMessages.WSIMPORT_ERROR_MESSAGE(e.getMessage()), e);
+        }
     }
 
 
@@ -69,7 +74,7 @@ public class ConsoleErrorReporter extends ErrorReceiver {
     public void warning(SAXParseException e) {
         print(WscompileMessages.WSIMPORT_WARNING_MESSAGE(e.getMessage()), e);
     }
-
+    
     /**
      * Used to report possibly verbose information that
      * can be safely ignored.

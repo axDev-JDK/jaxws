@@ -52,16 +52,16 @@ import org.xml.sax.SAXException;
 /**
  * Encapsulates various JAXB operations on objects bound by JAXB.
  * Immutable and thread-safe.
- *
+ * 
  * <p>
  * Each JAXB-bound class has a corresponding {@link JaxBeanInfo} object,
  * which performs all the JAXB related operations on behalf of
  * the JAXB-bound object.
- *
+ * 
  * <p>
  * Given a class, the corresponding {@link JaxBeanInfo} can be located
  * via {@link JAXBContextImpl#getBeanInfo(Class,boolean)}.
- *
+ * 
  * <p>
  * Typically, {@link JaxBeanInfo} implementations should be generated
  * by XJC/JXC. Those impl classes will register themselves to their
@@ -74,6 +74,8 @@ import org.xml.sax.SAXException;
  *     Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
 public abstract class JaxBeanInfo<BeanT> {
+
+    protected boolean isNilIncluded = false;
 
     /**
      * For {@link JaxBeanInfo} that has multiple type names.
@@ -154,7 +156,7 @@ public abstract class JaxBeanInfo<BeanT> {
     /**
      * Gets the JAXB bound class type that this {@link JaxBeanInfo}
      * handles.
-     *
+     * 
      * <p>
      * IOW, when a bean info object is requested for T,
      * sometimes the bean info for one of its base classes might be
@@ -164,7 +166,7 @@ public abstract class JaxBeanInfo<BeanT> {
 
     /**
      * Returns true if the bean is mapped to/from an XML element.
-     *
+     * 
      * <p>
      * When this method returns true, {@link #getElementNamespaceURI(Object)}
      * and {@link #getElementLocalName(Object)} returns the element name of
@@ -200,12 +202,16 @@ public abstract class JaxBeanInfo<BeanT> {
      * <p>
      * Should be considered immutable, though I can't mark it final
      * because it cannot be computed in this constructor.
-     */
+     */ 
     protected final void hasElementOnlyContentModel(boolean value) {
         if(value)
             flag |= FLAG_HAS_ELEMENT_ONLY_CONTENTMODEL;
         else
             flag &= ~FLAG_HAS_ELEMENT_ONLY_CONTENTMODEL;
+    }
+
+    public boolean isNilIncluded() {
+        return isNilIncluded;
     }
 
     /**
@@ -223,17 +229,17 @@ public abstract class JaxBeanInfo<BeanT> {
      * Returns the namespace URI portion of the element name,
      * if the bean that this class represents is mapped from/to
      * an XML element.
-     *
+     * 
      * @throws UnsupportedOperationException
      *      if {@link #isElement} is false.
      */
     public abstract String getElementNamespaceURI(BeanT o);
-
+    
     /**
      * Returns the local name portion of the element name,
      * if the bean that this class represents is mapped from/to
      * an XML element.
-     *
+     * 
      * @throws UnsupportedOperationException
      *      if {@link #isElement} is false.
      */
@@ -249,7 +255,7 @@ public abstract class JaxBeanInfo<BeanT> {
     /**
      * Returns XML Schema type names if the bean is mapped from
      * a complex/simple type of XML Schema.
-     *
+     * 
      * <p>
      * This is an ugly necessity to correctly handle
      * the type substitution semantics of XML Schema.
@@ -298,7 +304,7 @@ public abstract class JaxBeanInfo<BeanT> {
     /**
      * Resets the object to the initial state, as if the object
      * is created fresh.
-     *
+     * 
      * <p>
      * This is used to reuse an existing object for unmarshalling.
      *
@@ -317,18 +323,18 @@ public abstract class JaxBeanInfo<BeanT> {
      *      as a result of reporting an error, the context may throw a {@link SAXException}.
      */
     public abstract boolean reset( BeanT o, UnmarshallingContext context ) throws SAXException;
-
+    
     /**
      * Gets the ID value of the given bean, if it has an ID value.
      * Otherwise return null.
      */
     public abstract String getId(BeanT o, XMLSerializer target) throws SAXException;
-
+    
     /**
      * Serializes child elements and texts into the specified target.
      */
     public abstract void serializeBody( BeanT o, XMLSerializer target ) throws SAXException, IOException, XMLStreamException;
-
+    
     /**
      * Serializes attributes into the specified target.
      */
@@ -361,7 +367,7 @@ public abstract class JaxBeanInfo<BeanT> {
      * its top-level scope into the specified target.
      */
     public abstract void serializeURIs( BeanT o, XMLSerializer target ) throws SAXException;
-
+    
     /**
      * Gets the {@link Loader} that will unmarshall the given object.
      *

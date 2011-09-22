@@ -91,6 +91,8 @@ public abstract class AbstractSEIModelImpl implements SEIModel {
         this.port = port;
         for (JavaMethodImpl m : javaMethods) {
             m.freeze(port);
+            putOp(m.getOperation().getName(),m);
+
         }
     }
 
@@ -184,19 +186,6 @@ public abstract class AbstractSEIModelImpl implements SEIModel {
         }
     }
 
-    /**
-     * @return the <code>Method</code> for a given WSDLOperation <code>qname</code>
-     */
-    public Method getDispatchMethod(QName qname) {
-        //handle the empty body
-        if (qname == null)
-            qname = emptyBodyName;
-        JavaMethodImpl jm = getJavaMethod(qname);
-        if (jm != null) {
-            return jm.getMethod();
-        }
-        return null;
-    }
 
     /**
      * @return true if <code>name</code> is the name
@@ -238,6 +227,11 @@ public abstract class AbstractSEIModelImpl implements SEIModel {
     public JavaMethodImpl getJavaMethod(QName name) {
         return nameToJM.get(name);
     }
+
+    public JavaMethod getJavaMethodForWsdlOperation(QName operationName) {
+        return wsdlOpToJM.get(operationName);
+    }
+
 
     /**
      * @return the <code>QName</code> associated with the
@@ -425,6 +419,9 @@ public abstract class AbstractSEIModelImpl implements SEIModel {
         methodToJM.put(method, jm);
     }
 
+    void putOp(QName opName, JavaMethodImpl jm) {
+        wsdlOpToJM.put(opName, jm);
+    }
     public String getWSDLLocation() {
         return wsdlLocation;
     }
@@ -505,6 +502,11 @@ public abstract class AbstractSEIModelImpl implements SEIModel {
      * Payload QName to the method that handles it.
      */
     private Map<QName,JavaMethodImpl> nameToJM = new HashMap<QName, JavaMethodImpl>();
+    /**
+     * Wsdl Operation QName to the method that handles it.
+     */
+    private Map<QName, JavaMethodImpl> wsdlOpToJM = new HashMap<QName, JavaMethodImpl>();
+
     private List<JavaMethodImpl> javaMethods = new ArrayList<JavaMethodImpl>();
     private final Map<TypeReference, Bridge> bridgeMap = new HashMap<TypeReference, Bridge>();
     protected final QName emptyBodyName = new QName("");

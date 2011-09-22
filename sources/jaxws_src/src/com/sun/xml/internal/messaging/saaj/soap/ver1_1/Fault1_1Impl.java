@@ -314,15 +314,14 @@ public class Fault1_1Impl extends FaultImpl {
 
     public void setFaultCode(String faultCode, String prefix, String uri)
         throws SOAPException {
-        if (prefix == null || prefix.equals("")) {
+        if (prefix == null || "".equals(prefix)) {
             if (uri != null && !"".equals(uri)) {
                 prefix = getNamespacePrefix(uri);
-                if (prefix == null || prefix.equals("")) {
+                if (prefix == null || "".equals(prefix)) {
                     prefix = "ns0";
                 }
-            }
+            }   
         }
-
 
         if (this.faultCodeElement == null)
             findFaultCodeElement();
@@ -331,46 +330,60 @@ public class Fault1_1Impl extends FaultImpl {
             this.faultCodeElement = addFaultCodeElement();
         else
             this.faultCodeElement.removeContents();
-
-        if (uri == null || uri.equals("")) {
+ 
+        if (uri == null || "".equals(uri)) {
             if (prefix != null && !"".equals("prefix")) {
                 uri = this.faultCodeElement.getNamespaceURI(prefix);
             }
         }
 
-//        if (standardFaultCode(faultCode) &&
-//                ((uri == null) || uri.equals(""))) {
-//             log.log(Level.WARNING, "SAAJ0306.ver1_1.faultcode.incorrect.namespace", new Object[]{faultCode});
-//               // throw new SOAPExceptionImpl("Namespace Error, Standard Faultcode: " +  faultCode + ", should be in SOAP 1.1 Namespace");
-//        }
-
-        if (uri == null) {
-            //SOAP 1.1 Allows this
+        if (uri == null || "".equals(uri)) {
             if (prefix != null && !"".equals(prefix)) {
-                log.severe("SAAJ0140.impl.no.ns.URI");
-                throw new SOAPExceptionImpl("No NamespaceURI, SOAP requires faultcode content to be a QName");
+                //cannot allow an empty URI for a non-Empty prefix
+                log.log(Level.SEVERE, "SAAJ0307.impl.no.ns.URI", new Object[]{prefix + ":" + faultCode});
+                throw new SOAPExceptionImpl("Empty/Null NamespaceURI specified for faultCode \"" + prefix + ":" + faultCode + "\"");
+            } else {
+                uri = "";
             }
-        } else {
-            checkIfStandardFaultCode(faultCode, uri);
-            ((FaultElementImpl) this.faultCodeElement).ensureNamespaceIsDeclared(prefix, uri);
         }
 
+        checkIfStandardFaultCode(faultCode, uri);
+        ((FaultElementImpl) this.faultCodeElement).ensureNamespaceIsDeclared(prefix, uri);
+        
         if (prefix == null || "".equals(prefix)) {
             finallySetFaultCode(faultCode);
         } else {
             finallySetFaultCode(prefix + ":" + faultCode);
         }
     }
-
+    
     private boolean standardFaultCode(String faultCode) {
         if (faultCode.equals("VersionMismatch") || faultCode.equals("MustUnderstand")
             || faultCode.equals("Client") || faultCode.equals("Server")) {
-            return true;
+            return true;    
         }
         if (faultCode.startsWith("VersionMismatch.") || faultCode.startsWith("MustUnderstand.")
             || faultCode.startsWith("Client.") || faultCode.startsWith("Server.")) {
-            return true;
+            return true;    
         }
         return false;
+    }
+
+     public void setFaultActor(String faultActor) throws SOAPException {
+        if (this.faultActorElement == null)
+            findFaultActorElement();
+        if (this.faultActorElement != null)
+            this.faultActorElement.detachNode();
+        if (faultActor == null)
+            return;
+        this.faultActorElement =
+            createSOAPFaultElement(getFaultActorName());
+        this.faultActorElement.addTextNode(faultActor);
+        if (hasDetail()) {
+            insertBefore(this.faultActorElement, this.detail);
+            return;
+        }
+        addNode(this.faultActorElement);
+        
     }
 }

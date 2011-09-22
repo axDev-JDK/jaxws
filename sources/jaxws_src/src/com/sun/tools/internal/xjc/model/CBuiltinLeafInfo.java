@@ -262,9 +262,9 @@ public abstract class CBuiltinLeafInfo extends BuiltinLeafInfoImpl<NType,NClass>
         }
     };
     // XMLGregorianCalendar is mutable, so we can't support default values anyhow.
-        // For CALENAR we are uses a most unlikely name so as to avoid potential name
-        // conflicts in the furture.
-        public static final CBuiltinLeafInfo CALENDAR = new NoConstantBuiltin(XMLGregorianCalendar.class,"\u0000");
+	// For CALENAR we are uses a most unlikely name so as to avoid potential name 
+	// conflicts in the furture.
+	public static final CBuiltinLeafInfo CALENDAR = new NoConstantBuiltin(XMLGregorianCalendar.class,"\u0000");
     public static final CBuiltinLeafInfo DURATION = new NoConstantBuiltin(Duration.class,"duration");
 
     public static final CBuiltinLeafInfo BIG_INTEGER = new Builtin(BigInteger.class,"integer") {
@@ -305,10 +305,10 @@ public abstract class CBuiltinLeafInfo extends BuiltinLeafInfoImpl<NType,NClass>
 
     /**
      * boolean restricted to 0 or 1.
-     */
+     */ 
     public static final TypeUse BOOLEAN_ZERO_OR_ONE =
             STRING.makeAdapted(ZeroOneBooleanAdapter.class,true);
-
+    
     /**
      * IDREF.
      *

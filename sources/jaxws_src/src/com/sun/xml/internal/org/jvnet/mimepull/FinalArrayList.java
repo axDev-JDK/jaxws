@@ -47,3 +47,4 @@ final class FinalArrayList<T> extends ArrayList<T> {
         super(ts);
     }
 }
+

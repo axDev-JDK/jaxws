@@ -31,7 +31,7 @@ import org.xml.sax.SAXException;
 
 /**
  * Maps an error to a fatal error.
- *
+ * 
  * @author Kohsuke Kawaguchi
  */
 public class FatalAdapter implements ErrorHandler {

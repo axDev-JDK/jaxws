@@ -31,6 +31,9 @@ LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
 NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+
+// @@3RD PARTY CODE@@
+
 package com.sun.xml.internal.xsom.impl.util;
 
 import java.io.IOException;
@@ -114,7 +117,7 @@ public class Uri {
   private static boolean isDigit(char c) {
     return '0' <= c && c <= '9';
   }
-
+  
   private static boolean isSchemeChar(char c) {
     return isAlpha(c) || isDigit(c) || c == '+' || c == '-' || c =='.';
   }

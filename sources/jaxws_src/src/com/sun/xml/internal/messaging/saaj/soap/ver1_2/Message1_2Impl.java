@@ -66,10 +66,10 @@ public class Message1_2Impl extends MessageImpl implements SOAPConstants{
     }
 
     public SOAPPart getSOAPPart()  {
-        if (soapPart == null)
-            soapPart = new SOAPPart1_2Impl(this);
+        if (soapPartImpl == null)
+            soapPartImpl = new SOAPPart1_2Impl(this);
 
-        return soapPart;
+        return soapPartImpl;
     }
 
     protected boolean isCorrectSoapVersion(int contentTypeId) {
@@ -84,5 +84,5 @@ public class Message1_2Impl extends MessageImpl implements SOAPConstants{
        String accept = "application/soap+xml, text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2";
        return acceptFastInfoset ? ("application/soap+fastinfoset, " + accept) : accept;
    }
-
+    
 }

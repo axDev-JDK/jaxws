@@ -29,22 +29,23 @@ import com.sun.istack.internal.Nullable;
 import com.sun.xml.internal.stream.buffer.XMLStreamBufferResult;
 import com.sun.xml.internal.ws.api.WSBinding;
 import com.sun.xml.internal.ws.api.BindingID;
-import com.sun.xml.internal.ws.api.server.WSEndpoint;
+import com.sun.xml.internal.ws.api.message.Packet;
 import com.sun.xml.internal.ws.binding.BindingImpl;
-import com.sun.xml.internal.ws.api.server.InstanceResolver;
-import com.sun.xml.internal.ws.api.server.SDDocumentSource;
+import com.sun.xml.internal.ws.api.server.*;
 import com.sun.xml.internal.ws.server.EndpointFactory;
 import com.sun.xml.internal.ws.server.ServerRtException;
 import com.sun.xml.internal.ws.util.xml.XmlUtil;
+import com.sun.xml.internal.ws.transport.http.HttpAdapterList;
+import com.sun.xml.internal.ws.transport.http.HttpAdapter;
 import com.sun.istack.internal.NotNull;
 
 import java.net.MalformedURLException;
 
 import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.ws.*;
+import javax.xml.ws.spi.http.HttpContext;
 import javax.xml.ws.wsaddressing.W3CEndpointReference;
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -56,6 +57,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import org.xml.sax.EntityResolver;
 import org.xml.sax.SAXException;
@@ -92,29 +95,53 @@ public class EndpointImpl extends Endpoint {
 
     // information accumulated for creating WSEndpoint
     private final WSBinding binding;
-    private final Object implementor;
+    private @Nullable final Object implementor;
     private List<Source> metadata;
     private Executor executor;
     private Map<String, Object> properties = Collections.emptyMap(); // always non-null
     private boolean stopped;
+    private @Nullable EndpointContext endpointContext;
+    private @NotNull final Class<?> implClass;
+    private final Invoker invoker;
+    private Container container;
 
 
-    public EndpointImpl(@NotNull BindingID bindingId, @NotNull Object impl) {
-        binding = BindingImpl.create(bindingId);
-        implementor = impl;
+    public EndpointImpl(@NotNull BindingID bindingId, @NotNull Object impl,
+                        WebServiceFeature ... features) {
+        this(bindingId, impl, impl.getClass(),
+             InstanceResolver.createSingleton(impl).createInvoker(),  features);
     }
+
+    public EndpointImpl(@NotNull BindingID bindingId, @NotNull Class implClass,
+                        javax.xml.ws.spi.Invoker invoker,
+                        WebServiceFeature ... features) {
+        this(bindingId, null, implClass, new InvokerImpl(invoker),  features);
+    }
+
+    private EndpointImpl(@NotNull BindingID bindingId, Object impl, @NotNull Class implClass,
+                        Invoker invoker, WebServiceFeature ... features) {
+        binding = BindingImpl.create(bindingId, features);
+        this.implClass = implClass;
+        this.invoker = invoker;
+        this.implementor = impl;
+    }
+
 
     /**
      * Wraps an already created {@link WSEndpoint} into an {@link EndpointImpl},
      * and immediately publishes it with the given context.
      *
+     * @param wse created endpoint
+     * @param serverContext supported http context
      * @deprecated This is a backdoor method. Don't use it unless you know what you are doing.
      */
     public EndpointImpl(WSEndpoint wse, Object serverContext) {
-        actualEndpoint = new HttpEndpoint(wse, executor);
+        actualEndpoint = new HttpEndpoint(null, getAdapter(wse, ""));
         ((HttpEndpoint) actualEndpoint).publish(serverContext);
         binding = wse.getBinding();
         implementor = null; // this violates the semantics, but hey, this is a backdoor.
+        implClass = null;
+        invoker = null;
     }
 
     public Binding getBinding() {
@@ -140,7 +167,7 @@ public class EndpointImpl extends Endpoint {
             throw new IllegalArgumentException("Incorrect WebService address=" + address +
                     ". The address's path should start with /");
         }
-        createEndpoint();
+        createEndpoint(url.getPath());
         ((HttpEndpoint) actualEndpoint).publish(address);
     }
 
@@ -149,7 +176,13 @@ public class EndpointImpl extends Endpoint {
         if (!com.sun.net.httpserver.HttpContext.class.isAssignableFrom(serverContext.getClass())) {
             throw new IllegalArgumentException(serverContext.getClass() + " is not a supported context.");
         }
-        createEndpoint();
+        createEndpoint("");
+        ((HttpEndpoint) actualEndpoint).publish(serverContext);
+    }
+
+    public void publish(HttpContext serverContext) {
+        canPublish();
+        createEndpoint(serverContext.getPath());
         ((HttpEndpoint) actualEndpoint).publish(serverContext);
     }
 
@@ -196,7 +229,7 @@ public class EndpointImpl extends Endpoint {
     * Checks the permission of "publishEndpoint" before accessing HTTP classes.
     * Also it checks if there is an available HTTP server implementation.
     */
-    private void createEndpoint() {
+    private void createEndpoint(String urlPattern) {
         // Checks permission for "publishEndpoint"
         SecurityManager sm = System.getSecurityManager();
         if (sm != null) {
@@ -209,20 +242,21 @@ public class EndpointImpl extends Endpoint {
         } catch (Exception e) {
             throw new UnsupportedOperationException("Couldn't load light weight http server", e);
         }
-
+        container = getContainer();
         WSEndpoint wse = WSEndpoint.create(
-                (Class<?>) implementor.getClass(), true,
-                InstanceResolver.createSingleton(implementor).createInvoker(),
+                implClass, true,
+                invoker,
                 getProperty(QName.class, Endpoint.WSDL_SERVICE),
                 getProperty(QName.class, Endpoint.WSDL_PORT),
-                null /* no container */,
+                container,
                 binding,
                 getPrimaryWsdl(),
                 buildDocList(),
-                (EntityResolver) null
+                (EntityResolver) null,
+                false
         );
         // Don't load HttpEndpoint class before as it may load HttpServer classes
-        actualEndpoint = new HttpEndpoint(wse, executor);
+        actualEndpoint = new HttpEndpoint(executor, getAdapter(wse, urlPattern));
     }
 
     private <T> T getProperty(Class<T> type, String key) {
@@ -242,7 +276,6 @@ public class EndpointImpl extends Endpoint {
         List<SDDocumentSource> r = new ArrayList<SDDocumentSource>();
 
         if (metadata != null) {
-            Transformer transformer = XmlUtil.newTransformer();
             for (Source source : metadata) {
                 try {
                     XMLStreamBufferResult xsbr = XmlUtil.identityTransform(source, new XMLStreamBufferResult());
@@ -268,12 +301,11 @@ public class EndpointImpl extends Endpoint {
      * Gets wsdl from @WebService or @WebServiceProvider
      */
     private @Nullable SDDocumentSource getPrimaryWsdl() {
-        Class implType = implementor.getClass();
         // Takes care of @WebService, @WebServiceProvider's wsdlLocation
-        EndpointFactory.verifyImplementorClass(implType);
-        String wsdlLocation = EndpointFactory.getWsdlLocation(implType);
+        EndpointFactory.verifyImplementorClass(implClass);
+        String wsdlLocation = EndpointFactory.getWsdlLocation(implClass);
         if (wsdlLocation != null) {
-            ClassLoader cl = implType.getClassLoader();
+            ClassLoader cl = implClass.getClassLoader();
             URL url = cl.getResource(wsdlLocation);
             if (url != null) {
                 return SDDocumentSource.create(url);
@@ -304,4 +336,64 @@ public class EndpointImpl extends Endpoint {
         }
         return ((HttpEndpoint)actualEndpoint).getEndpointReference(clazz,referenceParameters);
     }
+
+    @Override
+    public void setEndpointContext(EndpointContext ctxt) {
+        this.endpointContext = ctxt;
+    }
+
+    private HttpAdapter getAdapter(WSEndpoint endpoint, String urlPattern) {
+        HttpAdapterList adapterList = null;
+        if (endpointContext != null) {
+            for(Endpoint e : endpointContext.getEndpoints()) {
+                if (e.isPublished() && e != this) {
+                    adapterList = ((HttpEndpoint)(((EndpointImpl)e).actualEndpoint)).getAdapterOwner();
+                    assert adapterList != null;
+                    break;
+                }
+            }
+        }
+        if (adapterList == null) {
+            adapterList = new ServerAdapterList();
+        }
+        return adapterList.createAdapter("", urlPattern, endpoint);
+    }
+
+    /**
+     * Endpoints within a EndpointContext get the same container.
+     */
+    private Container getContainer() {
+        if (endpointContext != null) {
+            for(Endpoint e : endpointContext.getEndpoints()) {
+                if (e.isPublished() && e != this) {
+                    return ((EndpointImpl)e).container;
+                }
+            }
+        }
+        return new ServerContainer();
+    }
+
+    private static class InvokerImpl extends Invoker {
+        private javax.xml.ws.spi.Invoker spiInvoker;
+
+        InvokerImpl(javax.xml.ws.spi.Invoker spiInvoker) {
+            this.spiInvoker = spiInvoker;
+        }
+
+        @Override
+        public void start(@NotNull WSWebServiceContext wsc, @NotNull WSEndpoint endpoint) {
+            try {
+                spiInvoker.inject(wsc);
+            } catch (IllegalAccessException e) {
+                throw new WebServiceException(e);
+            } catch (InvocationTargetException e) {
+                throw new WebServiceException(e);
+            }
+        }
+
+        public Object invoke(@NotNull Packet p, @NotNull Method m, @NotNull Object... args) throws InvocationTargetException, IllegalAccessException {
+            return spiInvoker.invoke(m, args);
+        }
+    }
 }
+

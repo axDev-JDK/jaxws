@@ -31,12 +31,13 @@ import com.sun.xml.internal.ws.api.BindingID;
 import com.sun.xml.internal.ws.api.EndpointAddress;
 import com.sun.xml.internal.ws.api.WSService;
 import com.sun.xml.internal.ws.api.model.wsdl.WSDLPort;
+import com.sun.xml.internal.ws.policy.PolicyMap;
 
 import javax.xml.ws.handler.PortInfo;
 
 /**
  * JAX-WS RI's extension to {@link PortInfo}.
- *
+ * 
  * @author Kohsuke Kawaguchi
  */
 public interface WSPortInfo extends PortInfo {
@@ -61,4 +62,15 @@ public interface WSPortInfo extends PortInfo {
      * if {@link WSService} is configured with WSDL. Otherwise null.
      */
     @Nullable WSDLPort getPort();
+
+    /**
+     * Gives the PolicMap that captures the Policy for the PortInfo
+     *
+     * @return PolicyMap
+     *
+     * @deprecated
+     * Do not use this method as the PolicyMap API is not final yet and might change in next few months.
+     */
+
+    public PolicyMap getPolicyMap();
 }

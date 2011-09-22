@@ -106,7 +106,7 @@ public final class CClassRef extends AbstractCElement implements NClass, CClass 
     public CNonElement getInfo() {
         return this;
     }
-
+    
 // are these going to bite us?
 //    we can compute some of them, but not all.
 

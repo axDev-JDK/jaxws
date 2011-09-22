@@ -50,19 +50,19 @@ public final class NameList {
     /**
      * Local names by their indices. No nulls in this array.
      * Read-only.
-     */
+     */ 
     public final String[] localNames;
 
     /**
      * Number of Names for elements
      */
     public final int numberOfElementNames;
-
+    
     /**
      * Number of Names for attributes
      */
     public final int numberOfAttributeNames;
-
+    
     public NameList(String[] namespaceURIs, boolean[] nsUriCannotBeDefaulted, String[] localNames, int numberElementNames, int numberAttributeNames) {
         this.namespaceURIs = namespaceURIs;
         this.nsUriCannotBeDefaulted = nsUriCannotBeDefaulted;

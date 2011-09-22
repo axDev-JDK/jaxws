@@ -30,14 +30,14 @@ import com.sun.xml.internal.xsom.XSType;
 import com.sun.xml.internal.xsom.impl.Ref;
 
 /**
- *
- *
+ * 
+ * 
  * @author
  *     Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
 public class SubstGroupBaseTypeRef implements Ref.Type {
     private final Ref.Element e;
-
+    
     public SubstGroupBaseTypeRef( Ref.Element _e ) {
         this.e = _e;
     }

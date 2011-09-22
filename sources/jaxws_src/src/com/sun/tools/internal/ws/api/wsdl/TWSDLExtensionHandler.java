@@ -47,7 +47,7 @@ public abstract class TWSDLExtensionHandler {
 
     /**
      * This interface is called during WSDL parsing on detecting any wsdl extension.
-     *
+     * 
      * @param context Parser context that will be passed on by the wsdl parser
      * @param parent  The Parent element within which the extensibility element is defined
      * @param e       The extensibility elemenet

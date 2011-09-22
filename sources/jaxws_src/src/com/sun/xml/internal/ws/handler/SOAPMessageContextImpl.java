@@ -80,14 +80,14 @@ class SOAPMessageContextImpl extends MessageUpdatableContext implements SOAPMess
             throw new WebServiceException(e);
         }
     }
-
+    
     void setPacketMessage(Message newMessage){
         if(newMessage != null) {
             packet.setMessage(newMessage);
             soapMsg = null;
         }
     }
-
+    
     protected void updateMessage() {
         //Check if SOAPMessage has changed, if so construct new one,
         // Packet are handled through MessageContext
@@ -125,5 +125,5 @@ class SOAPMessageContextImpl extends MessageUpdatableContext implements SOAPMess
 
     public Set<String> getRoles() {
         return roles;
-    }
+    } 
 }

@@ -22,13 +22,6 @@
  * CA 95054 USA or visit www.sun.com if you need additional information or
  * have any questions.
  */
-/*
- * $Id: DetailEntry.java,v 1.4 2006/03/30 00:59:38 ofung Exp $
- * $Revision: 1.4 $
- * $Date: 2006/03/30 00:59:38 $
- */
-
-
 package javax.xml.soap;
 
 /**

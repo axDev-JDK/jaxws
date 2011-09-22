@@ -84,7 +84,7 @@ public interface XMLStreamWriterEx extends XMLStreamWriter {
      *
      * <p>
      * (data,start,len) triplet identifies the binary data to be written.
-     * After the method invocation, the callee owns the buffer.
+     * After the method invocation, the callee owns the buffer. 
      *
      * @param contentType
      *      this mandatory parameter identifies the MIME type of the binary data.

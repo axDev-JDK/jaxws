@@ -52,7 +52,7 @@ import com.sun.xml.internal.bind.v2.model.runtime.RuntimeTypeInfoSet;
  *
  * <p>
  * <b>Subject to change without notice</b>.
- *
+ * 
  * @since 2.0 EA1
  * @author
  *     Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
@@ -87,12 +87,12 @@ public abstract class JAXBRIContext extends JAXBContext {
      *      Can be null.
      * @since JAXB 2.1 EA2
      */
-    public static JAXBRIContext newInstance(@NotNull Class[] classes,
-       @Nullable Collection<TypeReference> typeRefs,
-       @Nullable Map<Class,Class> subclassReplacements,
-       @Nullable String defaultNamespaceRemap, boolean c14nSupport,
+    public static JAXBRIContext newInstance(@NotNull Class[] classes, 
+       @Nullable Collection<TypeReference> typeRefs, 
+       @Nullable Map<Class,Class> subclassReplacements, 
+       @Nullable String defaultNamespaceRemap, boolean c14nSupport, 
        @Nullable RuntimeAnnotationReader ar) throws JAXBException {
-        return ContextFactory.createContext(classes, typeRefs, subclassReplacements,
+        return ContextFactory.createContext(classes, typeRefs, subclassReplacements, 
                 defaultNamespaceRemap, c14nSupport, ar, false, false, false);
     }
 
@@ -103,7 +103,7 @@ public abstract class JAXBRIContext extends JAXBContext {
     public static JAXBRIContext newInstance(@NotNull Class[] classes,
         @Nullable Collection<TypeReference> typeRefs,
         @Nullable String defaultNamespaceRemap, boolean c14nSupport ) throws JAXBException {
-        return newInstance(classes,typeRefs, Collections.<Class,Class>emptyMap(),
+        return newInstance(classes,typeRefs, Collections.<Class,Class>emptyMap(), 
                 defaultNamespaceRemap,c14nSupport,null);
     }
 
@@ -246,7 +246,7 @@ public abstract class JAXBRIContext extends JAXBContext {
      *      in the {@link JAXBRIContext#newInstance} method.
      *
      * @return null
-     *      if the referenced type is an anonymous and therefore doesn't have a name.
+     *      if the referenced type is an anonymous and therefore doesn't have a name. 
      */
     public abstract QName getTypeName(@NotNull TypeReference tr);
 
@@ -284,7 +284,7 @@ public abstract class JAXBRIContext extends JAXBContext {
      * @since 2.1.10
      */
     public abstract RuntimeTypeInfoSet getRuntimeTypeInfoSet();
-
+    
     /**
      * Computes a Java identifier from a local name.
      *
@@ -431,7 +431,7 @@ public abstract class JAXBRIContext extends JAXBContext {
      * to specify specific classes that replace the reference to generic classes.
      *
      * <p>
-     * See the release notes for more details about this feature.
+     * See the release notes for more details about this feature. 
      *
      * @since 2.1 EA2
      */

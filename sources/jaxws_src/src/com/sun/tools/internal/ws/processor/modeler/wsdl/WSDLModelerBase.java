@@ -559,12 +559,16 @@ public abstract class WSDLModelerBase implements Modeler {
     }
 
     protected String makePackageQualified(String s) {
-        if (options.defaultPackage != null
-            && !options.defaultPackage.equals("")) {
+        if (s.indexOf(".") != -1) {
+            // s is already package qualified
+            return s;
+        } else if (options.defaultPackage != null
+                && !options.defaultPackage.equals("")) {
             return options.defaultPackage + "." + s;
-        } else {
+        } else {//options.defaultPackage seems to be never null, and this is never executed
             return s;
         }
+
     }
 
 
@@ -622,11 +626,11 @@ public abstract class WSDLModelerBase implements Modeler {
     // bug fix: 4857100
     protected static com.sun.tools.internal.ws.wsdl.document.Message findMessage(
         QName messageName,
-        ProcessSOAPOperationInfo info) {
+        WSDLDocument document) {
         com.sun.tools.internal.ws.wsdl.document.Message message = null;
         try {
             message =
-                (com.sun.tools.internal.ws.wsdl.document.Message)info.document.find(
+                (com.sun.tools.internal.ws.wsdl.document.Message)document.find(
                     Kinds.MESSAGE,
                     messageName);
         } catch (NoSuchEntityException e) {

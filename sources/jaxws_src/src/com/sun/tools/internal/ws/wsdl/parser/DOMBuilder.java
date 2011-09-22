@@ -101,3 +101,4 @@ class DOMBuilder extends SAX2DOMEx {
         super.endElement(namespaceURI, localName, qName);
     }
 }
+

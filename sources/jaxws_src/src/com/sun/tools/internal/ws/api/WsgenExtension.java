@@ -34,7 +34,7 @@ package com.sun.tools.internal.ws.api;
  *
  * {@link WsgenProtocol} annotation can be specified on the
  * extensions to extend -wsdl[:protocol] behaviour.
- *
+ * 
  * @author Jitendra Kotamraju
  * @since JAX-WS RI 2.1.6
  * @see WsgenProtocol

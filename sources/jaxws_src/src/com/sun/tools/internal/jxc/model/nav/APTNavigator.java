@@ -181,6 +181,10 @@ public class APTNavigator implements Navigator<TypeMirror,TypeDeclaration,FieldD
         return hasModifier(m, Modifier.STATIC);
     }
 
+    public boolean isFinalMethod(MethodDeclaration m) {
+        return hasModifier(m, Modifier.FINAL);
+    }
+
     private boolean hasModifier(Declaration d, Modifier mod) {
         return d.getModifiers().contains(mod);
     }
@@ -550,3 +554,4 @@ public class APTNavigator implements Navigator<TypeMirror,TypeDeclaration,FieldD
         }
     };
 }
+

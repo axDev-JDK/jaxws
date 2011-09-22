@@ -395,11 +395,11 @@ public final class JBlock implements JGenerable, JStatement {
 
     /**
      * Creates a "literal" statement directly.
-     *
+     * 
      * <p>
      * Specified string is printed as-is.
      * This is useful as a short-cut.
-     *
+     * 
      * <p>
      * For example, you can invoke this method as:
      * <code>directStatement("a=b+c;")</code>.

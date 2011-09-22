@@ -49,7 +49,7 @@ public interface RuntimeClassInfo extends ClassInfo<Type,Class>, RuntimeNonEleme
     RuntimePropertyInfo getProperty(String name);
 
     Method getFactoryMethod();
-
+    
     /**
      * If {@link #hasAttributeWildcard()} is true,
      * returns the accessor to access the property.

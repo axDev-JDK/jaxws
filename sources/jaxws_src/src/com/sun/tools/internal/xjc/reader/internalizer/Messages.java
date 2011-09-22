@@ -38,7 +38,7 @@ class Messages
         String text = ResourceBundle.getBundle(Messages.class.getPackage().getName() +".MessageBundle").getString(property);
         return MessageFormat.format(text,args);
     }
-
+    
     static final String ERR_INCORRECT_SCHEMA_REFERENCE = // args:2
         "Internalizer.IncorrectSchemaReference";
     static final String ERR_XPATH_EVAL = // arg:1
@@ -79,4 +79,7 @@ class Messages
         "ERR_FILENAME_IS_NOT_URI";
     static final String ERR_GENERAL_SCHEMA_CORRECTNESS_ERROR = // arg:1
         "ERR_GENERAL_SCHEMA_CORRECTNESS_ERROR";
+    static final String DOMFOREST_INPUTSOURCE_IOEXCEPTION = // arg:2
+        "DOMFOREST_INPUTSOURCE_IOEXCEPTION";
+
 }

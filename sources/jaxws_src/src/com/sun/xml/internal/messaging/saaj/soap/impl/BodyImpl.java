@@ -82,7 +82,7 @@ public abstract class BodyImpl extends ElementImpl implements SOAPBody {
         String faultString,
         Locale locale)
         throws SOAPException {
-
+        
         SOAPFault fault = addFault();
         fault.setFaultCode(faultCode);
         fault.setFaultString(faultString, locale);
@@ -209,7 +209,7 @@ public abstract class BodyImpl extends ElementImpl implements SOAPBody {
     public SOAPBodyElement addDocument(Document document)
         throws SOAPException {
         /*
-
+                
                 Element rootNode =
                     document.getDocumentElement();
                 // Causes all deferred nodes to be inflated
@@ -240,12 +240,12 @@ public abstract class BodyImpl extends ElementImpl implements SOAPBody {
                 newBodyElement = (SOAPBodyElement) i.next();
         }
         return newBodyElement;
-        //*/
+        //*/        
     }
 
     protected SOAPElement convertToSoapElement(Element element) {
         if ((element instanceof SOAPBodyElement) &&
-            //this check is required because ElementImpl currently
+            //this check is required because ElementImpl currently 
             // implements SOAPBodyElement
             !(element.getClass().equals(ElementImpl.class))) {
             return (SOAPElement) element;
@@ -299,7 +299,7 @@ public abstract class BodyImpl extends ElementImpl implements SOAPBody {
 
         Document document = null;
         try {
-            DocumentBuilderFactory factory =
+            DocumentBuilderFactory factory = 
                 new com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl();
             factory.setNamespaceAware(true);
             DocumentBuilder builder = factory.newDocumentBuilder();
@@ -317,7 +317,7 @@ public abstract class BodyImpl extends ElementImpl implements SOAPBody {
             throw new SOAPExceptionImpl(
                 "Unable to extract Document from body", e);
         }
-
+            
         firstBodyElement.detachNode();
 
         return document;

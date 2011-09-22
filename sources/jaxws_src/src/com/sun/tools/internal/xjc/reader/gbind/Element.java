@@ -39,7 +39,7 @@ import java.util.Set;
  * Since this package is about a regular expression over element declarations,
  * this represents an XML element declaration (hence the name.)
  *
- * Element needs to be interned, meaning one {@link Element} per one tag name.
+ * Element needs to be interned, meaning one {@link Element} per one tag name. 
  *
  * <p>
  * Implements {@link ElementSet} to represent a self.

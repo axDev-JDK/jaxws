@@ -36,14 +36,14 @@ import com.sun.tools.internal.xjc.reader.xmlschema.BGMBuilder;
 
 /**
  * Controls the <tt>ObjectFactory</tt> method name.
- *
+ * 
  * @author Kohsuke Kawaguchi
  */
 @XmlRootElement(name="factoryMethod")
 public class BIFactoryMethod extends AbstractDeclarationImpl {
     @XmlAttribute
     public String name;
-
+    
     /**
      * If the given component has {@link BIInlineBinaryData} customization,
      * reflect that to the specified property.

@@ -81,7 +81,7 @@ public abstract class OptimizedTransducedAccessorFactory {
         TypeInfo<Type,Class> parent = prop.parent();
         if(!(parent instanceof RuntimeClassInfo))
             return null;
-
+        
         Class dc = ((RuntimeClassInfo)parent).getClazz();
         String newClassName = toVMClassName(dc)+"_JaxbXducedAccessor_"+prop.getName();
 

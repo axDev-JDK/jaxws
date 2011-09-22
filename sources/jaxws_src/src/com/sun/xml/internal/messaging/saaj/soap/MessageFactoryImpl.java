@@ -56,23 +56,23 @@ public class MessageFactoryImpl extends MessageFactory {
     protected  OutputStream listener;
 
     protected boolean lazyAttachments = false;
-
+    
     public  OutputStream listen(OutputStream newListener) {
         OutputStream oldListener = listener;
         listener = newListener;
         return oldListener;
     }
-
+    
     public SOAPMessage createMessage() throws SOAPException {
         throw new UnsupportedOperationException();
     }
 
-    public SOAPMessage createMessage(boolean isFastInfoset,
-        boolean acceptFastInfoset) throws SOAPException
+    public SOAPMessage createMessage(boolean isFastInfoset, 
+        boolean acceptFastInfoset) throws SOAPException 
     {
         throw new UnsupportedOperationException();
     }
-
+    
     public SOAPMessage createMessage(MimeHeaders headers, InputStream in)
         throws SOAPException, IOException {
         String contentTypeString = MessageImpl.getContentType(headers);
@@ -93,7 +93,7 @@ public class MessageFactoryImpl extends MessageFactory {
                 log.severe("SAAJ0530.soap.unknown.Content-Type");
                 throw new SOAPExceptionImpl("Unrecognized Content-Type");
             }
-        } catch (ParseException e) {
+        } catch (ParseException e) {            
             log.severe("SAAJ0531.soap.cannot.parse.Content-Type");
             throw new SOAPExceptionImpl(
                 "Unable to parse content type: " + e.getMessage());

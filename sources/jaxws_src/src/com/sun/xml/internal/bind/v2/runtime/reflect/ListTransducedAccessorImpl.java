@@ -49,7 +49,7 @@ public final class ListTransducedAccessorImpl<BeanT,ListT,ItemT,PackT> extends D
      */
     private final Lister<BeanT,ListT,ItemT,PackT> lister;
     /**
-     * {@link Accessor} to get/set the list.
+     * {@link Accessor} to get/set the list. 
      */
     private final Accessor<BeanT,ListT> acc;
 

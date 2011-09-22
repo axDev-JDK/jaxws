@@ -81,7 +81,7 @@ public final class InterningXmlVisitor implements XmlVisitor {
     public UnmarshallingContext getContext() {
         return next.getContext();
     }
-
+    
     public TextPredictor getPredictor() {
         return next.getPredictor();
     }

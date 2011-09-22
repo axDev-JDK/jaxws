@@ -288,3 +288,4 @@ public final class JAnnotationUse extends JAnnotationValue {
         return memberValues.size()==1 && memberValues.containsKey("value");
     }
 }
+

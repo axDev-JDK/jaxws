@@ -56,18 +56,18 @@ import com.sun.xml.internal.xsom.XSSimpleType;
 
 /**
  * Global binding customization. The code is highly temporary.
- *
+ * 
  * <p>
  * One of the information contained in a global customization
  * is the default binding for properties. This object contains a
  * BIProperty object to keep this information.
- *
+ * 
  * @author
  *  Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
 @XmlRootElement(name="globalBindings")
 public final class BIGlobalBinding extends AbstractDeclarationImpl {
-
+    
 
     /**
      * Gets the name converter that will govern the XML->Java
@@ -203,7 +203,7 @@ public final class BIGlobalBinding extends AbstractDeclarationImpl {
     /*package*/ boolean isJavaNamingConventionEnabled = true;
 
     /**
-     * True to generate classes for every simple type.
+     * True to generate classes for every simple type. 
      */
     @XmlAttribute(name="mapSimpleTypeDef")
     boolean simpleTypeSubstitution = false;
@@ -391,7 +391,7 @@ public final class BIGlobalBinding extends AbstractDeclarationImpl {
      */
     public BIGlobalBinding() {
     }
-
+    
     public void setParent(BindInfo parent) {
         super.setParent(parent);
         // fill in the remaining default values
@@ -412,7 +412,7 @@ public final class BIGlobalBinding extends AbstractDeclarationImpl {
 
             QName name = e.getKey();
             BIConversion conv = e.getValue();
-
+            
             XSSimpleType st = schema.getSimpleType(name.getNamespaceURI(),name.getLocalPart());
             if(st==null) {
                 Ring.get(ErrorReceiver.class).error(
@@ -421,16 +421,16 @@ public final class BIGlobalBinding extends AbstractDeclarationImpl {
                 );
                 continue; // abort
             }
-
+            
             getBuilder().getOrCreateBindInfo(st).addDecl(conv);
         }
     }
-
-
+    
+    
     /**
      * Checks if the given XML Schema built-in type can be mapped to
      * a type-safe enum class.
-     *
+     * 
      * @param typeName
      */
     public boolean canBeMappedToTypeSafeEnum( QName typeName ) {
@@ -492,6 +492,22 @@ public final class BIGlobalBinding extends AbstractDeclarationImpl {
     static final class GlobalStandardConversion extends BIConversion.User {
         @XmlAttribute
         QName xmlType;
+
+        @Override
+        public boolean equals(Object obj) {
+            if(obj instanceof GlobalStandardConversion) {
+                return ((GlobalStandardConversion)obj).xmlType.equals(xmlType);
+    }
+
+            return false;
+        }
+
+        @Override
+        public int hashCode() {
+            int hash = 7;
+            hash = 73 * hash + (this.xmlType != null ? this.xmlType.hashCode() : 0);
+            return hash;
+        }
     }
 
     /**
@@ -500,5 +516,61 @@ public final class BIGlobalBinding extends AbstractDeclarationImpl {
     static final class GlobalVendorConversion extends BIConversion.UserAdapter {
         @XmlAttribute
         QName xmlType;
+
+        @Override
+        public boolean equals(Object obj) {
+            if(obj instanceof GlobalVendorConversion) {
+                return ((GlobalVendorConversion)obj).xmlType.equals(xmlType);
+    }
+
+            return false;
+        }
+
+        @Override
+        public int hashCode() {
+            int hash = 7;
+            hash = 73 * hash + (this.xmlType != null ? this.xmlType.hashCode() : 0);
+            return hash;
+        }
+    }
+
+    /* don't want to override equals to avoid overriding hashcode for this complex object, too */
+    public boolean isEqual(BIGlobalBinding b) {
+        boolean equal = 
+            this.isJavaNamingConventionEnabled == b.isJavaNamingConventionEnabled &&
+            this.simpleTypeSubstitution == b.simpleTypeSubstitution &&
+            this.fixedAttributeAsConstantProperty == b.fixedAttributeAsConstantProperty &&
+            this.generateEnumMemberName == b.generateEnumMemberName &&
+            this.codeGenerationStrategy == b.codeGenerationStrategy &&
+            this.serializable == b.serializable &&
+            this.superClass == b.superClass &&
+            this.superInterface == b.superInterface &&
+            this.generateElementClass == b.generateElementClass &&
+            this.generateMixedExtensions == b.generateMixedExtensions &&
+            this.generateElementProperty == b.generateElementProperty &&
+            this.choiceContentProperty == b.choiceContentProperty &&
+            this.optionalProperty == b.optionalProperty &&
+            this.defaultEnumMemberSizeCap == b.defaultEnumMemberSizeCap &&
+            this.flattenClasses == b.flattenClasses;
+
+        if (!equal) return false;
+
+        return isEqual(this.nameConverter, b.nameConverter) &&
+               isEqual(this.noMarshaller, b.noMarshaller) &&
+               isEqual(this.noUnmarshaller, b.noUnmarshaller) &&
+               isEqual(this.noValidator, b.noValidator) &&
+               isEqual(this.noValidatingUnmarshaller, b.noValidatingUnmarshaller) &&
+               isEqual(this.typeSubstitution, b.typeSubstitution) &&
+               isEqual(this.simpleMode, b.simpleMode) &&
+               isEqual(this.enumBaseTypes, b.enumBaseTypes) &&
+               isEqual(this.treatRestrictionLikeNewType, b.treatRestrictionLikeNewType) &&
+               isEqual(this.globalConversions, b.globalConversions);
+    }
+
+    private boolean isEqual(Object a, Object b) {
+        if (a != null) {
+            return a.equals(b);
+        }
+        return (b == null);
     }
 }

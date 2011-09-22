@@ -52,7 +52,7 @@ public class SOAPPart1_1Impl extends SOAPPartImpl implements SOAPConstants {
     public SOAPPart1_1Impl() {
         super();
      }
-
+    
     public SOAPPart1_1Impl(MessageImpl message) {
         super(message);
     }

@@ -26,8 +26,10 @@ package com.sun.tools.internal.xjc.reader.internalizer;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.text.ParseException;
@@ -111,7 +113,7 @@ class Internalizer {
     private SCDBasedBindingSet transform() {
 
         // either target nodes are conventional DOM nodes (as per spec),
-        Map<Element,Node> targetNodes = new HashMap<Element,Node>();
+        Map<Element,List<Node>> targetNodes = new HashMap<Element,List<Node>>();
         // ... or it will be schema components by means of SCD (RI extension)
         SCDBasedBindingSet scd = new SCDBasedBindingSet(forest);
 
@@ -149,6 +151,13 @@ class Internalizer {
             if( a.getLocalName().equals("scd") )
                 continue;
 
+            // enhancements
+            if( a.getLocalName().equals("required") ) //
+                continue;
+            if( a.getLocalName().equals("multiple") ) //
+                continue;
+
+
             // TODO: flag error for this undefined attribute
         }
     }
@@ -168,38 +177,71 @@ class Internalizer {
      */
     private void buildTargetNodeMap( Element bindings, @NotNull Node inheritedTarget,
                                      @Nullable SCDBasedBindingSet.Target inheritedSCD,
-                                     Map<Element,Node> result, SCDBasedBindingSet scdResult ) {
+                                     Map<Element,List<Node>> result, SCDBasedBindingSet scdResult ) {
         // start by the inherited target
         Node target = inheritedTarget;
+        ArrayList<Node> targetMultiple = null;
 
         validate(bindings); // validate this node
+
+        boolean required = true;
+        boolean multiple = false;
+
+        if(bindings.getAttribute("required") != null) {
+            String requiredAttr = bindings.getAttribute("required");
+
+            if(requiredAttr.equals("no") || requiredAttr.equals("false") || requiredAttr.equals("0"))
+                required = false;
+        }
+
+        if(bindings.getAttribute("multiple") != null) {
+            String requiredAttr = bindings.getAttribute("multiple");
+
+            if(requiredAttr.equals("yes") || requiredAttr.equals("true") || requiredAttr.equals("1"))
+                multiple = true;
+        }
+
 
         // look for @schemaLocation
         if( bindings.getAttributeNode("schemaLocation")!=null ) {
             String schemaLocation = bindings.getAttribute("schemaLocation");
 
-            try {
-                // absolutize this URI.
-                // TODO: use the URI class
-                // TODO: honor xml:base
-                schemaLocation = new URL(
-                    new URL( forest.getSystemId(bindings.getOwnerDocument()) ),
-                    schemaLocation ).toExternalForm();
-            } catch( MalformedURLException e ) {
-                // continue with the original schemaLocation value
+            // enhancement - schemaLocation="*" = bind to all schemas..
+            if(schemaLocation.equals("*")) {
+                for(String systemId : forest.listSystemIDs()) {
+                    if (result.get(bindings) == null)
+                        result.put(bindings, new ArrayList<Node>());
+                    result.get(bindings).add(forest.get(systemId).getDocumentElement());
+
+                    Element[] children = DOMUtils.getChildElements(bindings, Const.JAXB_NSURI, "bindings");
+                    for (Element value : children)
+                        buildTargetNodeMap(value, forest.get(systemId).getDocumentElement(), inheritedSCD, result, scdResult);
+                }
+                return;
+            } else {
+                try {
+                    // absolutize this URI.
+                    // TODO: use the URI class
+                    // TODO: honor xml:base
+                    schemaLocation = new URL(
+                        new URL( forest.getSystemId(bindings.getOwnerDocument()) ),
+                        schemaLocation ).toExternalForm();
+                } catch( MalformedURLException e ) {
+                    // continue with the original schemaLocation value
+                }
+
+                target = forest.get(schemaLocation);
+                if(target==null) {
+                    reportError( bindings,
+                        Messages.format(Messages.ERR_INCORRECT_SCHEMA_REFERENCE,
+                            schemaLocation,
+                            EditDistance.findNearest(schemaLocation,forest.listSystemIDs())));
+
+                    return; // abort processing this <jaxb:bindings>
+                }
+
+                target = ((Document)target).getDocumentElement();
             }
-
-            target = forest.get(schemaLocation);
-            if(target==null) {
-                reportError( bindings,
-                    Messages.format(Messages.ERR_INCORRECT_SCHEMA_REFERENCE,
-                        schemaLocation,
-                        EditDistance.findNearest(schemaLocation,forest.listSystemIDs())));
-
-                return; // abort processing this <jaxb:bindings>
-            }
-
-            target = ((Document)target).getDocumentElement();
         }
 
         // look for @node
@@ -212,38 +254,69 @@ class Internalizer {
                 xpath.setNamespaceContext(new NamespaceContextImpl(bindings));
                 nlst = (NodeList)xpath.evaluate(nodeXPath,target,XPathConstants.NODESET);
             } catch (XPathExpressionException e) {
-                reportError( bindings,
-                    Messages.format(Messages.ERR_XPATH_EVAL,e.getMessage()), e );
-                return; // abort processing this <jaxb:bindings>
+                if(required) {
+                    reportError( bindings,
+                        Messages.format(Messages.ERR_XPATH_EVAL,e.getMessage()), e );
+                    return; // abort processing this <jaxb:bindings>
+                } else {
+                    return;
+                }
             }
 
             if( nlst.getLength()==0 ) {
-                reportError( bindings,
-                    Messages.format(Messages.NO_XPATH_EVAL_TO_NO_TARGET, nodeXPath) );
+                if(required)
+                    reportError( bindings,
+                        Messages.format(Messages.NO_XPATH_EVAL_TO_NO_TARGET, nodeXPath) );
                 return; // abort
             }
 
             if( nlst.getLength()!=1 ) {
-                reportError( bindings,
-                    Messages.format(Messages.NO_XPATH_EVAL_TOO_MANY_TARGETS, nodeXPath,nlst.getLength()) );
-                return; // abort
+                if(!multiple) {
+                    reportError( bindings,
+                        Messages.format(Messages.NO_XPATH_EVAL_TOO_MANY_TARGETS, nodeXPath,nlst.getLength()) );
+
+                    return; // abort
+                } else {
+                    if(targetMultiple == null) targetMultiple = new ArrayList<Node>();
+                    for(int i = 0; i < nlst.getLength(); i++) {
+                        targetMultiple.add(nlst.item(i));
+                    }
+                }
             }
 
-            Node rnode = nlst.item(0);
-            if(!(rnode instanceof Element )) {
-                reportError( bindings,
-                    Messages.format(Messages.NO_XPATH_EVAL_TO_NON_ELEMENT, nodeXPath) );
-                return; // abort
-            }
+            // check
+            if(!multiple || nlst.getLength() == 1) {
+                Node rnode = nlst.item(0);
+                if (!(rnode instanceof Element)) {
+                    reportError(bindings,
+                            Messages.format(Messages.NO_XPATH_EVAL_TO_NON_ELEMENT, nodeXPath));
+                    return; // abort
+                }
 
-            if( !forest.logic.checkIfValidTargetNode(forest,bindings,(Element)rnode) ) {
-                reportError( bindings,
-                    Messages.format(Messages.XPATH_EVAL_TO_NON_SCHEMA_ELEMENT,
-                        nodeXPath, rnode.getNodeName() ) );
-                return; // abort
-            }
+                if (!forest.logic.checkIfValidTargetNode(forest, bindings, (Element) rnode)) {
+                    reportError(bindings,
+                            Messages.format(Messages.XPATH_EVAL_TO_NON_SCHEMA_ELEMENT,
+                            nodeXPath, rnode.getNodeName()));
+                    return; // abort
+                }
 
-            target = rnode;
+                target = rnode;
+            } else {
+                for(Node rnode : targetMultiple) {
+                    if (!(rnode instanceof Element)) {
+                        reportError(bindings,
+                                Messages.format(Messages.NO_XPATH_EVAL_TO_NON_ELEMENT, nodeXPath));
+                        return; // abort
+                    }
+
+                    if (!forest.logic.checkIfValidTargetNode(forest, bindings, (Element) rnode)) {
+                        reportError(bindings,
+                                Messages.format(Messages.XPATH_EVAL_TO_NON_SCHEMA_ELEMENT,
+                                nodeXPath, rnode.getNodeName()));
+                        return; // abort
+                    }
+                }
+            }
         }
 
         // look for @scd
@@ -267,52 +340,77 @@ class Internalizer {
         }
 
         // update the result map
-        if(inheritedSCD!=null)
+        if (inheritedSCD != null) {
             inheritedSCD.addBinidng(bindings);
-        else
-            result.put( bindings, target );
+        } else if (!multiple || targetMultiple == null) {
+            if (result.get(bindings) == null)
+                result.put(bindings, new ArrayList<Node>());
+            result.get(bindings).add(target);
+        } else {
+            for (Node rnode : targetMultiple) {
+                if (result.get(bindings) == null)
+                    result.put(bindings, new ArrayList<Node>());
+
+                result.get(bindings).add(rnode);
+            }
+
+        }
+
 
         // look for child <jaxb:bindings> and process them recursively
         Element[] children = DOMUtils.getChildElements( bindings, Const.JAXB_NSURI, "bindings" );
         for (Element value : children)
-            buildTargetNodeMap(value, target, inheritedSCD, result, scdResult);
+            if(!multiple || targetMultiple == null)
+                buildTargetNodeMap(value, target, inheritedSCD, result, scdResult);
+            else {
+                for(Node rnode : targetMultiple) {
+                    buildTargetNodeMap(value, rnode, inheritedSCD, result, scdResult);
+                }
+            }
     }
 
     /**
      * Moves JAXB customizations under their respective target nodes.
      */
-    private void move( Element bindings, Map<Element,Node> targetNodes ) {
-        Node target = targetNodes.get(bindings);
-        if(target==null)
-            // this must be the result of an error on the external binding.
+    private void move(Element bindings, Map<Element, List<Node>> targetNodes) {
+        List<Node> nodelist = targetNodes.get(bindings);
+
+        if(nodelist == null) {
+                return; // abort
+        }
+
+        for (Node target : nodelist) {
+            if (target == null) // this must be the result of an error on the external binding.
             // recover from the error by ignoring this node
-            return;
+            {
+                return;
+            }
 
-        for (Element item : DOMUtils.getChildElements(bindings)) {
-            String localName = item.getLocalName();
+            for (Element item : DOMUtils.getChildElements(bindings)) {
+                String localName = item.getLocalName();
 
-            if ("bindings".equals(localName)) {
-                // process child <jaxb:bindings> recursively
-                move(item, targetNodes);
-            } else
-            if ("globalBindings".equals(localName)) {
-                // <jaxb:globalBindings> always go to the root of document.
-                moveUnder(item,forest.getOneDocument().getDocumentElement());
-            } else {
-                if (!(target instanceof Element)) {
-                    reportError(item,
-                            Messages.format(Messages.CONTEXT_NODE_IS_NOT_ELEMENT));
-                    return; // abort
+                if ("bindings".equals(localName)) {
+                    // process child <jaxb:bindings> recursively
+                    move(item, targetNodes);
+                } else if ("globalBindings".equals(localName)) {
+                        // <jaxb:globalBindings> always go to the root of document.
+                    moveUnder(item, forest.getOneDocument().getDocumentElement());
+                } else {
+                    if (!(target instanceof Element)) {
+                        reportError(item,
+                                Messages.format(Messages.CONTEXT_NODE_IS_NOT_ELEMENT));
+                        return; // abort
+                    }
+
+                    if (!forest.logic.checkIfValidTargetNode(forest, item, (Element) target)) {
+                        reportError(item,
+                                Messages.format(Messages.ORPHANED_CUSTOMIZATION, item.getNodeName()));
+                        return; // abort
+                    }
+
+                    // move this node under the target
+                    moveUnder(item, (Element) target);
                 }
-
-                if (!forest.logic.checkIfValidTargetNode(forest, item, (Element)target)) {
-                    reportError(item,
-                            Messages.format(Messages.ORPHANED_CUSTOMIZATION, item.getNodeName()));
-                    return; // abort
-                }
-
-                // move this node under the target
-                moveUnder(item,(Element)target);
             }
         }
     }
@@ -380,7 +478,6 @@ class Internalizer {
             // this effectively clones a ndoe,, so we need to copy locators.
             copyLocators( original, decl );
         }
-
 
         realTarget.appendChild( decl );
     }

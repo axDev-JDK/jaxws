@@ -78,7 +78,7 @@ public abstract class HandlerTube extends AbstractFilterTubeImpl {
         if(that.cousinTube != null) {
             this.cousinTube = cloner.copy(that.cousinTube);
         }
-        this.port = that.port;
+        this.port = that.port;        
     }
 
     @Override
@@ -111,7 +111,7 @@ public abstract class HandlerTube extends AbstractFilterTubeImpl {
                 }
             }
             requestProcessingSucessful = true;
-            // Call next Tube
+            // Call next Tube 
             return doInvoke(super.next, packet);
         } catch (RuntimeException re) {
             if(isOneWay) {
@@ -175,7 +175,7 @@ public abstract class HandlerTube extends AbstractFilterTubeImpl {
 
         }
     }
-
+    
     /**
      * Must be overridden by HandlerTube that drives other handler tubes for processing a message.
      * On Client-side: ClientLogicalHandlerTube drives the Handler Processing.
@@ -210,7 +210,7 @@ public abstract class HandlerTube extends AbstractFilterTubeImpl {
         }
         if (processor != null)
             closeHandlers(msgContext);
-
+        
         // Clean up the exchange for next invocation.
         exchange = null;
         requestProcessingSucessful = false;
@@ -293,7 +293,7 @@ public abstract class HandlerTube extends AbstractFilterTubeImpl {
         return handlers.isEmpty();
     }
     abstract MessageUpdatableContext getContext(Packet p);
-
+    
     private boolean isHandleFault(Packet packet) {
         if (cousinTube != null) {
             return exchange.isHandleFault();
@@ -355,5 +355,5 @@ public abstract class HandlerTube extends AbstractFilterTubeImpl {
             this.handleFalse = true;
         }
     }
-
+    
 }

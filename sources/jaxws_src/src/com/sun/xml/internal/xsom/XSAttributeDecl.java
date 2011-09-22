@@ -28,7 +28,7 @@ package com.sun.xml.internal.xsom;
 
 /**
  * Attribute declaration.
- *
+ * 
  * @author
  *  Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */

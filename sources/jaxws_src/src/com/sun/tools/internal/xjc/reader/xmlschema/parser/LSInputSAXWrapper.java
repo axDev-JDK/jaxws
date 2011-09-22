@@ -33,7 +33,7 @@ import org.xml.sax.InputSource;
 
 /**
  * LSInput implementation that wraps a SAX InputSource
- *
+ * 
  * @author Ryan.Shoemaker@Sun.COM
  */
 public class LSInputSAXWrapper implements LSInput {

@@ -70,7 +70,7 @@ public final class CCustomizations extends ArrayList<CPluginCustomization> {
 //        // loop check
 //        for( CCustomizations c = model.customizations; c!=null; c=c.next )
 //            assert c!=this;
-
+        
         this.next = model.customizations;
         model.customizations = this;
         assert owner!=null;

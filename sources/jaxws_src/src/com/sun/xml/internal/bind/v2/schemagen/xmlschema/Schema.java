@@ -56,16 +56,16 @@ public interface Schema
     public Schema attributeFormDefault(String value);
 
     @XmlAttribute
-    public Schema blockDefault(String[] value);
-
-    @XmlAttribute
     public Schema blockDefault(String value);
 
     @XmlAttribute
-    public Schema finalDefault(String value);
+    public Schema blockDefault(String[] value);
 
     @XmlAttribute
     public Schema finalDefault(String[] value);
+
+    @XmlAttribute
+    public Schema finalDefault(String value);
 
     @XmlAttribute
     public Schema version(String value);

@@ -59,7 +59,7 @@ public interface RuntimeLeafInfo extends LeafInfo<Type,Class>, RuntimeNonElement
      * While conceptually this method belongs to {@link RuntimeNonElement},
      * if we do that we have to put a lot of dummy implementations everywhere,
      * so it's placed here, where it's actually needed.
-     *
+     * 
      * @return
      *      Always non-null. Do not modify the returned array.
      */

@@ -30,7 +30,7 @@ import com.sun.xml.internal.xsom.XSWildcard;
 
 /**
  * Visits three kinds of {@link XSWildcard}.
- *
+ * 
  * @author
  *     Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */

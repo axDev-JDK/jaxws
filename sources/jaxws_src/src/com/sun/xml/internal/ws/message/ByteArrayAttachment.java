@@ -60,7 +60,7 @@ public final class ByteArrayAttachment implements Attachment {
         this.len = len;
         this.mimeType = mimeType;
     }
-
+    
     public ByteArrayAttachment(@NotNull String contentId, byte[] data, String mimeType) {
         this(contentId, data, 0, data.length, mimeType);
     }

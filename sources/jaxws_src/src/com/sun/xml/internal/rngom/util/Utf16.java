@@ -45,3 +45,4 @@ public abstract class Utf16 {
     return (char)(((c - 0x10000) & 0x3FF) | 0xDC00);
   }
 }
+

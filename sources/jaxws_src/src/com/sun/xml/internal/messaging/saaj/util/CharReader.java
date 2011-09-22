@@ -38,7 +38,7 @@ public class CharReader extends CharArrayReader {
     public CharReader(char buf[], int offset, int length) {
         super(buf, offset, length);
     }
-
+        
     public char[] getChars() {
         return buf;
     }

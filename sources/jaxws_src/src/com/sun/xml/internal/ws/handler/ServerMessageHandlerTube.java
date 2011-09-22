@@ -22,6 +22,7 @@
  * CA 95054 USA or visit www.sun.com if you need additional information or
  * have any questions.
  */
+
 package com.sun.xml.internal.ws.handler;
 
 import com.sun.xml.internal.ws.api.WSBinding;
@@ -140,7 +141,7 @@ public class ServerMessageHandlerTube extends HandlerTube{
     @Override
     protected void initiateClosing(MessageContext mc) {
       close(mc);
-      super.initiateClosing(mc);
+      super.initiateClosing(mc);  
     }
 
    public AbstractFilterTubeImpl copy(TubeCloner cloner) {

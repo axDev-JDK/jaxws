@@ -1,0 +1,58 @@
+/*
+ * Copyright 2005-2006 Sun Microsystems, Inc.  All Rights Reserved.
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ *
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation.  Sun designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Sun in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * Please contact Sun Microsystems, Inc., 4150 Network Circle, Santa Clara,
+ * CA 95054 USA or visit www.sun.com if you need additional information or
+ * have any questions.
+ */
+package javax.xml.ws;
+
+import javax.xml.ws.Endpoint;
+import java.util.Set;
+
+/**
+ * <code>EndpointContext</code> allows multiple endpoints in an application
+ * to share any information. For example, servlet application's war may
+ * contain multiple endpoints and these endpoints can get addresses of each
+ * other by sharing this context. If multiple endpoints share different
+ * ports of a WSDL, then the multiple port addresses can be patched
+ * when the WSDL is accessed. It also allows all endpoints to share any
+ * other runtime information.
+ *
+ * <p>
+ * This needs to be set by using {@link Endpoint#setEndpointContext}
+ * before {@link Endpoint#publish} methods.
+ *
+ * @author Jitendra Kotamraju
+ * @since JAX-WS 2.2
+ */
+public abstract class EndpointContext {
+
+    /**
+     * This gives list of endpoints in an application. For e.g in
+     * servlet container, a war file may contain multiple endpoints.
+     * In case of http, these endpoints are hosted on the same http
+     * server.
+     *
+     * @return list of all endpoints in an application
+     */
+    public abstract Set<Endpoint> getEndpoints();
+
+}

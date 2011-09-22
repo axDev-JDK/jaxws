@@ -47,7 +47,7 @@ import java.util.*;
 /**
  * Builds all possible pseudo schemas for async operation ResponseBean to feed to XJC.
  *
- * @author Vivek Pandey
+ * @author Vivek Pandey 
  */
 public class PseudoSchemaBuilder {
 
@@ -59,15 +59,17 @@ public class PseudoSchemaBuilder {
     private static final String w3ceprSchemaBinding = "<bindings\n" +
             "  xmlns=\"http://java.sun.com/xml/ns/jaxb\"\n" +
             "  xmlns:wsa=\"http://www.w3.org/2005/08/addressing\"\n" +
+            "  xmlns:xjc=\"http://java.sun.com/xml/ns/jaxb/xjc\"\n" +
             "  version=\"2.1\">\n" +
             "  \n" +
             "  <bindings scd=\"x-schema::wsa\" if-exists=\"true\">\n" +
-            "    <schemaBindings map=\"false\" />\n" +
+   //comment the following, otw JAXB won't generate ObjectFactory, classes from wsa schema. See JAX-WS-804
+   //         "    <schemaBindings map=\"false\" />\n" +
             "    <bindings scd=\"wsa:EndpointReference\">\n" +
-            "      <class ref=\"javax.xml.ws.wsaddressing.W3CEndpointReference\"/>\n" +
+            "      <class ref=\"javax.xml.ws.wsaddressing.W3CEndpointReference\" xjc:recursive=\"true\"/>\n" +
             "    </bindings>\n" +
             "    <bindings scd=\"~wsa:EndpointReferenceType\">\n" +
-            "      <class ref=\"javax.xml.ws.wsaddressing.W3CEndpointReference\"/>\n" +
+            "      <class ref=\"javax.xml.ws.wsaddressing.W3CEndpointReference\" xjc:recursive=\"true\"/>\n" +
             "    </bindings>\n" +
             "  </bindings>\n" +
             "</bindings>";
@@ -78,7 +80,8 @@ public class PseudoSchemaBuilder {
             "  version=\"2.1\">\n" +
             "  \n" +
             "  <bindings scd=\"x-schema::wsa\" if-exists=\"true\">\n" +
-            "    <schemaBindings map=\"false\" />\n" +
+//comment the following, otw JAXB won't generate ObjectFactory, classes from wsa schema. See JAX-WS-804
+//            "    <schemaBindings map=\"false\" />\n" +
             "    <bindings scd=\"wsa:EndpointReference\">\n" +
             "      <class ref=\"com.sun.xml.internal.ws.developer.MemberSubmissionEndpointReference\"/>\n" +
             "    </bindings>\n" +
@@ -189,6 +192,10 @@ public class PseudoSchemaBuilder {
             outputMessage = operation.getOutput().resolveMessage(wsdlDocument);
         if(outputMessage != null){
             List<MessagePart> allParts = new ArrayList<MessagePart>(outputMessage.getParts());
+            if(options.additionalHeaders) {
+                List<MessagePart> addtionalHeaderParts = wsdlModeler.getAdditionHeaderParts(bindingOperation, outputMessage, false);
+                allParts.addAll(addtionalHeaderParts);
+            }
             if(allParts.size() > 1)
                 build(getOperationName(operationName), allParts);
         }

@@ -39,7 +39,7 @@ import java.util.Arrays;
 public class DefaultAuthTester {
     public static void main(String[] args) throws BadCommandLineException {
         DefaultAuthenticator da = new MyAuthenticator(new ConsoleErrorReporter(System.out), new File("c:\\Users\\vivekp\\.metro\\auth"));
-
+                
         PasswordAuthentication pa = da.getPasswordAuthentication();
         if(pa!= null && pa.getUserName().equals("vivek") && Arrays.equals(pa.getPassword(), "test".toCharArray()))
             System.out.println("Success!");

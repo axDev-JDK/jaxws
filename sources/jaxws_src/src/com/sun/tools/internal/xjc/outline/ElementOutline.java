@@ -36,7 +36,7 @@ import com.sun.tools.internal.xjc.model.CElementInfo;
  * not created for all {@link CElementInfo}s.
  * It is only for those {@link CElementInfo} that has a class.
  * (IOW, {@link CElementInfo#hasClass()}
- *
+ * 
  * @author Kohsuke Kawaguchi
  */
 public abstract class ElementOutline {

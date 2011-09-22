@@ -28,7 +28,7 @@ package com.sun.xml.internal.xsom;
 
 /**
  * Union simple type.
- *
+ * 
  * @author
  *  Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */

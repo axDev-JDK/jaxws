@@ -30,7 +30,7 @@ import com.sun.tools.internal.xjc.model.CPropertyInfo;
 
 /**
  * {@link SingleField} that forces the primitive accessor type.
- *
+ * 
  * @author Kohsuke Kawaguchi
  */
 public class SinglePrimitiveAccessField extends SingleField {

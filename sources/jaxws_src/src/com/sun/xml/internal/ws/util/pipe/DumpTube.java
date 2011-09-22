@@ -101,6 +101,7 @@ public class DumpTube extends AbstractFilterTubeImpl {
         else
             try {
                 XMLStreamWriter writer = staxOut.createXMLStreamWriter(new PrintStream(out) {
+                    @Override
                     public void close() {
                         // noop
                     }

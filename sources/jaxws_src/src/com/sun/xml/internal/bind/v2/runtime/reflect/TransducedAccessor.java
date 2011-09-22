@@ -151,7 +151,7 @@ public abstract class TransducedAccessor<BeanT> {
         if(prop.id()==ID.IDREF)
             return new IDREFTransducedAccessorImpl(prop.getAccessor());
 
-        if(xducer.isDefault() && !context.fastBoot) {
+        if(xducer.isDefault() && context != null && !context.fastBoot) {
             TransducedAccessor xa = OptimizedTransducedAccessorFactory.get(prop);
             if(xa!=null)    return xa;
         }
@@ -267,7 +267,7 @@ public abstract class TransducedAccessor<BeanT> {
         public String print(BeanT bean) throws AccessorException, SAXException {
             TargetT target = acc.get(bean);
             if(target==null)    return null;
-
+            
             XMLSerializer w = XMLSerializer.getInstance();
             try {
                 String id = w.grammar.getBeanInfo(target,true).getId(target,w);

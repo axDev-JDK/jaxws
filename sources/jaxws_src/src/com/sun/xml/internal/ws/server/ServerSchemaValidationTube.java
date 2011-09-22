@@ -22,12 +22,18 @@
  * CA 95054 USA or visit www.sun.com if you need additional information or
  * have any questions.
  */
+
 package com.sun.xml.internal.ws.server;
 
-import com.sun.istack.internal.Nullable;
 import com.sun.xml.internal.ws.api.WSBinding;
+import com.sun.xml.internal.ws.api.SOAPVersion;
+import com.sun.xml.internal.ws.api.model.SEIModel;
+import com.sun.xml.internal.ws.api.model.wsdl.WSDLPort;
+import com.sun.xml.internal.ws.api.message.Packet;
+import com.sun.xml.internal.ws.api.message.Message;
 import com.sun.xml.internal.ws.api.pipe.Tube;
 import com.sun.xml.internal.ws.api.pipe.TubeCloner;
+import com.sun.xml.internal.ws.api.pipe.NextAction;
 import com.sun.xml.internal.ws.api.pipe.helper.AbstractTubeImpl;
 import com.sun.xml.internal.ws.api.server.SDDocument;
 import com.sun.xml.internal.ws.api.server.SDDocumentSource;
@@ -37,16 +43,14 @@ import com.sun.xml.internal.ws.util.ByteArrayBuffer;
 import com.sun.xml.internal.ws.util.MetadataUtil;
 import com.sun.xml.internal.ws.util.pipe.AbstractSchemaValidationTube;
 import com.sun.xml.internal.ws.util.xml.MetadataDocument;
-import org.w3c.dom.*;
+import com.sun.xml.internal.ws.fault.SOAPFaultBuilder;
 import org.w3c.dom.ls.LSInput;
 import org.w3c.dom.ls.LSResourceResolver;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.NamespaceSupport;
 
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
-import javax.xml.transform.dom.DOMSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
@@ -72,13 +76,23 @@ public class ServerSchemaValidationTube extends AbstractSchemaValidationTube {
     //private final ServiceDefinition docs;
     private final Schema schema;
     private final Validator validator;
-
+    
     private final boolean noValidation;
+    private final SEIModel seiModel;
+    private final WSDLPort wsdlPort;
 
-    public ServerSchemaValidationTube(WSEndpoint endpoint, WSBinding binding, Tube next) {
+    public ServerSchemaValidationTube(WSEndpoint endpoint, WSBinding binding,
+            SEIModel seiModel, WSDLPort wsdlPort, Tube next) {
         super(binding, next);
+        this.seiModel = seiModel;
+        this.wsdlPort = wsdlPort;
         //docs = endpoint.getServiceDefinition();
         SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        try {
+            sf.setFeature(HONOUR_ALL_SCHEMA_LOCATIONS_ID, true);
+       } catch(Exception e) {
+            // xerces 2.7 supports this feature. So just ignore the exception.
+        }
         Source[] sources = getSchemaSources(endpoint.getServiceDefinition());
         for(Source source : sources) {
             LOGGER.fine("Constructing validation Schema from = "+source.getSystemId());
@@ -93,6 +107,11 @@ public class ServerSchemaValidationTube extends AbstractSchemaValidationTube {
                 throw new WebServiceException(e);
             }
             validator = schema.newValidator();
+            try {
+                validator.setFeature(HONOUR_ALL_SCHEMA_LOCATIONS_ID, true);
+            } catch(Exception e) {
+                // xerces 2.7 supports this feature. So just ignore the exception.
+            }            
         } else {
             noValidation = true;
             schema = null;
@@ -105,31 +124,13 @@ public class ServerSchemaValidationTube extends AbstractSchemaValidationTube {
      *   - all <xsd:schema> fragements from all WSDL documents.
      *   - all schema documents in the application(from WAR etc)
      *
+     * @param sd wsdl/schema document
      * @return list of root schema documents
      */
     private Source[] getSchemaSources(ServiceDefinition sd) {
         String primary = sd.getPrimary().getURL().toExternalForm();
         MetadataUtil.MetadataResolver mdresolver = new MetadataResolverImpl(sd);
-        Map<String, SDDocument> docs = MetadataUtil.getMetadataClosure(primary, mdresolver, true);
-
-        List<Source> list = new ArrayList<Source>();
-        for(Map.Entry<String, SDDocument> entry : docs.entrySet()) {
-            SDDocument doc = entry.getValue();
-            // Add all xsd:schema fragments from all WSDLs. That should form a closure of schemas.
-            if (doc.isWSDL()) {
-                Document dom = createDOM(doc);
-                // Get xsd:schema node from WSDL's DOM
-                addSchemaFragmentSource(dom, doc.getURL().toExternalForm(), list);
-            } else if (doc.isSchema()) {
-                // If there are multiple schemas with the same targetnamespace,
-                // JAXP works only with the first one. Above, all schema fragments may have the same targetnamespace,
-                // and that means it will not include all the schemas. Since we have a list of schemas, just add them.
-                Document dom = createDOM(doc);
-                list.add(new DOMSource(dom, doc.getURL().toExternalForm()));
-            }
-        }
-        //addSchemaSource(list);
-        return list.toArray(new Source[list.size()]) ;
+        return super.getSchemaSources(primary, mdresolver);
     }
 
     private class MetadataResolverImpl implements MetadataUtil.MetadataResolver, LSResourceResolver {
@@ -138,8 +139,7 @@ public class ServerSchemaValidationTube extends AbstractSchemaValidationTube {
 
         MetadataResolverImpl(ServiceDefinition sd) {
             for(SDDocument doc : sd) {
-                SDDocument sdi = doc;
-                docs.put(sdi.getURL().toExternalForm(), sdi);
+                docs.put(doc.getURL().toExternalForm(), doc);
             }
         }
 
@@ -256,60 +256,49 @@ public class ServerSchemaValidationTube extends AbstractSchemaValidationTube {
         return noValidation;
     }
 
-    /**
-     * Recursively visit ancestors and build up {@link org.xml.sax.helpers.NamespaceSupport} oject.
-     */
-    private void buildNamespaceSupport(NamespaceSupport nss, Node node) {
-        if(node==null || node.getNodeType()!=Node.ELEMENT_NODE)
-            return;
-
-        buildNamespaceSupport( nss, node.getParentNode() );
-
-        nss.pushContext();
-        NamedNodeMap atts = node.getAttributes();
-        for( int i=0; i<atts.getLength(); i++ ) {
-            Attr a = (Attr)atts.item(i);
-            if( "xmlns".equals(a.getPrefix()) ) {
-                nss.declarePrefix( a.getLocalName(), a.getValue() );
-                continue;
-            }
-            if( "xmlns".equals(a.getName()) ) {
-                nss.declarePrefix( "", a.getValue() );
-                continue;
-            }
+    @Override
+    public NextAction processRequest(Packet request) {
+        if (isNoValidation() || !request.getMessage().hasPayload() || request.getMessage().isFault()) {
+            return super.processRequest(request);
         }
+        try {
+            doProcess(request);
+        } catch(SAXException se) {
+            LOGGER.log(Level.WARNING, "Client Request doesn't pass Service's Schema Validation", se);
+            // Client request is invalid. So sending specific fault code
+            // Also converting this to fault message so that handlers may get
+            // to see the message.
+            SOAPVersion soapVersion = binding.getSOAPVersion();
+            Message faultMsg = SOAPFaultBuilder.createSOAPFaultMessage(
+                    soapVersion, null, se, soapVersion.faultCodeClient);
+            return doReturnWith(request.createServerResponse(faultMsg,
+                    wsdlPort, seiModel, binding));
+        }
+        return super.processRequest(request);
     }
 
-    /**
-     * Adds inscope namespaces as attributes to  <xsd:schema> fragment nodes.
-     *
-     * @param nss namespace context info
-     * @param elem that is patched with inscope namespaces
-     */
-    private @Nullable void patchDOMFragment(NamespaceSupport nss, Element elem) {
-        NamedNodeMap atts = elem.getAttributes();
-        for( Enumeration en = nss.getPrefixes(); en.hasMoreElements(); ) {
-            String prefix = (String)en.nextElement();
-
-            for( int i=0; i<atts.getLength(); i++ ) {
-                Attr a = (Attr)atts.item(i);
-                if (!"xmlns".equals(a.getPrefix()) || !a.getLocalName().equals("prefix")) {
-                    LOGGER.fine("Patching with xmlns:"+prefix+"="+nss.getURI(prefix));
-                    elem.setAttributeNS(XMLConstants.XMLNS_ATTRIBUTE_NS_URI, "xmlns:"+prefix, nss.getURI(prefix));
-                }
-            }
+    @Override
+    public NextAction processResponse(Packet response) {
+        if (isNoValidation() || response.getMessage() == null || !response.getMessage().hasPayload() || response.getMessage().isFault()) {
+            return super.processResponse(response);
         }
+        try {
+            doProcess(response);
+        } catch(SAXException se) {
+            // TODO: Should we convert this to fault Message ??
+            throw new WebServiceException(se);
+        }
+        return super.processResponse(response);
     }
-
-
-
 
     protected ServerSchemaValidationTube(ServerSchemaValidationTube that, TubeCloner cloner) {
         super(that,cloner);
         //this.docs = that.docs;
-        this.schema = that.schema;
+        this.schema = that.schema;      // Schema is thread-safe
         this.validator = schema.newValidator();
         this.noValidation = that.noValidation;
+        this.seiModel = that.seiModel;
+        this.wsdlPort = that.wsdlPort;
     }
 
     public AbstractTubeImpl copy(TubeCloner cloner) {

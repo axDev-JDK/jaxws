@@ -121,7 +121,7 @@ public class DomLoader<ResultT extends Result> extends Loader {
 
     public void text(UnmarshallingContext.State state, CharSequence text) throws SAXException {
         if(text.length()==0)
-            return;     // there's no point in creating an empty Text node in DOM.
+            return;     // there's no point in creating an empty Text node in DOM. 
         try {
             State s = (State) state.target;
             s.handler.characters(text.toString().toCharArray(),0,text.length());

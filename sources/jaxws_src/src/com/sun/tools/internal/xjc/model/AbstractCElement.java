@@ -33,7 +33,7 @@ import org.xml.sax.Locator;
 
 /**
  * Partial default implementation of {@link CElement}.
- *
+ * 
  * @author Kohsuke Kawaguchi
  */
 abstract class AbstractCElement extends AbstractCTypeInfoImpl implements CElement {

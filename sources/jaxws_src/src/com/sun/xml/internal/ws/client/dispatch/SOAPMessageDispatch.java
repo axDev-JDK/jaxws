@@ -28,8 +28,10 @@ package com.sun.xml.internal.ws.client.dispatch;
 import com.sun.xml.internal.ws.api.addressing.WSEndpointReference;
 import com.sun.xml.internal.ws.api.message.Packet;
 import com.sun.xml.internal.ws.api.pipe.Tube;
+import com.sun.xml.internal.ws.api.client.WSPortInfo;
 import com.sun.xml.internal.ws.binding.BindingImpl;
 import com.sun.xml.internal.ws.client.WSServiceDelegate;
+import com.sun.xml.internal.ws.client.PortInfo;
 import com.sun.xml.internal.ws.message.saaj.SAAJMessage;
 import com.sun.xml.internal.ws.resources.DispatchMessages;
 import com.sun.xml.internal.ws.transport.Headers;
@@ -55,8 +57,13 @@ import java.util.Iterator;
  * @version 1.0
  */
 public class SOAPMessageDispatch extends com.sun.xml.internal.ws.client.dispatch.DispatchImpl<SOAPMessage> {
+    @Deprecated
     public SOAPMessageDispatch(QName port, Service.Mode mode, WSServiceDelegate owner, Tube pipe, BindingImpl binding, WSEndpointReference epr) {
         super(port, mode, owner, pipe, binding, epr);
+    }
+
+    public SOAPMessageDispatch(WSPortInfo portInfo, Service.Mode mode, BindingImpl binding, WSEndpointReference epr) {
+        super(portInfo, mode, binding, epr);
     }
 
     Packet createPacket(SOAPMessage arg) {
@@ -78,7 +85,7 @@ public class SOAPMessageDispatch extends com.sun.xml.internal.ws.client.dispatch
             if ( response ==null || response.getMessage() == null )
                      throw new WebServiceException(DispatchMessages.INVALID_RESPONSE());
             else
-                return response.getMessage().readAsSOAPMessage();
+                return response.getMessage().readAsSOAPMessage();            
         } catch (SOAPException e) {
             throw new WebServiceException(e);
         }

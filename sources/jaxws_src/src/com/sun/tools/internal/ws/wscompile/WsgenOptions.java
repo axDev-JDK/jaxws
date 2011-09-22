@@ -195,9 +195,9 @@ public class WsgenOptions extends Options {
         if (protocol == null || protocol.equalsIgnoreCase(X_SOAP12) && !isExtensionMode()) {
             throw new BadCommandLineException(WscompileMessages.WSGEN_SOAP_12_WITHOUT_EXTENSION());
         }
-
+        
         if (nonstdProtocols.containsKey(protocol) && !isExtensionMode()) {
-            throw new BadCommandLineException(WscompileMessages.WSGEN_PROTOCOL_WITHOUT_EXTENSION(protocol));
+            throw new BadCommandLineException(WscompileMessages.WSGEN_PROTOCOL_WITHOUT_EXTENSION(protocol));            
         }
 
         validateEndpointClass();

@@ -72,6 +72,8 @@ public final class RelatesToHeader extends StringHeader {
     @Override
     public void writeTo(SOAPMessage saaj) throws SOAPException {
         SOAPHeader header = saaj.getSOAPHeader();
+        if (header == null)
+            header = saaj.getSOAPPart().getEnvelope().addHeader();
         SOAPHeaderElement she = header.addHeaderElement(name);
 
         if (type != null)

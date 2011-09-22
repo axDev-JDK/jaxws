@@ -62,7 +62,7 @@ final class MemoryData implements Data {
     }
 
     /**
-     *
+     * 
      * @param dataHead
      * @param buf
      * @return

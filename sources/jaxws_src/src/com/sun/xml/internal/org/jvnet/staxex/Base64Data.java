@@ -45,7 +45,7 @@ import java.io.OutputStream;
 public class Base64Data implements CharSequence, Cloneable {
 
     // either dataHandler or (data,dataLen,mimeType?) must be present
-    // (note that having both is allowed)
+    // (note that having both is allowed) 
 
     private DataHandler dataHandler;
 

@@ -167,6 +167,7 @@ class SOAP11Fault extends SOAPFaultBuilder {
     protected Throwable getProtocolException() {
         try {
             SOAPFault fault = SOAPVersion.SOAP_11.saajSoapFactory.createFault(faultstring, faultcode);
+            fault.setFaultActor(faultactor);
             if(detail != null){
                 Detail d = fault.addDetail();
                 for(Element det : detail.getDetails()){
@@ -174,7 +175,6 @@ class SOAP11Fault extends SOAPFaultBuilder {
                     d.appendChild(n);
                 }
             }
-            fault.setFaultActor(faultactor);
             return new SOAPFaultException(fault);
         } catch (SOAPException e) {
             throw new WebServiceException(e);

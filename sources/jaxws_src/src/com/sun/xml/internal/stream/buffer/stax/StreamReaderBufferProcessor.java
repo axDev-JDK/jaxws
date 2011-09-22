@@ -54,7 +54,7 @@ import java.util.NoSuchElementException;
  * When {@link XMLStreamBuffer} contains a multiple tree (AKA "forest"),
  * {@link XMLStreamReader} will behave as if there are multiple root elements
  * (so you'll see {@link #START_ELEMENT} event where you'd normally expect
- * {@link #END_DOCUMENT}.)
+ * {@link #END_DOCUMENT}.) 
  *
  * @author Paul.Sandoz@Sun.Com
  * @author K.Venugopal@sun.com
@@ -174,6 +174,13 @@ public class StreamReaderBufferProcessor extends AbstractProcessor implements XM
                 XMLStreamBufferMark mark = new XMLStreamBufferMark(inscope, this);
                 next();
                 return mark;
+            } else if((s &TYPE_MASK)==T_DOCUMENT) {
+                //move the pointer to next structure.
+                readStructure();
+                //mark the next start element
+                XMLStreamBufferMark mark = new XMLStreamBufferMark(new HashMap<String, String>(_namespaceAIIsEnd), this);
+                next();
+                return mark;
             }
 
             if(next()==END_ELEMENT)
@@ -208,10 +215,10 @@ public class StreamReaderBufferProcessor extends AbstractProcessor implements XM
                     // to push
                     popElementStack(_depth);
                 } else if (_depth == 1) {
-                    _depth--;
+                    _depth--;                    
                 }
         }
-
+        
         _characters = null;
         _charSequence = null;
         while(true) {// loop only if we read STATE_DOCUMENT
@@ -833,7 +840,7 @@ public class StreamReaderBufferProcessor extends AbstractProcessor implements XM
         // Move back the position of the namespace index
         _namespaceAIIsEnd = _stack[depth].namespaceAIIsStart;
     }
-
+    
     private final class ElementStackEntry {
         /**
          * Prefix.
@@ -1076,7 +1083,7 @@ public class StreamReaderBufferProcessor extends AbstractProcessor implements XM
             return _buffer.getSystemId();
         }
     }
-
+    
     private static String fixEmptyString(String s) {
         // s must not be null, so no need to check for that. that would be bug.
         if(s.length()==0)   return null;

@@ -22,6 +22,7 @@
  * CA 95054 USA or visit www.sun.com if you need additional information or
  * have any questions.
  */
+
 package com.sun.xml.internal.ws.developer;
 
 import com.sun.xml.internal.ws.server.DraconianValidationErrorHandler;
@@ -35,6 +36,7 @@ import static java.lang.annotation.ElementType.TYPE;
 import java.lang.annotation.Retention;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Target;
+import java.lang.annotation.ElementType;
 
 /**
  * Validates all request and response messages payload(SOAP:Body) for a {@link WebService}
@@ -58,7 +60,7 @@ import java.lang.annotation.Target;
  * @see SchemaValidationFeature
  */
 @Retention(RUNTIME)
-@Target(TYPE)
+@Target({TYPE, ElementType.METHOD, ElementType.FIELD})
 @Documented
 @WebServiceFeatureAnnotation(id = SchemaValidationFeature.ID, bean = SchemaValidationFeature.class)
 public @interface SchemaValidation {

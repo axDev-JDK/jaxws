@@ -57,7 +57,7 @@ public interface WSDLOutput extends WSDLObject, WSDLExtensible {
      * <p/>
      * This method provides the correct value irrespective of
      * whether the Action is explicitly specified in the WSDL or
-     * implicitly derived using the rules defined in WS-Addressing.
+     * implicitly derived using the rules defined in WS-Addressing. 
      *
      * @return Action
      */

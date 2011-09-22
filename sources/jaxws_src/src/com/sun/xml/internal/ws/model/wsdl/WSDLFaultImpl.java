@@ -40,6 +40,8 @@ public final class WSDLFaultImpl extends AbstractExtensibleImpl implements WSDLF
     private final QName messageName;
     private WSDLMessageImpl message;
     private WSDLOperationImpl operation;
+    private String action = "";
+    private boolean defaultAction = true;
 
     public WSDLFaultImpl(XMLStreamReader xsr, String name, QName messageName, WSDLOperationImpl operation) {
         super(xsr);
@@ -64,6 +66,22 @@ public final class WSDLFaultImpl extends AbstractExtensibleImpl implements WSDLF
     @NotNull
     public QName getQName() {
         return new QName(operation.getName().getNamespaceURI(), name);
+    }
+
+    @NotNull
+    public String getAction() {
+        return action;
+    }
+    public void setAction(String action) {
+        this.action = action;
+    }
+
+    public boolean isDefaultAction() {
+        return defaultAction;
+    }
+
+    public void setDefaultAction(boolean defaultAction) {
+        this.defaultAction = defaultAction;
     }
 
     void freeze(WSDLModelImpl root){

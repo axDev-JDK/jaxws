@@ -37,7 +37,7 @@ import org.xml.sax.Locator;
 
 /**
  * {@link ValuePropertyInfo} implementation for XJC.
- *
+ * 
  * @author Kohsuke Kawaguchi
  */
 public final class CValuePropertyInfo extends CSingleTypePropertyInfo implements ValuePropertyInfo<NType,NClass> {

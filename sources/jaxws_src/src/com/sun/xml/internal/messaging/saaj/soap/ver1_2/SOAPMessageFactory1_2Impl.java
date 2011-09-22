@@ -46,12 +46,12 @@ public class SOAPMessageFactory1_2Impl extends MessageFactoryImpl {
         return new Message1_2Impl();
     }
 
-    public SOAPMessage createMessage(boolean isFastInfoset,
-        boolean acceptFastInfoset) throws SOAPException
+    public SOAPMessage createMessage(boolean isFastInfoset, 
+        boolean acceptFastInfoset) throws SOAPException 
     {
         return new Message1_2Impl(isFastInfoset, acceptFastInfoset);
     }
-
+    
     public SOAPMessage createMessage(MimeHeaders headers, InputStream in)
         throws IOException, SOAPExceptionImpl {
         if ((headers == null) || (getContentType(headers) == null)) {

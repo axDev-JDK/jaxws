@@ -139,7 +139,7 @@ public abstract class SOAPFaultBuilder {
      *
      * @param soapVersion {@link SOAPVersion#SOAP_11} or {@link SOAPVersion#SOAP_12}
      * @param ex a ProtocolException
-     * @param faultcode soap faultcode. Its ignored if the {@link ProtocolException} instance is {@link SOAPFaultException} and it has a
+     * @param faultcode soap faultcode. Its ignored if the {@link ProtocolException} instance is {@link SOAPFaultException} and it has a 
      * faultcode present in the underlying {@link SOAPFault}.
      * @return {@link Message} representing SOAP fault
      */
@@ -170,10 +170,19 @@ public abstract class SOAPFaultBuilder {
      * @param soapVersion non-null
      */
     public static Message createSOAPFaultMessage(SOAPVersion soapVersion, CheckedExceptionImpl ceModel, Throwable ex) {
+        return createSOAPFaultMessage(soapVersion, ceModel, ex, null);
+    }
+
+    /**
+     * Create the Message with the specified faultCode
+     *
+     * @see #createSOAPFaultMessage(SOAPVersion, CheckedExceptionImpl, Throwable)
+     */
+    public static Message createSOAPFaultMessage(SOAPVersion soapVersion, CheckedExceptionImpl ceModel, Throwable ex, QName faultCode) {
         Object detail = getFaultDetail(ceModel, ex);
         if(soapVersion == SOAPVersion.SOAP_12)
-            return createSOAP12Fault(soapVersion, ex, detail, ceModel, null);
-        return createSOAP11Fault(soapVersion, ex, detail, ceModel, null);
+            return createSOAP12Fault(soapVersion, ex, detail, ceModel, faultCode);
+        return createSOAP11Fault(soapVersion, ex, detail, ceModel, faultCode);
     }
 
     /**
@@ -391,8 +400,11 @@ public abstract class SOAPFaultBuilder {
             }
         }
         SOAP11Fault soap11Fault = new SOAP11Fault(faultCode, faultString, faultActor, detailNode);
-        soap11Fault.captureStackTrace(e);
-
+        
+        //Don't fill the stacktrace for Service specific exceptions.
+        if(ce == null) {
+            soap11Fault.captureStackTrace(e);
+        }
         Message msg = JAXBMessage.create(JAXB_CONTEXT, soap11Fault, soapVersion);
         return new FaultMessage(msg, firstEntry);
     }
@@ -417,6 +429,7 @@ public abstract class SOAPFaultBuilder {
         CodeType code = null;
         String faultString = null;
         String faultRole = null;
+        String faultNode = null;
         Throwable cause = e.getCause();
         if (e instanceof SOAPFaultException) {
             soapFaultException = (SOAPFaultException) e;
@@ -446,13 +459,14 @@ public abstract class SOAPFaultBuilder {
             }
             faultString = soapFaultException.getFault().getFaultString();
             faultRole = soapFaultException.getFault().getFaultActor();
+            faultNode = soapFaultException.getFault().getFaultNode();
         }
 
         if (faultCode == null) {
             faultCode = getDefaultFaultCode(soapVersion);
             code = new CodeType(faultCode);
         }else if(code == null){
-            code = new CodeType(faultCode);
+            code = new CodeType(faultCode);            
         }
 
         if (faultString == null) {
@@ -481,9 +495,12 @@ public abstract class SOAPFaultBuilder {
             }
         }
 
-        SOAP12Fault soap12Fault = new SOAP12Fault(code, reason, null, faultRole, detailNode);
-        soap12Fault.captureStackTrace(e);
+        SOAP12Fault soap12Fault = new SOAP12Fault(code, reason, faultNode, faultRole, detailNode);
 
+        //Don't fill the stacktrace for Service specific exceptions.
+        if(ce == null) {
+            soap12Fault.captureStackTrace(e);
+        }
         Message msg = JAXBMessage.create(JAXB_CONTEXT, soap12Fault, soapVersion);
         return new FaultMessage(msg, firstEntry);
     }

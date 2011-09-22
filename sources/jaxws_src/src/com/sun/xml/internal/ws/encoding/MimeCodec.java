@@ -36,6 +36,7 @@ import com.sun.xml.internal.ws.developer.StreamingAttachmentFeature;
 
 import javax.activation.CommandMap;
 import javax.activation.MailcapCommandMap;
+import javax.activation.DataContentHandler;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -60,7 +61,7 @@ import java.util.UUID;
  * @author Kohsuke Kawaguchi
  */
 abstract class MimeCodec implements Codec {
-
+    
     static {
         // DataHandler.writeTo() may search for DCH. So adding some default ones.
         try {
@@ -83,7 +84,7 @@ abstract class MimeCodec implements Codec {
     }
 
     public static final String MULTIPART_RELATED_MIME_TYPE = "multipart/related";
-
+    
     private String boundary;
     private String messageContentType;
     private boolean hasAttachments;
@@ -95,7 +96,7 @@ abstract class MimeCodec implements Codec {
         this.version = version;
         this.binding = binding;
     }
-
+    
     public String getMimeType() {
         return MULTIPART_RELATED_MIME_TYPE;
     }
@@ -110,7 +111,9 @@ abstract class MimeCodec implements Codec {
 
         if (hasAttachments) {
             writeln("--"+boundary, out);
-            writeln("Content-Type: " + rootCodec.getMimeType(), out);
+            ContentType ct = rootCodec.getStaticContentType(packet);
+            String ctStr = (ct != null) ? ct.getContentType() : rootCodec.getMimeType();
+            writeln("Content-Type: " + ctStr, out);
             writeln(out);
         }
         ContentType primaryCt = rootCodec.encode(packet, out);
@@ -138,7 +141,7 @@ abstract class MimeCodec implements Codec {
         // TODO not returing correct multipart/related type(no boundary)
         return hasAttachments ? new ContentTypeImpl(messageContentType, packet.soapAction, null) : primaryCt;
     }
-
+    
     public ContentType getStaticContentType(Packet packet) {
         Message msg = packet.getMessage();
         hasAttachments = !msg.getAttachments().isEmpty();
@@ -147,7 +150,7 @@ abstract class MimeCodec implements Codec {
             boundary = "uuid:" + UUID.randomUUID().toString();
             String boundaryParameter = "boundary=\"" + boundary + "\"";
             // TODO use primaryEncoder to get type
-            messageContentType =  MULTIPART_RELATED_MIME_TYPE +
+            messageContentType =  MULTIPART_RELATED_MIME_TYPE + 
                     "; type=\"" + rootCodec.getMimeType() + "\"; " +
                     boundaryParameter;
             return new ContentTypeImpl(messageContentType, packet.soapAction, null);

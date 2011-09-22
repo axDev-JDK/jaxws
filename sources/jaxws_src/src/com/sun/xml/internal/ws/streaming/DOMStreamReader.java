@@ -292,7 +292,7 @@ public final class DOMStreamReader implements XMLStreamReader, NamespaceContext 
         String uri = fixNull(n.getNamespaceURI());
 
         Scope scope = scopes[depth];
-
+        
         String currentUri = scope.getNamespaceURI(prefix);
 
         if(prefix.length()==0) {
@@ -306,7 +306,7 @@ public final class DOMStreamReader implements XMLStreamReader, NamespaceContext 
 
         if(prefix.equals("xml") || prefix.equals("xmlns"))
             return; // implicitly declared namespaces
-
+        
         // needs to be declared
         scope.additionalNamespaces.add(prefix);
         scope.additionalNamespaces.add(uri);
@@ -499,8 +499,8 @@ public final class DOMStreamReader implements XMLStreamReader, NamespaceContext 
     }
 
     /**
-     * This method is not particularly fast, but shouldn't be called very
-     * often. If we start to use it more, we should keep track of the
+     * This method is not particularly fast, but shouldn't be called very 
+     * often. If we start to use it more, we should keep track of the 
      * NS declarations using a NamespaceContext implementation instead.
      */
     public String getNamespaceURI(String prefix) {
@@ -755,7 +755,7 @@ public final class DOMStreamReader implements XMLStreamReader, NamespaceContext 
             }
         }
     }
-
+    
     private int _next() throws XMLStreamException {
         Node child;
 

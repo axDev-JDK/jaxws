@@ -29,7 +29,7 @@ import java.io.IOException;
 
 /**
  * Constructs a InputStream from a linked list of {@link Chunk}s.
- *
+ * 
  * @author Kohsuke Kawaguchi
  * @author Jitendra Kotamraju
  */

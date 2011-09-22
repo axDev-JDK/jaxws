@@ -35,6 +35,5 @@ public class Constants {
     /**
      * WS SI Logging Domain
      */
-    public static final String LoggingDomain =
-        "javax.enterprise.resource.webservices.jaxws";
+    public static final String LoggingDomain = "com.sun.xml.internal.ws";
 }

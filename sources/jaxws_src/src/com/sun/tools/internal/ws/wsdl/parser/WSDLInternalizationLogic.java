@@ -88,7 +88,7 @@ public class WSDLInternalizationLogic implements InternalizationLogic{
             appinfo = insertXMLSchemaElement( annotation, "appinfo" );
 
         return appinfo;
-
+        
     }
 
     public Element refineWSDLTarget(Element target){
@@ -114,7 +114,7 @@ public class WSDLInternalizationLogic implements InternalizationLogic{
 
         return child;
     }
-
+    
 
     /**
      * Creates a new XML Schema element of the given local name

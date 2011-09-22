@@ -147,8 +147,8 @@ public class ElementFactory {
                 return new Detail1_2Impl(ownerDocument, prefix);
             }
         }
-        if (localName.equalsIgnoreCase("faultcode")
-            || localName.equalsIgnoreCase("faultstring")
+        if (localName.equalsIgnoreCase("faultcode") 
+            || localName.equalsIgnoreCase("faultstring") 
             || localName.equalsIgnoreCase("faultactor")) {
             // SOAP 1.2 does not have fault(code/string/actor)
             // So there is no else case required
@@ -161,7 +161,7 @@ public class ElementFactory {
 
         return null;
     }
-
+    
     protected static void invalidCreate(String msg) {
         throw new TreeException(msg);
     }

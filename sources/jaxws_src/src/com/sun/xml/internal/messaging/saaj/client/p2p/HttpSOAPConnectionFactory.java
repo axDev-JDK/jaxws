@@ -41,3 +41,4 @@ public class HttpSOAPConnectionFactory extends SOAPConnectionFactory {
         return new HttpSOAPConnection();
     }
 }
+

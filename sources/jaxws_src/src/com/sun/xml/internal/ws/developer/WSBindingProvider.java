@@ -25,9 +25,11 @@
 
 package com.sun.xml.internal.ws.developer;
 
+import com.sun.istack.internal.NotNull;
 import com.sun.xml.internal.ws.api.message.Header;
 import com.sun.xml.internal.ws.api.message.Headers;
-
+import com.sun.xml.internal.ws.api.addressing.WSEndpointReference;
+import com.sun.xml.internal.ws.api.client.WSPortInfo;
 import javax.xml.bind.JAXBContext;
 import javax.xml.namespace.QName;
 import javax.xml.ws.BindingProvider;
@@ -36,6 +38,7 @@ import javax.xml.ws.Service;
 import javax.xml.ws.Service.Mode;
 import java.util.List;
 import java.io.Closeable;
+import com.sun.org.glassfish.gmbal.ManagedObjectManager;
 
 /**
  * {@link BindingProvider} with JAX-WS RI's extension methods.
@@ -110,11 +113,33 @@ public interface WSBindingProvider extends BindingProvider, Closeable {
      *      BindingProvider.ENDPOINT_ADDRESS_PROPERTY, "...")
      * <p>
      * you could do this:
-     *
+     * 
      * <p>
      * ((WSBindingProvider)proxy).setAddress("...");
      *
      * @param address Address of the service
      */
     void setAddress(String address);
+
+    /**
+     * Similar to {link BindingProvider#getEndpointReference(}, but returns WSEndpointReference that has more
+     * convenience methods
+     *
+     * @return WSEndpointReference of the target servcie endpoint
+     *
+     * @since JAX-WS 2.2
+     */
+    WSEndpointReference getWSEndpointReference();
+
+    /**
+     *
+     * @return WSPortInfo object that captures the port information for which the stub is created.
+     * @since JAX-WS 2.2 
+     */
+    WSPortInfo getPortInfo();
+
+    /**
+     * Get the ManagedObjectManager for this provider.
+     */
+    public @NotNull ManagedObjectManager getManagedObjectManager();
 }

@@ -303,8 +303,8 @@ public final class QNameMap<V> {
     };
 
     private abstract class HashIterator<E> implements Iterator<E> {
-        Entry<V> next;  // next entry to return
-        int index;              // current slot
+        Entry<V> next;	// next entry to return
+        int index;		// current slot
 
         HashIterator() {
             Entry<V>[] t = table;

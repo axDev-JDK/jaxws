@@ -139,7 +139,7 @@ public interface Navigator<T,C,F,M> {
      * Note that this method does not list methods declared on base classes.
      *
      * @return
-     *      can be empty but always non-null.
+     *      can be empty but always non-null. 
      */
     Collection<? extends M> getDeclaredMethods(C clazz);
 
@@ -302,6 +302,11 @@ public interface Navigator<T,C,F,M> {
     boolean isPublicMethod(M method);
 
     /**
+     * Returns true if the method is final.
+     */
+    boolean isFinalMethod(M method);
+
+    /**
      * Returns true if the field is public.
      */
     boolean isPublicField(F field);
@@ -335,7 +340,7 @@ public interface Navigator<T,C,F,M> {
      *
      * @return
      *      can be empty but never null.
-     */
+     */ 
     F[] getEnumConstants(C clazz);
 
     /**

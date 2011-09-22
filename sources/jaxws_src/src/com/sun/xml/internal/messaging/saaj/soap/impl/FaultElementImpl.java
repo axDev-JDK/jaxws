@@ -37,14 +37,14 @@ import com.sun.xml.internal.messaging.saaj.soap.SOAPDocumentImpl;
 import com.sun.xml.internal.messaging.saaj.soap.name.NameImpl;
 
 public abstract class FaultElementImpl
-    extends ElementImpl
+    extends ElementImpl 
     implements SOAPFaultElement {
 
-    protected FaultElementImpl(SOAPDocumentImpl ownerDoc, NameImpl qname) {
+    protected FaultElementImpl(SOAPDocumentImpl ownerDoc, NameImpl qname) { 
         super(ownerDoc, qname);
     }
 
-    protected FaultElementImpl(SOAPDocumentImpl ownerDoc, QName qname) {
+    protected FaultElementImpl(SOAPDocumentImpl ownerDoc, QName qname) { 
         super(ownerDoc, qname);
     }
 

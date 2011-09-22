@@ -55,7 +55,7 @@ public class MIMEPart {
 
     MIMEPart(MIMEMessage msg, String contentId) {
         this(msg);
-        this.contentId = contentId;
+        this.contentId = contentId;   
     }
 
     /**
@@ -79,7 +79,7 @@ public class MIMEPart {
     public void close() {
         dataHead.close();
     }
-
+    
 
     /**
      * Can get the attachment part's content only once. The content
@@ -141,8 +141,8 @@ public class MIMEPart {
      * Returns <code>null</code> if no headers with the
      * specified name exist.
      *
-     * @param   name header name
-     * @return  list of header values, or null if none
+     * @param	name header name
+     * @return	list of header values, or null if none
      */
     public List<String> getHeader(String name) {
         getHeaders();

@@ -22,6 +22,7 @@
  * CA 95054 USA or visit www.sun.com if you need additional information or
  * have any questions.
  */
+
 package com.sun.xml.internal.ws.api.handler;
 
 import javax.xml.ws.handler.Handler;
@@ -34,8 +35,8 @@ import java.util.Set;
  * to provide typesafety for the message context parameter and add a method
  * to obtain access to the headers that may be processed by the handler.
  * Its provides similar functionality as a SOAPHandler but provides RI's
- * Message in the MessageContext.
- *
+ * Message in the MessageContext. 
+ * 
  * @author Rama Pulavarthi
  * @since JAX-WS 2.1.3
  */

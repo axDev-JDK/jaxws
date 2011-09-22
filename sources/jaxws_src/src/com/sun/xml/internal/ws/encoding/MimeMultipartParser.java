@@ -62,7 +62,7 @@ public final class MimeMultipartParser {
     private final String start;
     private final MIMEMessage message;
     private Attachment root;
-
+    
     // Attachments without root part
     private final Map<String, Attachment> attachments = new HashMap<String, Attachment>();
 

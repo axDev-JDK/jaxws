@@ -27,12 +27,21 @@ package com.sun.xml.internal.ws.handler;
 
 import com.sun.xml.internal.ws.api.message.Packet;
 import com.sun.xml.internal.ws.api.message.Message;
+import com.sun.xml.internal.ws.api.message.HeaderList;
+import com.sun.xml.internal.ws.api.message.AttachmentSet;
+import com.sun.xml.internal.ws.api.WSBinding;
 import com.sun.xml.internal.ws.util.xml.XmlUtil;
+import com.sun.xml.internal.ws.message.EmptyMessageImpl;
+import com.sun.xml.internal.ws.message.DOMMessage;
+import com.sun.xml.internal.ws.message.jaxb.JAXBMessage;
+import com.sun.xml.internal.ws.message.source.PayloadSourceMessage;
+import com.sun.xml.internal.bind.api.JAXBRIContext;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.util.JAXBSource;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
@@ -41,142 +50,248 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.ws.LogicalMessage;
 import javax.xml.ws.WebServiceException;
 
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.Document;
+
 /**
  * Implementation of {@link LogicalMessage}. This class implements the methods
  * used by LogicalHandlers to get/set the request or response either
  * as a JAXB object or as javax.xml.transform.Source.
- *
+ * <p/>
  * <p>The {@link Message} that is passed into the constructor
  * is used to retrieve the payload of the request or response.
  *
+ * @author WS Development Team
  * @see Message
  * @see LogicalMessageContextImpl
- *
- * @author WS Development Team
  */
-/**
-* TODO: Take care of variations in behavior wrt to vaious sources.
-* DOMSource : changes made should be reflected, StreamSource or SAXSource, Give copy
-*/
 class LogicalMessageImpl implements LogicalMessage {
     private Packet packet;
-    // This holds the (modified)payload set by User
-    private Source payloadSrc = null;
-    // Flag to check if the PayloadSrc is accessed/modified
-    private boolean payloadModifed = false;
+    protected JAXBContext defaultJaxbContext;
+    private ImmutableLM lm = null;
 
-    /** Creates a new instance of LogicalMessageImplRearch */
-    public LogicalMessageImpl(Packet packet) {
+
+    public LogicalMessageImpl(JAXBContext defaultJaxbContext, Packet
+            packet) {
         // don't create extract payload until Users wants it.
         this.packet = packet;
+        this.defaultJaxbContext = defaultJaxbContext;
     }
 
-    boolean isPayloadModifed(){
-        return payloadModifed;
-    }
-    Source getModifiedPayload(){
-        if(!payloadModifed)
-            throw new RuntimeException("Payload not modified.");
-        return payloadSrc;
-
-    }
     public Source getPayload() {
-        if(!payloadModifed) {
-            payloadSrc = packet.getMessage().readPayloadAsSource();
-            payloadModifed = true;
-        }
-        if (payloadSrc == null)
-            return null;
-        if(payloadSrc instanceof DOMSource){
-            return payloadSrc;
-        } else {
-            try {
-            Transformer transformer = XmlUtil.newTransformer();
-            DOMResult domResult = new DOMResult();
-            transformer.transform(payloadSrc, domResult);
-            payloadSrc = new DOMSource(domResult.getNode());
-            return payloadSrc;
-            } catch(TransformerException te) {
-                throw new WebServiceException(te);
+        if (lm == null) {
+            Source payload = packet.getMessage().copy().readPayloadAsSource();
+            if (payload instanceof DOMSource) {
+                lm = createLogicalMessageImpl(payload);
             }
-        }
-        /*
-        Source copySrc;
-        if(payloadSrc instanceof DOMSource){
-            copySrc = payloadSrc;
+            return payload;
         } else {
-            copySrc = copy(payloadSrc);
+            return lm.getPayload();
         }
-        return copySrc;
-         */
     }
 
     public void setPayload(Source payload) {
-        payloadModifed = true;
-        payloadSrc = payload;
+        lm = createLogicalMessageImpl(payload);
     }
-    /*
-     * Converts to DOMSource and then it unmarshalls this  DOMSource
-     * to a jaxb object. Any changes done in jaxb object are lost if
-     * the object isn't set again.
-     */
-    public Object getPayload(JAXBContext context) {
-        try {
-            Source payloadSrc = getPayload();
-            if(payloadSrc == null)
-                return null;
-            Unmarshaller unmarshaller = context.createUnmarshaller();
-            return unmarshaller.unmarshal(payloadSrc);
-        } catch (JAXBException e){
-            throw new WebServiceException(e);
+
+    private ImmutableLM createLogicalMessageImpl(Source payload) {
+        if (payload == null) {
+            lm = new EmptyLogicalMessageImpl();
+        } else if (payload instanceof DOMSource) {
+            lm = new DOMLogicalMessageImpl((DOMSource) payload);
+        } else {
+            lm = new SourceLogicalMessageImpl(payload);
         }
+        return lm;
+    }
+
+    public Object getPayload(JAXBContext context) {
+        if (context == null) {
+            context = defaultJaxbContext;
+        }
+        if (context == null)
+            throw new WebServiceException("JAXBContext parameter cannot be null");
+
+        Object o;
+        if (lm == null) {
+            try {
+                o = packet.getMessage().copy().readPayloadAsJAXB(context.createUnmarshaller());
+            } catch (JAXBException e) {
+                throw new WebServiceException(e);
+            }
+        } else {
+            o = lm.getPayload(context);
+            lm = new JAXBLogicalMessageImpl(context, o);
+        }
+        return o;
     }
 
     public void setPayload(Object payload, JAXBContext context) {
-        payloadModifed = true;
-        try {
-            Marshaller marshaller = context.createMarshaller();
-            marshaller.setProperty("jaxb.fragment", true);
-            DOMResult domResult = new DOMResult();
-            marshaller.marshal(payload, domResult);
-            payloadSrc = new DOMSource(domResult.getNode());
-        } catch(JAXBException e) {
-            throw new WebServiceException(e);
+        if (context == null) {
+            context = defaultJaxbContext;
+        }
+        if (payload == null) {
+            lm = new EmptyLogicalMessageImpl();
+        } else {
+            lm = new JAXBLogicalMessageImpl(context, payload);
         }
     }
-    /*
-    private Source copy(Source src) {
-        if(src instanceof StreamSource){
-            StreamSource origSrc = (StreamSource)src;
-            byte[] payloadbytes;
-            try {
-                payloadbytes = ASCIIUtility.getBytes(origSrc.getInputStream());
-            } catch (IOException e) {
-                throw new WebServiceException(e);
-            }
-            ByteArrayInputStream bis = new ByteArrayInputStream(payloadbytes);
-            origSrc.setInputStream(new ByteArrayInputStream(payloadbytes));
-            StreamSource copySource = new StreamSource(bis, src.getSystemId());
-            return copySource;
-        } else if(src instanceof SAXSource){
-            SAXSource saxSrc = (SAXSource)src;
-            try {
-                XMLStreamBuffer xsb = new XMLStreamBuffer();
-                XMLReader reader = saxSrc.getXMLReader();
-                if(reader == null)
-                    reader = new SAXBufferProcessor();
-                saxSrc.setXMLReader(reader);
-                reader.setContentHandler(new SAXBufferCreator(xsb));
-                reader.parse(saxSrc.getInputSource());
-                src = new XMLStreamBufferSource(xsb);
-                return new XMLStreamBufferSource(xsb);
-            } catch (IOException e) {
-                throw new WebServiceException(e);
-            } catch (SAXException e) {
-                throw new WebServiceException(e);
-            }
-        }
-        throw new WebServiceException("Copy is not needed for this Source");
+
+    public boolean isPayloadModifed() {
+        return (lm != null);
     }
+
+    /**
+     * This should be called by first checking if the payload is modified.
+     *
+     * @param headers
+     * @param attachments
+     * @param binding
+     * @return
      */
+    public Message getMessage(HeaderList headers, AttachmentSet attachments, WSBinding binding) {
+        assert isPayloadModifed();
+        if(isPayloadModifed()) {
+            return lm.getMessage(headers,attachments,binding);
+        } else {
+            return packet.getMessage();
+        }
+
+    }
+
+
+    private abstract class ImmutableLM {
+        public abstract Source getPayload();
+        public abstract Object getPayload(JAXBContext context);
+        public abstract Message getMessage(HeaderList headers, AttachmentSet attachments, WSBinding binding);
+
+    }
+
+    private class DOMLogicalMessageImpl extends SourceLogicalMessageImpl {
+        private DOMSource dom;
+
+        public DOMLogicalMessageImpl(DOMSource dom) {
+            super(dom);
+            this.dom = dom;
+        }
+
+        @Override
+        public Source getPayload() {
+            return dom;
+        }
+
+        public Message getMessage(HeaderList headers, AttachmentSet attachments, WSBinding binding) {
+            Node n = dom.getNode();
+            if(n.getNodeType()== Node.DOCUMENT_NODE) {
+                n = ((Document)n).getDocumentElement();
+            }
+            return new DOMMessage(binding.getSOAPVersion(),headers, (Element)n, attachments);
+        }
+    }
+
+    private class EmptyLogicalMessageImpl extends ImmutableLM {
+        public EmptyLogicalMessageImpl() {
+
+        }
+
+        @Override
+        public Source getPayload() {
+            return null;
+        }
+
+        @Override
+        public Object getPayload(JAXBContext context) {
+            return null;
+        }
+
+        public Message getMessage(HeaderList headers, AttachmentSet attachments, WSBinding binding) {
+            return new EmptyMessageImpl(headers,attachments,binding.getSOAPVersion());
+        }
+    }
+
+    private class JAXBLogicalMessageImpl extends ImmutableLM {
+        private JAXBContext ctxt;
+        private Object o;
+
+        public JAXBLogicalMessageImpl(JAXBContext ctxt, Object o) {
+            this.ctxt = ctxt;
+            this.o = o;
+
+        }
+
+        @Override
+        public Source getPayload() {
+            JAXBContext context = ctxt;
+            if (context == null) {
+                context = defaultJaxbContext;
+            }
+            try {
+                return new JAXBSource(context, o);
+            } catch (JAXBException e) {
+                throw new WebServiceException(e);
+            }
+        }
+
+        @Override
+        public Object getPayload(JAXBContext context) {
+//            if(context == ctxt) {
+//                return o;
+//            }
+            try {
+                Source payloadSrc = getPayload();
+                if (payloadSrc == null)
+                    return null;
+                Unmarshaller unmarshaller = context.createUnmarshaller();
+                return unmarshaller.unmarshal(payloadSrc);
+            } catch (JAXBException e) {
+                throw new WebServiceException(e);
+            }
+        }
+
+        public Message getMessage(HeaderList headers, AttachmentSet attachments, WSBinding binding) {
+            return JAXBMessage.create((JAXBRIContext)ctxt, o,binding.getSOAPVersion(), headers,attachments);
+        }
+    }
+
+    private class SourceLogicalMessageImpl extends ImmutableLM {
+        private Source payloadSrc;
+
+        public SourceLogicalMessageImpl(Source source) {
+            this.payloadSrc = source;
+        }
+
+        public Source getPayload() {
+            assert (!(payloadSrc instanceof DOMSource));
+            try {
+                Transformer transformer = XmlUtil.newTransformer();
+                DOMResult domResult = new DOMResult();
+                transformer.transform(payloadSrc, domResult);
+                DOMSource dom = new DOMSource(domResult.getNode());
+                lm = new DOMLogicalMessageImpl((DOMSource) dom);
+                payloadSrc = null;
+                return dom;
+            } catch (TransformerException te) {
+                throw new WebServiceException(te);
+            }
+        }
+
+        public Object getPayload(JAXBContext context) {
+            try {
+                Source payloadSrc = getPayload();
+                if (payloadSrc == null)
+                    return null;
+                Unmarshaller unmarshaller = context.createUnmarshaller();
+                return unmarshaller.unmarshal(payloadSrc);
+            } catch (JAXBException e) {
+                throw new WebServiceException(e);
+            }
+
+        }
+
+        public Message getMessage(HeaderList headers, AttachmentSet attachments, WSBinding binding) {
+            assert (payloadSrc!=null);
+            return new PayloadSourceMessage(headers, payloadSrc, attachments,binding.getSOAPVersion());
+        }
+    }
 }

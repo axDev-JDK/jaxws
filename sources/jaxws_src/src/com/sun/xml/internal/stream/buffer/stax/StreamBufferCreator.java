@@ -36,11 +36,11 @@ import java.util.List;
  * @author Kohsuke Kawaguchi
  */
 abstract class StreamBufferCreator extends AbstractCreator {
-
+    
     private boolean checkAttributeValue = false;
-
+    
     protected List<String> attributeValuePrefixes = new ArrayList<String>();
-
+    
     protected void storeQualifiedName(int item, String prefix, String uri, String localName) {
         if (uri != null && uri.length() > 0) {
             if (prefix != null && prefix.length() > 0) {
@@ -78,7 +78,7 @@ abstract class StreamBufferCreator extends AbstractCreator {
 
         storeStructureString(type);
         storeContentString(value);
-        if(checkAttributeValue && value.indexOf("://") == -1){  // the condition after && avoids looking inside URIs
+        if(checkAttributeValue && value.indexOf("://") == -1){  // the condition after && avoids looking inside URIs 
             int firstIndex = value.indexOf(":");
             int lastIndex = value.lastIndexOf(":");  // Check last index of : as some SAML namespace have multiple ":"s
             if(firstIndex != -1 && lastIndex == firstIndex){
@@ -89,7 +89,7 @@ abstract class StreamBufferCreator extends AbstractCreator {
             }
         }
     }
-
+    
     public final List getAttributeValuePrefixes(){
         return attributeValuePrefixes;
     }
@@ -99,11 +99,11 @@ abstract class StreamBufferCreator extends AbstractCreator {
         storeStructureString(target);
         storeStructureString(data);
     }
-
+    
     public final boolean isCheckAttributeValue(){
         return checkAttributeValue;
     }
-
+    
     public final void setCheckAttributeValue(boolean value){
         this.checkAttributeValue = value;
     }

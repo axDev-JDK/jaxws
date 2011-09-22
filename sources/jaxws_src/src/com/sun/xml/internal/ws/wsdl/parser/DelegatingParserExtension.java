@@ -33,7 +33,7 @@ import javax.xml.stream.XMLStreamReader;
 
 /**
  * Delegate to another {@link WSDLParserExtension}
- * useful for the base class for filtering.
+ * useful for the base class for filtering. 
  *
  * @author Kohsuke Kawaguchi
  */

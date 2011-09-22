@@ -94,17 +94,14 @@ public abstract class FaultImpl extends ElementImpl implements SOAPFault {
     public void setFaultCode(String faultCode, String prefix, String uri)
         throws SOAPException {
 
-        if (prefix == null || prefix.equals("")) {
-            if (uri == null) {
-                log.severe("SAAJ0140.impl.no.ns.URI");
-                throw new SOAPExceptionImpl("No NamespaceURI, SOAP requires faultcode content to be a QName");
-            }
-            prefix = getNamespacePrefix(uri);
-            if (prefix == null || prefix.equals("")) {
-                prefix = "ns0";
+        if (prefix == null || "".equals(prefix)) {
+            if (uri != null && !"".equals(uri)) {
+                prefix = getNamespacePrefix(uri);
+                if (prefix == null || "".equals(prefix)) {
+                    prefix = "ns0";
+                }
             }
         }
-
         if (this.faultCodeElement == null)
             findFaultCodeElement();
 
@@ -112,18 +109,27 @@ public abstract class FaultImpl extends ElementImpl implements SOAPFault {
             this.faultCodeElement = addFaultCodeElement();
         else
             this.faultCodeElement.removeContents();
-
-        if (uri == null || uri.equals("")) {
+ 
+        if (uri == null || "".equals(uri)) {
             uri = this.faultCodeElement.getNamespaceURI(prefix);
         }
-        if (uri == null) {
-            log.severe("SAAJ0140.impl.no.ns.URI");
-            throw new SOAPExceptionImpl("No NamespaceURI, SOAP requires faultcode content to be a QName");
-        } else {
-            checkIfStandardFaultCode(faultCode, uri);
-            ((FaultElementImpl) this.faultCodeElement).ensureNamespaceIsDeclared(prefix, uri);
+        if (uri == null || "".equals(uri)) {
+            if (prefix != null && !"".equals(prefix)) {
+                //cannot allow an empty URI for a non-Empty prefix
+                log.log(Level.SEVERE, "SAAJ0140.impl.no.ns.URI", new Object[]{prefix + ":" + faultCode});
+                throw new SOAPExceptionImpl("Empty/Null NamespaceURI specified for faultCode \"" + prefix + ":" + faultCode + "\"");
+            } else {
+                uri = "";
+            }
         }
-        finallySetFaultCode(prefix + ":" + faultCode);
+        checkIfStandardFaultCode(faultCode, uri);
+        ((FaultElementImpl) this.faultCodeElement).ensureNamespaceIsDeclared(prefix, uri);
+        
+        if (prefix == null || "".equals(prefix)) {
+            finallySetFaultCode(faultCode);
+        } else {
+            finallySetFaultCode(prefix + ":" + faultCode);
+        }
     }
 
     public void setFaultCode(Name faultCodeQName) throws SOAPException {
@@ -187,17 +193,7 @@ public abstract class FaultImpl extends ElementImpl implements SOAPFault {
         return (getDetail() != null);
     }
 
-    public void setFaultActor(String faultActor) throws SOAPException {
-        if (this.faultActorElement == null)
-            findFaultActorElement();
-        if (this.faultActorElement != null)
-            this.faultActorElement.detachNode();
-        if (faultActor == null)
-            return;
-        this.faultActorElement =
-            addSOAPFaultElement(getFaultActorName().getLocalName());
-        this.faultActorElement.addTextNode(faultActor);
-    }
+    public abstract void setFaultActor(String faultActor) throws SOAPException;
 
     public String getFaultActor() {
         if (this.faultActorElement == null)
@@ -209,7 +205,7 @@ public abstract class FaultImpl extends ElementImpl implements SOAPFault {
     }
 
     public SOAPElement setElementQName(QName newName) throws SOAPException {
-
+        
         log.log(
             Level.SEVERE,
             "SAAJ0146.impl.invalid.name.change.requested",
@@ -219,7 +215,7 @@ public abstract class FaultImpl extends ElementImpl implements SOAPFault {
     }
 
     protected SOAPElement convertToSoapElement(Element element) {
-        if (element instanceof SOAPFaultElement) {
+        if (element instanceof SOAPFaultElement) { 
             return (SOAPElement) element;
         } else if (element instanceof SOAPElement) {
             SOAPElement soapElement = (SOAPElement) element;
@@ -230,7 +226,7 @@ public abstract class FaultImpl extends ElementImpl implements SOAPFault {
                     soapElement.getElementName().getLocalName();
                 if (isStandardFaultElement(localName))
                     return replaceElementWithSOAPElement(
-                               element,
+                               element, 
                                createSOAPFaultElement(soapElement.getElementQName()));
                 return soapElement;
             }
@@ -306,7 +302,7 @@ public abstract class FaultImpl extends ElementImpl implements SOAPFault {
         return addElement(NameImpl.convertToName(name));
     }
 
-    protected FaultElementImpl addSOAPFaultElement(String localName)
+    protected FaultElementImpl addSOAPFaultElement(String localName) 
         throws SOAPException {
 
         FaultElementImpl faultElem = createSOAPFaultElement(localName);

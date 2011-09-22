@@ -106,3 +106,4 @@ public interface InternalizationLogic {
     Element refineWSDLTarget( Element target );
 
 }
+

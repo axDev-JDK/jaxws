@@ -37,7 +37,7 @@ import java.util.Collection;
 
 /**
  * Base interface for all the schema components.
- *
+ * 
  * @author
  *  Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */

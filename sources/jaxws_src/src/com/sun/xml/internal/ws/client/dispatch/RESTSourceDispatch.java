@@ -30,8 +30,10 @@ import com.sun.xml.internal.ws.api.message.Message;
 import com.sun.xml.internal.ws.api.message.Messages;
 import com.sun.xml.internal.ws.api.message.Packet;
 import com.sun.xml.internal.ws.api.pipe.Tube;
+import com.sun.xml.internal.ws.api.client.WSPortInfo;
 import com.sun.xml.internal.ws.binding.BindingImpl;
 import com.sun.xml.internal.ws.client.WSServiceDelegate;
+import com.sun.xml.internal.ws.client.PortInfo;
 import com.sun.xml.internal.ws.encoding.xml.XMLMessage;
 import com.sun.xml.internal.ws.message.source.PayloadSourceMessage;
 
@@ -50,9 +52,14 @@ import java.io.IOException;
  * @see SOAPSourceDispatch
  */
 final class RESTSourceDispatch extends DispatchImpl<Source> {
-
+    @Deprecated
     public RESTSourceDispatch(QName port, Mode mode, WSServiceDelegate owner, Tube pipe, BindingImpl binding, WSEndpointReference epr) {
         super(port, mode, owner, pipe, binding, epr);
+        assert isXMLHttp(binding);
+    }
+
+    public RESTSourceDispatch(WSPortInfo portInfo, Mode mode, BindingImpl binding, WSEndpointReference epr) {
+        super(portInfo, mode, binding, epr);
         assert isXMLHttp(binding);
     }
 

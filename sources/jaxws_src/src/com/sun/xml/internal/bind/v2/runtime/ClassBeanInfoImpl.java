@@ -71,7 +71,7 @@ import org.xml.sax.helpers.LocatorImpl;
 public final class ClassBeanInfoImpl<BeanT> extends JaxBeanInfo<BeanT> implements AttributeAccessor<BeanT> {
 
     private boolean isNilIncluded = false;
-
+    
     /**
      * Properties of this bean class but not its ancestor classes.
      */
@@ -108,6 +108,8 @@ public final class ClassBeanInfoImpl<BeanT> extends JaxBeanInfo<BeanT> implement
 
     private final Name tagName;
 
+    private boolean retainPropertyInfo = false;
+            
     /**
      * The {@link AttributeProperty}s for this type and all its ancestors.
      * If {@link JAXBContextImpl#c14nSupport} is true, this is sorted alphabetically.
@@ -120,7 +122,7 @@ public final class ClassBeanInfoImpl<BeanT> extends JaxBeanInfo<BeanT> implement
     private /*final*/ Property<BeanT>[] uriProperties;
 
     private final Method factoryMethod;
-
+    
     /*package*/ ClassBeanInfoImpl(JAXBContextImpl owner, RuntimeClassInfo ci) {
         super(owner,ci,ci.getClazz(),ci.getTypeName(),ci.isElement(),false,true);
 
@@ -128,6 +130,8 @@ public final class ClassBeanInfoImpl<BeanT> extends JaxBeanInfo<BeanT> implement
         this.inheritedAttWildcard = ci.getAttributeWildcard();
         this.xducer = ci.getTransducer();
         this.factoryMethod = ci.getFactoryMethod();
+        this.retainPropertyInfo = owner.retainPropertyInfo;
+        
         // make the factory accessible
         if(factoryMethod!=null) {
             int classMod = factoryMethod.getDeclaringClass().getModifiers();
@@ -144,7 +148,7 @@ public final class ClassBeanInfoImpl<BeanT> extends JaxBeanInfo<BeanT> implement
             }
         }
 
-
+        
         if(ci.getBaseClass()==null)
             this.superClazz = null;
         else
@@ -206,7 +210,7 @@ public final class ClassBeanInfoImpl<BeanT> extends JaxBeanInfo<BeanT> implement
         List<AttributeProperty> attProps = new FinalArrayList<AttributeProperty>();
         List<Property> uriProps = new FinalArrayList<Property>();
         for (ClassBeanInfoImpl bi = this; bi != null; bi = bi.superClazz) {
-            for (int i = bi.properties.length - 1; i >= 0; i--) {
+            for (int i = 0; i < bi.properties.length; i++) {
                 Property p = bi.properties[i];
                 if(p instanceof AttributeProperty)
                     attProps.add((AttributeProperty) p);
@@ -244,8 +248,8 @@ public final class ClassBeanInfoImpl<BeanT> extends JaxBeanInfo<BeanT> implement
     }
 
     public BeanT createInstance(UnmarshallingContext context) throws IllegalAccessException, InvocationTargetException, InstantiationException, SAXException {
-
-        BeanT bean = null;
+        
+        BeanT bean = null;        
         if (factoryMethod == null){
            bean = ClassFactory.create0(jaxbType);
         }else {
@@ -256,7 +260,7 @@ public final class ClassBeanInfoImpl<BeanT> extends JaxBeanInfo<BeanT> implement
                 throw new InstantiationException("The factory method didn't return a correct object");
             }
         }
-
+        
         if(xmlLocatorField!=null)
             // need to copy because Locator is mutable
             try {
@@ -308,8 +312,10 @@ public final class ClassBeanInfoImpl<BeanT> extends JaxBeanInfo<BeanT> implement
             target.startElement(tagName,bean);
             target.childAsSoleContent(bean,null);
             target.endElement();
+            if (retainPropertyInfo) {
             target.currentProperty.remove();
         }
+    }
     }
 
     public void serializeBody(BeanT bean, XMLSerializer target) throws SAXException, IOException, XMLStreamException {
@@ -317,7 +323,9 @@ public final class ClassBeanInfoImpl<BeanT> extends JaxBeanInfo<BeanT> implement
             superClazz.serializeBody(bean,target);
         try {
             for( Property<BeanT> p : properties ) {
+                if (retainPropertyInfo) {
                 target.currentProperty.set(p);
+                }
                 p.serializeBody(bean,target, null);
             }
         } catch (AccessorException e) {
@@ -328,10 +336,14 @@ public final class ClassBeanInfoImpl<BeanT> extends JaxBeanInfo<BeanT> implement
     public void serializeAttributes(BeanT bean, XMLSerializer target) throws SAXException, IOException, XMLStreamException {
         for( AttributeProperty<BeanT> p : attributeProperties )
             try {
+                if (retainPropertyInfo) {
                 final Property parentProperty = target.getCurrentProperty();
                 target.currentProperty.set(p);
                 p.serializeAttributes(bean,target);
                 target.currentProperty.set(parentProperty);
+                } else {
+                    p.serializeAttributes(bean,target);
+                }
                 if (p.attName.equals(WellKnownNamespace.XML_SCHEMA_INSTANCE, "nil")) {
                     isNilIncluded = true;
                 }
@@ -351,13 +363,18 @@ public final class ClassBeanInfoImpl<BeanT> extends JaxBeanInfo<BeanT> implement
 
     public void serializeURIs(BeanT bean, XMLSerializer target) throws SAXException {
         try {
+            if (retainPropertyInfo) {
             final Property parentProperty = target.getCurrentProperty();
             for( Property<BeanT> p : uriProperties ) {
                 target.currentProperty.set(p);
                 p.serializeURIs(bean,target);
             }
             target.currentProperty.set(parentProperty);
-
+            } else {
+                for( Property<BeanT> p : uriProperties ) {
+                    p.serializeURIs(bean,target);
+                }
+            }
             if(inheritedAttWildcard!=null) {
                 Map<QName,String> map = inheritedAttWildcard.get(bean);
                 target.attWildcardAsURIs(map,null);
@@ -396,7 +413,5 @@ public final class ClassBeanInfoImpl<BeanT> extends JaxBeanInfo<BeanT> implement
 
     private static final Logger logger = Util.getClassLogger();
 
-    public boolean isNilIncluded() {
-        return isNilIncluded;
-    }
 }
+

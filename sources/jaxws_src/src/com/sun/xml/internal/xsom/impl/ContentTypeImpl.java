@@ -31,7 +31,7 @@ import com.sun.xml.internal.xsom.XSContentType;
 /**
  * Marker interface that says this implementation
  * implements XSContentType.
- *
+ * 
  * @author
  *     Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */

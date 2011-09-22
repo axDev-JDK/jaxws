@@ -28,17 +28,19 @@ package com.sun.xml.internal.ws.client;
 import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
 import com.sun.xml.internal.ws.model.wsdl.WSDLProperties;
+import com.sun.xml.internal.ws.model.wsdl.WSDLPortImpl;
 import com.sun.xml.internal.ws.api.EndpointAddress;
 import com.sun.xml.internal.ws.api.WSBinding;
+import com.sun.xml.internal.ws.api.BindingID;
+import com.sun.xml.internal.ws.api.client.WSPortInfo;
 import com.sun.xml.internal.ws.api.addressing.AddressingVersion;
 import com.sun.xml.internal.ws.api.addressing.WSEndpointReference;
 import com.sun.xml.internal.ws.api.message.Header;
 import com.sun.xml.internal.ws.api.message.HeaderList;
 import com.sun.xml.internal.ws.api.message.Packet;
 import com.sun.xml.internal.ws.api.model.wsdl.WSDLPort;
-import com.sun.xml.internal.ws.api.pipe.Engine;
-import com.sun.xml.internal.ws.api.pipe.Fiber;
-import com.sun.xml.internal.ws.api.pipe.Tube;
+import com.sun.xml.internal.ws.api.model.SEIModel;
+import com.sun.xml.internal.ws.api.pipe.*;
 import com.sun.xml.internal.ws.binding.BindingImpl;
 import com.sun.xml.internal.ws.developer.JAXWSProperties;
 import com.sun.xml.internal.ws.developer.WSBindingProvider;
@@ -46,17 +48,22 @@ import com.sun.xml.internal.ws.resources.ClientMessages;
 import com.sun.xml.internal.ws.util.Pool;
 import com.sun.xml.internal.ws.util.Pool.TubePool;
 import com.sun.xml.internal.ws.util.RuntimeVersion;
+import com.sun.xml.internal.ws.wsdl.OperationDispatcher;
+import com.sun.xml.internal.ws.addressing.WSEPRExtension;
+import com.sun.xml.internal.stream.buffer.XMLStreamBuffer;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.EndpointReference;
 import javax.xml.ws.WebServiceException;
+import javax.xml.ws.RespectBindingFeature;
 import javax.xml.ws.http.HTTPBinding;
 import javax.xml.ws.wsaddressing.W3CEndpointReference;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import javax.xml.stream.XMLStreamException;
+import java.util.*;
 import java.util.concurrent.Executor;
+
+import com.sun.org.glassfish.gmbal.ManagedObjectManager;
 
 /**
  * Base class for stubs, which accept method invocations from
@@ -95,9 +102,11 @@ public abstract class Stub implements WSBindingProvider, ResponseContextReceiver
      * Unlike endpoint address, we are not letting users to change the EPR,
      * as it contains references to services and so on that we don't want to change.
      */
-    protected final @Nullable WSEndpointReference endpointReference;
+    protected @Nullable WSEndpointReference endpointReference;
 
     protected final BindingImpl binding;
+
+    protected final WSPortInfo portInfo;
 
     /**
      * represents AddressingVersion on binding if enabled, otherwise null;
@@ -119,6 +128,9 @@ public abstract class Stub implements WSBindingProvider, ResponseContextReceiver
     @Nullable private volatile Header[] userOutboundHeaders;
 
     private final @Nullable WSDLProperties wsdlProperties;
+    protected OperationDispatcher operationDispatcher = null;
+    private final @NotNull ManagedObjectManager managedObjectManager;
+    private boolean managedObjectManagerClosed = false;
 
     /**
      * @param master                 The created stub will send messages to this pipe.
@@ -131,10 +143,31 @@ public abstract class Stub implements WSBindingProvider, ResponseContextReceiver
      *                               Its address field will not be used, and that should be given
      *                               separately as the <tt>defaultEndPointAddress</tt>.
      */
+    @Deprecated
     protected Stub(WSServiceDelegate owner, Tube master, BindingImpl binding, WSDLPort wsdlPort, EndpointAddress defaultEndPointAddress, @Nullable WSEndpointReference epr) {
+        this(owner,master, null, binding,wsdlPort,defaultEndPointAddress,epr);
+    }
+
+    /**
+     * @param portInfo               PortInfo  for this stub 
+     * @param binding                As a {@link BindingProvider}, this object will
+     *                               return this binding from {@link BindingProvider#getBinding()}.
+     * @param defaultEndPointAddress The destination of the message. The actual destination
+     *                               could be overridden by {@link RequestContext}.
+     * @param epr                    To create a stub that sends out reference parameters
+     *                               of a specific EPR, give that instance. Otherwise null.
+     *                               Its address field will not be used, and that should be given
+     *                               separately as the <tt>defaultEndPointAddress</tt>.
+     */
+    protected Stub(WSPortInfo portInfo, BindingImpl binding, EndpointAddress defaultEndPointAddress, @Nullable WSEndpointReference epr) {
+         this((WSServiceDelegate)portInfo.getOwner(),null, portInfo, binding,portInfo.getPort(),defaultEndPointAddress,epr);
+
+    }
+
+    private Stub(WSServiceDelegate owner, @Nullable Tube master, @Nullable WSPortInfo portInfo, BindingImpl binding, @Nullable WSDLPort wsdlPort, EndpointAddress defaultEndPointAddress, @Nullable WSEndpointReference epr) {
         this.owner = owner;
-        this.tubes = new TubePool(master);
-        this.wsdlPort = wsdlPort;
+        this.portInfo = portInfo;
+        this.wsdlPort = portInfo.getPort();
         this.binding = binding;
         addrVersion = binding.getAddressingVersion();
         // if there is an EPR, EPR's address should be used for invocation instead of default address
@@ -145,6 +178,70 @@ public abstract class Stub implements WSBindingProvider, ResponseContextReceiver
         this.engine = new Engine(toString());
         this.endpointReference = epr;
         wsdlProperties = (wsdlPort==null) ? null : new WSDLProperties(wsdlPort);
+
+        // ManagedObjectManager MUST be created before the pipeline
+        // is constructed.
+
+        managedObjectManager = new MonitorRootClient(this).createManagedObjectManager(this);
+
+        if(master != null)
+            this.tubes = new TubePool(master);
+        else
+            this.tubes = new TubePool(createPipeline(portInfo, binding));
+
+        // This needs to happen after createPipeline.
+        // TBD: Check if it needs to happen outside the Stub constructor.
+        managedObjectManager.resumeJMXRegistration();
+    }
+
+    /**
+     * Creates a new pipeline for the given port name.
+     */
+    private Tube createPipeline(WSPortInfo portInfo, WSBinding binding) {
+        //Check all required WSDL extensions are understood
+        checkAllWSDLExtensionsUnderstood(portInfo,binding);
+        SEIModel seiModel = null;
+        if(portInfo instanceof SEIPortInfo) {
+            seiModel = ((SEIPortInfo)portInfo).model;
+        }
+        BindingID bindingId = portInfo.getBindingId();
+
+        TubelineAssembler assembler = TubelineAssemblerFactory.create(
+                Thread.currentThread().getContextClassLoader(), bindingId);
+        if (assembler == null)
+            throw new WebServiceException("Unable to process bindingID=" + bindingId);    // TODO: i18n
+        return assembler.createClient(
+                new ClientTubeAssemblerContext(
+                        portInfo.getEndpointAddress(),
+                        portInfo.getPort(),
+                        this, binding, owner.getContainer(),((BindingImpl)binding).createCodec(),seiModel));
+    }
+
+    /**
+     * Checks only if RespectBindingFeature is enabled
+     * checks if all required wsdl extensions in the
+     * corresponding wsdl:Port are understood when RespectBindingFeature is enabled.
+     * @throws WebServiceException
+     *      when any wsdl extension that has wsdl:required=true is not understood
+     */
+    private static void checkAllWSDLExtensionsUnderstood(WSPortInfo port, WSBinding binding) {
+        if (port.getPort() != null && binding.isFeatureEnabled(RespectBindingFeature.class)) {
+            ((WSDLPortImpl) port.getPort()).areRequiredExtensionsUnderstood();
+        }
+    }
+
+    public WSPortInfo getPortInfo() {
+        return portInfo;
+    }
+
+    /**
+     * Nullable when there is no associated WSDL Model
+     * @return
+     */
+    public @Nullable OperationDispatcher getOperationDispatcher() {
+        if(operationDispatcher == null && wsdlPort != null)
+            operationDispatcher = new OperationDispatcher(wsdlPort,binding,null);
+        return operationDispatcher;
     }
 
     /**
@@ -227,7 +324,7 @@ public abstract class Stub implements WSBindingProvider, ResponseContextReceiver
         // fill in Packet
         packet.proxy = this;
         packet.handlerConfig = binding.getHandlerConfig();
-        requestContext.fill(packet);
+        requestContext.fill(packet,(binding.getAddressingVersion() != null));
         if (wsdlProperties != null) {
             packet.addSatellite(wsdlProperties);
         }
@@ -300,6 +397,13 @@ public abstract class Stub implements WSBindingProvider, ResponseContextReceiver
             tubes = null;
             p.preDestroy();
         }
+        if (managedObjectManagerClosed) {
+            return;
+        } else {
+            com.sun.xml.internal.ws.server.MonitorBase.closeMOM(managedObjectManager);
+            managedObjectManagerClosed = true;
+        }
+        
     }
 
     public final WSBinding getBinding() {
@@ -322,41 +426,56 @@ public abstract class Stub implements WSBindingProvider, ResponseContextReceiver
         return RuntimeVersion.VERSION + ": Stub for " + getRequestContext().get(BindingProvider.ENDPOINT_ADDRESS_PROPERTY);
     }
 
+    public final WSEndpointReference getWSEndpointReference() {
+        if (binding.getBindingID().equals(HTTPBinding.HTTP_BINDING))
+            throw new java.lang.UnsupportedOperationException(ClientMessages.UNSUPPORTED_OPERATION("BindingProvider.getEndpointReference(Class<T> class)", "XML/HTTP Binding", "SOAP11 or SOAP12 Binding"));
+
+        if (endpointReference != null) {
+            return endpointReference;
+        }
+
+        String eprAddress = requestContext.getEndpointAddress().toString();
+        QName portTypeName = null;
+        String wsdlAddress = null;
+        List<WSEndpointReference.EPRExtension> wsdlEPRExtensions = new ArrayList<WSEndpointReference.EPRExtension>();
+        if(wsdlPort!=null) {
+            portTypeName = wsdlPort.getBinding().getPortTypeName();
+            wsdlAddress = eprAddress +"?wsdl";
+
+            //gather EPRExtensions specified in WSDL.
+            try {
+                WSEndpointReference wsdlEpr = ((WSDLPortImpl) wsdlPort).getEPR();
+                if (wsdlEpr != null) {
+                    for (WSEndpointReference.EPRExtension extnEl : wsdlEpr.getEPRExtensions()) {
+                        wsdlEPRExtensions.add(new WSEPRExtension(
+                                XMLStreamBuffer.createNewBufferFromXMLStreamReader(extnEl.readAsXMLStreamReader()), extnEl.getQName()));
+                    }
+                }
+
+            } catch (XMLStreamException ex) {
+                throw new WebServiceException(ex);
+            }
+        }
+        AddressingVersion av = AddressingVersion.W3C;
+        this.endpointReference =  new WSEndpointReference(
+                    av, eprAddress, getServiceName(), getPortName(), portTypeName, null, wsdlAddress, null,wsdlEPRExtensions,null);
+        
+        return this.endpointReference;
+    }
+
+
     public final W3CEndpointReference getEndpointReference() {
         if (binding.getBindingID().equals(HTTPBinding.HTTP_BINDING))
             throw new java.lang.UnsupportedOperationException(ClientMessages.UNSUPPORTED_OPERATION("BindingProvider.getEndpointReference()", "XML/HTTP Binding", "SOAP11 or SOAP12 Binding"));
         return getEndpointReference(W3CEndpointReference.class);
     }
 
-    public final <T extends EndpointReference>
-    T getEndpointReference(Class<T> clazz) {
+    public final <T extends EndpointReference> T getEndpointReference(Class<T> clazz) {
+        return getWSEndpointReference().toSpec(clazz);
+    }
 
-        if (binding.getBindingID().equals(HTTPBinding.HTTP_BINDING))
-            throw new java.lang.UnsupportedOperationException(ClientMessages.UNSUPPORTED_OPERATION("BindingProvider.getEndpointReference(Class<T> class)", "XML/HTTP Binding", "SOAP11 or SOAP12 Binding"));
-
-        // we need to expand WSEndpointAddress class to be able to return EPR with arbitrary address.
-        if (endpointReference != null) {
-            return endpointReference.toSpec(clazz);
-        }
-        String eprAddress = requestContext.getEndpointAddress().toString();
-        QName portTypeName = null;
-        String wsdlAddress = null;
-        if(wsdlPort!=null) {
-            portTypeName = wsdlPort.getBinding().getPortTypeName();
-            wsdlAddress = eprAddress +"?wsdl";
-        }
-        AddressingVersion av = AddressingVersion.fromSpecClass(clazz);
-        if (av == AddressingVersion.W3C) {
-            // Supress writing ServiceName and EndpointName in W3C EPR,
-            // Until the ns for those metadata elements is resolved.
-            return new WSEndpointReference(
-                    AddressingVersion.W3C,
-                    eprAddress, null /*getServiceName()*/, null/*getPortName()*/, null /* portTypeName*/, null, null /*wsdlAddress*/, null).toSpec(clazz);
-        } else {
-            return new WSEndpointReference(
-                    AddressingVersion.MEMBER,
-                    eprAddress, getServiceName(), getPortName(), portTypeName, null, wsdlAddress, null).toSpec(clazz);
-        }
+    public @NotNull ManagedObjectManager getManagedObjectManager() {
+        return managedObjectManager;
     }
 
 //

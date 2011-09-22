@@ -61,7 +61,7 @@ package com.sun.xml.internal.ws.org.objectweb.asm;
 
 /**
  * Information about an exception handler block.
- *
+ * 
  * @author Eric Bruneton
  */
 class Handler {

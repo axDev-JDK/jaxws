@@ -33,7 +33,7 @@ import org.xml.sax.SAXException;
 
 /**
  * Feed incoming events to {@link DomHandler} and builds a DOM tree.
- *
+ * 
  * <p>
  * Note that the SAXException returned by the ContentHandler is
  * unreported. So we have to catch them and report it, then rethrow

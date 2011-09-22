@@ -22,11 +22,15 @@
  * CA 95054 USA or visit www.sun.com if you need additional information or
  * have any questions.
  */
+
 package com.sun.xml.internal.ws.developer;
 
 import com.sun.xml.internal.ws.api.BindingID;
 
 import javax.xml.ws.WebServiceFeature;
+
+import com.sun.org.glassfish.gmbal.ManagedAttribute;
+import com.sun.org.glassfish.gmbal.ManagedData;
 
 /**
  * Using this feature, the application could override the binding used by
@@ -34,6 +38,7 @@ import javax.xml.ws.WebServiceFeature;
  *
  * @author Jitendra Kotamraju
  */
+@ManagedData
 public final class BindingTypeFeature extends WebServiceFeature {
 
     public static final String ID = "http://jax-ws.dev.java.net/features/binding";
@@ -44,10 +49,12 @@ public final class BindingTypeFeature extends WebServiceFeature {
         this.bindingId = bindingId;
     }
 
+    @ManagedAttribute
     public String getID() {
         return ID;
     }
 
+    @ManagedAttribute
     public String getBindingId() {
         return bindingId;
     }

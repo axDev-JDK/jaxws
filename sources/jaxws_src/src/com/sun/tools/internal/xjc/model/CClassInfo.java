@@ -93,7 +93,7 @@ public final class CClassInfo extends AbstractCElement implements ClassInfo<NTyp
      * Custom {@link #getSqueezedName() squeezed name}, if any.
      */
     private /*almost final*/ @Nullable String squeezedName;
-
+    
     /**
      * If this class also gets {@link XmlRootElement}, the class name.
      */
@@ -156,7 +156,7 @@ public final class CClassInfo extends AbstractCElement implements ClassInfo<NTyp
                 this.squeezedName = factoryMethod.name;
             }
         }
-
+        
         model.add(this);
     }
 
@@ -291,7 +291,7 @@ public final class CClassInfo extends AbstractCElement implements ClassInfo<NTyp
     public CNonElement getInfo() {
         return this;
     }
-
+    
     public Element<NType,NClass> asElement() {
         if(isElement())
             return this;
@@ -397,7 +397,7 @@ public final class CClassInfo extends AbstractCElement implements ClassInfo<NTyp
             return null;
         }
     }
-
+    
     public CClassRef getRefBaseClass() {
         if (baseClass instanceof CClassRef) {
             return (CClassRef) baseClass;

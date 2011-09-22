@@ -49,7 +49,7 @@ import java.nio.ByteBuffer;
  * @author Jitendra Kotamraju
  */
 class MIMEParser implements Iterable<MIMEEvent> {
-
+    
     private static final Logger LOGGER = Logger.getLogger(MIMEParser.class.getName());
 
     // Actually, the grammar doesn't support whitespace characters
@@ -496,5 +496,5 @@ NEXT:   while (off <= last) {
         }
 
     }
-
+    
 }

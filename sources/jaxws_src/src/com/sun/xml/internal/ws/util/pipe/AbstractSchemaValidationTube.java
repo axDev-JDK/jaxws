@@ -22,6 +22,7 @@
  * CA 95054 USA or visit www.sun.com if you need additional information or
  * have any questions.
  */
+
 package com.sun.xml.internal.ws.util.pipe;
 
 import com.sun.istack.internal.NotNull;
@@ -29,7 +30,6 @@ import com.sun.istack.internal.Nullable;
 import com.sun.xml.internal.ws.api.WSBinding;
 import com.sun.xml.internal.ws.api.message.Message;
 import com.sun.xml.internal.ws.api.message.Packet;
-import com.sun.xml.internal.ws.api.pipe.NextAction;
 import com.sun.xml.internal.ws.api.pipe.Tube;
 import com.sun.xml.internal.ws.api.pipe.TubeCloner;
 import com.sun.xml.internal.ws.api.pipe.helper.AbstractFilterTubeImpl;
@@ -38,9 +38,11 @@ import com.sun.xml.internal.ws.api.server.SDDocument;
 import com.sun.xml.internal.ws.developer.SchemaValidationFeature;
 import com.sun.xml.internal.ws.developer.ValidationErrorHandler;
 import com.sun.xml.internal.ws.util.ByteArrayBuffer;
+import com.sun.xml.internal.ws.util.MetadataUtil;
 import com.sun.xml.internal.ws.util.xml.XmlUtil;
 import com.sun.xml.internal.ws.wsdl.parser.WSDLConstants;
 import org.w3c.dom.*;
+import org.xml.sax.SAXException;
 import org.xml.sax.helpers.NamespaceSupport;
 
 import javax.xml.XMLConstants;
@@ -55,8 +57,10 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Validator;
 import javax.xml.ws.WebServiceException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 /**
@@ -67,6 +71,7 @@ import java.util.logging.Logger;
 public abstract class AbstractSchemaValidationTube extends AbstractFilterTubeImpl {
 
     private static final Logger LOGGER = Logger.getLogger(AbstractSchemaValidationTube.class.getName());
+    protected static final String HONOUR_ALL_SCHEMA_LOCATIONS_ID = "http://apache.org/xml/features/honour-all-schemaLocations";
 
     protected final WSBinding binding;
     protected final SchemaValidationFeature feature;
@@ -118,6 +123,44 @@ public abstract class AbstractSchemaValidationTube extends AbstractFilterTubeImp
         return (Document)result.getNode();
     }
 
+    /**
+     * Constructs list of schema documents as follows:
+     *   - all <xsd:schema> fragements from all WSDL documents.
+     *   - all schema documents in the application(from WAR etc)
+     *
+     * @param primary wsdl/schema document
+     * @param mdresolver resolves metadata documents
+     * @return list of root schema documents
+     */
+    protected Source[] getSchemaSources(String primary, MetadataUtil.MetadataResolver mdresolver) {
+        Map<String, SDDocument> docs = MetadataUtil.getMetadataClosure(primary, mdresolver, true);
+
+        List<Source> list = new ArrayList<Source>();
+        List<Source> externalSchemas = new ArrayList<Source>();
+        for(Map.Entry<String, SDDocument> entry : docs.entrySet()) {
+            SDDocument doc = entry.getValue();
+            // Add all xsd:schema fragments from all WSDLs. That should form a closure of schemas.
+            if (doc.isWSDL()) {
+                Document dom = createDOM(doc);
+                // Get xsd:schema node from WSDL's DOM
+                addSchemaFragmentSource(dom, doc.getURL().toExternalForm(), list);
+            } else if (doc.isSchema()) {
+                // If there are multiple schemas with the same targetnamespace,
+                // JAXP works only with the first one. Above, all schema fragments may have the same targetnamespace,
+                // and that means it will not include all the schemas. Since we have a list of schemas, just add them.
+                Document dom = createDOM(doc);
+                externalSchemas.add(new DOMSource(dom, doc.getURL().toExternalForm()));
+            }
+        }
+        // "honour-all-schemaLocations" feature only applies today to multiple
+        // imports for the same namespace contained directly or indirectly from
+        // a root schema document. By adding wsdl schema fragments firs in the
+        // list may capture many root schema document.
+        list.addAll(externalSchemas);
+        return list.toArray(new Source[list.size()]) ;
+    }
+
+
 
     /**
      * Locates xsd:schema elements in the WSDL and creates DOMSource and adds them to the list
@@ -144,7 +187,7 @@ public abstract class AbstractSchemaValidationTube extends AbstractFilterTubeImp
             }
         }
     }
-
+    
 
     /**
      * Recursively visit ancestors and build up {@link org.xml.sax.helpers.NamespaceSupport} oject.
@@ -183,7 +226,7 @@ public abstract class AbstractSchemaValidationTube extends AbstractFilterTubeImp
 
             for( int i=0; i<atts.getLength(); i++ ) {
                 Attr a = (Attr)atts.item(i);
-                if (!"xmlns".equals(a.getPrefix()) || !a.getLocalName().equals("prefix")) {
+                if (!"xmlns".equals(a.getPrefix()) || !a.getLocalName().equals(prefix)) {
                     LOGGER.fine("Patching with xmlns:"+prefix+"="+nss.getURI(prefix));
                     elem.setAttributeNS(XMLConstants.XMLNS_ATTRIBUTE_NS_URI, "xmlns:"+prefix, nss.getURI(prefix));
                 }
@@ -191,25 +234,26 @@ public abstract class AbstractSchemaValidationTube extends AbstractFilterTubeImp
         }
     }
 
-    @Override
-    public NextAction processRequest(Packet request) {
-        if (isNoValidation() || !request.getMessage().hasPayload() || request.getMessage().isFault()) {
-            return super.processRequest(request);
-        }
-        doProcess(request);
-        return super.processRequest(request);
-    }
+//    @Override
+//    public NextAction processRequest(Packet request) {
+//        if (isNoValidation() || !request.getMessage().hasPayload() || request.getMessage().isFault()) {
+//            return super.processRequest(request);
+//        }
+//        doProcess(request);
+//        return super.processRequest(request);
+//    }
+//
+//    @Override
+//    public NextAction processResponse(Packet response) {
+//        if (isNoValidation() || response.getMessage() == null || !response.getMessage().hasPayload() || response.getMessage().isFault()) {
+//            return super.processResponse(response);
+//        }
+//        doProcess(response);
+//        return super.processResponse(response);
+//    }
 
-    @Override
-    public NextAction processResponse(Packet response) {
-        if (isNoValidation() || response.getMessage() == null || !response.getMessage().hasPayload() || response.getMessage().isFault()) {
-            return super.processResponse(response);
-        }
-        doProcess(response);
-        return super.processResponse(response);
-    }
 
-    private void doProcess(Packet packet) {
+    protected void doProcess(Packet packet) throws SAXException {
         getValidator().reset();
         Class<? extends ValidationErrorHandler> handlerClass = feature.getErrorHandler();
         ValidationErrorHandler handler;
@@ -226,7 +270,7 @@ public abstract class AbstractSchemaValidationTube extends AbstractFilterTubeImp
             // Validator javadoc allows ONLY SAX, and DOM Sources
             // But the impl seems to handle all kinds.
             getValidator().validate(source);
-        } catch(Exception e) {
+        } catch(IOException e) {
             throw new WebServiceException(e);
         }
     }

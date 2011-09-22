@@ -30,6 +30,7 @@ import com.sun.istack.internal.Nullable;
 import com.sun.xml.internal.ws.api.BindingID;
 import com.sun.xml.internal.ws.api.SOAPVersion;
 import com.sun.xml.internal.ws.api.WSBinding;
+import com.sun.xml.internal.ws.api.client.WSPortInfo;
 import com.sun.xml.internal.ws.api.addressing.WSEndpointReference;
 import com.sun.xml.internal.ws.api.message.Attachment;
 import com.sun.xml.internal.ws.api.message.AttachmentSet;
@@ -38,13 +39,7 @@ import com.sun.xml.internal.ws.api.message.Packet;
 import com.sun.xml.internal.ws.api.pipe.Fiber;
 import com.sun.xml.internal.ws.api.pipe.Tube;
 import com.sun.xml.internal.ws.binding.BindingImpl;
-import com.sun.xml.internal.ws.client.AsyncInvoker;
-import com.sun.xml.internal.ws.client.AsyncResponseImpl;
-import com.sun.xml.internal.ws.client.RequestContext;
-import com.sun.xml.internal.ws.client.ResponseContext;
-import com.sun.xml.internal.ws.client.ResponseContextReceiver;
-import com.sun.xml.internal.ws.client.Stub;
-import com.sun.xml.internal.ws.client.WSServiceDelegate;
+import com.sun.xml.internal.ws.client.*;
 import com.sun.xml.internal.ws.encoding.soap.DeserializationException;
 import com.sun.xml.internal.ws.fault.SOAPFaultBuilder;
 import com.sun.xml.internal.ws.message.AttachmentSetImpl;
@@ -105,9 +100,23 @@ public abstract class DispatchImpl<T> extends Stub implements Dispatch<T> {
      * @param pipe    Master pipe for the pipeline
      * @param binding Binding of this Dispatch instance, current one of SOAP/HTTP or XML/HTTP
      */
+    @Deprecated
     protected DispatchImpl(QName port, Service.Mode mode, WSServiceDelegate owner, Tube pipe, BindingImpl binding, @Nullable WSEndpointReference epr) {
         super(owner, pipe, binding, (owner.getWsdlService() != null)? owner.getWsdlService().get(port) : null , owner.getEndpointAddress(port), epr);
         this.portname = port;
+        this.mode = mode;
+        this.soapVersion = binding.getSOAPVersion();
+    }
+
+    /**
+     *
+     * @param portInfo dispatch instance is asssociated with this portInfo
+     * @param mode     Service.mode associated with this Dispatch instance - Service.mode.MESSAGE or Service.mode.PAYLOAD
+     * @param binding  Binding of this Dispatch instance, current one of SOAP/HTTP or XML/HTTP
+     */
+    protected DispatchImpl(WSPortInfo portInfo, Service.Mode mode, BindingImpl binding, @Nullable WSEndpointReference epr) {
+        super(portInfo, binding, portInfo.getEndpointAddress(), epr);
+        this.portname = portInfo.getPortName();
         this.mode = mode;
         this.soapVersion = binding.getSOAPVersion();
     }
@@ -414,7 +423,7 @@ public abstract class DispatchImpl<T> extends Stub implements Dispatch<T> {
     }
 
     /**
-     *
+     * 
      */
     private class DispatchAsyncInvoker extends AsyncInvoker {
         private final T param;
@@ -479,10 +488,18 @@ public abstract class DispatchImpl<T> extends Stub implements Dispatch<T> {
     static final String HTTP_REQUEST_METHOD_POST="POST";
     static final String HTTP_REQUEST_METHOD_PUT="PUT";
 
+    @Deprecated
     public static Dispatch<Source> createSourceDispatch(QName port, Mode mode, WSServiceDelegate owner, Tube pipe, BindingImpl binding, WSEndpointReference epr) {
         if(isXMLHttp(binding))
             return new RESTSourceDispatch(port,mode,owner,pipe,binding,epr);
         else
             return new SOAPSourceDispatch(port,mode,owner,pipe,binding,epr);
+    }
+
+    public static Dispatch<Source> createSourceDispatch(WSPortInfo portInfo, Mode mode, BindingImpl binding, WSEndpointReference epr) {
+        if (isXMLHttp(binding))
+            return new RESTSourceDispatch(portInfo, mode, binding, epr);
+        else
+            return new SOAPSourceDispatch(portInfo, mode, binding, epr);
     }
 }

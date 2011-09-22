@@ -55,7 +55,7 @@
  *      Corresponds to {@link Method}.
  *
  * <dt>
- */
+ */ 
 @XmlSchema(namespace="http://jaxb.dev.java.net/xjc/model",elementFormDefault=QUALIFIED)
 package com.sun.xml.internal.bind.v2.model.core;
 
@@ -66,3 +66,6 @@ import java.lang.reflect.Field;
 import javax.xml.bind.annotation.XmlSchema;
 
 import static javax.xml.bind.annotation.XmlNsForm.QUALIFIED;
+
+
+

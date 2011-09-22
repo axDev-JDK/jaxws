@@ -62,7 +62,7 @@ public interface ReferencePropertyInfo<T,C> extends PropertyInfo<T,C> {
      * {@inheritDoc}.
      *
      * If this {@link ReferencePropertyInfo} has a wildcard in it,
-     * then the returned list will contain {@link WildcardTypeInfo}.
+     * then the returned list will contain {@link WildcardTypeInfo}. 
      */
     Collection<? extends TypeInfo<T,C>> ref();
 

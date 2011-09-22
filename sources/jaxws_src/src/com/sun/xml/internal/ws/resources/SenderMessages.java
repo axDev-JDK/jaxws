@@ -22,6 +22,7 @@
  * CA 95054 USA or visit www.sun.com if you need additional information or
  * have any questions.
  */
+
 package com.sun.xml.internal.ws.resources;
 
 import com.sun.xml.internal.ws.util.localization.Localizable;
@@ -31,7 +32,7 @@ import com.sun.xml.internal.ws.util.localization.Localizer;
 
 /**
  * Defines string formatting method for each constant in the resource file
- *
+ * 
  */
 public final class SenderMessages {
 
@@ -44,7 +45,7 @@ public final class SenderMessages {
 
     /**
      * illegal value for content negotiation property "{0}"
-     *
+     * 
      */
     public static String SENDER_REQUEST_ILLEGAL_VALUE_FOR_CONTENT_NEGOTIATION(Object arg0) {
         return localizer.localize(localizableSENDER_REQUEST_ILLEGAL_VALUE_FOR_CONTENT_NEGOTIATION(arg0));
@@ -56,7 +57,7 @@ public final class SenderMessages {
 
     /**
      * fault detail cannot be decoded
-     *
+     * 
      */
     public static String SENDER_RESPONSE_CANNOT_DECODE_FAULT_DETAIL() {
         return localizer.localize(localizableSENDER_RESPONSE_CANNOT_DECODE_FAULT_DETAIL());
@@ -68,7 +69,7 @@ public final class SenderMessages {
 
     /**
      * sender error: {0}
-     *
+     * 
      */
     public static String SENDER_NESTED_ERROR(Object arg0) {
         return localizer.localize(localizableSENDER_NESTED_ERROR(arg0));
@@ -80,7 +81,7 @@ public final class SenderMessages {
 
     /**
      * message not ready to be sent
-     *
+     * 
      */
     public static String SENDER_REQUEST_MESSAGE_NOT_READY() {
         return localizer.localize(localizableSENDER_REQUEST_MESSAGE_NOT_READY());

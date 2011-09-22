@@ -65,7 +65,7 @@ public class JAXWSBinding extends ExtensionImpl {
         // TODO Auto-generated method stub
         return JAXWSBindingsConstants.JAXWS_BINDINGS;
     }
-
+    
     public QName getWSDLElementName() {
         return getElementName();
     }

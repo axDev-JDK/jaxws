@@ -29,7 +29,7 @@ import com.sun.xml.internal.bind.util.AttributesImpl;
 
 /**
  * {@link AttributesEx} implementation.
- *
+ * 
  * TODO: proper implementation that holds CharSequence
  *
  * @author Kohsuke Kawaguchi

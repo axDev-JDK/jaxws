@@ -30,7 +30,7 @@ import com.sun.xml.internal.bind.v2.runtime.Location;
 
 /**
  * {@link Locatable} implementation for a class.
- *
+ * 
  * @author Kohsuke Kawaguchi
  */
 public class ClassLocatable<C> implements Locatable {

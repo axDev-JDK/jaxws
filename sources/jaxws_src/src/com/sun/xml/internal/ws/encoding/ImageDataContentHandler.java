@@ -23,7 +23,6 @@
  * have any questions.
  */
 
-
 package com.sun.xml.internal.ws.encoding;
 
 import javax.activation.DataContentHandler;
@@ -162,3 +161,4 @@ public class ImageDataContentHandler extends Component
     }
 
 }
+

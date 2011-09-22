@@ -56,7 +56,7 @@ public class SOAPSEIModel extends AbstractSEIModelImpl {
                     put(p.getName(), jm);
                     bodyFound = true;
                 }
-            }
+            }            
             if(!bodyFound){
                 put(emptyBodyName, jm);
 //                System.out.println("added empty body for: "+jm.getMethod().getName());

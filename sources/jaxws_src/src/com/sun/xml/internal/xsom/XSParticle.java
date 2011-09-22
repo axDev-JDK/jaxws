@@ -28,7 +28,7 @@ package com.sun.xml.internal.xsom;
 
 /**
  * Particle schema component.
- *
+ * 
  * @author
  *  Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
@@ -37,7 +37,7 @@ public interface XSParticle extends XSContentType
     int getMinOccurs();
     /**
      * Gets the max occurs property.
-     *
+     * 
      * @return
      *      {@link UNBOUNDED} will be returned if the value
      *      is "unbounded".

@@ -155,7 +155,7 @@ public class RuntimeModelBuilder extends ModelBuilder<Type,Class,Field,Method> {
             }
             t = new SchemaTypeTransducer(t,src.getSchemaType());
         }
-
+        
         return t;
     }
 

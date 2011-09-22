@@ -42,13 +42,13 @@ import java.util.logging.Logger;
  * @author Jitendra Kotamraju
  */
 final class ServerMgr {
-
+    
     private static final ServerMgr serverMgr = new ServerMgr();
     private static final Logger logger =
         Logger.getLogger(
             com.sun.xml.internal.ws.util.Constants.LoggingDomain + ".server.http");
     private final Map<InetSocketAddress,ServerState> servers = new HashMap<InetSocketAddress,ServerState>();
-
+            
     private ServerMgr() {}
 
     /**
@@ -58,7 +58,7 @@ final class ServerMgr {
     static ServerMgr getInstance() {
         return serverMgr;
     }
-
+    
     /*
      * Creates a HttpContext at the given address. If there is already a server
      * it uses that server to create a context. Otherwise, it creates a new
@@ -100,7 +100,7 @@ final class ServerMgr {
             throw new ServerRtException("server.rt.err",e );
         }
     }
-
+    
     /*
      * Removes a context. If the server doesn't have anymore contexts, it
      * would stop the server and server is removed from servers Map.
@@ -120,28 +120,28 @@ final class ServerMgr {
             }
         }
     }
-
+    
     private static final class ServerState {
         private final HttpServer server;
         private int instances;
-
+        
         ServerState(HttpServer server) {
             this.server = server;
             this.instances = 1;
         }
-
+        
         public HttpServer getServer() {
             return server;
         }
-
+        
         public void oneMoreContext() {
             ++instances;
         }
-
+        
         public void oneLessContext() {
             --instances;
         }
-
+        
         public int noOfContexts() {
             return instances;
         }

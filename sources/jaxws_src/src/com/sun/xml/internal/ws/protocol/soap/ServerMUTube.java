@@ -37,18 +37,22 @@ import java.util.Set;
  */
 
 public class ServerMUTube extends MUTube {
-
+    
     private HandlerConfiguration handlerConfig;
+    private ServerTubeAssemblerContext tubeContext;
+    public ServerMUTube(ServerTubeAssemblerContext tubeContext, Tube next) {
+        super(tubeContext.getEndpoint().getBinding(), next);
 
-    public ServerMUTube(WSBinding binding, Tube next) {
-        super(binding, next);
+        this.tubeContext = tubeContext;
+
         //On Server, HandlerConfiguration does n't change after publish.
-        handlerConfig = ((BindingImpl)binding).getHandlerConfig();
+        handlerConfig = ((BindingImpl)tubeContext.getEndpoint().getBinding()).getHandlerConfig();
     }
 
     protected ServerMUTube(ServerMUTube that, TubeCloner cloner) {
         super(that,cloner);
         handlerConfig = that.handlerConfig;
+        tubeContext = that.tubeContext;
     }
 
     /**
@@ -66,7 +70,8 @@ public class ServerMUTube extends MUTube {
         if((misUnderstoodHeaders == null)  || misUnderstoodHeaders.isEmpty()) {
             return doInvoke(super.next, request);
         }
-        return doReturnWith(request.createResponse(createMUSOAPFaultMessage(misUnderstoodHeaders)));
+        return doReturnWith(request.createServerResponse(createMUSOAPFaultMessage(misUnderstoodHeaders),
+                tubeContext.getWsdlModel(), tubeContext.getSEIModel(), tubeContext.getEndpoint().getBinding()));
     }
 
     public ServerMUTube copy(TubeCloner cloner) {

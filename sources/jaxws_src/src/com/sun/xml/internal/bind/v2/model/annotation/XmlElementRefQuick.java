@@ -63,4 +63,8 @@ final class XmlElementRefQuick
         return core.namespace();
     }
 
+    public boolean required() {
+        return core.required();
+    }
+
 }

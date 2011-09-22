@@ -22,6 +22,7 @@
  * CA 95054 USA or visit www.sun.com if you need additional information or
  * have any questions.
  */
+
 package com.sun.xml.internal.ws.resources;
 
 import com.sun.xml.internal.ws.util.localization.Localizable;
@@ -31,7 +32,7 @@ import com.sun.xml.internal.ws.util.localization.Localizer;
 
 /**
  * Defines string formatting method for each constant in the resource file
- *
+ * 
  */
 public final class HttpserverMessages {
 
@@ -44,7 +45,7 @@ public final class HttpserverMessages {
 
     /**
      * Cannot handle HTTP method: {0}
-     *
+     * 
      */
     public static String UNEXPECTED_HTTP_METHOD(Object arg0) {
         return localizer.localize(localizableUNEXPECTED_HTTP_METHOD(arg0));

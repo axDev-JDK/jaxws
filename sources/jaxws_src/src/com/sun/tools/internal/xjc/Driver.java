@@ -298,7 +298,7 @@ public class Driver {
                 }
                 return -1;
             }
-
+            
             Model model = ModelLoader.load( opt, new JCodeModel(), receiver );
 
             if (model == null) {
@@ -423,10 +423,10 @@ public class Driver {
         GBIND
     }
 
-
+    
     /**
      * Command-line arguments processor.
-     *
+     * 
      * <p>
      * This class contains options that only make sense
      * for the command line interface.
@@ -435,10 +435,10 @@ public class Driver {
     {
         /** Operation mode. */
         protected Mode mode = Mode.CODE;
-
+        
         /** A switch that determines the behavior in the BGM mode. */
         public boolean noNS = false;
-
+        
         /** Parse XJC-specific options. */
         public int parseArgument(String[] args, int i) throws BadCommandLineException {
             if (args[i].equals("-noNS")) {
@@ -495,7 +495,7 @@ public class Driver {
         } else {
             System.out.println(Messages.format(Messages.DRIVER_PUBLIC_USAGE));
         }
-
+        
         if( opts!=null && opts.getAllPlugins().size()!=0 ) {
             System.out.println(Messages.format(Messages.ADDON_USAGE));
             for (Plugin p : opts.getAllPlugins()) {

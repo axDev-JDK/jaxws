@@ -32,7 +32,7 @@ import com.sun.xml.internal.bind.v2.runtime.Name;
 
 /**
  * Pair of {@link QName} and {@link JaxBeanInfo}.
- *
+ * 
  * @author Kohsuke Kawaguchi
  */
 class TagAndType {

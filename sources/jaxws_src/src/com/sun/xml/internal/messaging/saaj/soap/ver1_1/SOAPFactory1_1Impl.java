@@ -49,7 +49,7 @@ public class SOAPFactory1_1Impl extends SOAPFactoryImpl {
         return new Detail1_1Impl(createDocument());
     }
 
-    public SOAPFault createFault(String reasonText, QName faultCode)
+    public SOAPFault createFault(String reasonText, QName faultCode) 
         throws SOAPException {
         if (faultCode == null) {
             throw new IllegalArgumentException("faultCode argument for createFault was passed NULL");

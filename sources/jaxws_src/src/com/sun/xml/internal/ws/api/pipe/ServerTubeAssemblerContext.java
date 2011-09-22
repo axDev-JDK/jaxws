@@ -27,7 +27,6 @@ package com.sun.xml.internal.ws.api.pipe;
 
 import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
-import com.sun.xml.internal.ws.addressing.WsaServerTube;
 import com.sun.xml.internal.ws.addressing.W3CWsaServerTube;
 import com.sun.xml.internal.ws.addressing.v200408.MemberSubmissionWsaServerTube;
 import com.sun.xml.internal.ws.api.addressing.AddressingVersion;
@@ -120,7 +119,7 @@ public class ServerTubeAssemblerContext {
      *
      * @return always non-null terminal pipe
      */
-     public @NotNull Tube getTerminalTube() {
+    public @NotNull Tube getTerminalTube() {
          return terminal;
     }
 
@@ -140,7 +139,7 @@ public class ServerTubeAssemblerContext {
      */
     public @NotNull Tube createServerMUTube(@NotNull Tube next) {
         if (binding instanceof SOAPBinding)
-            return new ServerMUTube(binding,next);
+            return new ServerMUTube(this,next);
         else
             return next;
     }
@@ -150,7 +149,7 @@ public class ServerTubeAssemblerContext {
      */
     public @NotNull Tube createHandlerTube(@NotNull Tube next) {
         if (!binding.getHandlerChain().isEmpty()) {
-            HandlerTube cousin = new ServerLogicalHandlerTube(binding, wsdlModel, next);
+            HandlerTube cousin = new ServerLogicalHandlerTube(binding, seiModel, wsdlModel, next);
             next = cousin;
             if (binding instanceof SOAPBinding) {
                 //Add SOAPHandlerTube
@@ -200,7 +199,7 @@ public class ServerTubeAssemblerContext {
      */
     public Tube createValidationTube(Tube next) {
         if (binding instanceof SOAPBinding && binding.isFeatureEnabled(SchemaValidationFeature.class) && wsdlModel!=null)
-            return new ServerSchemaValidationTube(endpoint, binding, next);
+            return new ServerSchemaValidationTube(endpoint, binding, seiModel, wsdlModel, next);
         else
             return next;
     }
@@ -211,7 +210,7 @@ public class ServerTubeAssemblerContext {
     public Tube createWsaTube(Tube next) {
         if (binding instanceof SOAPBinding && AddressingVersion.isEnabled(binding)) {
             if(AddressingVersion.fromBinding(binding) == AddressingVersion.MEMBER) {
-                return new MemberSubmissionWsaServerTube(endpoint, wsdlModel, binding, next);
+                return new MemberSubmissionWsaServerTube(endpoint, wsdlModel, binding, next);    
             } else {
                 return new W3CWsaServerTube(endpoint, wsdlModel, binding, next);
             }

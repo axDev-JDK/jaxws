@@ -59,14 +59,14 @@ public class NameImpl implements Name {
     protected static final Logger log =
         Logger.getLogger(LogDomainConstants.NAMING_DOMAIN,
                          "com.sun.xml.internal.messaging.saaj.soap.name.LocalStrings");
-
+    
     /**
      * XML Information Set REC
-     * all namespace attributes (including those named xmlns,
+     * all namespace attributes (including those named xmlns, 
      * whose [prefix] property has no value) have a namespace URI of http://www.w3.org/2000/xmlns/
      */
     public final static String XMLNS_URI = "http://www.w3.org/2000/xmlns/".intern();
-
+    
     protected NameImpl(String name) {
         this.localName = name == null ? "" : name;
     }
@@ -85,15 +85,15 @@ public class NameImpl implements Name {
     }
 
     public static Name convertToName(QName qname) {
-        return new NameImpl(qname.getLocalPart(),
-                            qname.getPrefix(),
+        return new NameImpl(qname.getLocalPart(), 
+                            qname.getPrefix(), 
                             qname.getNamespaceURI());
     }
 
     public static QName convertToQName(Name name) {
         return new QName(name.getURI(),
-                         name.getLocalName(),
-                         name.getPrefix());
+			 name.getLocalName(),
+                         name.getPrefix()); 
     }
 
     public static NameImpl createFromUnqualifiedName(String name) {
@@ -129,7 +129,7 @@ public class NameImpl implements Name {
     protected static int getPrefixSeparatorIndex(String qualifiedName) {
         int index = qualifiedName.indexOf(':');
         if (index < 0) {
-            log.log(
+            log.log( 
                 Level.SEVERE,
                 "SAAJ0202.name.invalid.arg.format",
                 new String[] { qualifiedName });
@@ -470,7 +470,7 @@ static class FaultElement1_1Name extends NameImpl {
     FaultElement1_1Name(String localName) {
         super(localName);
     }
-
+    
     FaultElement1_1Name(String localName, String prefix) {
         super(localName, prefix, "");
     }

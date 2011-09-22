@@ -41,7 +41,7 @@ import java.util.*;
  * Packet.handlerConfig
  * The information in the HandlerConfiguration is used by MUPipe and HandlerTube
  * implementations.
- *
+ * 
  * @author Rama Pulavarthi
  */
 public class HandlerConfiguration {

@@ -23,9 +23,6 @@
  * have any questions.
  */
 
-/*
- * Copyright (c) 2006 Your Corporation. All Rights Reserved.
- */
 package com.sun.xml.internal.ws.util.pipe;
 
 import com.sun.istack.internal.NotNull;
@@ -56,7 +53,7 @@ public class StandalonePipeAssembler implements PipelineAssembler {
         }
         head = context.createWsaPipe(head);
         head = context.createClientMUPipe(head);
-        return context.createHandlerPipe(head);
+        return context.createHandlerPipe(head);        
     }
 
     /**

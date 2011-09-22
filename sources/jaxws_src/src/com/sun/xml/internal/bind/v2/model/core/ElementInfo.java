@@ -82,7 +82,7 @@ public interface ElementInfo<T,C> extends Element<T,C> {
     /**
      * @inheritDoc
      *
-     * {@link ElementInfo} can only substitute {@link ElementInfo}.
+     * {@link ElementInfo} can only substitute {@link ElementInfo}. 
      */
     ElementInfo<T,C> getSubstitutionHead();
 

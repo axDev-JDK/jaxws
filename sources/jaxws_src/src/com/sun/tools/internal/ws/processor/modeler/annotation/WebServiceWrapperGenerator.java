@@ -27,9 +27,14 @@ package com.sun.tools.internal.ws.processor.modeler.annotation;
 import static com.sun.codemodel.internal.ClassType.CLASS;
 import com.sun.codemodel.internal.*;
 import com.sun.codemodel.internal.writer.ProgressCodeWriter;
-import com.sun.mirror.declaration.*;
+import com.sun.mirror.declaration.ClassDeclaration;
+import com.sun.mirror.declaration.InterfaceDeclaration;
+import com.sun.mirror.declaration.MethodDeclaration;
+import com.sun.mirror.declaration.TypeDeclaration;
 import com.sun.mirror.type.ClassType;
 import com.sun.mirror.type.*;
+import com.sun.tools.internal.jxc.apt.InlineAnnotationReaderImpl;
+import com.sun.tools.internal.jxc.model.nav.APTNavigator;
 import com.sun.tools.internal.ws.processor.generator.GeneratorBase;
 import com.sun.tools.internal.ws.processor.generator.GeneratorConstants;
 import com.sun.tools.internal.ws.processor.generator.Names;
@@ -40,21 +45,26 @@ import com.sun.tools.internal.ws.util.ClassNameInfo;
 import com.sun.tools.internal.ws.wscompile.FilerCodeWriter;
 import com.sun.tools.internal.ws.wscompile.WsgenOptions;
 import com.sun.tools.internal.ws.wsdl.document.soap.SOAPStyle;
-import com.sun.xml.internal.ws.util.StringUtils;
 import com.sun.xml.internal.bind.api.JAXBRIContext;
-import com.sun.xml.internal.bind.api.impl.NameConverter;
+import com.sun.xml.internal.bind.v2.model.annotation.AnnotationReader;
+import com.sun.xml.internal.bind.v2.model.nav.Navigator;
+import com.sun.xml.internal.ws.model.AbstractWrapperBeanGenerator;
+import com.sun.xml.internal.ws.util.StringUtils;
 
-import javax.jws.*;
+import javax.jws.Oneway;
+import javax.jws.WebMethod;
+import javax.jws.WebService;
 import javax.xml.bind.annotation.*;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import javax.xml.namespace.QName;
 import javax.xml.ws.RequestWrapper;
 import javax.xml.ws.ResponseWrapper;
 import javax.xml.ws.WebFault;
+import javax.xml.ws.WebServiceException;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
 import java.lang.annotation.Annotation;
+import java.util.*;
 
 
 /**
@@ -64,11 +74,43 @@ import java.lang.annotation.Annotation;
  * @author  WS Development Team
  */
 public class WebServiceWrapperGenerator extends WebServiceVisitor {
-    protected Set<String> wrapperNames;
-    protected Set<String> processedExceptions;
-    protected JCodeModel cm;
-    protected MakeSafeTypeVisitor makeSafeVisitor;
+    private Set<String> wrapperNames;
+    private Set<String> processedExceptions;
+    private JCodeModel cm;
+    private final MakeSafeTypeVisitor makeSafeVisitor;
 
+    private static final FieldFactory FIELD_FACTORY = new FieldFactory();
+
+    private final AbstractWrapperBeanGenerator APT_GENERATOR =
+            new APTWrapperBeanGenerator(InlineAnnotationReaderImpl.theInstance,
+                   new APTNavigator(builder.getAPEnv()) , FIELD_FACTORY);
+
+    private final class APTWrapperBeanGenerator extends AbstractWrapperBeanGenerator<TypeMirror, TypeDeclaration, MethodDeclaration, MemberInfo> {
+
+        protected APTWrapperBeanGenerator(AnnotationReader<TypeMirror, TypeDeclaration, ?, MethodDeclaration> annReader, Navigator<TypeMirror, TypeDeclaration, ?, MethodDeclaration> nav, BeanMemberFactory<TypeMirror, MemberInfo> beanMemberFactory) {
+            super(annReader, nav, beanMemberFactory);
+        }
+
+        protected TypeMirror getSafeType(TypeMirror type) {
+            return WebServiceWrapperGenerator.this.getSafeType(type);
+        }
+
+        protected TypeMirror getHolderValueType(TypeMirror paramType) {
+            return builder.getHolderValueType(paramType);
+        }
+
+        protected boolean isVoidType(TypeMirror type) {
+            return type instanceof VoidType;
+        }
+
+    }
+
+    private static final class FieldFactory implements AbstractWrapperBeanGenerator.BeanMemberFactory<TypeMirror, MemberInfo> {
+        public MemberInfo createWrapperBeanMember(TypeMirror paramType,
+                String paramName, List<Annotation> jaxb) {
+            return new MemberInfo(paramType, paramName, jaxb);
+        }
+    }
 
     public WebServiceWrapperGenerator(ModelBuilder builder, AnnotationProcessorContext context) {
         super(builder, context);
@@ -208,14 +250,14 @@ public class WebServiceWrapperGenerator extends WebServiceVisitor {
                                  Names.stripQualifier(responseClassName) + GeneratorConstants.JAVA_SRC_SUFFIX);
             builder.getOptions().addGeneratedFile(file);
         }
-        ArrayList<MemberInfo> reqMembers = new ArrayList<MemberInfo>();
-        ArrayList<MemberInfo> resMembers = new ArrayList<MemberInfo>();
+        //ArrayList<MemberInfo> reqMembers = new ArrayList<MemberInfo>();
+        //ArrayList<MemberInfo> resMembers = new ArrayList<MemberInfo>();
         WrapperInfo reqWrapperInfo = new WrapperInfo(requestClassName);
-        reqWrapperInfo.setMembers(reqMembers);
+        //reqWrapperInfo.setMembers(reqMembers);
         WrapperInfo resWrapperInfo = null;
         if (!isOneway) {
             resWrapperInfo = new WrapperInfo(responseClassName);
-            resWrapperInfo.setMembers(resMembers);
+            //resWrapperInfo.setMembers(resMembers);
         }
         seiContext.setReqWrapperOperation(method, reqWrapperInfo);
         if (!isOneway)
@@ -239,7 +281,10 @@ public class WebServiceWrapperGenerator extends WebServiceVisitor {
             writeXmlElementDeclaration(reqCls, reqName,reqNamespace);
             writeXmlElementDeclaration(resCls, resName, resNamespace);
 
-            collectMembers(method, reqMembers, resMembers);
+            List<MemberInfo> reqMembers = APT_GENERATOR.collectRequestBeanMembers(
+                    method);
+            List<MemberInfo> resMembers = APT_GENERATOR.collectResponseBeanMembers(
+                    method);
 
             // XmlType
             writeXmlTypeDeclaration(reqCls, reqName, reqNamespace, reqMembers);
@@ -255,127 +300,16 @@ public class WebServiceWrapperGenerator extends WebServiceVisitor {
         return true;
     }
 
-    private void collectMembers(MethodDeclaration method,
-                                ArrayList<MemberInfo> requestMembers,
-                                ArrayList<MemberInfo> responseMembers) {
-
-        WebResult webResult = method.getAnnotation(WebResult.class);
-        List<Annotation> jaxbRespAnnotations = collectJAXBAnnotations(method);
-        String responseElementName = RETURN;
-        String responseName = RETURN_VALUE;
-        String responseNamespace = wrapped ? EMTPY_NAMESPACE_ID : typeNamespace;
-        boolean isResultHeader = false;
-        if (webResult != null) {
-            if (webResult.name().length() > 0) {
-                responseElementName = webResult.name();
-                responseName = JAXBRIContext.mangleNameToVariableName(webResult.name());
-
-                //We wont have to do this if JAXBRIContext.mangleNameToVariableName() takes
-                //care of mangling java identifiers
-                responseName = Names.getJavaReserverVarialbeName(responseName);
-            }
-            responseNamespace = webResult.targetNamespace().length() > 1 ?
-                webResult.targetNamespace() :
-                responseNamespace;
-            isResultHeader = webResult.header();
-        }
-
-        // class members
-        WebParam webParam;
-        TypeMirror paramType;
-        String paramName;
-
-        String paramNamespace;
-        TypeMirror holderType;
-        int paramIndex = -1;
-        TypeMirror typeMirror = getSafeType(method.getReturnType());
-
-        if (!(method.getReturnType() instanceof VoidType) && !isResultHeader) {
-            responseMembers.add(new MemberInfo(typeMirror, responseName,
-                new QName(responseNamespace, responseElementName), method, jaxbRespAnnotations.toArray(new Annotation[jaxbRespAnnotations.size()])));
-        }
-
-        for (ParameterDeclaration param : method.getParameters()) {
-            List<Annotation> jaxbAnnotation = collectJAXBAnnotations(param);
-            WebParam.Mode mode = null;
-            paramIndex++;
-            holderType = builder.getHolderValueType(param.getType());
-            webParam = param.getAnnotation(WebParam.class);
-            typeMirror =  getSafeType(param.getType());
-            paramType = typeMirror;
-            paramNamespace = wrapped ? EMTPY_NAMESPACE_ID : typeNamespace;
-            if (holderType != null) {
-                paramType = holderType;
-            }
-            paramName =  "arg"+paramIndex;
-            if (webParam != null && webParam.header()) {
-                continue;
-            }
-            if (webParam != null) {
-                mode = webParam.mode();
-                if (webParam.name().length() > 0)
-                    paramName = webParam.name();
-                if (webParam.targetNamespace().length() > 0)
-                    paramNamespace = webParam.targetNamespace();
-            }
-
-            String propertyName = JAXBRIContext.mangleNameToVariableName(paramName);
-            //We wont have to do this if JAXBRIContext.mangleNameToVariableName() takes
-            //care of mangling java identifiers
-            propertyName = Names.getJavaReserverVarialbeName(propertyName);
-
-            MemberInfo memInfo = new MemberInfo(paramType, propertyName,
-                new QName(paramNamespace, paramName), param, jaxbAnnotation.toArray(new Annotation[jaxbAnnotation.size()]));
-            if (holderType != null) {
-                if (mode == null || mode.equals(WebParam.Mode.INOUT)) {
-                    requestMembers.add(memInfo);
-                }
-                responseMembers.add(memInfo);
-            } else {
-                requestMembers.add(memInfo);
-            }
-        }
-    }
-
-    private List<Annotation> collectJAXBAnnotations(ParameterDeclaration param) {
-        List<Annotation> jaxbAnnotation = new ArrayList<Annotation>();
-        Annotation ann = param.getAnnotation(XmlAttachmentRef.class);
-        if(ann != null)
-            jaxbAnnotation.add(ann);
-
-        ann = param.getAnnotation(XmlMimeType.class);
-        if(ann != null)
-            jaxbAnnotation.add(ann);
-
-        ann = param.getAnnotation(XmlJavaTypeAdapter.class);
-        if(ann != null)
-            jaxbAnnotation.add(ann);
-
-        ann = param.getAnnotation(XmlList.class);
-        if(ann != null)
-            jaxbAnnotation.add(ann);
-        return jaxbAnnotation;
-    }
-
-    private List<Annotation> collectJAXBAnnotations(MethodDeclaration method) {
-        List<Annotation> jaxbAnnotation = new ArrayList<Annotation>();
-        Annotation ann = method.getAnnotation(XmlAttachmentRef.class);
-        if(ann != null)
-            jaxbAnnotation.add(ann);
-
-        ann = method.getAnnotation(XmlMimeType.class);
-        if(ann != null)
-            jaxbAnnotation.add(ann);
-
-        ann = method.getAnnotation(XmlJavaTypeAdapter.class);
-        if(ann != null)
-            jaxbAnnotation.add(ann);
-
-        ann = method.getAnnotation(XmlList.class);
-        if(ann != null)
-            jaxbAnnotation.add(ann);
-        return jaxbAnnotation;
-    }
+//    private List<Annotation> collectJAXBAnnotations(Declaration decl) {
+//        List<Annotation> jaxbAnnotation = new ArrayList<Annotation>();
+//        for(Class jaxbClass : jaxbAnns) {
+//            Annotation ann = decl.getAnnotation(jaxbClass);
+//            if (ann != null) {
+//                jaxbAnnotation.add(ann);
+//            }
+//        }
+//        return jaxbAnnotation;
+//    }
 
     private TypeMirror getSafeType(TypeMirror type) {
         return makeSafeVisitor.apply(type, builder.getAPEnv().getTypeUtils());
@@ -392,49 +326,13 @@ public class WebServiceWrapperGenerator extends WebServiceVisitor {
         }
     }
 
-    private ArrayList<MemberInfo> sortMembers(ArrayList<MemberInfo> members) {
-        Map<String, MemberInfo> sortedMap = new java.util.TreeMap<String, MemberInfo>();
-        for (MemberInfo member : members) {
-            sortedMap.put(member.getParamName(), member);
-        }
-        ArrayList<MemberInfo> sortedMembers = new ArrayList<MemberInfo>();
-        sortedMembers.addAll(sortedMap.values());
-        return sortedMembers;
-    }
-
-    private void writeMembers(JDefinedClass cls, ArrayList<MemberInfo> members) {
+    private void writeMembers(JDefinedClass cls, Collection<MemberInfo> members) {
         if (cls == null)
             return;
         for (MemberInfo memInfo : members) {
             JType type = getType(memInfo.getParamType());
             JFieldVar field = cls.field(JMod.PRIVATE, type, memInfo.getParamName());
-            QName elementName = memInfo.getElementName();
-            if (elementName != null) {
-                if (soapStyle.equals(SOAPStyle.RPC) || wrapped) {
-                    JAnnotationUse xmlElementAnn = field.annotate(XmlElement.class);
-                    xmlElementAnn.param("name", elementName.getLocalPart());
-                    xmlElementAnn.param("namespace", elementName.getNamespaceURI());
-                    if(memInfo.getParamType() instanceof ArrayType){
-                        xmlElementAnn.param("nillable", true);
-                    }
-                } else {
-                    field.annotate(XmlValue.class);
-                }
-                annotateParameterWithJAXBAnnotations(field, memInfo.getJaxbAnnotations());
-            }
-
-            // copy adapter if needed
-            XmlJavaTypeAdapter xjta = memInfo.getDecl().getAnnotation(XmlJavaTypeAdapter.class);
-            if(xjta!=null) {
-                JAnnotationUse xjtaA = field.annotate(XmlJavaTypeAdapter.class);
-                try {
-                    xjta.value();
-                    throw new AssertionError();
-                } catch (MirroredTypeException e) {
-                    xjtaA.param("value",getType(e.getTypeMirror()));
-                }
-                // XmlJavaTypeAdapter.type() is for package only. No need to copy.
-            }
+            annotateParameterWithJAXBAnnotations(memInfo, field);
         }
         for (MemberInfo memInfo : members) {
             writeMember(cls, memInfo.getParamType(),
@@ -442,20 +340,39 @@ public class WebServiceWrapperGenerator extends WebServiceVisitor {
         }
     }
 
-    private void annotateParameterWithJAXBAnnotations(JFieldVar field, Annotation[] jaxbAnnotations) {
-        for(Annotation ann : jaxbAnnotations){
-            if(ann instanceof XmlMimeType){
+    private void annotateParameterWithJAXBAnnotations(MemberInfo memInfo, JFieldVar field) {
+        List<Annotation> jaxbAnnotations = memInfo.getJaxbAnnotations();
+        for(Annotation ann : jaxbAnnotations) {
+            if (ann instanceof XmlMimeType) {
                 JAnnotationUse jaxbAnn = field.annotate(XmlMimeType.class);
                 jaxbAnn.param("value", ((XmlMimeType)ann).value());
-            }else if(ann instanceof XmlJavaTypeAdapter){
+            } else if (ann instanceof XmlJavaTypeAdapter) {
                 JAnnotationUse jaxbAnn = field.annotate(XmlJavaTypeAdapter.class);
                 XmlJavaTypeAdapter ja = (XmlJavaTypeAdapter) ann;
-                jaxbAnn.param("value", ja.value());
-                jaxbAnn.param("type", ja.type());
-            }else if(ann instanceof XmlAttachmentRef){
+                try {
+                    ja.value();
+                    throw new AssertionError();
+                } catch (MirroredTypeException e) {
+                    jaxbAnn.param("value",getType(e.getTypeMirror()));
+                }
+                // XmlJavaTypeAdapter.type() is for package only. No need to copy.
+            } else if (ann instanceof XmlAttachmentRef) {
                 field.annotate(XmlAttachmentRef.class);
-            }else if(ann instanceof XmlList){
+            } else if (ann instanceof XmlList){
                 field.annotate(XmlList.class);
+            } else if (ann instanceof XmlElement) {
+                XmlElement elemAnn = (XmlElement)ann;
+                JAnnotationUse jAnn = field.annotate(XmlElement.class);
+                jAnn.param("name", elemAnn.name());
+                jAnn.param("namespace", elemAnn.namespace());
+                if (elemAnn.nillable()) {
+                    jAnn.param("nillable", true);
+                }
+                if (elemAnn.required()) {
+                     jAnn.param("required", true);
+                }
+            } else {
+                throw new WebServiceException("SEI Parameter cannot have this JAXB annotation: " + ann);
             }
         }
     }
@@ -471,7 +388,7 @@ public class WebServiceWrapperGenerator extends WebServiceVisitor {
     }
 
     private boolean generateExceptionBean(ClassDeclaration thrownDecl, String beanPackage) {
-        if (builder.isRemoteException(thrownDecl))
+        if (!builder.isServiceException(thrownDecl))
             return false;
 
         String exceptionName = ClassNameInfo.getName(thrownDecl.getQualifiedName());
@@ -481,16 +398,13 @@ public class WebServiceWrapperGenerator extends WebServiceVisitor {
         WebFault webFault = thrownDecl.getAnnotation(WebFault.class);
         String className = beanPackage+ exceptionName + BEAN;
 
-        TreeMap<String,MethodDeclaration> propertyToTypeMap = new TreeMap<String,MethodDeclaration>();
-
-        TypeModeler.collectExceptionProperties(thrownDecl,propertyToTypeMap);
-
-        boolean isWSDLException = isWSDLException(propertyToTypeMap, thrownDecl);
+        Collection<MemberInfo> members = APT_GENERATOR.collectExceptionBeanMembers(thrownDecl);
+        boolean isWSDLException = isWSDLException(members, thrownDecl);
         String namespace = typeNamespace;
         String name = exceptionName;
         FaultInfo faultInfo;
         if (isWSDLException) {
-            TypeMirror beanType =  getSafeType(propertyToTypeMap.get(FAULT_INFO).getReturnType());
+            TypeMirror beanType =  getFaultInfoMember(members).getParamType();
             faultInfo = new FaultInfo(TypeMonikerFactory.getTypeMoniker(beanType), true);
             namespace = webFault.targetNamespace().length()>0 ?
                                webFault.targetNamespace() : namespace;
@@ -516,15 +430,6 @@ public class WebServiceWrapperGenerator extends WebServiceVisitor {
             builder.onError(WebserviceapMessages.WEBSERVICEAP_METHOD_EXCEPTION_BEAN_NAME_NOT_UNIQUE(typeDecl.getQualifiedName(), thrownDecl.getQualifiedName()));
         }
 
-        ArrayList<MemberInfo> members = new ArrayList<MemberInfo>();
-        for (String key : propertyToTypeMap.keySet()) {
-            MethodDeclaration method = propertyToTypeMap.get(key);
-            TypeMirror erasureType =  getSafeType(method.getReturnType());
-            MemberInfo member = new MemberInfo(erasureType, key, null, method);
-            members.add(member);
-        }
-        faultInfo.setMembers(members);
-
         boolean canOverWriteBean = builder.canOverWriteClass(className);
         if (!canOverWriteBean) {
             builder.log("Class " + className + " exists. Not overwriting.");
@@ -544,8 +449,11 @@ public class WebServiceWrapperGenerator extends WebServiceVisitor {
         writeXmlElementDeclaration(cls, name, namespace);
 
         // XmlType Declaration
-        members = sortMembers(members);
-        writeXmlTypeDeclaration(cls, exceptionName, typeNamespace, members);
+        //members = sortMembers(members);
+        XmlType xmlType = thrownDecl.getAnnotation(XmlType.class);
+        String xmlTypeName = (xmlType != null && !xmlType.name().equals("##default")) ? xmlType.name() : exceptionName;
+        String xmlTypeNamespace = (xmlType != null && !xmlType.namespace().equals("##default")) ? xmlType.namespace() : typeNamespace;
+        writeXmlTypeDeclaration(cls, xmlTypeName, xmlTypeNamespace, members);
 
         writeMembers(cls, members);
 
@@ -553,11 +461,24 @@ public class WebServiceWrapperGenerator extends WebServiceVisitor {
         return true;
     }
 
-    protected boolean isWSDLException(Map<String,MethodDeclaration> map, ClassDeclaration thrownDecl) {
+    protected boolean isWSDLException(Collection<MemberInfo> members, ClassDeclaration thrownDecl) {
         WebFault webFault = thrownDecl.getAnnotation(WebFault.class);
         if (webFault == null)
             return false;
-        return !(map.size() != 2 || map.get(FAULT_INFO) == null);
+        return !(members.size() != 2 || getFaultInfoMember(members) == null);
+    }
+
+    /*
+     * Returns the corresponding MemberInfo for getFaultInfo()
+     * method of an exception. Returns null, if that method is not there.
+     */
+    private MemberInfo getFaultInfoMember(Collection<MemberInfo> members) {
+        for(MemberInfo member : members) {
+            if (member.getParamName().equals(FAULT_INFO)) {
+                return member;
+            }
+        }
+        return null;
     }
 
     private void writeXmlElementDeclaration(JDefinedClass cls, String elementName, String namespaceUri) {
@@ -574,7 +495,7 @@ public class WebServiceWrapperGenerator extends WebServiceVisitor {
     }
 
     private void writeXmlTypeDeclaration(JDefinedClass cls, String typeName, String namespaceUri,
-                                         ArrayList<MemberInfo> members) {
+                                         Collection<MemberInfo> members) {
         if (cls == null)
             return;
         JAnnotationUse xmlTypeAnn = cls.annotate(cm.ref(XmlType.class));
@@ -612,4 +533,5 @@ public class WebServiceWrapperGenerator extends WebServiceVisitor {
         body = m.body();
         body.assign( JExpr._this().ref(paramName), param );
     }
-}
+}      
+    

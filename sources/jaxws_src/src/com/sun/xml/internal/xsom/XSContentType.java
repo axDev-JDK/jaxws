@@ -31,7 +31,7 @@ import com.sun.xml.internal.xsom.visitor.XSContentTypeVisitor;
 
 /**
  * Content of a complex type.
- *
+ * 
  * @author
  *  Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */

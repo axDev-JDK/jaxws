@@ -36,10 +36,10 @@ public interface TopLevelElement
 
 
     @XmlAttribute("final")
-    public TopLevelElement _final(String value);
+    public TopLevelElement _final(String[] value);
 
     @XmlAttribute("final")
-    public TopLevelElement _final(String[] value);
+    public TopLevelElement _final(String value);
 
     @XmlAttribute("abstract")
     public TopLevelElement _abstract(boolean value);

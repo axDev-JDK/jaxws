@@ -35,13 +35,13 @@ import com.sun.istack.internal.Nullable;
 
 /**
  * Class declaration.
- *
+ * 
  * This customization turns arbitrary schema component into a Java
  * content interface.
- *
+ * 
  * <p>
  * This customization is acknowledged by the ClassSelector.
- *
+ * 
  * @author
  *     Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
@@ -89,6 +89,9 @@ public final class BIClass extends AbstractDeclarationImpl {
     @XmlAttribute(name="ref")
     private String ref;
 
+    @XmlAttribute(name="recursive", namespace=Const.XJC_EXTENSION_URI)
+    private String recursive;
+
     /**
      * Reference to the existing class, or null.
      * Fully qualified name.
@@ -98,6 +101,10 @@ public final class BIClass extends AbstractDeclarationImpl {
      */
     public String getExistingClassRef() {
         return ref;
+    }
+
+    public String getRecursive() {
+        return recursive;
     }
 
     @XmlElement
@@ -121,3 +128,4 @@ public final class BIClass extends AbstractDeclarationImpl {
     /** Name of this declaration. */
     public static final QName NAME = new QName( Const.JAXB_NSURI, "class" );
 }
+

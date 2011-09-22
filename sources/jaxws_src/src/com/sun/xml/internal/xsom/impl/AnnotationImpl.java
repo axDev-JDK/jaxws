@@ -75,6 +75,6 @@ public class AnnotationImpl implements XSAnnotation
             return;
         }
     };
-
+    
     private static final LocatorImplUnmodifiable NULL_LOCATION = new LocatorImplUnmodifiable();
 }

@@ -99,7 +99,7 @@ public class NamespaceContextIterator implements Iterator {
     public Object next() {
         return getNext();
     }
-
+    
     public Attr nextNamespaceAttr() {
         return getNext();
     }

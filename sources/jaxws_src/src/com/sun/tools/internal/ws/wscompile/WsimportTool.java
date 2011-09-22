@@ -46,7 +46,9 @@ import org.xml.sax.EntityResolver;
 import org.xml.sax.SAXParseException;
 
 import javax.xml.bind.annotation.XmlSeeAlso;
+import javax.xml.bind.JAXBPermission;
 import javax.xml.ws.EndpointReference;
+import javax.xml.ws.EndpointContext;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -178,7 +180,7 @@ public class WsimportTool {
                 //generated code
                 if( !options.quiet )
                     listener.message(WscompileMessages.WSIMPORT_GENERATING_CODE());
-
+                
                 TJavaGeneratorExtension[] genExtn = ServiceFinder.find(TJavaGeneratorExtension.class).toArray();
                 CustomExceptionGenerator.generate(wsdlModel,  options, receiver);
                 SeiGenerator.generate(wsdlModel, options, receiver, genExtn);
@@ -249,7 +251,7 @@ public class WsimportTool {
         if (sourceFiles.size() > 0) {
             String classDir = options.destDir.getAbsolutePath();
             String classpathString = createClasspathString();
-            boolean bootCP = useBootClasspath(EndpointReference.class) || useBootClasspath(XmlSeeAlso.class);
+            boolean bootCP = useBootClasspath(EndpointContext.class) || useBootClasspath(JAXBPermission.class);
             String[] args = new String[4 + (bootCP ? 1 : 0) + (options.debug ? 1 : 0)
                     + sourceFiles.size()];
             args[0] = "-d";
@@ -257,8 +259,9 @@ public class WsimportTool {
             args[2] = "-classpath";
             args[3] = classpathString;
             int baseIndex = 4;
+            //javac is not working in osgi as the url starts with a bundle
             if (bootCP) {
-                args[baseIndex++] = "-Xbootclasspath/p:"+JavaCompilerHelper.getJarFile(EndpointReference.class)+File.pathSeparator+JavaCompilerHelper.getJarFile(XmlSeeAlso.class);
+                args[baseIndex++] = "-Xbootclasspath/p:"+JavaCompilerHelper.getJarFile(EndpointContext.class)+File.pathSeparator+JavaCompilerHelper.getJarFile(JAXBPermission.class);
             }
 
             if (options.debug) {
@@ -267,12 +270,12 @@ public class WsimportTool {
             for (int i = 0; i < sourceFiles.size(); ++i) {
                 args[baseIndex + i] = sourceFiles.get(i);
             }
-
+            
             listener.message(WscompileMessages.WSIMPORT_COMPILING_CODE());
             if(options.verbose){
                 StringBuffer argstr = new StringBuffer();
                 for(String arg:args){
-                    argstr.append(arg).append(" ");
+                    argstr.append(arg).append(" ");                    
                 }
                 listener.message("javac "+ argstr.toString());
             }

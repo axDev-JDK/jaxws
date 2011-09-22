@@ -41,12 +41,12 @@ import com.sun.xml.internal.xsom.impl.XPathImpl;
 
 /**
  * Function object that works on the entire XML Schema components.
- *
+ * 
  * @author
  *     Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
 public interface XSFunction<T> extends XSContentTypeFunction<T>, XSTermFunction<T> {
-
+        
     T annotation( XSAnnotation ann );
     T attGroupDecl( XSAttGroupDecl decl );
     T attributeDecl( XSAttributeDecl decl );

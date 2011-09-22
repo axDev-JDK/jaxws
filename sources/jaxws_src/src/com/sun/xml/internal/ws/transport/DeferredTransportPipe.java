@@ -60,14 +60,30 @@ public final class DeferredTransportPipe extends AbstractTubeImpl {
 
     public DeferredTransportPipe(ClassLoader classLoader, ClientPipeAssemblerContext context) {
         this(classLoader, new ClientTubeAssemblerContext(context.getAddress(), context.getWsdlModel(),
-                context.getService(), context.getBinding(), context.getContainer()));
+                context.getBindingProvider(), context.getBinding(), context.getContainer(), context.getCodec(), context.getSEIModel()));
     }
 
     public DeferredTransportPipe(ClassLoader classLoader, ClientTubeAssemblerContext context) {
         this.classLoader = classLoader;
         this.context = context;
+        //See if we can create the transport pipe from the available information.
+        try {
+            this.transport = TransportTubeFactory.create(classLoader, context);
+            this.address = context.getAddress();
+        } catch(Exception e) {
+            //No problem, transport will be initialized while processing the requests
+        }
     }
 
+    public DeferredTransportPipe(DeferredTransportPipe that, TubeCloner cloner) {
+        super(that,cloner);
+        this.classLoader = that.classLoader;
+        this.context = that.context;
+        if(that.transport!=null) {
+            this.transport = ((PipeCloner)cloner).copy(that.transport);
+            this.address = that.address;
+       }
+    }
     public NextAction processException(@NotNull Throwable t) {
         return transport.processException(t);
     }
@@ -91,10 +107,11 @@ public final class DeferredTransportPipe extends AbstractTubeImpl {
         ClientTubeAssemblerContext newContext = new ClientTubeAssemblerContext(
             request.endpointAddress,
             context.getWsdlModel(),
-            context.getService(),
+            context.getBindingProvider(),
             context.getBinding(),
             context.getContainer(),
-            context.getCodec().copy()
+            context.getCodec().copy(),
+            context.getSEIModel()
         );
 
         address = request.endpointAddress;
@@ -118,6 +135,8 @@ public final class DeferredTransportPipe extends AbstractTubeImpl {
     }
 
     public DeferredTransportPipe copy(TubeCloner cloner) {
+        return new DeferredTransportPipe(this,cloner);
+        /*
         DeferredTransportPipe copy = new DeferredTransportPipe(classLoader,context);
         cloner.add(this,copy);
 
@@ -125,10 +144,11 @@ public final class DeferredTransportPipe extends AbstractTubeImpl {
         // copied pipeline is still likely to work with the same endpoint address,
         // so also copy the cached transport pipe, if any
         if(transport!=null) {
-            copy.transport = ((PipeCloner)cloner).copy(this.transport);
+            copy.transport = cloner.copy(this.transport);
             copy.address = this.address;
         }
 
         return copy;
+        */
     }
 }

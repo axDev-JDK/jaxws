@@ -35,7 +35,7 @@ import javax.xml.bind.ValidationEventLocator;
  * <em>DO NOT IMPLEMENT THIS INTERFACE BY YOUR CODE</em> because
  * we might add more methods on this interface in the future release
  * of the RI.
- *
+ * 
  * <h2>Usage</h2>
  * <p>
  * If you obtain a reference to {@link javax.xml.bind.ValidationEventLocator},
@@ -51,7 +51,7 @@ import javax.xml.bind.ValidationEventLocator;
  *     }
  * }
  * </pre>
- *
+ * 
  * @author
  *     Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
@@ -61,10 +61,10 @@ public interface ValidationEventLocatorEx extends ValidationEventLocator {
      * <p>
      * This method always returns null when you are doing
      * a validation during unmarshalling.
-     *
+     * 
      * When not null, the field name indicates the field of the object
      * designated by the {@link #getObject()} method where the error
-     * occured.
+     * occured. 
      */
     String getFieldName();
 }

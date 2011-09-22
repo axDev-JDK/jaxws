@@ -79,7 +79,7 @@ public class FilterMessageImpl extends Message {
     }
 
     protected boolean hasAttachments() {
-        return delegate.hasAttachments();
+        return delegate.hasAttachments();    
     }
 
     public boolean isOneWay(@NotNull WSDLPort port) {

@@ -29,6 +29,9 @@ import com.sun.xml.internal.ws.api.FeatureConstructor;
 
 import javax.xml.ws.WebServiceFeature;
 
+import com.sun.org.glassfish.gmbal.ManagedAttribute;
+import com.sun.org.glassfish.gmbal.ManagedData;
+
 /**
  * Enable or disable Fast Infoset on a Web service.
  * <p>
@@ -36,7 +39,7 @@ import javax.xml.ws.WebServiceFeature;
  * to being enabled or disabled:
  * <ul>
  *  <li> ENABLED: In this Mode, Fast Infoset will be enabled.
- *  <li> DISABLED: In this Mode, Fast Infoset will be disabled and the
+ *  <li> DISABLED: In this Mode, Fast Infoset will be disabled and the 
  *       Web service will not process incoming messages or produce outgoing
  *       messages encoded using Fast Infoset.
  * </ul>
@@ -45,6 +48,7 @@ import javax.xml.ws.WebServiceFeature;
  * is equivalent to this feature being present and enabled.
  * @author Paul.Sandoz@Sun.Com
  */
+@ManagedData
 public class FastInfosetFeature extends WebServiceFeature {
     /**
      * Constant value identifying the {@link FastInfosetFeature}
@@ -72,6 +76,7 @@ public class FastInfosetFeature extends WebServiceFeature {
     /**
      * {@inheritDoc}
      */
+    @ManagedAttribute
     public String getID() {
         return ID;
     }

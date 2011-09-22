@@ -84,7 +84,7 @@ public class JpegDataContentHandler
 
                 try {
                     inputStream = ds.getInputStream();
-                    jpegLoadImage = ImageIO.read(inputStream);
+                    jpegLoadImage = ImageIO.read(inputStream); 
 
                 } catch (Exception e) {
                     System.out.println(e);
@@ -141,8 +141,8 @@ public class JpegDataContentHandler
                 tracker.addImage(img, 0);
                 tracker.waitForAll();
                 if (tracker.isErrorAny()) {
-                        throw new IOException("Error while loading image");
-                }
+			throw new IOException("Error while loading image");
+		}
                 bufImage =
                     new BufferedImage(
                         img.getWidth(null),

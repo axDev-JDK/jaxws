@@ -45,6 +45,11 @@ public class JAXBProperty {
     private QName elementName;
 
     /**
+     * @see Property#rawName()
+     */
+    private QName rawTypeName;
+
+    /**
      * Default constructor for the persistence.
      */
     public JAXBProperty() {}
@@ -56,6 +61,7 @@ public class JAXBProperty {
         this.name = prop.name();
         this.type = new JAXBTypeAndAnnotation(prop.type());
         this.elementName = prop.elementName();
+        this.rawTypeName = prop.rawName();
     }
 
     /**
@@ -65,10 +71,14 @@ public class JAXBProperty {
         return name;
     }
 
+    public QName getRawTypeName() {
+        return rawTypeName;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
-
+    
     public JAXBTypeAndAnnotation getType() {
         return type;
     }

@@ -151,7 +151,7 @@ public interface JAXWSProperties {
      *
      * The propery value is available on incoming SOAP message. The type of the value
      * is {@link WSEndpointReference}.
-     *
+     * 
      * Null if the incoming SOAP message didn't have the header.
      *
      * @since 2.1.3

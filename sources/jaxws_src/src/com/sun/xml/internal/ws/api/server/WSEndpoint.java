@@ -29,6 +29,8 @@ import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
 import com.sun.xml.internal.ws.api.BindingID;
 import com.sun.xml.internal.ws.api.WSBinding;
+import com.sun.xml.internal.ws.api.config.management.EndpointCreationAttributes;
+import com.sun.xml.internal.ws.api.config.management.ManagedEndpointFactory;
 import com.sun.xml.internal.ws.api.message.Message;
 import com.sun.xml.internal.ws.api.message.Packet;
 import com.sun.xml.internal.ws.api.model.SEIModel;
@@ -40,7 +42,11 @@ import com.sun.xml.internal.ws.api.pipe.ServerTubeAssemblerContext;
 import com.sun.xml.internal.ws.api.pipe.Tube;
 import com.sun.xml.internal.ws.server.EndpointFactory;
 import com.sun.xml.internal.ws.util.xml.XmlUtil;
+import com.sun.xml.internal.ws.policy.PolicyMap;
+import com.sun.xml.internal.ws.util.ServiceFinder;
 import org.xml.sax.EntityResolver;
+
+import com.sun.org.glassfish.gmbal.ManagedObjectManager;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.Binding;
@@ -48,6 +54,7 @@ import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.WebServiceException;
 import java.net.URL;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.Executor;
 
@@ -209,7 +216,7 @@ public abstract class WSEndpoint<T> {
      *
      * @see {@link Packet#transportBackChannel}
      * @see {@link Packet#webServiceContextDelegate}
-     *
+     * 
      * @param request web service request
      * @param callback callback to get response packet
      */
@@ -340,7 +347,8 @@ public abstract class WSEndpoint<T> {
      * this method returns null.
      *
      * @return
-     *      Possibly null, but always the same value.
+     *      Possibly null, always the same value under ordinary circumstances but
+     *      may change if the endpoint is managed.
      */
     public abstract @Nullable ServiceDefinition getServiceDefinition();
 
@@ -376,6 +384,35 @@ public abstract class WSEndpoint<T> {
      */
     public abstract @Nullable SEIModel getSEIModel();
 
+    /**
+     * Gives the PolicMap that captures the Policy for the endpoint
+     *
+     * @return PolicyMap
+     *
+     * @deprecated
+     * Do not use this method as the PolicyMap API is not final yet and might change in next few months.
+     */
+    public abstract PolicyMap getPolicyMap();
+
+    /**
+     * Get the ManagedObjectManager for this endpoint.
+     */
+    public abstract @NotNull ManagedObjectManager getManagedObjectManager();
+
+    /**
+     * Close the ManagedObjectManager for this endpoint.
+     * This is used by the Web Service Configuration Management system so that it
+     * closes the MOM before it creates a new WSEndpoint.  Then it calls dispose
+     * on the existing endpoint and then installs the new endpoint.
+     * The call to dispose also calls closeManagedObjectManager, but is a noop
+     * if that method has already been called.
+     */
+    public abstract void closeManagedObjectManager();
+
+    /**
+     * This is only needed to expose info for monitoring.
+     */
+    public abstract @NotNull ServerTubeAssemblerContext getAssemblerContext();
 
     /**
      * Creates an endpoint from deployment or programmatic configuration
@@ -452,9 +489,22 @@ public abstract class WSEndpoint<T> {
         @Nullable SDDocumentSource primaryWsdl,
         @Nullable Collection<? extends SDDocumentSource> metadata,
         @Nullable EntityResolver resolver,
-        boolean isTransportSynchronous) {
-        return EndpointFactory.createEndpoint(
-            implType,processHandlerAnnotation, invoker,serviceName,portName,container,binding,primaryWsdl,metadata,resolver,isTransportSynchronous);
+        boolean isTransportSynchronous) 
+    {
+	final WSEndpoint<T> endpoint = 
+            EndpointFactory.createEndpoint(
+                implType,processHandlerAnnotation, invoker,serviceName,portName,container,binding,primaryWsdl,metadata,resolver,isTransportSynchronous);
+        endpoint.getManagedObjectManager().resumeJMXRegistration();
+
+        final Iterator<ManagedEndpointFactory> managementFactories = ServiceFinder.find(ManagedEndpointFactory.class).iterator();
+        if (managementFactories.hasNext()) {
+            final ManagedEndpointFactory managementFactory = managementFactories.next();
+            final EndpointCreationAttributes attributes = new EndpointCreationAttributes(
+                    processHandlerAnnotation, invoker, resolver, isTransportSynchronous);
+            return managementFactory.createEndpoint(endpoint, attributes);
+        }
+
+        return endpoint;
     }
 
     /**
@@ -514,5 +564,4 @@ public abstract class WSEndpoint<T> {
     public static @NotNull QName getDefaultPortName(@NotNull QName serviceName, Class endpointClass){
         return EndpointFactory.getDefaultPortName(serviceName, endpointClass);
     }
-
 }

@@ -75,7 +75,7 @@ import com.sun.xml.internal.bind.v2.TODO;
 
 /**
  * Useful base class for implementing {@link FieldOutline}.
- *
+ * 
  * <p>
  * This class just provides a few utility methods and keep some
  * important variables so that they can be readily accessed any time.
@@ -84,11 +84,11 @@ import com.sun.xml.internal.bind.v2.TODO;
  *     Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
 abstract class AbstractField implements FieldOutline {
-
+    
     protected final ClassOutlineImpl outline;
-
+    
     protected final CPropertyInfo prop;
-
+    
     protected final JCodeModel codeModel;
 
     /**
@@ -356,7 +356,7 @@ abstract class AbstractField implements FieldOutline {
 
         // Issue 570; always force generating name="" when do it when globalBindings underscoreBinding is set to non default value
         // generate name property?
-        if(!generatedName.equals(ap.getName(false)) || (outline.parent().getModel().getNameConverter() != NameConverter.standard)) {
+        if(!generatedName.equals(ap.getName(false)) || !generatedName.equals(ap.getName(true)) || (outline.parent().getModel().getNameConverter() != NameConverter.standard)) {
             xaw.name(generatedName);
         }
 
@@ -380,7 +380,7 @@ abstract class AbstractField implements FieldOutline {
          * Evaluates to the target object this accessor should access.
          */
         protected final JExpression $target;
-
+        
         protected Accessor( JExpression $target ) {
             this.$target = $target;
         }
@@ -393,8 +393,8 @@ abstract class AbstractField implements FieldOutline {
             return prop;
         }
     }
-
-
+    
+    
 //
 //
 //     utility methods

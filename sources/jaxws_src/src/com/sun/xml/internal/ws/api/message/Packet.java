@@ -37,21 +37,22 @@ import com.sun.xml.internal.ws.api.WSBinding;
 import com.sun.xml.internal.ws.api.addressing.AddressingVersion;
 import com.sun.xml.internal.ws.api.addressing.WSEndpointReference;
 import com.sun.xml.internal.ws.api.model.SEIModel;
+import com.sun.xml.internal.ws.api.model.JavaMethod;
 import com.sun.xml.internal.ws.api.model.wsdl.WSDLOperation;
 import com.sun.xml.internal.ws.api.model.wsdl.WSDLPort;
 import com.sun.xml.internal.ws.api.pipe.Tube;
 import com.sun.xml.internal.ws.api.server.TransportBackChannel;
 import com.sun.xml.internal.ws.api.server.WSEndpoint;
 import com.sun.xml.internal.ws.api.server.WebServiceContextDelegate;
-import com.sun.xml.internal.ws.client.BindingProviderProperties;
-import com.sun.xml.internal.ws.client.ContentNegotiation;
-import com.sun.xml.internal.ws.client.HandlerConfiguration;
-import com.sun.xml.internal.ws.client.ResponseContext;
+import com.sun.xml.internal.ws.client.*;
 import com.sun.xml.internal.ws.developer.JAXWSProperties;
 import com.sun.xml.internal.ws.message.RelatesToHeader;
 import com.sun.xml.internal.ws.message.StringHeader;
 import com.sun.xml.internal.ws.util.DOMUtil;
 import com.sun.xml.internal.ws.util.xml.XmlUtil;
+import com.sun.xml.internal.ws.server.WSEndpointImpl;
+import com.sun.xml.internal.ws.wsdl.DispatchException;
+import com.sun.xml.internal.ws.wsdl.OperationDispatcher;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -64,6 +65,7 @@ import javax.xml.ws.WebServiceException;
 import javax.xml.ws.handler.LogicalMessageContext;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.handler.soap.SOAPMessageContext;
+import javax.xml.namespace.QName;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -71,6 +73,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Logger;
 
 /**
  * Represents a container of a {@link Message}.
@@ -164,7 +167,7 @@ public final class Packet extends DistributedPropertySet {
     }
 
     /**
-     * Used by {@link #createResponse(Message)}.
+     * Used by {@link #createResponse(Message)} and {@link #copy(boolean)}.
      */
     private Packet(Packet that) {
         that.copySatelliteInto(this);
@@ -174,13 +177,20 @@ public final class Packet extends DistributedPropertySet {
         this.contentNegotiation = that.contentNegotiation;
         this.wasTransportSecure = that.wasTransportSecure;
         this.endpointAddress = that.endpointAddress;
+        this.wsdlOperation = that.wsdlOperation;
+
+        this.acceptableMimeTypes = that.acceptableMimeTypes;
+        this.endpoint = that.endpoint;
+        this.proxy = that.proxy;
+        this.webServiceContextDelegate = that.webServiceContextDelegate;
+        this.soapAction = that.soapAction;
         // copy other properties that need to be copied. is there any?
     }
 
     /**
      * Creates a copy of this {@link Packet}.
-     *
-     * @param copyMessage determines whether the {@link Message} from the original {@link Packet} should be copied as
+     * 
+     * @param copyMessage determines whether the {@link Message} from the original {@link Packet} should be copied as 
      *        well, or not. If the value is {@code false}, the {@link Message} in the copy of the {@link Packet} is {@code null}.
      * @return copy of the original packet
      */
@@ -189,13 +199,13 @@ public final class Packet extends DistributedPropertySet {
         // but so far the implementation is usable for this purpose as well, so calling the copy constructor
         // to avoid code dupliation.
         Packet copy = new Packet(this);
-        if (copyMessage) {
-            copy.message = this.message.copy();
+        if (copyMessage && this.message != null) {
+            copy.message = this.message.copy(); 
         }
-
+       
         return copy;
     }
-
+    
     private Message message;
 
     /**
@@ -218,6 +228,49 @@ public final class Packet extends DistributedPropertySet {
         this.message = message;
     }
 
+    private QName wsdlOperation;
+
+    /**
+     * Returns the QName of the wsdl operation associated with this packet.
+     * <p/>
+     * Information such as Payload QName, wsa:Action header, SOAPAction HTTP header are used depending on the features
+     * enabled on the particular port.
+     *
+     * @return null if there is no WSDL model or  
+     *              runtime cannot uniquely identify the wsdl operation from the information in the packet.
+     */
+    @Property(MessageContext.WSDL_OPERATION)
+    public final @Nullable QName getWSDLOperation(){
+        if(wsdlOperation != null)
+            return wsdlOperation;
+
+        OperationDispatcher opDispatcher = null;
+        if(endpoint != null) {
+            opDispatcher = ((WSEndpointImpl)endpoint).getOperationDispatcher();
+        } else if (proxy != null) {
+            opDispatcher = ((Stub)proxy).getOperationDispatcher();
+        }
+        //OpDispatcher is null when there is no WSDLModel
+        if(opDispatcher != null) {
+            try {
+                wsdlOperation = opDispatcher.getWSDLOperationQName(this);
+            } catch (DispatchException e) {
+                LOGGER.info("Cannot resolve wsdl operation that this Packet is targeted for.");
+            }
+        }
+        return wsdlOperation;
+    }
+
+    /**
+     * Set the wsdl operation to avoid lookup from other data.
+     * This is useful in SEI based clients, where the WSDL operation can be known from the associated JavaMethod
+     *
+     * @param wsdlOp QName
+     */
+    public void setWSDLOperation(QName wsdlOp) {
+        this.wsdlOperation = wsdlOp;
+    }
+    
     /**
      * True if this message came from a transport (IOW inbound),
      * and in paricular from a "secure" transport. A transport
@@ -244,7 +297,7 @@ public final class Packet extends DistributedPropertySet {
      * <p>
      * Transports may choose to ignore certain headers that interfere with
      * its correct operation, such as
-     * <tt>Content-Type</tt> and <tt>Content-Length</tt>.
+     * <tt>Content-Type</tt> and <tt>Content-Length</tt>. 
      */
     public static final String OUTBOUND_TRANSPORT_HEADERS = "com.sun.xml.internal.ws.api.message.packet.outbound.transport.headers";
 
@@ -640,6 +693,7 @@ public final class Packet extends DistributedPropertySet {
      */
     public Packet createClientResponse(Message msg) {
         Packet response = new Packet(this);
+        response.soapAction = null; // de-initializing 
         response.setMessage(msg);
         return response;
     }
@@ -717,11 +771,11 @@ public final class Packet extends DistributedPropertySet {
      * Overwrites the {@link Message} of the response packet ({@code this}) by the given {@link Message}.
      * Unlike {@link #setMessage(Message)}, fill in the addressing headers correctly, and this process
      * requires the access to the request packet.
-     *
+     * 
      * <p>
      * This method is useful when the caller needs to swap a response message completely to a new one.
      *
-     * @see #createServerResponse(Message, AddressingVersion, SOAPVersion, String)
+     * @see #createServerResponse(Message, AddressingVersion, SOAPVersion, String) 
      */
     public void setResponseMessage(@NotNull Packet request, @Nullable Message responseMessage, @NotNull AddressingVersion addressingVersion, @NotNull SOAPVersion soapVersion, @NotNull String action) {
        Packet temp = request.createServerResponse(responseMessage, addressingVersion, soapVersion, action);
@@ -791,7 +845,10 @@ public final class Packet extends DistributedPropertySet {
         String action = responsePacket.message.isFault() ?
                 wsaHelper.getFaultAction(this, responsePacket) :
                 wsaHelper.getOutputAction(this);
-
+        if(action == null) {
+            LOGGER.info("WSA headers are not added as value for wsa:Action cannot be resolved for this message");
+            return;
+        }
         populateAddressingHeaders(responsePacket, addressingVersion, binding.getSOAPVersion(), action);
     }
 
@@ -805,4 +862,6 @@ public final class Packet extends DistributedPropertySet {
     protected PropertyMap getPropertyMap() {
         return model;
     }
+
+    private static final Logger LOGGER = Logger.getLogger(Packet.class.getName());
 }

@@ -39,7 +39,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-
 /**
  * Version of SOAP (1.1 and 1.2).
  *
@@ -152,7 +151,6 @@ public enum SOAPVersion {
      * "{nsUri}Server" or "{nsUri}Receiver"
      */
     public final QName faultCodeServer;
-
 
     private SOAPVersion(String httpBindingId, String nsUri, String contentType, String implicitRole, String roleAttributeName,
                         String saajFactoryString, QName faultCodeMustUnderstand, String faultCodeClientLocalName,

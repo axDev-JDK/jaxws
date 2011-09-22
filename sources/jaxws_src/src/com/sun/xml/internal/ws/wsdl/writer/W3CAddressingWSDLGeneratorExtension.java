@@ -87,7 +87,7 @@ public class W3CAddressingWSDLGeneratorExtension extends WSDLGeneratorExtension 
                 delim = ":";
         } catch (URISyntaxException e) {
             LOGGER.warning("TargetNamespace of WebService is not a valid URI");
-        }
+        }        
         if (tns.endsWith(delim))
             tns = tns.substring(0, tns.length() - 1);
         //this assumes that fromjava case there won't be input name.

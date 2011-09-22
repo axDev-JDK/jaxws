@@ -39,9 +39,9 @@ import com.sun.istack.internal.NotNull;
 /**
  * Outline object that provides per-{@link CClassInfo} information
  * for filling in methods/fields for a bean.
- *
+ * 
  * This interface is accessible from {@link Outline}
- *
+ * 
  * @author Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
 public abstract class ClassOutline {

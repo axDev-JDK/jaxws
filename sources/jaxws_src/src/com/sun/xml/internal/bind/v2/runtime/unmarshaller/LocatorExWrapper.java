@@ -32,7 +32,7 @@ import org.xml.sax.Locator;
 
 /**
  * {@link LocatorEx} implemented by {@link Locator}.
- *
+ * 
  * @author Kohsuke Kawaguchi
  */
 class LocatorExWrapper implements LocatorEx {

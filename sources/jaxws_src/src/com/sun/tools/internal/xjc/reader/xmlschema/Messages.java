@@ -108,7 +108,7 @@ public class Messages
 
     static final String JAVADOC_LINE_UNKNOWN = // 0 args
         "ClassSelector.JavadocLineUnknown";
-
+    
     static final String JAVADOC_VALUEOBJECT_PROPERTY =
         "FieldBuilder.Javadoc.ValueObject"; // args:2
 

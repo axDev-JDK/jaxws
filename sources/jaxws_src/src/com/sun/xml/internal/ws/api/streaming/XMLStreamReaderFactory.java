@@ -51,7 +51,7 @@ import java.security.AccessController;
  * <p>
  * This wraps {@link XMLInputFactory} and allows us to reuse {@link XMLStreamReader} instances
  * when appropriate.
- *
+ * 
  * @author Kohsuke Kawaguchi
  */
 public abstract class XMLStreamReaderFactory {
@@ -174,6 +174,9 @@ public abstract class XMLStreamReaderFactory {
      */
     public static void recycle(XMLStreamReader r) {
         get().doRecycle(r);
+        if (r instanceof RecycleAware) {
+            ((RecycleAware)r).onRecycled();
+        }
     }
 
     // implementations
@@ -278,8 +281,6 @@ public abstract class XMLStreamReaderFactory {
         public void doRecycle(XMLStreamReader r) {
             if(zephyrClass.isInstance(r))
                 pool.set(r);
-            if(r instanceof RecycleAware)
-                ((RecycleAware)r).onRecycled();
         }
 
         public XMLStreamReader doCreate(String systemId, InputStream in, boolean rejectDTDs) {

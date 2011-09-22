@@ -28,7 +28,7 @@ import java.net.URL;
 
 /**
  * Finds out where a class file is loaded from.
- *
+ * 
  * @author
  *     Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
@@ -52,7 +52,7 @@ public class Which {
         if(loader == null) {
             loader = ClassLoader.getSystemClassLoader();
         }
-
+        
         URL it = loader.getResource(classnameAsResource);
         if (it != null) {
             return it.toString();

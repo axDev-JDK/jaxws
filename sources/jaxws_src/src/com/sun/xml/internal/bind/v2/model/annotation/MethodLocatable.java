@@ -30,7 +30,7 @@ import com.sun.xml.internal.bind.v2.runtime.Location;
 
 /**
  * {@link Locatable} implementation for a method.
- *
+ * 
  * @author Kohsuke Kawaguchi
  */
 public class MethodLocatable<M> implements Locatable {

@@ -39,7 +39,7 @@ import com.sun.xml.internal.messaging.saaj.soap.SOAPDocumentImpl;
 public abstract class BodyElementImpl
     extends ElementImpl
     implements SOAPBodyElement {
-
+        
     public BodyElementImpl(SOAPDocumentImpl ownerDoc, Name qname) {
         super(ownerDoc, qname);
     }

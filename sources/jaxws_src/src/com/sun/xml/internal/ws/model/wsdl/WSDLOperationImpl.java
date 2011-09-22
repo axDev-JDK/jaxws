@@ -51,14 +51,12 @@ public final class WSDLOperationImpl extends AbstractExtensibleImpl implements W
     private final QNameMap<WSDLFaultImpl> faultMap;
     protected Iterable<WSDLMessageImpl> messages;
     private final WSDLPortType owner;
-    private final Map<String,String> faultActionMap;
 
     public WSDLOperationImpl(XMLStreamReader xsr,WSDLPortTypeImpl owner, QName name) {
         super(xsr);
         this.name = name;
         this.faults = new ArrayList<WSDLFaultImpl>();
         this.faultMap = new QNameMap<WSDLFaultImpl>();
-        this.faultActionMap = new HashMap<String,String>();
         this.owner = owner;
     }
 
@@ -113,11 +111,7 @@ public final class WSDLOperationImpl extends AbstractExtensibleImpl implements W
         }
         return null;
     }
-
-    public Map<String,String> getFaultActionMap() {
-        return faultActionMap;
-    }
-
+    
     WSDLPortType getOwner() {
         return owner;
     }

@@ -22,13 +22,6 @@
  * CA 95054 USA or visit www.sun.com if you need additional information or
  * have any questions.
  */
-/*
- * $Id: Text.java,v 1.4 2006/03/30 00:59:42 ofung Exp $
- * $Revision: 1.4 $
- * $Date: 2006/03/30 00:59:42 $
- */
-
-
 package javax.xml.soap;
 
 /**

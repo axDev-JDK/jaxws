@@ -32,6 +32,7 @@ import com.sun.mirror.type.ClassType;
 import com.sun.mirror.type.InterfaceType;
 import com.sun.mirror.type.TypeMirror;
 import com.sun.mirror.util.SourcePosition;
+import com.sun.mirror.util.Types;
 import com.sun.tools.internal.ws.ToolVersion;
 import com.sun.tools.internal.ws.processor.generator.GeneratorUtil;
 import com.sun.tools.internal.ws.processor.generator.Names;
@@ -58,8 +59,8 @@ import java.util.Set;
 
 
 /**
- * WebServiceAP is a APT AnnotationProcessor for processing javax.jws.* and
- * javax.xml.ws.* annotations. This class is used either by the WsGen (CompileTool) tool or
+ * WebServiceAP is a APT AnnotationProcessor for processing javax.jws.* and 
+ * javax.xml.ws.* annotations. This class is used either by the WsGen (CompileTool) tool or 
  *    idirectly via the {@link com.sun.istack.internal.ws.AnnotationProcessorFactoryImpl} when invoked by APT.
  *
  * @author WS Development Team
@@ -73,6 +74,7 @@ public class WebServiceAP implements AnnotationProcessor, ModelBuilder, WebServi
     private TypeDeclaration remoteDecl;
     private TypeDeclaration remoteExceptionDecl;
     private TypeDeclaration exceptionDecl;
+    private TypeDeclaration runtimeExceptionDecl;
     private TypeDeclaration defHolderDecl;
     private Service service;
     private Port port;
@@ -112,6 +114,7 @@ public class WebServiceAP implements AnnotationProcessor, ModelBuilder, WebServi
         remoteDecl = this.apEnv.getTypeDeclaration(REMOTE_CLASSNAME);
         remoteExceptionDecl = this.apEnv.getTypeDeclaration(REMOTE_EXCEPTION_CLASSNAME);
         exceptionDecl = this.apEnv.getTypeDeclaration(EXCEPTION_CLASSNAME);
+        runtimeExceptionDecl = this.apEnv.getTypeDeclaration(RUNTIME_EXCEPTION_CLASSNAME);
         defHolderDecl = this.apEnv.getTypeDeclaration(HOLDER_CLASSNAME);
         if (options == null) {
             options = new WsgenOptions();
@@ -339,11 +342,22 @@ public class WebServiceAP implements AnnotationProcessor, ModelBuilder, WebServi
     public boolean isRemoteException(TypeDeclaration typeDecl) {
         return isSubtype(typeDecl, remoteExceptionDecl);
     }
+    public boolean isServiceException(TypeDeclaration typeDecl) {
+        if(!isSubtype(apEnv,typeDecl,exceptionDecl))
+            return false;
+        if(isSubtype(apEnv,typeDecl,runtimeExceptionDecl) || isSubtype(apEnv,typeDecl,remoteExceptionDecl))
+            return false;
+        return true;
+    }
 
     public boolean isRemote(TypeDeclaration typeDecl) {
         return isSubtype(typeDecl, remoteDecl);
     }
 
+    public static boolean isSubtype(AnnotationProcessorEnvironment env, TypeDeclaration d1, TypeDeclaration d2) {
+        Types typeUtils = env.getTypeUtils();
+        return typeUtils.isSubtype(typeUtils.getDeclaredType(d1),typeUtils.getDeclaredType(d2));
+    }
 
     public static boolean isSubtype(TypeDeclaration d1, TypeDeclaration d2) {
         if (d1.equals(d2))
@@ -418,3 +432,6 @@ public class WebServiceAP implements AnnotationProcessor, ModelBuilder, WebServi
         return javaName;
     }
 }
+
+
+

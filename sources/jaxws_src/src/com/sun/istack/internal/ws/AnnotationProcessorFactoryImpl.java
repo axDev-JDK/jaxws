@@ -81,21 +81,21 @@ public class AnnotationProcessorFactoryImpl implements AnnotationProcessorFactor
     public AnnotationProcessorFactoryImpl() {
     }
 
-
+    
     public Collection<String> supportedOptions() {
         return supportedOptions;
     }
 
-    public Collection<String> supportedAnnotationTypes() {
+    public Collection<String> supportedAnnotationTypes() { 
         return supportedAnnotations;
     }
-
+    
     /*
      * Return an instance of the {@link com.sun.istack.internal.ws.WSAP WSAP} AnnotationProcesor.
      */
     public AnnotationProcessor getProcessorFor(Set<AnnotationTypeDeclaration> atds,
-                                        AnnotationProcessorEnvironment apEnv) {
-
+					AnnotationProcessorEnvironment apEnv) {
+                                            
         if (wsAP == null) {
             AnnotationProcessorContext context = new AnnotationProcessorContext();
             wsAP = new WebServiceAP(null, context, null, null);
@@ -105,3 +105,7 @@ public class AnnotationProcessorFactoryImpl implements AnnotationProcessorFactor
         return wsAP;
     }
 }
+
+
+
+

@@ -22,9 +22,11 @@
  * CA 95054 USA or visit www.sun.com if you need additional information or
  * have any questions.
  */
+
 package com.sun.xml.internal.ws.api.server;
 
 import com.sun.istack.internal.NotNull;
+import com.sun.xml.internal.ws.transport.http.HttpAdapter;
 
 /**
  * Light-weight http server transport for {@link WSEndpoint}.
@@ -43,7 +45,7 @@ public abstract class HttpEndpoint {
      * @return transport object for the endpoint
      */
     public static HttpEndpoint create(@NotNull WSEndpoint endpoint) {
-        return new com.sun.xml.internal.ws.transport.http.server.HttpEndpoint(endpoint, null);
+        return new com.sun.xml.internal.ws.transport.http.server.HttpEndpoint(null, HttpAdapter.createAlone(endpoint));
     }
 
     /**
@@ -58,5 +60,5 @@ public abstract class HttpEndpoint {
      * Stops the published endpoint
      */
     public abstract void stop();
-
+    
 }

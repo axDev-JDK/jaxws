@@ -29,7 +29,7 @@ import com.sun.xml.internal.bind.v2.runtime.reflect.Accessor;
 
 /**
  * Template {@link Accessor} for reference type fields.
- *
+ * 
  * @author Kohsuke Kawaguchi
  */
 public class FieldAccessor_Ref extends Accessor {

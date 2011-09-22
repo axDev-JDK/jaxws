@@ -323,7 +323,7 @@ public abstract class BindingID {
      */
     public static final SOAPHTTPImpl X_SOAP12_HTTP = new SOAPHTTPImpl(
         SOAPVersion.SOAP_12, SOAPBindingImpl.X_SOAP12HTTP_BINDING, true);
-
+    
     /**
      * Constant that represents SOAP1.2/HTTP.
      */
@@ -345,8 +345,8 @@ public abstract class BindingID {
      */
     public static final SOAPHTTPImpl SOAP11_HTTP_MTOM = new SOAPHTTPImpl(
         SOAPVersion.SOAP_11, SOAPBinding.SOAP11HTTP_MTOM_BINDING, true, true);
-
-
+    
+    
     /**
      * Constant that represents REST.
      */
@@ -403,7 +403,7 @@ public abstract class BindingID {
             super(version, lexical, canGenerateWSDL);
         }
 
-        public SOAPHTTPImpl(SOAPVersion version, String lexical, boolean canGenerateWSDL,
+        public SOAPHTTPImpl(SOAPVersion version, String lexical, boolean canGenerateWSDL, 
                            boolean mtomEnabled) {
             this(version, lexical, canGenerateWSDL);
             String mtomStr = mtomEnabled ? "true" : "false";

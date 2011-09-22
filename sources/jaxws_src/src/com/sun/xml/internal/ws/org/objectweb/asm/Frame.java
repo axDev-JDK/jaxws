@@ -61,7 +61,7 @@ package com.sun.xml.internal.ws.org.objectweb.asm;
 
 /**
  * Information about the input and output stack map frames of a basic block.
- *
+ * 
  * @author Eric Bruneton
  */
 final class Frame {
@@ -76,14 +76,14 @@ final class Frame {
      * of the first basic block (which is computed from the method descriptor),
      * and by using the previously computed output frames to compute the input
      * state of the other blocks.
-     *
+     * 
      * All output and input frames are stored as arrays of integers. Reference
      * and array types are represented by an index into a type table (which is
      * not the same as the constant pool of the class, in order to avoid adding
      * unnecessary constants in the pool - not all computed frames will end up
      * being stored in the stack map table). This allows very fast type
      * comparisons.
-     *
+     * 
      * Output stack map frames are computed relatively to the input frame of the
      * basic block, which is not yet known when output frames are computed. It
      * is therefore necessary to be able to represent abstract types such as
@@ -91,7 +91,7 @@ final class Frame {
      * position x from the top of the input frame stack" or even "the type at
      * position x in the input frame, with y more (or less) array dimensions".
      * This explains the rather complicated type format used in output frames.
-     *
+     * 
      * This format is the following: DIM KIND VALUE (4, 4 and 24 bits). DIM is a
      * signed number of array dimensions (from -8 to 7). KIND is either BASE,
      * LOCAL or STACK. BASE is used for types that are not relative to the input
@@ -102,14 +102,14 @@ final class Frame {
      * relatively to the top of input frame stack. For BASE types, it is either
      * one of the constants defined in FrameVisitor, or for OBJECT and
      * UNINITIALIZED types, a tag and an index in the type table.
-     *
+     * 
      * Output frames can contain types of any kind and with a positive or
      * negative dimension (and even unassigned types, represented by 0 - which
      * does not correspond to any valid type value). Input frames can only
      * contain BASE types of positive or null dimension. In all cases the type
      * table contains only internal type names (array type descriptors are
      * forbidden - dimensions must be represented through the DIM field).
-     *
+     * 
      * The LONG and DOUBLE types are always represented by using two slots (LONG +
      * TOP or DOUBLE + TOP), for local variable types as well as in the operand
      * stack. This is necessary to be able to simulate DUPx_y instructions,
@@ -137,7 +137,7 @@ final class Frame {
 
     /**
      * Mask to get the kind of a frame type.
-     *
+     * 
      * @see #BASE
      * @see #LOCAL
      * @see #STACK
@@ -510,10 +510,10 @@ final class Frame {
     /**
      * Relative size of the output stack. The exact semantics of this field
      * depends on the algorithm that is used.
-     *
+     * 
      * When only the maximum stack size is computed, this field is the size of
      * the output stack relatively to the top of the input stack.
-     *
+     * 
      * When the stack map frames are completely computed, this field is the
      * actual number of types in {@link #outputStack}.
      */
@@ -521,7 +521,7 @@ final class Frame {
 
     /**
      * Number of types that are initialized in the basic block.
-     *
+     * 
      * @see #initializations
      */
     private int initializationCount;
@@ -543,7 +543,7 @@ final class Frame {
 
     /**
      * Returns the output frame local variable type at the given index.
-     *
+     * 
      * @param local the index of the local that must be returned.
      * @return the output frame local variable type at the given index.
      */
@@ -565,7 +565,7 @@ final class Frame {
 
     /**
      * Sets the output frame local variable type at the given index.
-     *
+     * 
      * @param local the index of the local that must be set.
      * @param type the value of the local that must be set.
      */
@@ -586,7 +586,7 @@ final class Frame {
 
     /**
      * Pushes a new type onto the output frame stack.
-     *
+     * 
      * @param type the type that must be pushed.
      */
     private void push(final int type) {
@@ -611,7 +611,7 @@ final class Frame {
 
     /**
      * Pushes a new type onto the output frame stack.
-     *
+     * 
      * @param cw the ClassWriter to which this label belongs.
      * @param desc the descriptor of the type to be pushed. Can also be a method
      *        descriptor (in this case this method pushes its return type onto
@@ -629,7 +629,7 @@ final class Frame {
 
     /**
      * Returns the int encoding of the given type.
-     *
+     * 
      * @param cw the ClassWriter to which this label belongs.
      * @param desc a type descriptor.
      * @return the int encoding of the given type.
@@ -701,7 +701,7 @@ final class Frame {
 
     /**
      * Pops a type from the output frame stack and returns its value.
-     *
+     * 
      * @return the type that has been popped from the output frame stack.
      */
     private int pop() {
@@ -715,7 +715,7 @@ final class Frame {
 
     /**
      * Pops the given number of types from the output frame stack.
-     *
+     * 
      * @param elements the number of types that must be popped.
      */
     private void pop(final int elements) {
@@ -732,7 +732,7 @@ final class Frame {
 
     /**
      * Pops a type from the output frame stack.
-     *
+     * 
      * @param desc the descriptor of the type to be popped. Can also be a method
      *        descriptor (in this case this method pops the types corresponding
      *        to the method arguments).
@@ -751,7 +751,7 @@ final class Frame {
     /**
      * Adds a new type to the list of types on which a constructor is invoked in
      * the basic block.
-     *
+     * 
      * @param var a type on a which a constructor is invoked.
      */
     private void init(final int var) {
@@ -772,7 +772,7 @@ final class Frame {
     /**
      * Replaces the given type with the appropriate type if it is one of the
      * types on which a constructor is invoked in the basic block.
-     *
+     * 
      * @param cw the ClassWriter to which this label belongs.
      * @param t a type
      * @return t or, if t is one of the types on which a constructor is invoked
@@ -807,7 +807,7 @@ final class Frame {
     /**
      * Initializes the input frame of the first basic block from the method
      * descriptor.
-     *
+     * 
      * @param cw the ClassWriter to which this label belongs.
      * @param access the access flags of the method to which this label belongs.
      * @param args the formal parameter types of this method.
@@ -843,7 +843,7 @@ final class Frame {
 
     /**
      * Simulates the action of the given instruction on the output stack frame.
-     *
+     * 
      * @param opcode the opcode of the instruction.
      * @param arg the operand of the instruction, if any.
      * @param cw the class writer to which this label belongs.
@@ -1266,7 +1266,7 @@ final class Frame {
      * Merges the input frame of the given basic block with the input and output
      * frames of this basic block. Returns <tt>true</tt> if the input frame of
      * the given label has been changed by this operation.
-     *
+     * 
      * @param cw the ClassWriter to which this label belongs.
      * @param frame the basic block whose input frame must be updated.
      * @param edge the kind of the {@link Edge} between this label and 'label'.
@@ -1359,7 +1359,7 @@ final class Frame {
      * Merges the type at the given index in the given type array with the given
      * type. Returns <tt>true</tt> if the type array has been modified by this
      * operation.
-     *
+     * 
      * @param cw the ClassWriter to which this label belongs.
      * @param t the type with which the type array element must be merged.
      * @param types an array of types.

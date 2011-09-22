@@ -88,7 +88,7 @@ public class Engine {
             SecurityManager s = System.getSecurityManager();
             group = (s != null)? s.getThreadGroup() :
                                  Thread.currentThread().getThreadGroup();
-            namePrefix = "jaxws-engine-" +
+            namePrefix = "jaxws-engine-" + 
                           poolNumber.getAndIncrement() +
                          "-thread-";
         }

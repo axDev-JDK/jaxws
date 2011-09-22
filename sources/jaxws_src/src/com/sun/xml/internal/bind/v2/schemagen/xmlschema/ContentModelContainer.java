@@ -32,7 +32,7 @@ import com.sun.xml.internal.txw2.annotation.XmlElement;
  * Used to write a content model.
  *
  * This mixes the particle and model group as the child of complex type.
- *
+ * 
  * @author Kohsuke Kawaguchi
  */
 public interface ContentModelContainer extends TypedXmlWriter {

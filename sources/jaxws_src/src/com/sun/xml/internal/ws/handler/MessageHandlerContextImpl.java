@@ -22,6 +22,7 @@
  * CA 95054 USA or visit www.sun.com if you need additional information or
  * have any questions.
  */
+
 package com.sun.xml.internal.ws.handler;
 
 import com.sun.istack.internal.Nullable;
@@ -73,7 +74,7 @@ public class MessageHandlerContextImpl extends MessageUpdatableContext implement
     public @Nullable WSDLPort getPort() {
         return wsdlModel;
     }
-
+    
     void updateMessage() {
        // Do Nothing
     }

@@ -27,7 +27,7 @@ package com.sun.xml.internal.xsom;
 
 /**
  * Selector or field of {@link XSIdentityConstraint}.
- *
+ * 
  * @author Kohsuke Kawaguchi
  */
 public interface XSXPath extends XSComponent  {

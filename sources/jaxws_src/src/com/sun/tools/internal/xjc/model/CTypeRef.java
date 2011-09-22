@@ -40,7 +40,7 @@ import com.sun.istack.internal.Nullable;
 
 /**
  * {@link TypeRef} for XJC.
- *
+ * 
  * TODO: do we need the source schema component support here?
  *
  * @author Kohsuke Kawaguchi
@@ -49,7 +49,7 @@ public final class CTypeRef implements TypeRef<NType,NClass> {
     /**
      * In-memory type.
      *
-     * This is the type used when
+     * This is the type used when 
      */
     @XmlJavaTypeAdapter(RuntimeUtil.ToStringAdapter.class)
     private final CNonElement type;
@@ -69,6 +69,10 @@ public final class CTypeRef implements TypeRef<NType,NClass> {
 
     }
 
+    public QName getTypeName() {
+        return typeName;
+    }
+    
     public static QName getSimpleTypeName(XSElementDecl decl) {
         if(decl==null)  return null;
         QName typeName = null;
@@ -102,7 +106,7 @@ public final class CTypeRef implements TypeRef<NType,NClass> {
 
     /**
      * Inside XJC, use {@link #defaultValue} that has context information.
-     * This method is to override the one defined in the runtime model.
+     * This method is to override the one defined in the runtime model. 
      *
      * @see #defaultValue
      */

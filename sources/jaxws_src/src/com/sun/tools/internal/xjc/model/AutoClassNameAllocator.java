@@ -34,7 +34,7 @@ import com.sun.tools.internal.xjc.api.ClassNameAllocator;
 
 /**
  * {@link ClassNameAllocator} filter that performs automatic name conflict resolution.
- *
+ * 
  * @author Kohsuke Kawaguchi
  */
 public class AutoClassNameAllocator implements ClassNameAllocator {

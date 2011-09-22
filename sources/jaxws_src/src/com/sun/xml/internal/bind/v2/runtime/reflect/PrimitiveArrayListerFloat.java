@@ -36,7 +36,7 @@ import com.sun.xml.internal.bind.v2.runtime.XMLSerializer;
  * lister classes. Do not modify the generated copies.
  */
 final class PrimitiveArrayListerFloat<BeanT> extends Lister<BeanT,float[],Float,PrimitiveArrayListerFloat.FloatArrayPack> {
-
+    
     private PrimitiveArrayListerFloat() {
     }
 

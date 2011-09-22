@@ -110,7 +110,7 @@ public final class ByteOutputStream extends OutputStream {
     }
 
     public void write(byte[] b) {
-        write(b, 0, b.length);
+    	write(b, 0, b.length);
     }
 
     /**
@@ -136,7 +136,7 @@ public final class ByteOutputStream extends OutputStream {
     }
 
     /**
-     * Evil buffer reallocation method.
+     * Evil buffer reallocation method. 
      * Don't use it unless you absolutely have to.
      *
      * @deprecated

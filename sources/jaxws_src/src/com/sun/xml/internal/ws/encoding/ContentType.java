@@ -22,6 +22,7 @@
  * CA 95054 USA or visit www.sun.com if you need additional information or
  * have any questions.
  */
+
 /*
  * @(#)ContentType.java       1.7 02/03/27
  */
@@ -42,16 +43,16 @@ import javax.xml.ws.WebServiceException;
  */
 public final class ContentType {
 
-    private String primaryType; // primary type
-    private String subType;     // subtype
-    private ParameterList list; // parameter list
+    private String primaryType;	// primary type
+    private String subType;	// subtype
+    private ParameterList list;	// parameter list
 
     /**
      * Constructor that takes a Content-Type string. The String
      * is parsed into its constituents: primaryType, subType
      * and parameters. A ParseException is thrown if the parse fails.
      *
-     * @param   s       the Content-Type string.
+     * @param	s	the Content-Type string.
      * @exception WebServiceException if the parse fails.
      */
     public ContentType(String s) throws WebServiceException {
@@ -87,7 +88,7 @@ public final class ContentType {
      * @return the primary type
      */
     public String getPrimaryType() {
-            return primaryType;
+	    return primaryType;
     }
 
     /**
@@ -95,7 +96,7 @@ public final class ContentType {
      * @return the subType
      */
     public String getSubType() {
-            return subType;
+	    return subType;
     }
 
     /**
@@ -106,7 +107,7 @@ public final class ContentType {
      * @return the type
      */
     public String getBaseType() {
-            return primaryType + '/' + subType;
+	    return primaryType + '/' + subType;
     }
 
     /**
@@ -114,7 +115,7 @@ public final class ContentType {
      * if this parameter is absent.
      *
      * @param name parameter name
-     * @return  parameter value
+     * @return	parameter value
      */
     public String getParameter(String name) {
         if (list == null)
@@ -127,10 +128,11 @@ public final class ContentType {
      * Return a ParameterList object that holds all the available
      * parameters. Returns null if no parameters are available.
      *
-     * @return  ParameterList
+     * @return	ParameterList
      */
     public ParameterList getParameterList() {
-            return list;
+	    return list;
     }
 
 }
+

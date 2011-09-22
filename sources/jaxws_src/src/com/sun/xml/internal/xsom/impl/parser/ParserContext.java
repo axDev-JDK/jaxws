@@ -46,12 +46,12 @@ import java.util.Vector;
 
 /**
  * Provides context information to be used by {@link NGCCRuntimeEx}s.
- *
+ * 
  * <p>
  * This class does the actual processing for {@link XSOMParser},
  * but to hide the details from the public API, this class in
  * a different package.
- *
+ * 
  * @author Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
 public class ParserContext {

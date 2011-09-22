@@ -179,7 +179,7 @@ class ReferencePropertyInfoImpl<T,C,F,M>
                     // reporting one error would do.
                     // often the element ref field is using @XmlElementRefs
                     // to point to multiple JAXBElements.
-                    // reporting one error for each @XmlElemetnRef is thus often redundant.
+                    // reporting one error for each @XmlElemetnRef is thus often redundant. 
                     return;
                 }
             }
@@ -277,7 +277,14 @@ class ReferencePropertyInfoImpl<T,C,F,M>
      * If we are working as 2.1 RI, this defaults to true.
      */
     private boolean isRequired(XmlElementRef ref) {
-        return true;
+        if(!is2_2)  return true;
+
+        try {
+            return ref.required();
+        } catch(LinkageError e) {
+            is2_2 = false;
+            return true;    // the value defaults to true
+        }
     }
 
     /**

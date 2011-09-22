@@ -22,6 +22,7 @@
  * CA 95054 USA or visit www.sun.com if you need additional information or
  * have any questions.
  */
+
 package com.sun.xml.internal.ws.resources;
 
 import com.sun.xml.internal.ws.util.localization.Localizable;
@@ -31,7 +32,7 @@ import com.sun.xml.internal.ws.util.localization.Localizer;
 
 /**
  * Defines string formatting method for each constant in the resource file
- *
+ * 
  */
 public final class AddressingMessages {
 
@@ -44,7 +45,7 @@ public final class AddressingMessages {
 
     /**
      * Ignoring non-anonymous response for one-way message
-     *
+     * 
      */
     public static String NON_ANONYMOUS_RESPONSE_ONEWAY() {
         return localizer.localize(localizableNON_ANONYMOUS_RESPONSE_ONEWAY());
@@ -56,7 +57,7 @@ public final class AddressingMessages {
 
     /**
      * No WS-Addressing headers found processing the server inbound request
-     *
+     * 
      */
     public static String NULL_WSA_HEADERS() {
         return localizer.localize(localizableNULL_WSA_HEADERS());
@@ -68,7 +69,7 @@ public final class AddressingMessages {
 
     /**
      * Unknown WS-Addressing header
-     *
+     * 
      */
     public static String UNKNOWN_WSA_HEADER() {
         return localizer.localize(localizableUNKNOWN_WSA_HEADER());
@@ -80,7 +81,7 @@ public final class AddressingMessages {
 
     /**
      * Populating request Addressing headers and found null Action
-     *
+     * 
      */
     public static String NULL_ACTION() {
         return localizer.localize(localizableNULL_ACTION());
@@ -92,7 +93,7 @@ public final class AddressingMessages {
 
     /**
      * Invalid value obtained from wsaw:Anonymous: "{0}"
-     *
+     * 
      */
     public static String INVALID_WSAW_ANONYMOUS(Object arg0) {
         return localizer.localize(localizableINVALID_WSAW_ANONYMOUS(arg0));
@@ -104,7 +105,7 @@ public final class AddressingMessages {
 
     /**
      * Unexpected null SOAP version
-     *
+     * 
      */
     public static String NULL_SOAP_VERSION() {
         return localizer.localize(localizableNULL_SOAP_VERSION());
@@ -116,10 +117,22 @@ public final class AddressingMessages {
 
     /**
      * Cannot find an operation in wsdl:binding for "{0}"
-     *
+     * 
      */
     public static String WSDL_BOUND_OPERATION_NOT_FOUND(Object arg0) {
         return localizer.localize(localizableWSDL_BOUND_OPERATION_NOT_FOUND(arg0));
+    }
+
+    public static Localizable localizableNON_UNIQUE_OPERATION_SIGNATURE(Object arg0, Object arg1, Object arg2, Object arg3) {
+        return messageFactory.getMessage("non.unique.operation.signature", arg0, arg1, arg2, arg3);
+    }
+
+    /**
+     * Operations in a port should have unique operation signature to successfuly identify a associated wsdl operation for a message. WSDL operation {0} and {1} have the same operation signature, wsa:Action "{2}" and request body block "{3}", Method dispatching may fail at runtime. Use unique wsa:Action for each operation
+     * 
+     */
+    public static String NON_UNIQUE_OPERATION_SIGNATURE(Object arg0, Object arg1, Object arg2, Object arg3) {
+        return localizer.localize(localizableNON_UNIQUE_OPERATION_SIGNATURE(arg0, arg1, arg2, arg3));
     }
 
     public static Localizable localizableNON_ANONYMOUS_RESPONSE() {
@@ -128,7 +141,7 @@ public final class AddressingMessages {
 
     /**
      * Sending 202 and processing non-anonymous response
-     *
+     * 
      */
     public static String NON_ANONYMOUS_RESPONSE() {
         return localizer.localize(localizableNON_ANONYMOUS_RESPONSE());
@@ -140,7 +153,7 @@ public final class AddressingMessages {
 
     /**
      * Validating inbound Addressing headers on server and found null Action
-     *
+     * 
      */
     public static String VALIDATION_SERVER_NULL_ACTION() {
         return localizer.localize(localizableVALIDATION_SERVER_NULL_ACTION());
@@ -152,7 +165,7 @@ public final class AddressingMessages {
 
     /**
      * FaultTo header cannot be parsed
-     *
+     * 
      */
     public static String FAULT_TO_CANNOT_PARSE() {
         return localizer.localize(localizableFAULT_TO_CANNOT_PARSE());
@@ -164,7 +177,7 @@ public final class AddressingMessages {
 
     /**
      * Validating inbound Addressing headers on client and found null Action
-     *
+     * 
      */
     public static String VALIDATION_CLIENT_NULL_ACTION() {
         return localizer.localize(localizableVALIDATION_CLIENT_NULL_ACTION());
@@ -176,7 +189,7 @@ public final class AddressingMessages {
 
     /**
      * Null message found when processing the server inbound request and WS-Addressing is required
-     *
+     * 
      */
     public static String NULL_MESSAGE() {
         return localizer.localize(localizableNULL_MESSAGE());
@@ -188,7 +201,7 @@ public final class AddressingMessages {
 
     /**
      * Action: "{0}" not supported
-     *
+     * 
      */
     public static String ACTION_NOT_SUPPORTED_EXCEPTION(Object arg0) {
         return localizer.localize(localizableACTION_NOT_SUPPORTED_EXCEPTION(arg0));
@@ -200,7 +213,7 @@ public final class AddressingMessages {
 
     /**
      * No response headers found in non-anonymous response from "{0}"
-     *
+     * 
      */
     public static String NON_ANONYMOUS_RESPONSE_NULL_HEADERS(Object arg0) {
         return localizer.localize(localizableNON_ANONYMOUS_RESPONSE_NULL_HEADERS(arg0));
@@ -212,7 +225,7 @@ public final class AddressingMessages {
 
     /**
      * Sending non-anonymous reply to "{0}"
-     *
+     * 
      */
     public static String NON_ANONYMOUS_RESPONSE_SENDING(Object arg0) {
         return localizer.localize(localizableNON_ANONYMOUS_RESPONSE_SENDING(arg0));
@@ -224,7 +237,7 @@ public final class AddressingMessages {
 
     /**
      * ReplyTo header cannot be parsed
-     *
+     * 
      */
     public static String REPLY_TO_CANNOT_PARSE() {
         return localizer.localize(localizableREPLY_TO_CANNOT_PARSE());
@@ -236,7 +249,7 @@ public final class AddressingMessages {
 
     /**
      * Invalid WS-Addressing header: "{0}",Reason: "{1}"
-     *
+     * 
      */
     public static String INVALID_ADDRESSING_HEADER_EXCEPTION(Object arg0, Object arg1) {
         return localizer.localize(localizableINVALID_ADDRESSING_HEADER_EXCEPTION(arg0, arg1));
@@ -248,7 +261,7 @@ public final class AddressingMessages {
 
     /**
      * Operation has "prohibited" value for wsaw:anonymous in the WSDL, Addressing must be disabled and SOAP message need to be hand-crafted
-     *
+     * 
      */
     public static String WSAW_ANONYMOUS_PROHIBITED() {
         return localizer.localize(localizableWSAW_ANONYMOUS_PROHIBITED());
@@ -260,7 +273,7 @@ public final class AddressingMessages {
 
     /**
      * Populating request Addressing headers and found null WSDLPort
-     *
+     * 
      */
     public static String NULL_WSDL_PORT() {
         return localizer.localize(localizableNULL_WSDL_PORT());
@@ -272,7 +285,7 @@ public final class AddressingMessages {
 
     /**
      * Addressing is not enabled
-     *
+     * 
      */
     public static String ADDRESSING_SHOULD_BE_ENABLED() {
         return localizer.localize(localizableADDRESSING_SHOULD_BE_ENABLED());
@@ -284,7 +297,7 @@ public final class AddressingMessages {
 
     /**
      * Unexpected null Addressing version
-     *
+     * 
      */
     public static String NULL_ADDRESSING_VERSION() {
         return localizer.localize(localizableNULL_ADDRESSING_VERSION());
@@ -296,7 +309,7 @@ public final class AddressingMessages {
 
     /**
      * Missing WS-Addressing header: "{0}"
-     *
+     * 
      */
     public static String MISSING_HEADER_EXCEPTION(Object arg0) {
         return localizer.localize(localizableMISSING_HEADER_EXCEPTION(arg0));
@@ -308,7 +321,7 @@ public final class AddressingMessages {
 
     /**
      * Populating request Addressing headers and found null Packet
-     *
+     * 
      */
     public static String NULL_PACKET() {
         return localizer.localize(localizableNULL_PACKET());
@@ -320,7 +333,7 @@ public final class AddressingMessages {
 
     /**
      * Expected "{0}" version of WS-Addressing but found "{1}"
-     *
+     * 
      */
     public static String WRONG_ADDRESSING_VERSION(Object arg0, Object arg1) {
         return localizer.localize(localizableWRONG_ADDRESSING_VERSION(arg0, arg1));
@@ -332,7 +345,7 @@ public final class AddressingMessages {
 
     /**
      * Addressing is not enabled, {0} should not be included in the pipeline"
-     *
+     * 
      */
     public static String ADDRESSING_NOT_ENABLED(Object arg0) {
         return localizer.localize(localizableADDRESSING_NOT_ENABLED(arg0));
@@ -344,7 +357,7 @@ public final class AddressingMessages {
 
     /**
      * Unknown protocol: "{0}"
-     *
+     * 
      */
     public static String NON_ANONYMOUS_UNKNOWN_PROTOCOL(Object arg0) {
         return localizer.localize(localizableNON_ANONYMOUS_UNKNOWN_PROTOCOL(arg0));
@@ -356,7 +369,7 @@ public final class AddressingMessages {
 
     /**
      * No message for non-anonymous response from "{0}"
-     *
+     * 
      */
     public static String NON_ANONYMOUS_RESPONSE_NULL_MESSAGE(Object arg0) {
         return localizer.localize(localizableNON_ANONYMOUS_RESPONSE_NULL_MESSAGE(arg0));
@@ -368,7 +381,7 @@ public final class AddressingMessages {
 
     /**
      * No headers found when processing the server inbound request and WS-Addressing is required
-     *
+     * 
      */
     public static String NULL_HEADERS() {
         return localizer.localize(localizableNULL_HEADERS());
@@ -380,7 +393,7 @@ public final class AddressingMessages {
 
     /**
      * Populating request Addressing headers and found null Binding
-     *
+     * 
      */
     public static String NULL_BINDING() {
         return localizer.localize(localizableNULL_BINDING());

@@ -38,7 +38,7 @@ import org.xml.sax.SAXException;
 /**
  * Abstract implementation of {@link XmlOutput}
  *
- * Implements the optimal methods, where defer to
+ * Implements the optimal methods, where defer to 
  * the non-optimal methods.
  *
  * @author Kohsuke Kawaguchi

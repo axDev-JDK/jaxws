@@ -35,17 +35,17 @@ import com.sun.xml.internal.xsom.visitor.XSFunction;
 import com.sun.xml.internal.xsom.visitor.XSVisitor;
 
 /**
- *
+ * 
  * @author
  *     Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
 public class EmptyImpl extends ComponentImpl implements ContentTypeImpl {
     public EmptyImpl() { super(null,null,null,null); }
-
+    
     public XSSimpleType asSimpleType()  { return null; }
     public XSParticle asParticle()      { return null; }
     public XSContentType asEmpty()      { return this; }
-
+    
     public Object apply( XSContentTypeFunction function ) {
         return function.empty(this);
     }
@@ -58,6 +58,6 @@ public class EmptyImpl extends ComponentImpl implements ContentTypeImpl {
     public void visit( XSContentTypeVisitor visitor ) {
         visitor.empty(this);
     }
-
+    
     public XSContentType getContentType() { return this; }
 }

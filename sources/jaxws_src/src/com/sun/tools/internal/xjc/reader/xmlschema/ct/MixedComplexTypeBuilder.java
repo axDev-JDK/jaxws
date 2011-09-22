@@ -79,7 +79,7 @@ final class MixedComplexTypeBuilder extends CTBuilder {
 
         CPropertyInfo p;
 
-        if (generateMixedExtensions) {
+        if (generateMixedExtensions) {            
             List<XSComplexType> cType = ct.getSubtypes();
             boolean isSubtyped = (cType != null) && (cType.size() > 0);
 

@@ -22,6 +22,7 @@
  * CA 95054 USA or visit www.sun.com if you need additional information or
  * have any questions.
  */
+
 package com.sun.xml.internal.ws.encoding;
 
 import com.sun.xml.internal.ws.util.xml.XmlUtil;
@@ -112,3 +113,4 @@ public class XmlDataContentHandler implements DataContentHandler {
         }
     }
 }
+

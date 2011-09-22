@@ -29,15 +29,19 @@ import com.sun.istack.internal.Nullable;
 import com.sun.xml.internal.ws.api.BindingID;
 import com.sun.xml.internal.ws.api.EndpointAddress;
 import com.sun.xml.internal.ws.api.WSService;
+import com.sun.xml.internal.ws.api.policy.PolicyResolverFactory;
+import com.sun.xml.internal.ws.api.policy.PolicyResolver;
 import com.sun.xml.internal.ws.api.client.WSPortInfo;
 import com.sun.xml.internal.ws.api.model.wsdl.WSDLPort;
 import com.sun.xml.internal.ws.binding.BindingImpl;
 import com.sun.xml.internal.ws.binding.WebServiceFeatureList;
 import com.sun.xml.internal.ws.model.wsdl.WSDLPortImpl;
+import com.sun.xml.internal.ws.model.wsdl.WSDLModelImpl;
+import com.sun.xml.internal.ws.policy.PolicyMap;
+import com.sun.xml.internal.ws.policy.PolicyUtil;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.WebServiceFeature;
-import javax.xml.ws.WebServiceException;
 
 /**
  * Information about a port.
@@ -54,6 +58,7 @@ public class PortInfo implements WSPortInfo {
     public final @NotNull EndpointAddress targetEndpoint;
     public final @NotNull BindingID bindingId;
 
+    public final @NotNull PolicyMap policyMap;
     /**
      * If a port is known statically to a WSDL, {@link PortInfo} may
      * have the corresponding WSDL model. This would occur when the
@@ -70,6 +75,8 @@ public class PortInfo implements WSPortInfo {
         this.portName = name;
         this.bindingId = bindingId;
         this.portModel = getPortModel(owner, name);
+        this.policyMap = createPolicyMap();
+
     }
 
     public PortInfo(@NotNull WSServiceDelegate owner, @NotNull WSDLPort port) {
@@ -78,8 +85,25 @@ public class PortInfo implements WSPortInfo {
         this.portName = port.getName();
         this.bindingId = port.getBinding().getBindingId();
         this.portModel = port;
+        this.policyMap = createPolicyMap();
     }
 
+    public PolicyMap getPolicyMap() {
+        return policyMap;
+    }
+
+    public PolicyMap createPolicyMap() {
+       PolicyMap map;
+       if(portModel != null) {
+            map = ((WSDLModelImpl) portModel.getOwner().getParent()).getPolicyMap();
+       } else {
+           map = PolicyResolverFactory.create().resolve(new PolicyResolver.ClientContext(null,owner.getContainer()));
+       }
+       //still map is null, create a empty map
+       if(map == null)
+           map = PolicyMap.createPolicyMap(null);
+       return map;
+    }
     /**
      * Creates {@link BindingImpl} for this {@link PortInfo}.
      *
@@ -87,16 +111,32 @@ public class PortInfo implements WSPortInfo {
      *      User-specified features.
      * @param portInterface
      *      Null if this is for dispatch. Otherwise the interface the proxy is going to implement
+     * @return
+     *      The initialized BindingImpl
      */
     public BindingImpl createBinding(WebServiceFeature[] webServiceFeatures, Class<?> portInterface) {
         WebServiceFeatureList r = new WebServiceFeatureList(webServiceFeatures);
-        if (portModel != null)
+
+        Iterable<WebServiceFeature> configFeatures;
+
+        //TODO incase of Dispatch, provide a way to User for complete control of the message processing by giving
+        // ability to turn off the WSDL/Policy based features and its associated tubes.
+
+        //Even in case of Dispatch, merge all features configured via WSDL/Policy or deployment configuration
+        if (portModel != null) {
+            // could have merged features from this.policyMap, but some features are set in WSDLModel which are not there in PolicyMap
+            // for ex: <wsaw:UsingAddressing> wsdl extn., and since the policyMap features are merged into WSDLModel anyway during postFinished(),
+            // So, using here WsdlModel for merging is right.
+
             // merge features from WSDL
-            r.mergeFeatures(portModel, portInterface==null/*if dispatch, true*/, false);
+            configFeatures = portModel.getFeatures();
+        } else {
+            configFeatures = PolicyUtil.getPortScopedFeatures(policyMap, owner.getServiceName(),portName);
+        }
+        r.mergeFeatures(configFeatures, false);
 
         // merge features from interceptor
-        for( WebServiceFeature wsf : owner.serviceInterceptor.preCreateBinding(this,portInterface,r) )
-            r.add(wsf);
+        r.mergeFeatures(owner.serviceInterceptor.preCreateBinding(this,portInterface,r), false);
 
         BindingImpl bindingImpl = BindingImpl.create(bindingId, r.toArray());
         owner.getHandlerConfigurator().configureHandlers(this,bindingImpl);
@@ -111,7 +151,7 @@ public class PortInfo implements WSPortInfo {
             Iterable<WSDLPortImpl> ports = owner.getWsdlService().getPorts();
             for (WSDLPortImpl port : ports){
                 if (port.getName().equals(portName))
-                    return port;
+                    return port;                
             }
         }
         return null;
@@ -168,3 +208,4 @@ public class PortInfo implements WSPortInfo {
         return bindingId.toString();
     }
 }
+

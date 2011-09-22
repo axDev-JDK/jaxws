@@ -36,23 +36,23 @@ abstract class DeclarationImpl extends ComponentImpl implements XSDeclaration
     DeclarationImpl( SchemaDocumentImpl owner,
         AnnotationImpl _annon, Locator loc, ForeignAttributesImpl fa,
         String _targetNamespace, String _name,    boolean _anonymous ) {
-
+        
         super(owner,_annon,loc,fa);
         this.targetNamespace = _targetNamespace;
         this.name = _name;
         this.anonymous = _anonymous;
     }
-
+    
     private final String name;
     public String getName() { return name; }
-
+    
     private final String targetNamespace;
     public String getTargetNamespace() { return targetNamespace; }
-
+    
     private final boolean anonymous;
     /** @deprecated */
     public boolean isAnonymous() { return anonymous; }
-
+    
     public final boolean isGlobal() { return !isAnonymous(); }
     public final boolean isLocal() { return isAnonymous(); }
 }

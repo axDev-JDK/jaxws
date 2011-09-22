@@ -37,6 +37,7 @@ import com.sun.xml.internal.ws.transport.http.HttpAdapter;
 import com.sun.xml.internal.ws.transport.http.WSHTTPConnection;
 import com.sun.xml.internal.ws.developer.JAXWSProperties;
 import com.sun.xml.internal.ws.resources.WsservletMessages;
+import com.sun.xml.internal.ws.util.ReadAllStream;
 
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.WebServiceException;
@@ -63,7 +64,8 @@ final class ServerConnectionImpl extends WSHTTPConnection implements WebServiceC
     private final HttpExchange httpExchange;
     private int status;
     private final HttpAdapter adapter;
-    private boolean outputWritten;
+    private LWHSInputStream in;
+    private OutputStream out;
 
 
     public ServerConnectionImpl(@NotNull HttpAdapter adapter, @NotNull HttpExchange httpExchange) {
@@ -118,52 +120,79 @@ final class ServerConnectionImpl extends WSHTTPConnection implements WebServiceC
     }
 
     public @NotNull InputStream getInput() {
-
-        // Light weight http server's InputStream.close() throws exception if
-        // all the bytes are not read. Work around until it is fixed.
-        return new FilterInputStream(httpExchange.getRequestBody()) {
-            // Workaround for "SJSXP XMLStreamReader.next() closes stream".
-            boolean closed;
-
-            @Override
-            public void close() throws IOException {
-                if (!closed) {
-                    while (read() != -1);
-                    super.close();
-                    closed = true;
-                }
-            }
-        };
+        if (in == null) {
+            in = new LWHSInputStream(httpExchange.getRequestBody());
+        }
+        return in;
     }
 
+    // Light weight http server's InputStream.close() throws exception if
+    // all the bytes are not read. Work around until it is fixed.
+    private static class LWHSInputStream extends FilterInputStream {
+        // Workaround for "SJSXP XMLStreamReader.next() closes stream".
+        boolean closed;
+        boolean readAll;
+        
+        LWHSInputStream(InputStream in) {
+            super(in);
+        }
+
+        void readAll() throws IOException {
+            if (!closed && !readAll) {
+                ReadAllStream all = new ReadAllStream();
+                all.readAll(in, 4000000);
+                in.close();
+                in = all;
+                readAll = true;
+            }
+        }
+
+        @Override
+        public void close() throws IOException {
+            if (!closed) {
+                readAll();
+                super.close();
+                closed = true;
+            }
+        }
+
+    }
+
+
     public @NotNull OutputStream getOutput() throws IOException {
-        assert !outputWritten;
-        outputWritten = true;
+        if (out == null) {
+            String lenHeader = httpExchange.getResponseHeaders().getFirst("Content-Length");
+            int length = (lenHeader != null) ? Integer.parseInt(lenHeader) : 0;
+            httpExchange.sendResponseHeaders(getStatus(), length);
 
-        List<String> lenHeader = httpExchange.getResponseHeaders().get("Content-Length");
-        int length = (lenHeader != null) ? Integer.parseInt(lenHeader.get(0)) : 0;
-        httpExchange.sendResponseHeaders(getStatus(), length);
-
-        // Light weight http server's OutputStream.close() throws exception if
-        // all the bytes are not read on the client side(StreamMessage on the client
-        // side doesn't read all bytes.
-        return new FilterOutputStream(httpExchange.getResponseBody()) {
-            @Override
-            public void close() throws IOException {
-                try {
-                    super.close();
-                } catch(IOException ioe) {
-                    // Ignoring purposefully.
+            // Light weight http server's OutputStream.close() throws exception if
+            // all the bytes are not read on the client side(StreamMessage on the client
+            // side doesn't read all bytes.
+            out =  new FilterOutputStream(httpExchange.getResponseBody()) {
+                boolean closed;
+                @Override
+                public void close() throws IOException {
+                    if (!closed) {
+                        closed = true;
+                        // lwhs closes input stream, when you close the output stream
+                        // This causes problems for streaming in one-way cases
+                        in.readAll();
+                        try {
+                            super.close();
+                        } catch(IOException ioe) {
+                            // Ignoring purposefully.
+                        }
+                    }
                 }
-            }
 
-            // Otherwise, FilterOutpuStream writes byte by byte
-            @Override
-            public void write(byte[] buf, int start, int len) throws IOException {
-                out.write(buf, start, len);
-            }
-        };
-
+                // Otherwise, FilterOutpuStream writes byte by byte
+                @Override
+                public void write(byte[] buf, int start, int len) throws IOException {
+                    out.write(buf, start, len);
+                }
+            };
+        }
+        return out;
     }
 
     public @NotNull WebServiceContextDelegate getWebServiceContextDelegate() {
@@ -180,7 +209,7 @@ final class ServerConnectionImpl extends WSHTTPConnection implements WebServiceC
 
     public @NotNull String getEPRAddress(Packet request, WSEndpoint endpoint) {
         //return WSHttpHandler.getRequestAddress(httpExchange);
-
+        
         PortAddressResolver resolver = adapter.owner.createPortAddressResolver(getBaseAddress());
         String address = resolver.getAddressFor(endpoint.getServiceName(), endpoint.getPortName().getLocalPart());
         if(address==null)
@@ -237,7 +266,28 @@ final class ServerConnectionImpl extends WSHTTPConnection implements WebServiceC
 
     @Override @NotNull
     public String getBaseAddress() {
-        return WSHttpHandler.getRequestAddress(httpExchange);
+        /*
+         * Computes the Endpoint's address from the request. Use "Host" header
+         * so that it has correct address(IP address or someother hostname)
+         * through which the application reached the endpoint.
+         *
+         */
+        StringBuilder strBuf = new StringBuilder();
+        strBuf.append((httpExchange instanceof HttpsExchange) ? "https" : "http");
+        strBuf.append("://");
+
+        String hostHeader = httpExchange.getRequestHeaders().getFirst("Host");
+        if (hostHeader != null) {
+            strBuf.append(hostHeader);   // Uses Host header
+        } else {
+            strBuf.append(httpExchange.getLocalAddress().getHostName());
+            strBuf.append(":");
+            strBuf.append(httpExchange.getLocalAddress().getPort());
+        }
+        //Do not include URL pattern here
+        //strBuf.append(httpExchange.getRequestURI().getPath());
+
+        return strBuf.toString();
     }
 
     @Override

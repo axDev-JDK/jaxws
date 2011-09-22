@@ -88,8 +88,8 @@ public class ContextFactory {
            JAXBRIContext.XMLACCESSORFACTORY_SUPPORT,Boolean.class);
         if(xmlAccessorFactorySupport==null){
             xmlAccessorFactorySupport = false;
-            Util.getClassLogger().log(Level.FINE, "Property " +
-                JAXBRIContext.XMLACCESSORFACTORY_SUPPORT +
+            Util.getClassLogger().log(Level.FINE, "Property " + 
+                JAXBRIContext.XMLACCESSORFACTORY_SUPPORT + 
                 "is not active.  Using JAXB's implementation");
         }
 
@@ -125,9 +125,9 @@ public class ContextFactory {
             return type.cast(o);
     }
 
-    public static JAXBRIContext createContext( Class[] classes,
-            Collection<TypeReference> typeRefs, Map<Class,Class> subclassReplacements,
-            String defaultNsUri, boolean c14nSupport, RuntimeAnnotationReader ar,
+    public static JAXBRIContext createContext( Class[] classes, 
+            Collection<TypeReference> typeRefs, Map<Class,Class> subclassReplacements, 
+            String defaultNsUri, boolean c14nSupport, RuntimeAnnotationReader ar, 
             boolean xmlAccessorFactorySupport, boolean allNillable, boolean retainPropertyInfo) throws JAXBException {
 
         JAXBContextImpl.JAXBContextBuilder builder = new JAXBContextImpl.JAXBContextBuilder();

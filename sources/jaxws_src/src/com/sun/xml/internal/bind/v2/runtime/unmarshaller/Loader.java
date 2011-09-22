@@ -97,7 +97,7 @@ public abstract class Loader {
         if(canRecover && !UnmarshallingContext.getInstance().parent.hasEventHandler())
             // this error happens particurly often (when input documents contain a lot of unexpected elements to be ignored),
             // so don't bother computing all the messages and etc if we know that
-            // there's no event handler to receive the error in the end. See #286
+            // there's no event handler to receive the error in the end. See #286 
             return;
         if(ea.uri!=ea.uri.intern() || ea.local!=ea.local.intern())
             reportError(Messages.UNINTERNED_STRINGS.format(), canRecover );
@@ -109,6 +109,13 @@ public abstract class Loader {
      * Returns a set of tag names expected as possible child elements in this context.
      */
     public Collection<QName> getExpectedChildElements() {
+        return Collections.emptyList();
+    }
+
+    /**
+     * Returns a set of tag names expected as possible child elements in this context.
+     */
+    public Collection<QName> getExpectedAttributes() {
         return Collections.emptyList();
     }
 

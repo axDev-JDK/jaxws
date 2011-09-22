@@ -227,7 +227,7 @@ public final class CElementInfo extends AbstractCElement
     @XmlElement
     public String getSqueezedName() {
         if(squeezedName!=null)  return squeezedName;
-
+        
         StringBuilder b = new StringBuilder();
         CClassInfo s = getScope();
         if(s!=null)

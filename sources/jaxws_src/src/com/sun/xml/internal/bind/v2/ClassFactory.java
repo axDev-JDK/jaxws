@@ -30,12 +30,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.Map;
-import java.util.Stack;
-import java.util.TreeSet;
 import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -180,7 +175,7 @@ public final class ClassFactory {
         exp.initCause(errorMsg);
         throw exp;
     }
-
+    
     /**
      * Infers the instanciable implementation class that can be assigned to the given field type.
      *

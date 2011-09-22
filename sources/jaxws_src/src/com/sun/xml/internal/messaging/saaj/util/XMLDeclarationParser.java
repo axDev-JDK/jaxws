@@ -25,17 +25,15 @@
 package com.sun.xml.internal.messaging.saaj.util;
 
 import java.io.*;
-import java.util.HashMap;
-import java.util.Iterator;
 
 import javax.xml.transform.TransformerException;
 
-/*
+/* 
  * Class that parses the very first construct in the document i.e.
  *  <?xml ... ?>
  *
  * @author Panos Kougiouris (panos@acm.org)
- * @version
+ * @version  
  */
 
 public class XMLDeclarationParser {
@@ -45,7 +43,6 @@ public class XMLDeclarationParser {
     private String xmlDecl = null;
     static String gt16 = null;
     static String utf16Decl = null;
-
     static {
          try {
              gt16 = new String(">".getBytes("utf-16"));
@@ -110,7 +107,7 @@ public class XMLDeclarationParser {
             return;
         }
         m_hasHeader = true;
-
+        
         if (utf16) {
             xmlDecl = new String(decl.getBytes(), "utf-16");
             xmlDecl = xmlDecl.substring(xmlDecl.indexOf("<"));
@@ -179,3 +176,4 @@ public class XMLDeclarationParser {
     }
 
 }
+    

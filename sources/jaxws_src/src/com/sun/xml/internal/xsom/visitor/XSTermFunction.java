@@ -34,7 +34,7 @@ import com.sun.xml.internal.xsom.XSTerm;
 
 /**
  * Function object that works on {@link XSTerm}.
- *
+ * 
  * @author
  *     Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
@@ -44,3 +44,4 @@ public interface XSTermFunction<T> {
     T modelGroup( XSModelGroup group );
     T elementDecl( XSElementDecl decl );
 }
+

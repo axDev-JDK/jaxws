@@ -66,9 +66,9 @@ class ClassLoaderBuilder {
 
             cl = new MaskingClassLoader(cl,mask);
 
-            URL apiUrl = cl.getResource("javax/xml/bind/annotation/XmlSeeAlso.class");
+            URL apiUrl = cl.getResource("javax/xml/bind/JAXBPermission.class");
             if(apiUrl==null)
-                throw new ClassNotFoundException("There's no JAXB 2.1 API in the classpath");
+                throw new ClassNotFoundException("There's no JAXB 2.2 API in the classpath");
 
             cl = new URLClassLoader(new URL[]{ParallelWorldClassLoader.toJarUrl(apiUrl)},cl);
         }

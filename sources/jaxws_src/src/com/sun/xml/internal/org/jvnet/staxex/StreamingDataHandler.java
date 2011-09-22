@@ -128,7 +128,7 @@ public abstract class StreamingDataHandler extends DataHandler {
      * move the file or delete this file, those methods will
      * behave in undefined fashion. For a simliar reason,
      * calling this method multiple times will cause
-     * undefined behavior.
+     * undefined behavior.  
      */
     public abstract void moveTo(File dst) throws IOException;
 
@@ -141,3 +141,4 @@ public abstract class StreamingDataHandler extends DataHandler {
     public abstract void close() throws IOException;
 
 }
+

@@ -55,7 +55,7 @@ import javax.xml.bind.attachment.AttachmentUnmarshaller;
  */
 public abstract class BridgeContext {
     protected BridgeContext() {}
-
+    
     /**
      * Registers the error handler that receives unmarshalling/marshalling errors.
      *

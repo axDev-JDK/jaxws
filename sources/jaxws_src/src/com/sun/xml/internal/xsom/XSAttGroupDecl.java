@@ -28,10 +28,10 @@ package com.sun.xml.internal.xsom;
 
 /**
  * Attribute group declaration.
- *
+ * 
  * @author
  *  Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
 public interface XSAttGroupDecl extends XSAttContainer {
-
+    
 }

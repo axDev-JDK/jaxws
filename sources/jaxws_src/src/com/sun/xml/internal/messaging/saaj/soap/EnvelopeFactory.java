@@ -49,15 +49,15 @@ import com.sun.xml.internal.messaging.saaj.util.transform.EfficientStreamingTran
  * underlying implementations.
  */
 public class EnvelopeFactory {
-
+    
     protected static final Logger
         log = Logger.getLogger(LogDomainConstants.SOAP_DOMAIN,
         "com.sun.xml.internal.messaging.saaj.soap.LocalStrings");
-
+    
     private static ParserPool parserPool = new ParserPool(5);
 
     public static Envelope createEnvelope(Source src, SOAPPartImpl soapPart)
-        throws SOAPException
+        throws SOAPException 
     {
         // Insert SAX filter to disallow Document Type Declarations since
         // they are not legal in SOAP
@@ -65,7 +65,9 @@ public class EnvelopeFactory {
         if (src instanceof StreamSource) {
             if (src instanceof JAXMStreamSource) {
                 try {
-                    ((JAXMStreamSource) src).reset();
+                    if (!SOAPPartImpl.lazyContentLength) {
+                        ((JAXMStreamSource) src).reset();
+                    }
                 } catch (java.io.IOException ioe) {
                     log.severe("SAAJ0515.source.reset.exception");
                     throw new SOAPExceptionImpl(ioe);
@@ -94,17 +96,14 @@ public class EnvelopeFactory {
             }
             src = new SAXSource(rejectFilter, is);
         }
-
+        
         try {
             Transformer transformer =
                 EfficientStreamingTransformer.newTransformer();
             DOMResult result = new DOMResult(soapPart);
             transformer.transform(src, result);
-
+            
             Envelope env = (Envelope) soapPart.getEnvelope();
-            if (saxParser != null) {
-                parserPool.put(saxParser);
-            }
             return env;
         } catch (Exception ex) {
             if (ex instanceof SOAPVersionMismatchException) {
@@ -114,6 +113,10 @@ public class EnvelopeFactory {
             throw new SOAPExceptionImpl(
                 "Unable to create envelope from given source: ",
                 ex);
+        } finally {
+            if (saxParser != null) {
+                parserPool.returnParser(saxParser);
+            }
         }
     }
 }

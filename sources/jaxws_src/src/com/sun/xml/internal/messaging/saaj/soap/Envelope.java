@@ -48,7 +48,7 @@ public interface Envelope extends SOAPEnvelope {
      * Output the content.
      */
     void output(OutputStream out) throws IOException;
-
+    
     /**
      * Output the content.
      */

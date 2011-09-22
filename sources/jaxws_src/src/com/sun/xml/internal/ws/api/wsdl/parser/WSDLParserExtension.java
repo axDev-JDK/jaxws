@@ -168,22 +168,22 @@ public abstract class WSDLParserExtension {
     public boolean portTypeOperationFault(WSDLOperation op, XMLStreamReader reader) {
         return false;
     }
-
+    
     public boolean definitionsElements(XMLStreamReader reader) {
         return false;
     }
-
+    
     public boolean bindingElements(WSDLBoundPortType binding, XMLStreamReader reader) {
         return false;
     }
-
+    
     public void bindingAttributes(WSDLBoundPortType binding, XMLStreamReader reader) {
     }
-
+    
     public boolean portTypeElements(WSDLPortType portType, XMLStreamReader reader) {
         return false;
     }
-
+    
     public void portTypeAttributes(WSDLPortType portType, XMLStreamReader reader) {
     }
 

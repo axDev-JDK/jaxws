@@ -221,7 +221,7 @@ public final class UnmarshallingContext extends Coordinator
          * it thereby makes {@link Receiver} mechanism simpler.
          *
          * <p>
-         * Yes, I know this is a hack, and no, I'm not proud of it.
+         * Yes, I know this is a hack, and no, I'm not proud of it. 
          *
          * @see ElementBeanInfoImpl.IntercepterLoader#startElement(State, TagName)
          * @see ElementBeanInfoImpl.IntercepterLoader#intercept(State, Object)
@@ -564,7 +564,7 @@ public final class UnmarshallingContext extends Coordinator
         }
         result = null;
     }
-
+    
     /**
      * Creates a new instance of the specified class.
      * In the unmarshaller, we need to check the user-specified factory class.
@@ -1050,7 +1050,7 @@ public final class UnmarshallingContext extends Coordinator
         }
 
         public void receive(State state, Object o) {
-            if(state.backup!=null) {
+             if(state.backup!=null) {
                 ((JAXBElement<Object>)state.backup).setValue(o);
                 o = state.backup;
             }
@@ -1070,6 +1070,7 @@ public final class UnmarshallingContext extends Coordinator
          * Receives the root element and determines how to start
          * unmarshalling.
          */
+        @Override
         public void childElement(UnmarshallingContext.State state, TagName ea) {
             UnmarshallingContext context = state.getContext();
 
@@ -1183,8 +1184,8 @@ public final class UnmarshallingContext extends Coordinator
 
     /**
      * Allows to access elements which are expected in current state.
-     * Useful for getting elements/attributes for current parent.
-     *
+     * Useful for getting elements for current parent.
+     * 
      * @return
      */
     public Collection<QName> getCurrentExpectedElements() {
@@ -1192,7 +1193,24 @@ public final class UnmarshallingContext extends Coordinator
         try {
             State s = getCurrentState();
             Loader l = s.loader;
-            return l.getExpectedChildElements();
+            return (l != null) ? l.getExpectedChildElements() : null;
+        } finally {
+            popCoordinator();
+        }
+    }
+
+    /**
+     * Allows to access attributes which are expected in current state.
+     * Useful for getting attributes for current parent.
+     *
+     * @return
+     */
+    public Collection<QName> getCurrentExpectedAttributes() {
+        pushCoordinator();
+        try {
+            State s = getCurrentState();
+            Loader l = s.loader;
+            return (l != null) ? l.getExpectedAttributes() : null;
         } finally {
             popCoordinator();
         }
@@ -1209,4 +1227,5 @@ public final class UnmarshallingContext extends Coordinator
 
         return null;
     }
+    
 }

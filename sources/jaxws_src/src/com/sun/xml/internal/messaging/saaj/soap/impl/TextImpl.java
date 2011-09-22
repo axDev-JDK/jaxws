@@ -41,7 +41,7 @@ public class TextImpl
     protected static final Logger log =
         Logger.getLogger(LogDomainConstants.SOAP_IMPL_DOMAIN,
                          "com.sun.xml.internal.messaging.saaj.soap.impl.LocalStrings");
-
+    
     public TextImpl(SOAPDocumentImpl ownerDoc, String text) {
         super(ownerDoc, text);
     }
@@ -50,7 +50,7 @@ public class TextImpl
         String nodeValue = getNodeValue();
         return (nodeValue.equals("") ? null : nodeValue);
     }
-
+    
     public void setValue(String text) {
         setNodeValue(text);
     }

@@ -22,6 +22,7 @@
  * CA 95054 USA or visit www.sun.com if you need additional information or
  * have any questions.
  */
+
 package com.sun.xml.internal.ws.handler;
 
 import com.sun.istack.internal.Nullable;
@@ -52,7 +53,7 @@ public class ClientMessageHandlerTube extends HandlerTube {
     private SEIModel seiModel;
     private WSBinding binding;
     private Set<String> roles;
-
+    
     /**
      * Creates a new instance of MessageHandlerTube
      */
@@ -74,7 +75,7 @@ public class ClientMessageHandlerTube extends HandlerTube {
     public AbstractFilterTubeImpl copy(TubeCloner cloner) {
         return new ClientMessageHandlerTube(this, cloner);
     }
-
+    
     void callHandlersOnResponse(MessageUpdatableContext context, boolean handleFault) {
         try {
             //CLIENT-SIDE
@@ -124,7 +125,7 @@ public class ClientMessageHandlerTube extends HandlerTube {
         closeClientsideHandlers(mc);
 
     }
-
+    
     void setUpProcessor() {
        // Take a snapshot, User may change chain after invocation, Same chain
         // should be used for the entire MEP

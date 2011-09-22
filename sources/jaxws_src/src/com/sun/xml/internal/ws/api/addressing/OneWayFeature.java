@@ -29,6 +29,9 @@ import com.sun.xml.internal.ws.api.FeatureConstructor;
 
 import javax.xml.ws.WebServiceFeature;
 
+import com.sun.org.glassfish.gmbal.ManagedAttribute;
+import com.sun.org.glassfish.gmbal.ManagedData;
+
 /**
  * Unsupported RI extension to work around an issue in WSIT.
  *
@@ -43,11 +46,12 @@ import javax.xml.ws.WebServiceFeature;
  * this annotation. All operations are assumed to be one-way, and
  * this feature should be used for one-way
  * operations only.
- *
+ * 
  * If a non-null ReplyTo is specified, then MessageID property is also added.
  *
  * @author Arun Gupta
  */
+@ManagedData
 public class OneWayFeature extends WebServiceFeature {
     /**
      * Constant value identifying the {@link OneWayFeature}
@@ -105,6 +109,7 @@ public class OneWayFeature extends WebServiceFeature {
     /**
      * {@inheritDoc}
      */
+    @ManagedAttribute
     public String getID() {
         return ID;
     }
@@ -114,6 +119,7 @@ public class OneWayFeature extends WebServiceFeature {
      *
      * @return address of the wsa:ReplyTo header
      */
+    @ManagedAttribute
     public WSEndpointReference getReplyTo() {
         return replyTo;
     }
@@ -132,6 +138,7 @@ public class OneWayFeature extends WebServiceFeature {
      *
      * @return address of the wsa:From header
      */
+    @ManagedAttribute
     public WSEndpointReference getFrom() {
         return from;
     }
@@ -150,6 +157,7 @@ public class OneWayFeature extends WebServiceFeature {
      *
      * @return address of the wsa:FaultTo header
      */
+    @ManagedAttribute
     public String getRelatesToID() {
         return relatesToID;
     }

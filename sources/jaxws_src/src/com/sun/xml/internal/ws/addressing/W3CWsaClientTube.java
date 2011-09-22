@@ -44,6 +44,7 @@ public class W3CWsaClientTube extends WsaClientTube {
         super(that, cloner);
     }
 
+    @Override
     public W3CWsaClientTube copy(TubeCloner cloner) {
         return new W3CWsaClientTube(this, cloner);
     }
@@ -64,6 +65,6 @@ public class W3CWsaClientTube extends WsaClientTube {
                 throw new MissingAddressingHeaderException(addressingVersion.relatesToTag,packet);
             }
         }
-
+        
     }
 }

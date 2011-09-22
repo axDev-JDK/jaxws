@@ -45,26 +45,26 @@ public class ModelGroupDeclImpl extends DeclarationImpl implements XSModelGroupD
         AnnotationImpl _annon, Locator _loc, ForeignAttributesImpl _fa,
         String _targetNamespace, String _name,
         ModelGroupImpl _modelGroup ) {
-
+        
         super(owner,_annon,_loc,_fa,_targetNamespace,_name,false);
         this.modelGroup = _modelGroup;
-
+        
         if(modelGroup==null)
             throw new IllegalArgumentException();
     }
-
+    
     private final ModelGroupImpl modelGroup;
     public XSModelGroup getModelGroup() { return modelGroup; }
-
+    
     /**
      * This component is a redefinition of "oldMG". Fix up the internal state
-     * as such.
+     * as such. 
      */
     public void redefine( ModelGroupDeclImpl oldMG ) {
         modelGroup.redefine(oldMG);
     }
-
-
+    
+    
     public void visit( XSVisitor visitor ) {
         visitor.modelGroupDecl(this);
     }

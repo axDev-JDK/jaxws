@@ -53,7 +53,7 @@ public class FaultElement1_1Impl extends FaultElementImpl {
                                String localName) {
         super(ownerDoc, NameImpl.createFaultElement1_1Name(localName));
     }
-
+    
     public FaultElement1_1Impl(SOAPDocumentImpl ownerDoc,
                                String localName,
                                String prefix) {
@@ -62,7 +62,7 @@ public class FaultElement1_1Impl extends FaultElementImpl {
     }
 
     protected boolean isStandardFaultElement() {
-        String localName = elementQName.getLocalPart();
+        String localName = elementQName.getLocalPart(); 
         if (localName.equalsIgnoreCase("faultcode") ||
             localName.equalsIgnoreCase("faultstring") ||
             localName.equalsIgnoreCase("faultactor")) {

@@ -48,7 +48,7 @@ public abstract class ResultFactory {
      * This method supports {@link javax.xml.transform.sax.SAXResult},
      * {@link javax.xml.transform.stream.StreamResult}, and {@link javax.xml.transform.dom.DOMResult}.
      *
-     * @param result the Result that will receive output from the XmlSerializer
+     * @param result the Result that will receive output from the XmlSerializer 
      * @return an implementation of XmlSerializer that will produce output on the supplied Result
      */
     public static XmlSerializer createSerializer(Result result) {

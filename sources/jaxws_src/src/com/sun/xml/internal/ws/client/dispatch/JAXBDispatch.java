@@ -33,8 +33,10 @@ import com.sun.xml.internal.ws.api.message.Message;
 import com.sun.xml.internal.ws.api.message.Messages;
 import com.sun.xml.internal.ws.api.message.Packet;
 import com.sun.xml.internal.ws.api.pipe.Tube;
+import com.sun.xml.internal.ws.api.client.WSPortInfo;
 import com.sun.xml.internal.ws.binding.BindingImpl;
 import com.sun.xml.internal.ws.client.WSServiceDelegate;
+import com.sun.xml.internal.ws.client.PortInfo;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -59,11 +61,16 @@ public class JAXBDispatch extends DispatchImpl<Object> {
 
     private final JAXBContext jaxbcontext;
 
+    @Deprecated
     public JAXBDispatch(QName port, JAXBContext jc, Service.Mode mode, WSServiceDelegate service, Tube pipe, BindingImpl binding, WSEndpointReference epr) {
         super(port, mode, service, pipe, binding, epr);
         this.jaxbcontext = jc;
     }
 
+    public JAXBDispatch(WSPortInfo portInfo, JAXBContext jc, Service.Mode mode, BindingImpl binding, WSEndpointReference epr) {
+        super(portInfo, mode, binding, epr);
+        this.jaxbcontext = jc;
+    }
 
     Object toReturnValue(Packet response) {
         try {

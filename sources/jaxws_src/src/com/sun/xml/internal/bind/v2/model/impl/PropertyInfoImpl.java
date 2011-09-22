@@ -197,7 +197,7 @@ abstract class PropertyInfoImpl<T,C,F,M>
         T type = reader().getClassValue(jta,"type");
         if(declaredType.equals(type))
             return true;    // for types explicitly marked in XmlJavaTypeAdapter.type()
-
+        
         T adapter = reader().getClassValue(jta,"value");
         T ba = nav().getBaseClass(adapter, nav().asDecl(XmlAdapter.class));
         if(!nav().isParameterizedType(ba))

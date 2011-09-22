@@ -163,7 +163,7 @@ public class DOMForest {
         if (core.containsKey(systemId)) {
             // this document has already been parsed. Just ignore.
             return core.get(systemId);
-        }
+        }        
 
         if(!root)
             addExternalReferences(systemId);
@@ -207,14 +207,17 @@ public class DOMForest {
                 boolean redirect;
                 URL url = JAXWSUtils.getFileOrURL(inputSource.getSystemId());
                 URLConnection conn = url.openConnection();
-                if (conn instanceof HttpsURLConnection) {
-                    if (options.disableSSLHostnameVerification) {
-                        ((HttpsURLConnection) conn).setHostnameVerifier(new HttpClientVerifier());
-                    }
-                }
-
                 do {
+                    if (conn instanceof HttpsURLConnection) {
+                        if (options.disableSSLHostnameVerification) {
+                            ((HttpsURLConnection) conn).setHostnameVerifier(new HttpClientVerifier());
+                        }
+                    }
                     redirect = false;
+                    if (conn instanceof HttpURLConnection) {
+                        ((HttpURLConnection) conn).setInstanceFollowRedirects(false);
+                    }
+
                     try {
                         is = conn.getInputStream();
                         //is = sun.net.www.protocol.http.HttpURLConnection.openConnectionCheckRedirects(conn);
@@ -250,9 +253,10 @@ public class DOMForest {
                                         throw new AbortException();
                                     }
                                     conn = url.openConnection();
+                                    inputSource.setSystemId(url.toExternalForm());
                                     redirects++;
                                     redirect = true;
-                                }
+                                }                                
                             }
                         }
                     }
@@ -442,7 +446,7 @@ public class DOMForest {
         if(rootDocuments.isEmpty()) return null;
         return rootDocuments.iterator().next();
     }
-
+    
     public Set<String> getRootDocuments() {
         return rootDocuments;
     }

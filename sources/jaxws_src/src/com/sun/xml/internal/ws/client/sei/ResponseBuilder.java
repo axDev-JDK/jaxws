@@ -40,6 +40,8 @@ import com.sun.xml.internal.ws.model.ParameterImpl;
 import com.sun.xml.internal.ws.model.WrapperParameter;
 import com.sun.xml.internal.ws.resources.ServerMessages;
 import com.sun.xml.internal.ws.streaming.XMLStreamReaderUtil;
+import com.sun.xml.internal.ws.encoding.StringDataContentHandler;
+import com.sun.xml.internal.ws.encoding.DataHandlerDataSource;
 
 import javax.activation.DataHandler;
 import javax.imageio.ImageIO;
@@ -96,7 +98,7 @@ abstract class ResponseBuilder {
     static final class None extends ResponseBuilder {
         private None(){
         }
-        public Object readResponse(Message msg, Object[] args) {
+        public Object readResponse(Message msg, Object[] args) {           
             msg.consume();
             return null;
         }
@@ -189,7 +191,7 @@ abstract class ResponseBuilder {
             return retVal;
         }
     }
-
+    
     /**
      * Reads an Attachment into a Java parameter.
      */
@@ -198,7 +200,7 @@ abstract class ResponseBuilder {
         protected final ParameterImpl param;
         private final String pname;
         private final String pname1;
-
+            
         AttachmentBuilder(ParameterImpl param, ValueSetter setter) {
             this.setter = setter;
             this.param = param;
@@ -229,11 +231,13 @@ abstract class ResponseBuilder {
                 return new InputStreamBuilder(param, setter);
             } else if(isXMLMimeType(param.getBinding().getMimeType())) {
                 return new JAXBBuilder(param, setter);
+            } else if(String.class.isAssignableFrom(type)) {
+                return new StringBuilder(param, setter);
             } else {
                 throw new UnsupportedOperationException("Unexpected Attachment type ="+type);
             }
         }
-
+        
         public Object readResponse(Message msg, Object[] args) throws JAXBException, XMLStreamException {
             // TODO not to loop
             for (Attachment att : msg.getAttachments()) {
@@ -247,17 +251,35 @@ abstract class ResponseBuilder {
             }
             return null;
         }
-
+        
         abstract Object mapAttachment(Attachment att, Object[] args) throws JAXBException;
     }
-
+        
     private static final class DataHandlerBuilder extends AttachmentBuilder {
         DataHandlerBuilder(ParameterImpl param, ValueSetter setter) {
             super(param, setter);
         }
-
+        
         Object mapAttachment(Attachment att, Object[] args) {
             return setter.put(att.asDataHandler(), args);
+        }
+    }
+
+    private static final class StringBuilder extends AttachmentBuilder {
+        StringBuilder(ParameterImpl param, ValueSetter setter) {
+            super(param, setter);
+        }
+
+        Object mapAttachment(Attachment att, Object[] args) {
+            att.getContentType();
+            StringDataContentHandler sdh = new StringDataContentHandler();
+            try {
+                String str = (String)sdh.getContent(new DataHandlerDataSource(att.asDataHandler()));
+                return setter.put(str, args);
+            } catch(Exception e) {
+                throw new WebServiceException(e);
+            }
+
         }
     }
 
@@ -265,27 +287,27 @@ abstract class ResponseBuilder {
         ByteArrayBuilder(ParameterImpl param, ValueSetter setter) {
             super(param, setter);
         }
-
+        
         Object mapAttachment(Attachment att, Object[] args) {
             return setter.put(att.asByteArray(), args);
         }
     }
-
+        
     private static final class SourceBuilder extends AttachmentBuilder {
         SourceBuilder(ParameterImpl param, ValueSetter setter) {
             super(param, setter);
         }
-
+        
         Object mapAttachment(Attachment att, Object[] args) {
             return setter.put(att.asSource(), args);
         }
     }
-
+        
     private static final class ImageBuilder extends AttachmentBuilder {
         ImageBuilder(ParameterImpl param, ValueSetter setter) {
             super(param, setter);
         }
-
+        
         Object mapAttachment(Attachment att, Object[] args) {
             Image image;
             InputStream is = null;
@@ -306,28 +328,28 @@ abstract class ResponseBuilder {
             return setter.put(image, args);
         }
     }
-
+        
     private static final class InputStreamBuilder extends AttachmentBuilder {
         InputStreamBuilder(ParameterImpl param, ValueSetter setter) {
             super(param, setter);
         }
-
+        
         Object mapAttachment(Attachment att, Object[] args) {
             return setter.put(att.asInputStream(), args);
         }
     }
-
+        
     private static final class JAXBBuilder extends AttachmentBuilder {
         JAXBBuilder(ParameterImpl param, ValueSetter setter) {
             super(param, setter);
         }
-
+        
         Object mapAttachment(Attachment att, Object[] args) throws JAXBException {
             Object obj = param.getBridge().unmarshal(att.asInputStream());
             return setter.put(obj, args);
         }
     }
-
+    
     /**
      * Gets the WSDL part name of this attachment.
      *
@@ -660,7 +682,7 @@ abstract class ResponseBuilder {
 
         }
     }
-
+    
     private static boolean isXMLMimeType(String mimeType){
         return mimeType.equals("text/xml") || mimeType.equals("application/xml");
     }

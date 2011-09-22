@@ -171,8 +171,15 @@ class ClassInfoImpl<T,C,F,M> extends TypeInfoImpl<T,C,F,M>
             propOrder = DEFAULT_ORDER;
         }
 
+        // obtain XmlAccessorOrder and  set proporder (XmlAccessorOrder can be defined for whole package)
+        // (<xs:all> vs <xs:sequence>)
+        XmlAccessorOrder xao = reader().getPackageAnnotation(XmlAccessorOrder.class, clazz, this);
+        if((xao != null) && (xao.value() == XmlAccessOrder.UNDEFINED)) {
+            propOrder = null;
+        }
+
         // obtain XmlAccessorOrder and  set proporder (<xs:all> vs <xs:sequence>)
-        XmlAccessorOrder xao = reader().getClassAnnotation(XmlAccessorOrder.class, clazz, this);
+        xao = reader().getClassAnnotation(XmlAccessorOrder.class, clazz, this);
         if((xao != null) && (xao.value() == XmlAccessOrder.UNDEFINED)) {
             propOrder = null;
         }

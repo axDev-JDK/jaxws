@@ -125,6 +125,8 @@ public class WSServiceDelegate extends WSService {
      * For dynamically added ones we'll have {@link PortInfo}.
      */
     private final Map<QName, PortInfo> ports = new HashMap<QName, PortInfo>();
+    // For monitoring
+    Map<QName, PortInfo> getQNameToPortInfoMap() { return ports; }
 
     /**
      * Whenever we create {@link BindingProvider}, we use this to configure handlers.
@@ -374,7 +376,7 @@ public class WSServiceDelegate extends WSService {
     public <T> Dispatch<T> createDispatch(QName portName, WSEndpointReference wsepr, Class<T> aClass, Service.Mode mode, WebServiceFeature... features) {
         PortInfo port = safeGetPort(portName);
         BindingImpl binding = port.createBinding(features,null);
-        Dispatch<T> dispatch = Stubs.createDispatch(portName, this, binding, aClass, mode, createPipeline(port, binding), wsepr);
+        Dispatch<T> dispatch = Stubs.createDispatch(port, this, binding, aClass, mode, wsepr);
         serviceInterceptor.postCreateDispatch((WSBindingProvider) dispatch);
         return dispatch;
     }
@@ -416,42 +418,6 @@ public class WSServiceDelegate extends WSService {
         return sb;
     }
 
-    /**
-     * Creates a new pipeline for the given port name.
-     */
-    private Tube createPipeline(PortInfo portInfo, WSBinding binding) {
-        //Check all required WSDL extensions are understood
-        checkAllWSDLExtensionsUnderstood(portInfo,binding);
-        SEIModel seiModel = null;
-        if(portInfo instanceof SEIPortInfo) {
-            seiModel = ((SEIPortInfo)portInfo).model;
-        }
-        BindingID bindingId = portInfo.bindingId;
-
-        TubelineAssembler assembler = TubelineAssemblerFactory.create(
-                Thread.currentThread().getContextClassLoader(), bindingId);
-        if (assembler == null)
-            throw new WebServiceException("Unable to process bindingID=" + bindingId);    // TODO: i18n
-        return assembler.createClient(
-                new ClientTubeAssemblerContext(
-                        portInfo.targetEndpoint,
-                        portInfo.portModel,
-                        this, binding, container,((BindingImpl)binding).createCodec(),seiModel));
-    }
-
-    /**
-     * Checks only if RespectBindingFeature is enabled
-     * checks if all required wsdl extensions in the
-     * corresponding wsdl:Port are understood when RespectBindingFeature is enabled.
-     * @throws WebServiceException
-     *      when any wsdl extension that has wsdl:required=true is not understood
-     */
-    private void checkAllWSDLExtensionsUnderstood(PortInfo port, WSBinding binding) {
-        if (port.portModel != null && binding.isFeatureEnabled(RespectBindingFeature.class)) {
-            ((WSDLPortImpl) port.portModel).areRequiredExtensionsUnderstood();
-        }
-    }
-
     public EndpointAddress getEndpointAddress(QName qName) {
         return ports.get(qName).targetEndpoint;
     }
@@ -465,8 +431,7 @@ public class WSServiceDelegate extends WSService {
         PortInfo port = safeGetPort(portName);
         BindingImpl binding = port.createBinding(features,null);
         Dispatch<Object> dispatch = Stubs.createJAXBDispatch(
-                portName, this, binding, jaxbContext, mode,
-                createPipeline(port, binding), wsepr);
+                port, binding, jaxbContext, mode,wsepr);
          serviceInterceptor.postCreateDispatch((WSBindingProvider)dispatch);
          return dispatch;
     }
@@ -599,8 +564,6 @@ public class WSServiceDelegate extends WSService {
     public Iterator<QName> getPorts() throws WebServiceException {
         // KK: the spec seems to be ambigous about whether
         // this returns ports that are dynamically added or not.
-        if (ports.isEmpty())
-            throw new WebServiceException("dii.service.no.wsdl.available");
         return ports.keySet().iterator();
     }
 
@@ -625,7 +588,7 @@ public class WSServiceDelegate extends WSService {
         }
 
         BindingImpl binding = eif.createBinding(webServiceFeatures,portInterface);
-        SEIStub pis = new SEIStub(this, binding, eif.model, createPipeline(eif, binding), epr);
+        SEIStub pis = new SEIStub(eif, binding, eif.model, epr);
 
         T proxy = portInterface.cast(Proxy.newProxyInstance(portInterface.getClassLoader(),
                 new Class[]{portInterface, WSBindingProvider.class, Closeable.class}, pis));
@@ -706,3 +669,5 @@ public class WSServiceDelegate extends WSService {
 
     private static final WebServiceFeature[] EMPTY_FEATURES = new WebServiceFeature[0];
 }
+
+

@@ -33,7 +33,7 @@ import com.sun.tools.internal.xjc.outline.Outline;
  * A type.
  *
  * See the package documentaion for details.
- *
+ * 
  * @author Kohsuke Kawaguchi
  */
 public interface NType {

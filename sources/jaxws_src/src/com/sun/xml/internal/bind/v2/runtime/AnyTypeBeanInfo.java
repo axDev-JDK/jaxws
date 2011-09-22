@@ -55,7 +55,7 @@ import org.xml.sax.SAXException;
 final class AnyTypeBeanInfo extends JaxBeanInfo<Object> implements AttributeAccessor {
 
     private boolean nilIncluded = false;
-
+    
     public AnyTypeBeanInfo(JAXBContextImpl grammar,RuntimeTypeInfo anyTypeInfo) {
         super(grammar, anyTypeInfo, Object.class, new QName(WellKnownNamespace.XML_SCHEMA,"anyType"), false, true, false);
     }
@@ -117,7 +117,7 @@ final class AnyTypeBeanInfo extends JaxBeanInfo<Object> implements AttributeAcce
             String name = a.getName();
             if(local==null) local = name;
             if (uri.equals(WellKnownNamespace.XML_SCHEMA_INSTANCE) && ("nil".equals(local))) {
-                nilIncluded = true;
+                isNilIncluded = true;
             }
             if(name.startsWith("xmlns")) continue;// DOM reports ns decls as attributes
 
@@ -169,7 +169,4 @@ final class AnyTypeBeanInfo extends JaxBeanInfo<Object> implements AttributeAcce
     private static final DomLoader domLoader = new DomLoader(domHandler);
     private final XsiTypeLoader substLoader = new XsiTypeLoader(this);
 
-    public boolean isNilIncluded() {
-        return nilIncluded;
     }
-}

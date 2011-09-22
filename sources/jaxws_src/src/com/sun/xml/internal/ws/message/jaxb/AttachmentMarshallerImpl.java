@@ -26,6 +26,7 @@
 package com.sun.xml.internal.ws.message.jaxb;
 
 import com.sun.xml.internal.ws.api.message.Attachment;
+import com.sun.xml.internal.ws.api.message.AttachmentSet;
 import com.sun.xml.internal.ws.message.AttachmentSetImpl;
 import com.sun.xml.internal.ws.message.DataHandlerAttachment;
 
@@ -46,9 +47,9 @@ import java.util.UUID;
  * @see JAXBMessage
  */
 final class AttachmentMarshallerImpl extends AttachmentMarshaller {
-    private AttachmentSetImpl attachments;
+    private AttachmentSet attachments;
 
-    public AttachmentMarshallerImpl(AttachmentSetImpl attachemnts) {
+    public AttachmentMarshallerImpl(AttachmentSet attachemnts) {
         this.attachments = attachemnts;
     }
 

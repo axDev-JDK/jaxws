@@ -28,7 +28,7 @@ package com.sun.xml.internal.xsom;
 
 /**
  * Base interface for {@link XSComplexType} and {@link XSSimpleType}.
- *
+ * 
  * @author
  *  Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */

@@ -68,12 +68,12 @@ public class StreamReaderBufferCreator extends StreamBufferCreator {
      * The stream reader must be positioned at the start of the document
      * or the start of an element.
      * <p>
-     * If the stream is positioned at the start of the document then the
-     * whole document is stored and after storing the stream will be positioned
+     * If the stream is positioned at the start of the document then the 
+     * whole document is stored and after storing the stream will be positioned 
      * at the end of the document.
      * <p>
-     * If the stream is positioned at the start of an element then the
-     * element and all its children will be stored and after storing the stream
+     * If the stream is positioned at the start of an element then the 
+     * element and all its children will be stored and after storing the stream 
      * will be positioned at the next event after the end of the element.
      * <p>
      * @return the mutable stream buffer.
@@ -93,10 +93,10 @@ public class StreamReaderBufferCreator extends StreamBufferCreator {
      * Creates the buffer from a stream reader that is an element fragment.
      * <p>
      * The stream reader will be moved to the position of the next start of
-     * an element if the stream reader is not already positioned at the start
+     * an element if the stream reader is not already positioned at the start 
      * of an element.
      * <p>
-     * The element and all its children will be stored and after storing the stream
+     * The element and all its children will be stored and after storing the stream 
      * will be positioned at the next event after the end of the element.
      * <p>
      * @param storeInScopeNamespaces true if in-scope namespaces of the element
@@ -149,7 +149,7 @@ public class StreamReaderBufferCreator extends StreamBufferCreator {
             default:
                 throw new XMLStreamException("XMLStreamReader not positioned at a document or element");
         }
-
+        
         increaseTreeCount();
     }
 

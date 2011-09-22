@@ -33,9 +33,9 @@ import java.util.Map;
 
 /**
  * Schema.
- *
+ * 
  * Container of declarations that belong to the same target namespace.
- *
+ * 
  * @author
  *  Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */

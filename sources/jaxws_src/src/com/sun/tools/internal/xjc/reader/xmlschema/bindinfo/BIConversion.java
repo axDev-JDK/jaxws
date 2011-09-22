@@ -58,11 +58,11 @@ import org.xml.sax.Locator;
 
 /**
  * Conversion declaration.
- *
+ * 
  * <p>
  * A conversion declaration specifies how an XML type gets mapped
  * to a Java type.
- *
+ * 
  * @author
  *     Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
@@ -89,7 +89,7 @@ public abstract class BIConversion extends AbstractDeclarationImpl {
     public abstract TypeUse getTypeUse( XSSimpleType owner );
 
     public QName getName() { return NAME; }
-
+    
     /** Name of the conversion declaration. */
     public static final QName NAME = new QName(
         Const.JAXB_NSURI, "conversion" );
@@ -233,7 +233,7 @@ public abstract class BIConversion extends AbstractDeclarationImpl {
 
                 // RESULT: <value>.<method>()
                 inv = $value.invoke(printMethod);
-
+                
                 // check value is not null ... if(value == null) return null;
                 JConditional jcon = marshal.body()._if($value.eq(JExpr._null()));
                 jcon._then()._return(JExpr._null());
@@ -346,3 +346,4 @@ public abstract class BIConversion extends AbstractDeclarationImpl {
         }
     }
 }
+

@@ -44,7 +44,7 @@ import org.xml.sax.SAXException;
 
 /**
  * {@link JaxBeanInfo} implementation that binds T[] to a list of simple types.
- *
+ * 
  * @author Kohsuke Kawaguchi
  */
 final class ValueListBeanInfoImpl extends JaxBeanInfo {

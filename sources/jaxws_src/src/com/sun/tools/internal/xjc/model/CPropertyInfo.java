@@ -170,7 +170,7 @@ public abstract class CPropertyInfo implements PropertyInfo<NType,NClass>, CCust
      *
      * @deprecated
      *      marked as deprecated so that we can spot the use of this method.
-     *
+     * 
      * @see #getName(boolean)
      */
     public String getName() {

@@ -179,7 +179,7 @@ public interface XMLStreamReaderEx extends XMLStreamReader {
      * The parser can often do this more efficiently than
      * {@code getElementText().trim()}.
      *
-     * @see #getElementText()
+     * @see #getElementText() 
      */
     String getElementTextTrim() throws XMLStreamException;
 }

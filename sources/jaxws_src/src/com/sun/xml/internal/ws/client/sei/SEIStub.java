@@ -26,7 +26,9 @@
 package com.sun.xml.internal.ws.client.sei;
 
 import com.sun.istack.internal.NotNull;
+import com.sun.istack.internal.Nullable;
 import com.sun.xml.internal.ws.api.SOAPVersion;
+import com.sun.xml.internal.ws.api.client.WSPortInfo;
 import com.sun.xml.internal.ws.api.addressing.WSEndpointReference;
 import com.sun.xml.internal.ws.api.message.Header;
 import com.sun.xml.internal.ws.api.message.Headers;
@@ -36,12 +38,10 @@ import com.sun.xml.internal.ws.api.model.wsdl.WSDLBoundOperation;
 import com.sun.xml.internal.ws.api.pipe.Tube;
 import com.sun.xml.internal.ws.api.pipe.Fiber;
 import com.sun.xml.internal.ws.binding.BindingImpl;
-import com.sun.xml.internal.ws.client.RequestContext;
-import com.sun.xml.internal.ws.client.ResponseContextReceiver;
-import com.sun.xml.internal.ws.client.Stub;
-import com.sun.xml.internal.ws.client.WSServiceDelegate;
+import com.sun.xml.internal.ws.client.*;
 import com.sun.xml.internal.ws.model.JavaMethodImpl;
 import com.sun.xml.internal.ws.model.SOAPSEIModel;
+import com.sun.xml.internal.ws.wsdl.OperationDispatcher;
 
 import javax.xml.namespace.QName;
 import java.lang.reflect.InvocationHandler;
@@ -57,11 +57,23 @@ import java.util.Map;
  * @author Kohsuke Kawaguchi
  */
 public final class SEIStub extends Stub implements InvocationHandler {
+
+    @Deprecated
     public SEIStub(WSServiceDelegate owner, BindingImpl binding, SOAPSEIModel seiModel, Tube master, WSEndpointReference epr) {
-        super(owner,master, binding, seiModel.getPort(), seiModel.getPort().getAddress(),epr);
+        super(owner, master, binding, seiModel.getPort(), seiModel.getPort().getAddress(), epr);
         this.seiModel = seiModel;
         this.soapVersion = binding.getSOAPVersion();
+        initMethodHandlers();
+    }
 
+    public SEIStub(WSPortInfo portInfo, BindingImpl binding, SOAPSEIModel seiModel, WSEndpointReference epr) {
+        super(portInfo, binding, seiModel.getPort().getAddress(),epr);
+        this.seiModel = seiModel;
+        this.soapVersion = binding.getSOAPVersion();
+        initMethodHandlers();
+    }
+
+    private void initMethodHandlers() {
         Map<WSDLBoundOperation, JavaMethodImpl> syncs = new HashMap<WSDLBoundOperation, JavaMethodImpl>();
 
         // fill in methodHandlers.
@@ -94,6 +106,16 @@ public final class SEIStub extends Stub implements InvocationHandler {
 
     public final SOAPVersion soapVersion;
 
+    /**
+     * Nullable when there is no associated WSDL Model
+     * @return
+     */
+    public @Nullable
+    OperationDispatcher getOperationDispatcher() {
+        if(operationDispatcher == null && wsdlPort != null)
+            operationDispatcher = new OperationDispatcher(wsdlPort,binding,seiModel);
+        return operationDispatcher;
+    }
 
     /**
      * For each method on the port interface we have

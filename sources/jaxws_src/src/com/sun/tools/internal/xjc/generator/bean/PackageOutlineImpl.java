@@ -53,11 +53,11 @@ import com.sun.tools.internal.xjc.outline.Aspect;
 /**
  * {@link PackageOutline} enhanced with schema2java specific
  * information.
- *
+ * 
  * @author
  *     Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
-final class PackageOutlineImpl implements PackageOutline {
+public final class PackageOutlineImpl implements PackageOutline {
     private final Model _model;
     private final JPackage _package;
     private final ObjectFactoryGenerator objectFactoryGenerator;
@@ -220,7 +220,7 @@ final class PackageOutlineImpl implements PackageOutline {
      * <p>
      * Because JAX-WS often reassigns the "" namespace URI,
      * and when that happens it unintentionally also renames (normally
-     * unqualified) local elements, prefer non-"" URI when there's a tie.
+     * unqualified) local elements, prefer non-"" URI when there's a tie. 
      */
     private String getMostUsedURI(HashMap<String, Integer> map) {
         String mostPopular = null;

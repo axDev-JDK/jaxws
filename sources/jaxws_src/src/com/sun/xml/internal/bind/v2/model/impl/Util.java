@@ -74,13 +74,13 @@ final class Util {
 
         return null;
     }
-
+    
     static MimeType calcExpectedMediaType(AnnotationSource primarySource,
                         ModelBuilder builder ) {
         XmlMimeType xmt = primarySource.readAnnotation(XmlMimeType.class);
         if(xmt==null)
             return null;
-
+        
         try {
             return new MimeType(xmt.value());
         } catch (MimeTypeParseException e) {

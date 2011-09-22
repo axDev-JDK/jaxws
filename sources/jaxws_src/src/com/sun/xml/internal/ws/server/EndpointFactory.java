@@ -29,15 +29,10 @@ import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
 import com.sun.xml.internal.ws.api.BindingID;
 import com.sun.xml.internal.ws.api.WSBinding;
+import com.sun.xml.internal.ws.api.policy.PolicyResolverFactory;
+import com.sun.xml.internal.ws.api.policy.PolicyResolver;
 import com.sun.xml.internal.ws.api.model.wsdl.WSDLPort;
-import com.sun.xml.internal.ws.api.server.AsyncProvider;
-import com.sun.xml.internal.ws.api.server.Container;
-import com.sun.xml.internal.ws.api.server.ContainerResolver;
-import com.sun.xml.internal.ws.api.server.InstanceResolver;
-import com.sun.xml.internal.ws.api.server.Invoker;
-import com.sun.xml.internal.ws.api.server.SDDocument;
-import com.sun.xml.internal.ws.api.server.SDDocumentSource;
-import com.sun.xml.internal.ws.api.server.WSEndpoint;
+import com.sun.xml.internal.ws.api.server.*;
 import com.sun.xml.internal.ws.api.wsdl.parser.WSDLParserExtension;
 import com.sun.xml.internal.ws.api.wsdl.parser.XMLEntityResolver;
 import com.sun.xml.internal.ws.api.wsdl.parser.XMLEntityResolver.Parser;
@@ -60,6 +55,8 @@ import com.sun.xml.internal.ws.util.ServiceConfigurationError;
 import com.sun.xml.internal.ws.util.ServiceFinder;
 import com.sun.xml.internal.ws.wsdl.parser.RuntimeWSDLParser;
 import com.sun.xml.internal.ws.wsdl.writer.WSDLGenerator;
+import com.sun.xml.internal.ws.policy.PolicyMap;
+import com.sun.xml.internal.ws.policy.PolicyUtil;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.SAXException;
 
@@ -69,6 +66,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.ws.Provider;
 import javax.xml.ws.WebServiceException;
 import javax.xml.ws.WebServiceProvider;
+import javax.xml.ws.WebServiceFeature;
 import javax.xml.ws.soap.SOAPBinding;
 import java.io.IOException;
 import java.net.URL;
@@ -102,7 +100,8 @@ public class EndpointFactory {
         @Nullable QName serviceName, @Nullable QName portName,
         @Nullable Container container, @Nullable WSBinding binding,
         @Nullable SDDocumentSource primaryWsdl,
-        @Nullable Collection<? extends SDDocumentSource> metadata, EntityResolver resolver, boolean isTransportSynchronous) {
+        @Nullable Collection<? extends SDDocumentSource> metadata,
+        EntityResolver resolver, boolean isTransportSynchronous) {
 
         if(implType ==null)
             throw new IllegalArgumentException();
@@ -166,12 +165,25 @@ public class EndpointFactory {
 
         WebServiceFeatureList features=((BindingImpl)binding).getFeatures();
         features.parseAnnotations(implType);
-
+        PolicyMap policyMap = null;
         // create terminal pipe that invokes the application
         if (implType.getAnnotation(WebServiceProvider.class)!=null) {
-            //Provider case: Enable Addressing from WSDL only if it has RespectBindingFeature enabled
-            if (wsdlPort != null)
-                features.mergeFeatures(wsdlPort,true,true);
+            //TODO incase of Provider, provide a way to User for complete control of the message processing by giving
+            // ability to turn off the WSDL/Policy based features and its associated tubes.
+
+            //Even in case of Provider, merge all features configured via WSDL/Policy or deployment configuration
+            Iterable<WebServiceFeature> configFtrs;
+            if(wsdlPort != null) {
+                 policyMap = wsdlPort.getOwner().getParent().getPolicyMap();
+                 //Merge features from WSDL and other policy configuration
+                configFtrs = wsdlPort.getFeatures();
+            } else {
+                //No WSDL, so try to merge features from Policy configuration
+                policyMap = PolicyResolverFactory.create().resolve(
+                        new PolicyResolver.ServerContext(null, container, implType, false));
+                configFtrs = PolicyUtil.getPortScopedFeatures(policyMap,serviceName,portName);
+            }
+            features.mergeFeatures(configFtrs, true);
             terminal = ProviderInvokerTube.create(implType,binding,invoker);
         } else {
             // Create runtime model for non Provider endpoints
@@ -188,9 +200,11 @@ public class EndpointFactory {
                 wsdlPort = getWSDLPort(primaryDoc, docList, serviceName, portName, container);
                 seiModel.freeze(wsdlPort);
             }
+            policyMap = wsdlPort.getOwner().getParent().getPolicyMap();
             // New Features might have been added in WSDL through Policy.
+            //Merge features from WSDL and other policy configuration
             // This sets only the wsdl features that are not already set(enabled/disabled)
-            features.mergeFeatures(wsdlPort, false, true);
+            features.mergeFeatures(wsdlPort.getFeatures(), true);
             terminal= new SEIInvokerTube(seiModel,invoker,binding);
         }
 
@@ -204,8 +218,9 @@ public class EndpointFactory {
         }
         ServiceDefinitionImpl serviceDefiniton = (primaryDoc != null) ? new ServiceDefinitionImpl(docList, primaryDoc) : null;
 
-        return new WSEndpointImpl<T>(serviceName, portName, binding,container,seiModel,wsdlPort,implType, serviceDefiniton,terminal, isTransportSynchronous);
+        return new WSEndpointImpl<T>(serviceName, portName, binding,container,seiModel,wsdlPort,implType, serviceDefiniton,terminal, isTransportSynchronous, policyMap);
     }
+
 
     /**
      * Goes through the original metadata documents and collects the required ones.
@@ -274,10 +289,10 @@ public class EndpointFactory {
         WebServiceProvider wsProvider = clz.getAnnotation(WebServiceProvider.class);
         WebService ws = clz.getAnnotation(WebService.class);
         if (wsProvider == null && ws == null) {
-            throw new IllegalArgumentException(clz +" has neither @WebSerivce nor @WebServiceProvider annotation");
+            throw new IllegalArgumentException(clz +" has neither @WebService nor @WebServiceProvider annotation");
         }
         if (wsProvider != null && ws != null) {
-            throw new IllegalArgumentException(clz +" has both @WebSerivce and @WebServiceProvider annotations");
+            throw new IllegalArgumentException(clz +" has both @WebService and @WebServiceProvider annotations");
         }
         if (wsProvider != null) {
             if (Provider.class.isAssignableFrom(clz) || AsyncProvider.class.isAssignableFrom(clz)) {
@@ -438,7 +453,8 @@ public class EndpointFactory {
     private static void verifyPrimaryWSDL(@NotNull SDDocumentSource primaryWsdl, @NotNull QName serviceName) {
         SDDocumentImpl primaryDoc = SDDocumentImpl.create(primaryWsdl,serviceName,null);
         if (!(primaryDoc instanceof SDDocument.WSDL)) {
-            throw new WebServiceException("Not a primary WSDL="+primaryWsdl.getSystemId());
+            throw new WebServiceException(primaryWsdl.getSystemId()+
+                    " is not a WSDL. But it is passed as a primary WSDL");
         }
         SDDocument.WSDL wsdlDoc = (SDDocument.WSDL)primaryDoc;
         if (!wsdlDoc.hasService()) {
@@ -446,7 +462,9 @@ public class EndpointFactory {
                 throw new WebServiceException("Not a primary WSDL="+primaryWsdl.getSystemId()+
                         " since it doesn't have Service "+serviceName);
             else
-                throw new WebServiceException("WSDL "+primaryDoc.getSystemId()+" has the following services "+wsdlDoc.getAllServices()+" but not "+serviceName+". Maybe you forgot to specify a service name in @WebService/@WebServiceProvider?");
+                throw new WebServiceException("WSDL "+primaryDoc.getSystemId()
+                        +" has the following services "+wsdlDoc.getAllServices()
+                        +" but not "+serviceName+". Maybe you forgot to specify a serviceName and/or targetNamespace in @WebService/@WebServiceProvider?");
         }
     }
 

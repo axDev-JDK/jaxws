@@ -98,7 +98,7 @@ public interface WSDLBoundOperation extends WSDLObject, WSDLExtensible {
      *
      * <p>
      * It's possible for an operation to define no body part, in which case
-     * this method returns null.
+     * this method returns null. 
      */
     @Nullable QName getReqPayloadName();
 

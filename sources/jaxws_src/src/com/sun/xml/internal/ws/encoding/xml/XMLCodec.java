@@ -50,7 +50,7 @@ public final class XMLCodec implements Codec {
     private static final ContentType contentType = new ContentTypeImpl(XML_TEXT_MIME_TYPE);
 
     private final WSBinding binding;
-
+    
     public XMLCodec(WSBinding binding) {
         this.binding = binding;
     }
@@ -93,5 +93,5 @@ public final class XMLCodec implements Codec {
     public void decode(ReadableByteChannel in, String contentType, Packet packet) {
         // TODO
         throw new UnsupportedOperationException();
-    }
+    }    
 }

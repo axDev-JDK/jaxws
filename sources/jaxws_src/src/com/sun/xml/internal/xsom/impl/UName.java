@@ -31,7 +31,7 @@ import java.util.Comparator;
 
 /**
  * UName.
- *
+ * 
  * @author Kohsuke Kawaguchi (kk@kohsuke.org)
  */
 public final class UName {
@@ -47,7 +47,7 @@ public final class UName {
         this.localName = _localName.intern();
         this.qname = _qname.intern();
     }
-
+    
     public UName( String nsUri, String localName ) {
         this(nsUri,localName,localName);
     }
@@ -59,7 +59,7 @@ public final class UName {
     private final String nsUri;
     private final String localName;
     private final String qname;
-
+    
     public String getName() { return localName; }
     public String getNamespaceURI() { return nsUri; }
     public String getQualifiedName() { return qname; }

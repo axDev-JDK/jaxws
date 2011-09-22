@@ -36,7 +36,7 @@ import com.sun.xml.internal.bind.v2.runtime.XMLSerializer;
  * lister classes. Do not modify the generated copies.
  */
 final class PrimitiveArrayListerDouble<BeanT> extends Lister<BeanT,double[],Double,PrimitiveArrayListerDouble.DoubleArrayPack> {
-
+    
     private PrimitiveArrayListerDouble() {
     }
 

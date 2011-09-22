@@ -22,13 +22,6 @@
  * CA 95054 USA or visit www.sun.com if you need additional information or
  * have any questions.
  */
-/*
- * $Id: SOAPElementFactory.java,v 1.12 2006/03/30 00:59:41 ofung Exp $
- * $Revision: 1.12 $
- * $Date: 2006/03/30 00:59:41 $
- */
-
-
 
 package javax.xml.soap;
 

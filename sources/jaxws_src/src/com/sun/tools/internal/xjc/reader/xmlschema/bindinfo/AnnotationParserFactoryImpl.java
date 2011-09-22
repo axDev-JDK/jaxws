@@ -48,7 +48,7 @@ import org.xml.sax.helpers.XMLFilterImpl;
 /**
  * Implementation of XSOM {@link AnnotationParserFactory} that
  * parses JAXB customization declarations.
- *
+ * 
  * @author
  *     Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */

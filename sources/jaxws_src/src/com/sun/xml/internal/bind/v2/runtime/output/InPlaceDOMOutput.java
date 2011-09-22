@@ -32,7 +32,7 @@ import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 /**
- *
+ * 
  * @author Kohsuke Kawaguchi
  */
 public final class InPlaceDOMOutput extends SAXOutput {

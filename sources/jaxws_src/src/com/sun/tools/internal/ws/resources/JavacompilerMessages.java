@@ -22,6 +22,7 @@
  * CA 95054 USA or visit www.sun.com if you need additional information or
  * have any questions.
  */
+
 package com.sun.tools.internal.ws.resources;
 
 import com.sun.xml.internal.ws.util.localization.Localizable;
@@ -31,7 +32,7 @@ import com.sun.xml.internal.ws.util.localization.Localizer;
 
 /**
  * Defines string formatting method for each constant in the resource file
- *
+ * 
  */
 public final class JavacompilerMessages {
 
@@ -44,7 +45,7 @@ public final class JavacompilerMessages {
 
     /**
      * {0} is not available in the classpath, requires Sun's JDK version 5.0 or latter.
-     *
+     * 
      */
     public static String JAVACOMPILER_CLASSPATH_ERROR(Object arg0) {
         return localizer.localize(localizableJAVACOMPILER_CLASSPATH_ERROR(arg0));
@@ -56,7 +57,7 @@ public final class JavacompilerMessages {
 
     /**
      * There is no such method {0} available, requires Sun's JDK version 5.0 or latter.
-     *
+     * 
      */
     public static String JAVACOMPILER_NOSUCHMETHOD_ERROR(Object arg0) {
         return localizer.localize(localizableJAVACOMPILER_NOSUCHMETHOD_ERROR(arg0));
@@ -68,7 +69,7 @@ public final class JavacompilerMessages {
 
     /**
      * error : {0}.
-     *
+     * 
      */
     public static String JAVACOMPILER_ERROR(Object arg0) {
         return localizer.localize(localizableJAVACOMPILER_ERROR(arg0));

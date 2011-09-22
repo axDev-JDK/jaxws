@@ -71,6 +71,11 @@ public class XsiNilLoader extends ProxyLoader {
             return defaultLoader.getExpectedChildElements();
         }
 
+        @Override
+        public Collection<QName> getExpectedAttributes() {
+            return defaultLoader.getExpectedAttributes();
+        }
+
     /**
      * Called when xsi:nil='true' was found.
      */

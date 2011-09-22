@@ -43,7 +43,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -87,6 +86,7 @@ public class HttpTransportPipe extends AbstractTubeImpl {
         throw new IllegalStateException("HttpTransportPipe's processResponse shouldn't be called.");
     }
 
+    @Override
     public Packet process(Packet request) {
         HttpClientTransport con;
         try {
@@ -104,7 +104,7 @@ public class HttpTransportPipe extends AbstractTubeImpl {
             ContentType ct = codec.getStaticContentType(request);
             if (ct == null) {
                 ByteArrayBuffer buf = new ByteArrayBuffer();
-
+                
                 ct = codec.encode(request, buf);
                 // data size is available, set it as Content-Length
                 reqHeaders.put("Content-Length", Collections.singletonList(Integer.toString(buf.size())));
@@ -115,10 +115,10 @@ public class HttpTransportPipe extends AbstractTubeImpl {
                 if (binding instanceof SOAPBinding) {
                     writeSOAPAction(reqHeaders, ct.getSOAPActionHeader(),request);
                 }
-
+                
                 if(dump)
                     dump(buf, "HTTP request", reqHeaders);
-
+                
                 buf.writeTo(con.getOutput());
             } else {
                 // Set static Content-Type
@@ -129,7 +129,7 @@ public class HttpTransportPipe extends AbstractTubeImpl {
                 if (binding instanceof SOAPBinding) {
                     writeSOAPAction(reqHeaders, ct.getSOAPActionHeader(), request);
                 }
-
+                
                 if(dump) {
                     ByteArrayBuffer buf = new ByteArrayBuffer();
                     codec.encode(request, buf);
@@ -159,23 +159,21 @@ public class HttpTransportPipe extends AbstractTubeImpl {
                 dump(buf,"HTTP response - "+request.endpointAddress+" - "+con.statusCode, con.getHeaders());
                 response = buf.newInputStream();
             }
-
+            
             if (con.statusCode== WSHTTPConnection.ONEWAY || (request.expectReply != null && !request.expectReply)) {
                 checkStatusCodeOneway(response, con.statusCode, con.statusMessage);   // throws ClientTransportException
                 return request.createClientResponse(null);    // one way. no response given.
             }
 
-            checkStatusCode(response, con.statusCode, con.statusMessage); // throws ClientTransportException
+            checkStatusCode(response, con); // throws ClientTransportException
 
             String contentType = con.getContentType();
-            if (contentType == null) {
-                throw new WebServiceException("No Content-type in the header!");
+            if (contentType != null && contentType.contains("text/html") && binding instanceof SOAPBinding) {
+                throw new ClientTransportException(ClientMessages.localizableHTTP_STATUS_CODE(con.statusCode, con.statusMessage));
             }
-
             // TODO check if returned MIME type is the same as that which was sent
             // or is acceptable if an Accept header was used
             Packet reply = request.createClientResponse(null);
-            //reply.addSatellite(new HttpResponseProperties(con));
             reply.wasTransportSecure = con.isSecure();
             codec.decode(response, contentType, reply);
             return reply;
@@ -186,17 +184,43 @@ public class HttpTransportPipe extends AbstractTubeImpl {
         }
     }
 
-    private void checkStatusCode(InputStream in, int statusCode, String statusMessage) throws IOException {
+    private void checkStatusCode(InputStream in, HttpClientTransport con) throws IOException {
+        int statusCode = con.statusCode;
+        String statusMessage = con.statusMessage;
         // SOAP1.1 and SOAP1.2 differ here
         if (binding instanceof SOAPBinding) {
-            if (statusCode != HttpURLConnection.HTTP_OK && statusCode != HttpURLConnection.HTTP_INTERNAL_ERROR) {
-                if (in != null) {
-                    in.close();
+            if (binding.getSOAPVersion() == SOAPVersion.SOAP_12) {
+                //In SOAP 1.2, Fault messages can be sent with 4xx and 5xx error codes
+                if (statusCode != HttpURLConnection.HTTP_OK && !isErrorCode(statusCode)) {
+                    if (in != null) {
+                        in.close();
+                    }
+                    throw new ClientTransportException(ClientMessages.localizableHTTP_STATUS_CODE(statusCode, statusMessage));
+                } else if(isErrorCode(statusCode)){
+                    // if there is no response message, throw ClientTransportException that captures error code.
+                    if(con.contentLength == 0) {
+                        throw new ClientTransportException(ClientMessages.localizableHTTP_STATUS_CODE(statusCode, statusMessage));
+                    }
+                    //there is some response message, so let it go
                 }
-                throw new ClientTransportException(ClientMessages.localizableHTTP_STATUS_CODE(statusCode, statusMessage));
+            } else {
+                if (statusCode != HttpURLConnection.HTTP_OK && statusCode != HttpURLConnection.HTTP_INTERNAL_ERROR) {
+                    if (in != null) {
+                        in.close();
+                    }
+                    throw new ClientTransportException(ClientMessages.localizableHTTP_STATUS_CODE(statusCode, statusMessage));
+                }
             }
         }
         // Every status code is OK for XML/HTTP
+    }
+
+    private boolean isErrorCode(int code) {              
+        //if(code/100 == 5/*Server-side error*/ || code/100 == 4 /*client error*/ ) {
+        if(code == 500|| code == 400 ) {
+            return true;
+        }
+        return false;
     }
 
     private void checkStatusCodeOneway(InputStream in, int statusCode, String statusMessage) throws IOException {

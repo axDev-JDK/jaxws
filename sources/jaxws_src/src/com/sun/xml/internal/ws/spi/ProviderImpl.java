@@ -61,11 +61,13 @@ import javax.xml.ws.WebServiceException;
 import javax.xml.ws.WebServiceFeature;
 import javax.xml.ws.spi.Provider;
 import javax.xml.ws.spi.ServiceDelegate;
+import javax.xml.ws.spi.Invoker;
 import javax.xml.ws.wsaddressing.W3CEndpointReference;
 import java.net.URL;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The entry point to the JAX-WS RI from the JAX-WS API.
@@ -93,6 +95,14 @@ public class ProviderImpl extends Provider {
          return new WSServiceDelegate(wsdlDocumentLocation, serviceName, serviceClass);
     }
 
+    public ServiceDelegate createServiceDelegate( URL wsdlDocumentLocation, QName serviceName, Class serviceClass,
+                                                  WebServiceFeature ... features) {
+        if (features.length > 0) {
+            throw new WebServiceException("Doesn't support any Service specific features");
+        }
+        return new WSServiceDelegate(wsdlDocumentLocation, serviceName, serviceClass);
+    }
+
     @Override
     public Endpoint createAndPublishEndpoint(String address,
                                              Object implementor) {
@@ -103,6 +113,25 @@ public class ProviderImpl extends Provider {
         return endpoint;
     }
 
+    public Endpoint createEndpoint(String bindingId, Object implementor, WebServiceFeature... features) {
+        return new EndpointImpl(
+            (bindingId != null) ? BindingID.parse(bindingId) : BindingID.parse(implementor.getClass()),
+            implementor, features);
+    }
+
+    public Endpoint createAndPublishEndpoint(String address, Object implementor, WebServiceFeature... features) {
+        Endpoint endpoint = new EndpointImpl(
+            BindingID.parse(implementor.getClass()), implementor, features);
+        endpoint.publish(address);
+        return endpoint;
+    }
+
+    public Endpoint createEndpoint(String bindingId, Class implementorClass, Invoker invoker, WebServiceFeature... features) {
+        return new EndpointImpl(
+            (bindingId != null) ? BindingID.parse(bindingId) : BindingID.parse(implementorClass),
+            implementorClass, invoker, features);
+    }
+    
     public EndpointReference readEndpointReference(final Source eprInfoset) {
         // EPR constructors are private, so we need privilege escalation.
         // this unmarshalling can only access instances of a fixed, known set of classes,
@@ -138,6 +167,12 @@ public class ProviderImpl extends Provider {
     }
 
     public W3CEndpointReference createW3CEndpointReference(String address, QName serviceName, QName portName, List<Element> metadata, String wsdlDocumentLocation, List<Element> referenceParameters) {
+        return createW3CEndpointReference(address, null, serviceName, portName, metadata, wsdlDocumentLocation, referenceParameters, null, null);
+    }
+
+    public W3CEndpointReference createW3CEndpointReference(String address, QName interfaceName, QName serviceName, QName portName,
+            List<Element> metadata, String wsdlDocumentLocation, List<Element> referenceParameters,
+            List<Element> elements, Map<QName, String> attributes) {
         Container container = ContainerResolver.getInstance().getContainer();
         if (address == null) {
             if (serviceName == null || portName == null) {
@@ -169,6 +204,7 @@ public class ProviderImpl extends Provider {
             throw new IllegalStateException(ProviderApiMessages.NULL_SERVICE());
         }
         //Validate Service and Port in WSDL
+        String wsdlTargetNamespace = null;
         if (wsdlDocumentLocation != null) {
             try {
                 EntityResolver er = XmlUtil.createDefaultCatalogResolver();
@@ -187,16 +223,19 @@ public class ProviderImpl extends Provider {
                             throw new IllegalStateException(ProviderApiMessages.NOTFOUND_PORT_IN_WSDL(
                                     portName,serviceName,wsdlDocumentLocation));
                     }
+                    wsdlTargetNamespace = serviceName.getNamespaceURI();
+                } else {
+                    QName firstService = wsdlDoc.getFirstServiceName();
+                    wsdlTargetNamespace = firstService.getNamespaceURI();
                 }
             } catch (Exception e) {
                 throw new IllegalStateException(ProviderApiMessages.ERROR_WSDL(wsdlDocumentLocation),e);
             }
         }
-        // Supress writing ServiceName and EndpointName in W3C EPR,
-        // Until the ns for those metadata elements is resolved.
         return new WSEndpointReference(
             AddressingVersion.fromSpecClass(W3CEndpointReference.class),
-            address, null /*serviceName*/, null /*portName*/, null, metadata, null /*wsdlDocumentLocation*/, referenceParameters).toSpec(W3CEndpointReference.class);
+            address, serviceName, portName, interfaceName, metadata, wsdlDocumentLocation, wsdlTargetNamespace,referenceParameters, elements, attributes).toSpec(W3CEndpointReference.class);
+
     }
 
     private static JAXBContext getEPRJaxbContext() {

@@ -43,7 +43,7 @@ import org.xml.sax.SAXException;
  * <p>
  * TODO:
  * Finding the optimized FI implementations is a bit hacky and not very
- * extensible. Can we use the service provider mechnism in general for
+ * extensible. Can we use the service provider mechnism in general for 
  * concrete implementations of StAXConnector.
  *
  * @author Ryan.Shoemaker@Sun.COM
@@ -354,9 +354,9 @@ class StAXStreamConnector extends StAXConnector {
         try {
             if (FI_STAX_READER_CLASS == null)
                 return null;
-
+            
             Class c = UnmarshallerImpl.class.getClassLoader().loadClass(
-                    "com.sun.xml.internal.bind.v2.runtime.unmarshaller.FastInfosetConnector");
+                    "com.sun.xml.internal.bind.v2.runtime.unmarshaller.FastInfosetConnector");                
             return c.getConstructor(FI_STAX_READER_CLASS,XmlVisitor.class);
         } catch (Throwable e) {
             return null;

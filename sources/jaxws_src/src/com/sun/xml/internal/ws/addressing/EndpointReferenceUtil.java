@@ -25,8 +25,8 @@
 
 package com.sun.xml.internal.ws.addressing;
 
-import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
+import com.sun.istack.internal.NotNull;
 import com.sun.xml.internal.stream.buffer.XMLStreamBufferSource;
 import com.sun.xml.internal.stream.buffer.stax.StreamWriterBufferCreator;
 import com.sun.xml.internal.ws.api.addressing.AddressingVersion;
@@ -88,7 +88,8 @@ public class EndpointReferenceUtil {
                     AddressingVersion.W3C.nsUri);
             //write wsa:Address
             writer.writeStartElement(AddressingVersion.W3C.getPrefix(),
-                    W3CAddressingConstants.WSA_ADDRESS_NAME, AddressingVersion.W3C.nsUri);
+                    AddressingVersion.W3C.eprType.address
+                    , AddressingVersion.W3C.nsUri);
             writer.writeCharacters(msEpr.addr.uri);
             writer.writeEndElement();
             //TODO: write extension attributes on wsa:Address
@@ -118,7 +119,7 @@ public class EndpointReferenceUtil {
             if (msEpr.portTypeName != null) {
                 writeW3CMetadata(writer);
                 writer.writeStartElement(AddressingVersion.W3C.getWsdlPrefix(),
-                        W3CAddressingConstants.WSAW_INTERFACENAME_NAME,
+                        AddressingVersion.W3C.eprType.portTypeName ,
                         AddressingVersion.W3C.wsdlNsUri);
                 writer.writeNamespace(AddressingVersion.W3C.getWsdlPrefix(),
                         AddressingVersion.W3C.wsdlNsUri);
@@ -134,14 +135,14 @@ public class EndpointReferenceUtil {
                 writeW3CMetadata(writer);
                 //Write service and Port info
                 writer.writeStartElement(AddressingVersion.W3C.getWsdlPrefix(),
-                        W3CAddressingConstants.WSAW_SERVICENAME_NAME,
+                        AddressingVersion.W3C.eprType.serviceName ,
                         AddressingVersion.W3C.wsdlNsUri);
                 writer.writeNamespace(AddressingVersion.W3C.getWsdlPrefix(),
                         AddressingVersion.W3C.wsdlNsUri);
 
                 String servicePrefix = fixNull(msEpr.serviceName.name.getPrefix());
                 if (msEpr.serviceName.portName != null)
-                    writer.writeAttribute(W3CAddressingConstants.WSAW_ENDPOINTNAME_NAME,
+                    writer.writeAttribute(AddressingVersion.W3C.eprType.portName,
                             msEpr.serviceName.portName);
 
                 writer.writeNamespace(servicePrefix, msEpr.serviceName.name.getNamespaceURI());
@@ -201,7 +202,7 @@ public class EndpointReferenceUtil {
 
     private static void writeW3CMetadata(StreamWriterBufferCreator writer) throws XMLStreamException {
         if (!w3cMetadataWritten) {
-            writer.writeStartElement(AddressingVersion.W3C.getPrefix(), W3CAddressingConstants.WSA_METADATA_NAME, AddressingVersion.W3C.nsUri);
+            writer.writeStartElement(AddressingVersion.W3C.getPrefix(), AddressingVersion.W3C.eprType.wsdlMetadata.getLocalPart(), AddressingVersion.W3C.nsUri);
             w3cMetadataWritten = true;
         }
     }
@@ -221,7 +222,7 @@ public class EndpointReferenceUtil {
             if (nodes.item(i).getNodeType() == Node.ELEMENT_NODE) {
                 Element child = (Element) nodes.item(i);
                 if (child.getNamespaceURI().equals(AddressingVersion.W3C.nsUri) &&
-                        child.getLocalName().equals(W3CAddressingConstants.WSA_ADDRESS_NAME)) {
+                        child.getLocalName().equals(AddressingVersion.W3C.eprType.address)) {
                     if (msEpr.addr == null)
                         msEpr.addr = new MemberSubmissionEndpointReference.Address();
                     msEpr.addr.uri = XmlUtil.getTextForNode(child);
@@ -241,18 +242,22 @@ public class EndpointReferenceUtil {
                         }
                     }
                 } else if (child.getNamespaceURI().equals(AddressingVersion.W3C.nsUri) &&
-                        child.getLocalName().equals(W3CAddressingConstants.WSA_METADATA_NAME)) {
+                        child.getLocalName().equals(AddressingVersion.W3C.eprType.wsdlMetadata.getLocalPart())) {
                     NodeList metadata = child.getChildNodes();
+                    String wsdlLocation = child.getAttributeNS(W3CAddressingMetadataConstants.WSAM_WSDLI_ATTRIBUTE_NAMESPACE,
+                            W3CAddressingMetadataConstants.WSAM_WSDLI_ATTRIBUTE_LOCALNAME);
+                    Element wsdlDefinitions = null;
                     for (int j = 0; j < metadata.getLength(); j++) {
                         Node node = metadata.item(j);
                         if (node.getNodeType() != Node.ELEMENT_NODE)
                             continue;
 
                         Element elm = (Element) node;
-                        if (elm.getNamespaceURI().equals(AddressingVersion.W3C.wsdlNsUri) &&
-                                elm.getLocalName().equals(W3CAddressingConstants.WSAW_SERVICENAME_NAME)) {
+                        if ((elm.getNamespaceURI().equals(AddressingVersion.W3C.wsdlNsUri) ||
+                                elm.getNamespaceURI().equals(W3CAddressingMetadataConstants.WSAM_NAMESPACE_NAME)) &&
+                                elm.getLocalName().equals(AddressingVersion.W3C.eprType.serviceName)) {
                             msEpr.serviceName = new MemberSubmissionEndpointReference.ServiceNameType();
-                            msEpr.serviceName.portName = elm.getAttribute(W3CAddressingConstants.WSAW_ENDPOINTNAME_NAME);
+                            msEpr.serviceName.portName = elm.getAttribute(AddressingVersion.W3C.eprType.portName);
 
                             String service = elm.getTextContent();
                             String prefix = XmlUtil.getPrefix(service);
@@ -270,8 +275,9 @@ public class EndpointReferenceUtil {
                                 msEpr.serviceName.name = new QName(null, name);
                             }
                             msEpr.serviceName.attributes = getAttributes(elm);
-                        } else if (elm.getNamespaceURI().equals(AddressingVersion.W3C.wsdlNsUri) &&
-                                elm.getLocalName().equals(W3CAddressingConstants.WSAW_INTERFACENAME_NAME)) {
+                        } else if ((elm.getNamespaceURI().equals(AddressingVersion.W3C.wsdlNsUri) ||
+                                elm.getNamespaceURI().equals(W3CAddressingMetadataConstants.WSAM_NAMESPACE_NAME)) &&
+                                elm.getLocalName().equals(AddressingVersion.W3C.eprType.portTypeName)) {
                             msEpr.portTypeName = new MemberSubmissionEndpointReference.AttributedQName();
 
                             String portType = elm.getTextContent();
@@ -292,18 +298,7 @@ public class EndpointReferenceUtil {
                             msEpr.portTypeName.attributes = getAttributes(elm);
                         } else if(elm.getNamespaceURI().equals(WSDLConstants.NS_WSDL) &&
                                 elm.getLocalName().equals(WSDLConstants.QNAME_DEFINITIONS.getLocalPart())) {
-                            Document doc = DOMUtil.createDom();
-                            Element mexEl = doc.createElementNS(MemberSubmissionAddressingConstants.MEX_METADATA.getNamespaceURI(),
-                                    MemberSubmissionAddressingConstants.MEX_METADATA.getPrefix()+":"
-                                            +MemberSubmissionAddressingConstants.MEX_METADATA.getLocalPart());
-                            Element metadataEl = doc.createElementNS(MemberSubmissionAddressingConstants.MEX_METADATA_SECTION.getNamespaceURI(),
-                                    MemberSubmissionAddressingConstants.MEX_METADATA_SECTION.getPrefix()+":"
-                                            +MemberSubmissionAddressingConstants.MEX_METADATA_SECTION.getLocalPart());
-                            metadataEl.setAttribute(MemberSubmissionAddressingConstants.MEX_METADATA_DIALECT_ATTRIBUTE,
-                                    MemberSubmissionAddressingConstants.MEX_METADATA_DIALECT_VALUE);
-                            metadataEl.appendChild(elm);
-                            mexEl.appendChild(metadataEl);
-
+                            wsdlDefinitions = elm;
                         } else {
                             //TODO : Revisit this
                             //its extensions in META-DATA and should be copied to extensions in MS EPR
@@ -313,6 +308,42 @@ public class EndpointReferenceUtil {
                             msEpr.elements.add(elm);
                         }
                     }
+
+
+                    Document doc = DOMUtil.createDom();
+                    Element mexEl = doc.createElementNS(MemberSubmissionAddressingConstants.MEX_METADATA.getNamespaceURI(),
+                            MemberSubmissionAddressingConstants.MEX_METADATA.getPrefix() + ":"
+                                    + MemberSubmissionAddressingConstants.MEX_METADATA.getLocalPart());
+                    Element metadataEl = doc.createElementNS(MemberSubmissionAddressingConstants.MEX_METADATA_SECTION.getNamespaceURI(),
+                            MemberSubmissionAddressingConstants.MEX_METADATA_SECTION.getPrefix() + ":"
+                                    + MemberSubmissionAddressingConstants.MEX_METADATA_SECTION.getLocalPart());
+                    metadataEl.setAttribute(MemberSubmissionAddressingConstants.MEX_METADATA_DIALECT_ATTRIBUTE,
+                            MemberSubmissionAddressingConstants.MEX_METADATA_DIALECT_VALUE);
+                    if (wsdlDefinitions == null && wsdlLocation != null && !wsdlLocation.equals("")) {
+                        wsdlLocation = wsdlLocation.trim();
+                        String wsdlTns = wsdlLocation.substring(0, wsdlLocation.indexOf(' '));
+                        wsdlLocation = wsdlLocation.substring(wsdlLocation.indexOf(' ') + 1);
+                        Element wsdlEl = doc.createElementNS(WSDLConstants.NS_WSDL,
+                                WSDLConstants.PREFIX_NS_WSDL + ":"
+                                        + WSDLConstants.QNAME_DEFINITIONS.getLocalPart());
+                        Element wsdlImportEl = doc.createElementNS(WSDLConstants.NS_WSDL,
+                                WSDLConstants.PREFIX_NS_WSDL + ":"
+                                        + WSDLConstants.QNAME_IMPORT.getLocalPart());
+                        wsdlImportEl.setAttribute("namespace", wsdlTns);
+                        wsdlImportEl.setAttribute("location", wsdlLocation);
+                        wsdlEl.appendChild(wsdlImportEl);
+                        metadataEl.appendChild(wsdlEl);
+                    } else if(wsdlDefinitions != null){
+                        metadataEl.appendChild(wsdlDefinitions);
+                    }
+                    mexEl.appendChild(metadataEl);
+
+                    if (msEpr.elements == null) {
+                        msEpr.elements = new ArrayList<Element>();
+                    }
+                    msEpr.elements.add(mexEl);
+
+
                 } else {
                     //its extensions
                     if (msEpr.elements == null) {
@@ -351,7 +382,7 @@ public class EndpointReferenceUtil {
                 continue;
 
             //exclude some attributes
-            if (!localName.equals(W3CAddressingConstants.WSAW_ENDPOINTNAME_NAME))
+            if (!localName.equals(AddressingVersion.W3C.eprType.portName))
                 attribs.put(new QName(ns, localName, prefix), n.getNodeValue());
         }
         return attribs;

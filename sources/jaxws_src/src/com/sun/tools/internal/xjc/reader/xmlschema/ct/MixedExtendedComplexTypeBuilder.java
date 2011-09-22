@@ -86,7 +86,7 @@ final class MixedExtendedComplexTypeBuilder extends AbstractExtendedComplexTypeB
         selector.getCurrentBean().addProperty(p);
 
         // adds attributes and we are through.
-        green.attContainer(ct);
+        green.attContainer(ct);        
     }
 
 }

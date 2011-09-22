@@ -33,7 +33,7 @@ import com.sun.xml.internal.xsom.XSUnionSimpleType;
 /**
  * Function object that works on {@link com.sun.xml.internal.xsom.XSSimpleType}
  * and its derived interfaces.
- *
+ * 
  * @author
  *     Kohsuke Kawaguchi (kohsuke,kawaguchi@sun.com)
  */
@@ -42,3 +42,4 @@ public interface XSSimpleTypeFunction<T> {
     T unionSimpleType( XSUnionSimpleType type );
     T restrictionSimpleType( XSRestrictionSimpleType type );
 }
+

@@ -43,7 +43,7 @@ import org.xml.sax.Locator;
  * never show up in the model constructed by XJC.
  *
  * <p>
- * This class is nevertheless defined to make the type checker happy.
+ * This class is nevertheless defined to make the type checker happy. 
  *
  * @author Kohsuke Kawaguchi
  */

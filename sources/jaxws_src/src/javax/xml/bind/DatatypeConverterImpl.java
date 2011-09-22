@@ -47,7 +47,6 @@ import java.util.TimeZone;
  * This class is responsible for whitespace normalization.
  *
  * @author <ul><li>Ryan Shoemaker, Sun Microsystems, Inc.</li></ul>
- * @version $Revision: 1.1 $
  * @since JAXB2.1
  */
 final class DatatypeConverterImpl implements DatatypeConverterInterface {

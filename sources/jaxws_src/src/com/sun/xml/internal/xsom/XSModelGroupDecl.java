@@ -29,7 +29,7 @@ package com.sun.xml.internal.xsom;
 
 /**
  * Named model group declaration.
- *
+ * 
  * @author
  *  Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */

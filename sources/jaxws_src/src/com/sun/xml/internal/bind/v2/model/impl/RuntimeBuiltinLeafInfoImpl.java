@@ -200,6 +200,8 @@ public abstract class RuntimeBuiltinLeafInfoImpl<T> extends BuiltinLeafInfoImpl<
         }
     };
 
+    private static final String DATE = "date";
+    
     /**
      * List of all {@link RuntimeBuiltinLeafInfoImpl}s.
      *
@@ -258,9 +260,16 @@ public abstract class RuntimeBuiltinLeafInfoImpl<T> extends BuiltinLeafInfoImpl<
                     return DatatypeConverterImpl._parseDateTime(text.toString()).getTime();
                 }
                 public String print(Date v) {
+                    XMLSerializer xs = XMLSerializer.getInstance();
+                    QName type = xs.getSchemaType();
                     GregorianCalendar cal = new GregorianCalendar(0,0,0);
                     cal.setTime(v);
-                    return DatatypeConverterImpl._printDateTime(cal);
+                    if ((type != null) && (WellKnownNamespace.XML_SCHEMA.equals(type.getNamespaceURI())) &&
+                            DATE.equals(type.getLocalPart())) {
+                        return DatatypeConverterImpl._printDate(cal);
+                    } else {
+                        return DatatypeConverterImpl._printDateTime(cal);
+                    }
                 }
             },
             new StringImpl<File>(File.class, createXS("string")) {
@@ -512,21 +521,21 @@ public abstract class RuntimeBuiltinLeafInfoImpl<T> extends BuiltinLeafInfoImpl<
 
                     QName type = xs.getSchemaType();
                     if(type!=null) {
-                                                try {
-                                                        checkXmlGregorianCalendarFieldRef(type, cal);
-                                                        String format = xmlGregorianCalendarFormatString.get(type);
-                                                        if(format!=null)
-                                                                return format(format,cal);
-                                                        // TODO:
-                                                        // we need to think about how to report an error where @XmlSchemaType
-                                                        // didn't take effect. a general case is when a transducer isn't even
-                                                        // written to look at that value.
-                                                } catch (javax.xml.bind.MarshalException e){
-                                                        //-xs.handleError(e);
-                                                        System.out.println(e.toString());
-                                                        return "";
-                                                }
-                                        }
+						try {
+							checkXmlGregorianCalendarFieldRef(type, cal);
+							String format = xmlGregorianCalendarFormatString.get(type);
+							if(format!=null)
+								return format(format,cal);
+							// TODO:
+							// we need to think about how to report an error where @XmlSchemaType
+							// didn't take effect. a general case is when a transducer isn't even
+							// written to look at that value.
+						} catch (javax.xml.bind.MarshalException e){
+							//-xs.handleError(e);
+							System.out.println(e.toString());
+							return "";
+						}
+					}
                     return cal.toXMLFormat();
                 }
 
@@ -570,7 +579,7 @@ public abstract class RuntimeBuiltinLeafInfoImpl<T> extends BuiltinLeafInfoImpl<
                         case 's':
                             printNumber(buf,value.getSecond(),2);
                     if (value.getFractionalSecond() != null) {
-                        String frac = value.getFractionalSecond().toString();
+                        String frac = value.getFractionalSecond().toPlainString();
                         //skip leading zero.
                         buf.append(frac.substring(1, frac.length()));
                     }
@@ -838,61 +847,61 @@ public abstract class RuntimeBuiltinLeafInfoImpl<T> extends BuiltinLeafInfoImpl<
         }
     }
 
-        private static void checkXmlGregorianCalendarFieldRef(QName type,
-                XMLGregorianCalendar cal)throws javax.xml.bind.MarshalException{
-                StringBuffer buf = new StringBuffer();
-                int bitField = xmlGregorianCalendarFieldRef.get(type);
-                final int l = 0x1;
-                int pos = 0;
-                while (bitField != 0x0){
-                        int bit = bitField & l;
-                        bitField >>>= 4;
-                        pos++;
-
-                        if (bit == 1) {
-                                switch(pos){
-                                        case 1:
-                                                if (cal.getSecond() == DatatypeConstants.FIELD_UNDEFINED){
-                                                        buf.append("  " + Messages.XMLGREGORIANCALENDAR_SEC);
-                                                }
-                                                break;
-                                        case 2:
-                                                if (cal.getMinute() == DatatypeConstants.FIELD_UNDEFINED){
-                                                        buf.append("  " + Messages.XMLGREGORIANCALENDAR_MIN);
-                                                }
-                                                break;
-                                        case 3:
-                                                if (cal.getHour() == DatatypeConstants.FIELD_UNDEFINED){
-                                                        buf.append("  " + Messages.XMLGREGORIANCALENDAR_HR);
-                                                }
-                                                break;
-                                        case 4:
-                                                if (cal.getDay() == DatatypeConstants.FIELD_UNDEFINED){
-                                                        buf.append("  " + Messages.XMLGREGORIANCALENDAR_DAY);
-                                                }
-                                                break;
-                                        case 5:
-                                                if (cal.getMonth() == DatatypeConstants.FIELD_UNDEFINED){
-                                                        buf.append("  " + Messages.XMLGREGORIANCALENDAR_MONTH);
-                                                }
-                                                break;
-                                        case 6:
-                                                if (cal.getYear() == DatatypeConstants.FIELD_UNDEFINED){
-                                                        buf.append("  " + Messages.XMLGREGORIANCALENDAR_YEAR);
-                                                }
-                                                break;
-                                        case 7:  // ignore timezone setting
-                                                break;
-                                }
-                        }
-                }
-                if (buf.length() > 0){
-                        throw new javax.xml.bind.MarshalException(
-                         Messages.XMLGREGORIANCALENDAR_INVALID.format(type.getLocalPart())
-                         + buf.toString());
-                }
-        }
-
+	private static void checkXmlGregorianCalendarFieldRef(QName type, 
+		XMLGregorianCalendar cal)throws javax.xml.bind.MarshalException{
+		StringBuffer buf = new StringBuffer();
+		int bitField = xmlGregorianCalendarFieldRef.get(type);
+		final int l = 0x1;
+		int pos = 0;
+		while (bitField != 0x0){
+			int bit = bitField & l;
+			bitField >>>= 4;
+			pos++;
+			
+			if (bit == 1) {
+				switch(pos){
+					case 1:
+						if (cal.getSecond() == DatatypeConstants.FIELD_UNDEFINED){
+							buf.append("  " + Messages.XMLGREGORIANCALENDAR_SEC);
+						}
+						break;
+					case 2:
+						if (cal.getMinute() == DatatypeConstants.FIELD_UNDEFINED){
+							buf.append("  " + Messages.XMLGREGORIANCALENDAR_MIN);
+						}
+						break;
+					case 3:
+						if (cal.getHour() == DatatypeConstants.FIELD_UNDEFINED){
+							buf.append("  " + Messages.XMLGREGORIANCALENDAR_HR);
+						}
+						break;
+					case 4:
+						if (cal.getDay() == DatatypeConstants.FIELD_UNDEFINED){
+							buf.append("  " + Messages.XMLGREGORIANCALENDAR_DAY);
+						}
+						break;
+					case 5:
+						if (cal.getMonth() == DatatypeConstants.FIELD_UNDEFINED){
+							buf.append("  " + Messages.XMLGREGORIANCALENDAR_MONTH);
+						}
+						break;
+					case 6:
+						if (cal.getYear() == DatatypeConstants.FIELD_UNDEFINED){
+							buf.append("  " + Messages.XMLGREGORIANCALENDAR_YEAR);
+						}
+						break;
+					case 7:  // ignore timezone setting
+						break;
+				}
+			}
+		}
+		if (buf.length() > 0){
+			throw new javax.xml.bind.MarshalException(
+			 Messages.XMLGREGORIANCALENDAR_INVALID.format(type.getLocalPart()) 
+			 + buf.toString());
+		}
+	}
+	
     /**
      * Format string for the {@link XMLGregorianCalendar}.
      */
@@ -911,30 +920,30 @@ public abstract class RuntimeBuiltinLeafInfoImpl<T> extends BuiltinLeafInfoImpl<
         m.put(DatatypeConstants.GMONTHDAY,  "--%M-%D" +"%z");
     }
 
-        /**
-         * Field designations for XMLGregorianCalendar format string.
-         * sec          0x0000001
-         * min          0x0000010
-         * hrs          0x0000100
-         * day          0x0001000
-         * month        0x0010000
-         * year         0x0100000
-         * timezone 0x1000000
-         */
-        private static final Map<QName, Integer> xmlGregorianCalendarFieldRef =
-                new HashMap<QName, Integer>();
-        static {
-                Map<QName, Integer> f = xmlGregorianCalendarFieldRef;
-                f.put(DatatypeConstants.DATETIME,   0x1111111);
-                f.put(DatatypeConstants.DATE,       0x1111000);
-                f.put(DatatypeConstants.TIME,       0x1000111);
-                f.put(DatatypeConstants.GDAY,       0x1001000);
-                f.put(DatatypeConstants.GMONTH,     0x1010000);
-                f.put(DatatypeConstants.GYEAR,      0x1100000);
-                f.put(DatatypeConstants.GYEARMONTH, 0x1110000);
-                f.put(DatatypeConstants.GMONTHDAY,  0x1011000);
-        }
-
+	/**
+	 * Field designations for XMLGregorianCalendar format string.
+	 * sec		0x0000001
+	 * min		0x0000010
+	 * hrs		0x0000100
+	 * day		0x0001000
+	 * month	0x0010000
+	 * year		0x0100000
+	 * timezone 0x1000000
+	 */
+	private static final Map<QName, Integer> xmlGregorianCalendarFieldRef =
+		new HashMap<QName, Integer>();
+	static {
+		Map<QName, Integer> f = xmlGregorianCalendarFieldRef;
+		f.put(DatatypeConstants.DATETIME,   0x1111111);
+		f.put(DatatypeConstants.DATE,       0x1111000);
+		f.put(DatatypeConstants.TIME,       0x1000111);
+		f.put(DatatypeConstants.GDAY,       0x1001000);
+		f.put(DatatypeConstants.GMONTH,     0x1010000);
+		f.put(DatatypeConstants.GYEAR,      0x1100000);
+		f.put(DatatypeConstants.GYEARMONTH, 0x1110000);
+		f.put(DatatypeConstants.GMONTHDAY,  0x1011000);
+	}
+	
     /**
      * {@link RuntimeBuiltinLeafInfoImpl} for {@link UUID}.
      *

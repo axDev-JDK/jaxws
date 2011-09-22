@@ -71,7 +71,7 @@ public final class Ref<T,C> {
     public Ref(ModelBuilder<T,C,?,?> builder, T type, XmlJavaTypeAdapter xjta, XmlList xl ) {
         this(builder.reader,builder.nav,type,xjta,xl);
     }
-
+    
     public Ref(AnnotationReader<T,C,?,?> reader,
                Navigator<T,C,?,?> nav,
                T type, XmlJavaTypeAdapter xjta, XmlList xl ) {

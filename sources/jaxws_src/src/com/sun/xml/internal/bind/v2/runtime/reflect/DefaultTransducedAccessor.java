@@ -42,7 +42,7 @@ import org.xml.sax.SAXException;
  * The print method that works for {@link String} determines the dispatching
  * of the {@link #writeText(XMLSerializer,Object,String)} and
  * {@link #writeLeafElement(XMLSerializer, Name, Object, String)} methods,
- * so those are implemented here.
+ * so those are implemented here. 
  *
  * @author Kohsuke Kawaguchi
  */

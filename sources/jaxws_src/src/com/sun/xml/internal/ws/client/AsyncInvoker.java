@@ -48,7 +48,7 @@ public abstract class AsyncInvoker implements Runnable {
     public void setReceiver(AsyncResponseImpl responseImpl) {
         this.responseImpl = responseImpl;
     }
-
+    
     public void run () {
         try {
             do_run();

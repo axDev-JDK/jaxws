@@ -29,12 +29,17 @@ import com.sun.xml.internal.ws.api.FeatureConstructor;
 
 import javax.xml.ws.WebServiceFeature;
 
+import com.sun.org.glassfish.gmbal.ManagedAttribute;
+import com.sun.org.glassfish.gmbal.ManagedData;
+
+
 /**
  * Addressing Feature representing MemberSubmission Version.
  *
  * @author Rama Pulavarthi
  */
 
+@ManagedData
 public class MemberSubmissionAddressingFeature extends WebServiceFeature {
     /**
      * Constant value identifying the MemberSubmissionAddressingFeature
@@ -45,7 +50,7 @@ public class MemberSubmissionAddressingFeature extends WebServiceFeature {
      * Constant ID for the <code>required</code> feature parameter
      */
     public static final String IS_REQUIRED = "ADDRESSING_IS_REQUIRED";
-
+    
     private boolean required;
 
     /**
@@ -99,11 +104,12 @@ public class MemberSubmissionAddressingFeature extends WebServiceFeature {
     }
 
 
-
+    @ManagedAttribute
     public String getID() {
         return ID;
     }
 
+    @ManagedAttribute
     public boolean isRequired() {
         return required;
     }
@@ -115,9 +121,10 @@ public class MemberSubmissionAddressingFeature extends WebServiceFeature {
     private MemberSubmissionAddressing.Validation validation = MemberSubmissionAddressing.Validation.LAX;
     public void setValidation(MemberSubmissionAddressing.Validation validation) {
         this.validation = validation;
-
+        
     }
 
+    @ManagedAttribute
     public MemberSubmissionAddressing.Validation getValidation() {
         return validation;
     }

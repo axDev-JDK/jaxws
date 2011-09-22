@@ -27,6 +27,7 @@
 package com.sun.tools.internal.ws.wscompile;
 
 import com.sun.tools.internal.ws.resources.WscompileMessages;
+import com.sun.tools.internal.ws.Invoker;
 
 import java.io.File;
 import java.io.IOException;
@@ -58,7 +59,7 @@ public class Options {
      */
     public boolean keep;
 
-
+    
 
     /**
      * -d
@@ -80,7 +81,7 @@ public class Options {
     public boolean nocompile;
 
     public enum Target {
-        V2_0, V2_1;
+        V2_0, V2_1, V2_2;
 
         /**
          * Returns true if this version is equal or later than the given one.
@@ -99,6 +100,8 @@ public class Options {
                 return Target.V2_0;
             else if (token.equals("2.1"))
                 return Target.V2_1;
+            else if (token.equals("2.2"))
+                return Target.V2_2;
             return null;
         }
 
@@ -111,13 +114,37 @@ public class Options {
                 return "2.0";
             case V2_1:
                 return "2.1";
+            case V2_2:
+                return "2.2";
             default:
                 return null;
             }
         }
+
+        public static Target getDefault() {
+            return V2_2;
+        }
+
+        public static Target getLoadedAPIVersion() {
+            return LOADED_API_VERSION;
+        }
+        
+        private static final Target LOADED_API_VERSION;
+
+        static {
+            // check if we are indeed loading JAX-WS 2.2 API
+            if (Invoker.checkIfLoading22API()) {
+                LOADED_API_VERSION = Target.V2_2;
+            } // check if we are indeed loading JAX-WS 2.1 API
+            else if (Invoker.checkIfLoading21API()) {
+                LOADED_API_VERSION = Target.V2_1;
+            } else {
+                LOADED_API_VERSION = Target.V2_0;
+            }
+        }
     }
 
-    public Target target = Target.V2_1;
+    public Target target = Target.V2_2;
 
     /**
      * strictly follow the compatibility rules specified in JAXWS spec
@@ -177,7 +204,7 @@ public class Options {
                 file.delete();
             }
         }
-        generatedFiles.clear();
+        generatedFiles.clear();        
     }
 
     /**

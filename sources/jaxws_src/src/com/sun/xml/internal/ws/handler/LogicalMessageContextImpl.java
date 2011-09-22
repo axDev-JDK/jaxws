@@ -29,12 +29,14 @@ import com.sun.xml.internal.ws.api.message.HeaderList;
 import com.sun.xml.internal.ws.api.message.Message;
 import com.sun.xml.internal.ws.api.message.Packet;
 import com.sun.xml.internal.ws.api.WSBinding;
+import com.sun.xml.internal.ws.api.model.SEIModel;
 import com.sun.xml.internal.ws.message.EmptyMessageImpl;
 import com.sun.xml.internal.ws.message.source.PayloadSourceMessage;
 import javax.xml.transform.Source;
 
 import javax.xml.ws.LogicalMessage;
 import javax.xml.ws.handler.LogicalMessageContext;
+import javax.xml.bind.JAXBContext;
 
 /**
  * Implementation of LogicalMessageContext. This class is used at runtime
@@ -49,15 +51,16 @@ import javax.xml.ws.handler.LogicalMessageContext;
 class LogicalMessageContextImpl extends MessageUpdatableContext implements LogicalMessageContext {
     private LogicalMessageImpl lm;
     private WSBinding binding;
-
-    public LogicalMessageContextImpl(WSBinding binding, Packet packet) {
+    private JAXBContext defaultJaxbContext;
+    public LogicalMessageContextImpl(WSBinding binding, JAXBContext defaultJAXBContext, Packet packet) {
         super(packet);
         this.binding = binding;
+        this.defaultJaxbContext = defaultJAXBContext;
     }
 
     public LogicalMessage getMessage() {
         if(lm == null)
-            lm = new LogicalMessageImpl(packet);
+            lm = new LogicalMessageImpl(defaultJaxbContext, packet);
         return lm;
     }
 
@@ -73,18 +76,11 @@ class LogicalMessageContextImpl extends MessageUpdatableContext implements Logic
         //If LogicalMessage is not acccessed, its not modified.
         if(lm != null) {
             //Check if LogicalMessageImpl has changed, if so construct new one
-            //TODO: Attachments are not used
             // Packet are handled through MessageContext
             if(lm.isPayloadModifed()){
                 Message msg = packet.getMessage();
-                HeaderList headers = msg.getHeaders();
-                AttachmentSet attachments = msg.getAttachments();
-                Source modifiedPayload = lm.getModifiedPayload();
-                if(modifiedPayload == null){
-                    packet.setMessage(new EmptyMessageImpl(headers,attachments,binding.getSOAPVersion()));
-                } else {
-                    packet.setMessage(new PayloadSourceMessage(headers,modifiedPayload, attachments, binding.getSOAPVersion()));
-                }
+                Message updatedMsg = lm.getMessage(msg.getHeaders(),msg.getAttachments(),binding);
+                packet.setMessage(updatedMsg);
             }
             lm = null;
         }

@@ -28,7 +28,7 @@ package com.sun.xml.internal.xsom;
 
 /**
  * Base interface of all "declarations".
- *
+ * 
  * @author
  *  Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
@@ -55,7 +55,7 @@ public interface XSDeclaration extends XSComponent
 
     /**
      * Returns true if this declaration is a global declaration.
-     *
+     * 
      * Global declarations are those declaration that can be enumerated
      * through the schema object.
      */

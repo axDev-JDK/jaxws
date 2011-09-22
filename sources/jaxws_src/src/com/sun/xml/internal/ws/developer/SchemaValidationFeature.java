@@ -22,6 +22,7 @@
  * CA 95054 USA or visit www.sun.com if you need additional information or
  * have any questions.
  */
+
 package com.sun.xml.internal.ws.developer;
 
 import com.sun.xml.internal.ws.api.FeatureConstructor;
@@ -29,6 +30,8 @@ import com.sun.xml.internal.ws.server.DraconianValidationErrorHandler;
 
 import javax.xml.ws.WebServiceFeature;
 
+import com.sun.org.glassfish.gmbal.ManagedAttribute;
+import com.sun.org.glassfish.gmbal.ManagedData;
 
 /**
  * {@link WebServiceFeature} for schema validation.
@@ -37,6 +40,7 @@ import javax.xml.ws.WebServiceFeature;
  * @author Jitendra Kotamraju
  * @see SchemaValidation
  */
+@ManagedData
 public class SchemaValidationFeature extends WebServiceFeature {
     /**
      * Constant value identifying the SchemaValidationFeature
@@ -59,6 +63,7 @@ public class SchemaValidationFeature extends WebServiceFeature {
         this.clazz = clazz;
     }
 
+    @ManagedAttribute
     public String getID() {
         return ID;
     }
@@ -68,6 +73,7 @@ public class SchemaValidationFeature extends WebServiceFeature {
      * for any invalid request and response message. If it is set to false, schema
      * validation messages are just logged.
      */
+    @ManagedAttribute
     public Class<? extends ValidationErrorHandler> getErrorHandler() {
         return clazz;
     }

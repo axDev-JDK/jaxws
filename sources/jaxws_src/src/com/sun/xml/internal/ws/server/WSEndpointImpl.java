@@ -45,28 +45,30 @@ import com.sun.xml.internal.ws.api.pipe.Tube;
 import com.sun.xml.internal.ws.api.pipe.TubeCloner;
 import com.sun.xml.internal.ws.api.pipe.TubelineAssembler;
 import com.sun.xml.internal.ws.api.pipe.TubelineAssemblerFactory;
-import com.sun.xml.internal.ws.api.server.Container;
-import com.sun.xml.internal.ws.api.server.EndpointAwareCodec;
-import com.sun.xml.internal.ws.api.server.EndpointComponent;
-import com.sun.xml.internal.ws.api.server.TransportBackChannel;
-import com.sun.xml.internal.ws.api.server.WSEndpoint;
-import com.sun.xml.internal.ws.api.server.WebServiceContextDelegate;
+import com.sun.xml.internal.ws.api.server.*;
 import com.sun.xml.internal.ws.fault.SOAPFaultBuilder;
 import com.sun.xml.internal.ws.model.wsdl.WSDLProperties;
+import com.sun.xml.internal.ws.model.wsdl.WSDLPortImpl;
 import com.sun.xml.internal.ws.resources.HandlerMessages;
 import com.sun.xml.internal.ws.util.Pool;
+import com.sun.xml.internal.ws.util.ServiceFinder;
 import com.sun.xml.internal.ws.util.Pool.TubePool;
+import com.sun.xml.internal.ws.policy.PolicyMap;
+import com.sun.xml.internal.ws.wsdl.OperationDispatcher;
+import com.sun.xml.internal.ws.addressing.EPRSDDocumentFilter;
+import com.sun.xml.internal.ws.addressing.WSEPRExtension;
+import com.sun.xml.internal.stream.buffer.XMLStreamBuffer;
+import com.sun.org.glassfish.gmbal.ManagedObjectManager;
 import org.w3c.dom.Element;
 
 import javax.annotation.PreDestroy;
 import javax.xml.namespace.QName;
 import javax.xml.ws.EndpointReference;
+import javax.xml.ws.WebServiceException;
 import javax.xml.ws.handler.Handler;
+import javax.xml.stream.XMLStreamException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.Executor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -78,16 +80,6 @@ import java.util.logging.Logger;
  * @author Jitendra Kotamraju
  */
 public final class WSEndpointImpl<T> extends WSEndpoint<T> {
-    // Register JAX-WS JMX MBeans
-    static {
-        try {
-            JMXAgent.getDefault();
-        } catch (Throwable t) {
-            // Ignore for now by logging the stack trace
-            t.printStackTrace();
-        }
-    }
-
     private final @NotNull QName serviceName;
     private final @NotNull QName portName;
     private final WSBinding binding;
@@ -100,9 +92,14 @@ public final class WSEndpointImpl<T> extends WSEndpoint<T> {
     private final SOAPVersion soapVersion;
     private final Engine engine;
     private final @NotNull Codec masterCodec;
-
+    private final @NotNull PolicyMap endpointPolicy;
     private final Pool<Tube> tubePool;
+    private final OperationDispatcher operationDispatcher;
+    private final @NotNull ManagedObjectManager managedObjectManager;
+    private       boolean managedObjectManagerClosed = false;
+    private final @NotNull ServerTubeAssemblerContext context;
 
+    private Map<QName, WSEndpointReference.EPRExtension> endpointReferenceExtensions = new HashMap<QName, WSEndpointReference.EPRExtension>();
     /**
      * Set to true once we start shutting down this endpoint.
      * Used to avoid running the clean up processing twice.
@@ -119,7 +116,8 @@ public final class WSEndpointImpl<T> extends WSEndpoint<T> {
                    Container container, SEIModel seiModel, WSDLPort port,
                    Class<T> implementationClass,
                    @Nullable ServiceDefinitionImpl serviceDef,
-                   InvokerTube terminalTube, boolean isSynchronous) {
+                   InvokerTube terminalTube, boolean isSynchronous,
+                   PolicyMap endpointPolicy) {
         this.serviceName = serviceName;
         this.portName = portName;
         this.binding = binding;
@@ -129,6 +127,11 @@ public final class WSEndpointImpl<T> extends WSEndpoint<T> {
         this.implementationClass = implementationClass;
         this.serviceDef = serviceDef;
         this.seiModel = seiModel;
+        this.endpointPolicy = endpointPolicy;
+
+        this.managedObjectManager = 
+            new MonitorRootService(this).createManagedObjectManager(this);
+
         if (serviceDef != null) {
             serviceDef.setOwner(this);
         }
@@ -137,12 +140,14 @@ public final class WSEndpointImpl<T> extends WSEndpoint<T> {
                 Thread.currentThread().getContextClassLoader(), binding.getBindingId(), container);
         assert assembler!=null;
 
-        ServerTubeAssemblerContext context = new ServerPipeAssemblerContext(seiModel, port, this, terminalTube, isSynchronous);
+        this.operationDispatcher = (port == null) ? null : new OperationDispatcher(port, binding, seiModel);
+
+        context = new ServerPipeAssemblerContext(seiModel, port, this, terminalTube, isSynchronous);
         this.masterTubeline = assembler.createServer(context);
 
         Codec c = context.getCodec();
         if(c instanceof EndpointAwareCodec) {
-            // create a copy to avoid sharing the codec between multiple endpoints
+            // create a copy to avoid sharing the codec between multiple endpoints 
             c = c.copy();
             ((EndpointAwareCodec)c).setEndpoint(this);
         }
@@ -152,6 +157,53 @@ public final class WSEndpointImpl<T> extends WSEndpoint<T> {
         terminalTube.setEndpoint(this);
         engine = new Engine(toString());
         wsdlProperties = (port==null) ? null : new WSDLProperties(port);
+
+        Map<QName, WSEndpointReference.EPRExtension> eprExtensions = new HashMap<QName, WSEndpointReference.EPRExtension>();
+        try {
+            if (port != null) {
+                //gather EPR extrensions from WSDL Model
+                WSEndpointReference wsdlEpr = ((WSDLPortImpl) port).getEPR();
+                if (wsdlEpr != null) {
+                    for (WSEndpointReference.EPRExtension extnEl : wsdlEpr.getEPRExtensions()) {
+                        eprExtensions.put(extnEl.getQName(), extnEl);
+                    }
+                }
+            }
+
+            EndpointReferenceExtensionContributor[] eprExtnContributors = ServiceFinder.find(EndpointReferenceExtensionContributor.class).toArray();
+            for(EndpointReferenceExtensionContributor eprExtnContributor :eprExtnContributors) {
+                WSEndpointReference.EPRExtension wsdlEPRExtn = eprExtensions.remove(eprExtnContributor.getQName());
+                    WSEndpointReference.EPRExtension endpointEprExtn = eprExtnContributor.getEPRExtension(this,wsdlEPRExtn);
+                    if (endpointEprExtn != null) {
+                        eprExtensions.put(endpointEprExtn.getQName(), endpointEprExtn);
+                    }
+            }
+            for (WSEndpointReference.EPRExtension extn : eprExtensions.values()) {
+                endpointReferenceExtensions.put(extn.getQName(), new WSEPRExtension(
+                        XMLStreamBuffer.createNewBufferFromXMLStreamReader(extn.readAsXMLStreamReader()),extn.getQName()));
+            }
+        } catch (XMLStreamException ex) {
+            throw new WebServiceException(ex);
+        }
+        if(!eprExtensions.isEmpty()) {
+            serviceDef.addFilter(new EPRSDDocumentFilter(this));
+        }
+
+    }
+
+    public Collection<WSEndpointReference.EPRExtension> getEndpointReferenceExtensions() {
+        return endpointReferenceExtensions.values();
+    }
+    /**
+     * Nullable when there is no associated WSDL Model
+     * @return
+     */
+    public @Nullable OperationDispatcher getOperationDispatcher() {
+        return operationDispatcher;
+    }
+
+    public PolicyMap getPolicyMap() {
+            return endpointPolicy;
     }
 
     public @NotNull Class<T> getImplementationClass() {
@@ -264,6 +316,7 @@ public final class WSEndpointImpl<T> extends WSEndpoint<T> {
                 break;
             }
         }
+        closeManagedObjectManager();
     }
 
     public ServiceDefinitionImpl getServiceDefinition() {
@@ -277,27 +330,26 @@ public final class WSEndpointImpl<T> extends WSEndpoint<T> {
     private static final Logger logger = Logger.getLogger(
         com.sun.xml.internal.ws.util.Constants.LoggingDomain + ".server.endpoint");
 
-    public <T extends EndpointReference> T getEndpointReference(Class<T> clazz, String address, String wsdlAddress, Element...referenceParameters) {
-        QName portType = null;
-        if(port != null) {
-            portType = port.getBinding().getPortTypeName();
-        }
+    public <T extends EndpointReference> T getEndpointReference(Class<T>
+            clazz, String address, String wsdlAddress, Element... referenceParameters) {
         List<Element> refParams = null;
-        if(referenceParameters != null) {
+        if (referenceParameters != null) {
             refParams = Arrays.asList(referenceParameters);
         }
-        AddressingVersion av = AddressingVersion.fromSpecClass(clazz);
-        if (av == AddressingVersion.W3C) {
-            // Supress writing ServiceName and EndpointName in W3C EPR,
-            // Until the ns for those metadata elements is resolved.
-            return new WSEndpointReference(
-                    AddressingVersion.W3C,
-                    address,null /*serviceName*/,null /*portName*/, null /*portType*/, null, null /*wsdlAddress*/, refParams).toSpec(clazz);
-        } else {
-            return new WSEndpointReference(
-                    AddressingVersion.MEMBER,
-                    address, serviceName, portName, portType, null, wsdlAddress, refParams).toSpec(clazz);
+        return getEndpointReference(clazz, address, wsdlAddress, null, refParams);
+    }
+
+    public <T extends EndpointReference> T getEndpointReference(Class<T>
+            clazz, String address, String wsdlAddress, List<Element> metadata, List<Element> referenceParameters) {
+        QName portType = null;
+        if (port != null) {
+            portType = port.getBinding().getPortTypeName();
         }
+
+        AddressingVersion av = AddressingVersion.fromSpecClass(clazz);
+        return new WSEndpointReference(
+                    av, address, serviceName, portName, portType, metadata, wsdlAddress, referenceParameters,endpointReferenceExtensions.values(), null).toSpec(clazz);
+
     }
 
     public @NotNull QName getPortName() {
@@ -312,4 +364,23 @@ public final class WSEndpointImpl<T> extends WSEndpoint<T> {
     public @NotNull QName getServiceName() {
         return serviceName;
     }
+
+    public @NotNull ManagedObjectManager getManagedObjectManager() {
+        return managedObjectManager;
+    }
+
+    // This can be called independently of WSEndpoint.dispose.
+    // Example: the WSCM framework calls this before dispose.
+    public void closeManagedObjectManager() {
+        if (managedObjectManagerClosed == true) {
+            return;
+        }
+        MonitorBase.closeMOM(managedObjectManager);
+        managedObjectManagerClosed = true;
+    }
+
+    public @NotNull ServerTubeAssemblerContext getAssemblerContext() {
+        return context;
+    }
 }
+

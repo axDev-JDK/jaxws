@@ -76,7 +76,7 @@ public class XmlDataContentHandler implements DataContentHandler {
      */
     public Object getTransferData(DataFlavor flavor, DataSource dataSource)
         throws IOException {
-        if (flavor.getMimeType().startsWith("text/xml") ||
+        if (flavor.getMimeType().startsWith("text/xml") || 
                 flavor.getMimeType().startsWith("application/xml")) {
             if (flavor.getRepresentationClass().getName().equals(STR_SRC)) {
                 return new StreamSource(dataSource.getInputStream());
@@ -103,13 +103,13 @@ public class XmlDataContentHandler implements DataContentHandler {
             throw new IOException(
                 "Invalid content type \"" + mimeType + "\" for XmlDCH");
 
-
+            
         try {
             Transformer transformer = EfficientStreamingTransformer.newTransformer();
             StreamResult result = new StreamResult(os);
             if (obj instanceof DataSource) {
-                // Streaming transform applies only to javax.xml.transform.StreamSource
-                transformer.transform((Source) getContent((DataSource)obj), result);
+                // Streaming transform applies only to javax.xml.transform.StreamSource 
+                transformer.transform((Source) getContent((DataSource)obj), result);                
             } else {
                 Source src=null;
                 if (obj instanceof String) {

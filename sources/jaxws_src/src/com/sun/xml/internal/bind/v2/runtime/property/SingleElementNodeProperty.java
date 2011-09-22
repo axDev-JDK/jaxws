@@ -93,7 +93,7 @@ final class SingleElementNodeProperty<BeanT,ValueT> extends PropertyImpl<BeanT> 
                 context.nameBuilder.createElementName(e.getTagName()),beanInfo) );
             nil |= e.isNillable();
         }
-
+        
         nullTagName = context.nameBuilder.createElementName(nt);
 
         nillable = nil;

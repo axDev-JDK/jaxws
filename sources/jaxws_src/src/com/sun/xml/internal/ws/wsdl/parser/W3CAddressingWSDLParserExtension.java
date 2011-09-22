@@ -26,21 +26,10 @@
 package com.sun.xml.internal.ws.wsdl.parser;
 
 import com.sun.xml.internal.ws.api.addressing.AddressingVersion;
-import com.sun.xml.internal.ws.api.model.wsdl.WSDLBoundOperation;
-import com.sun.xml.internal.ws.api.model.wsdl.WSDLBoundPortType;
-import com.sun.xml.internal.ws.api.model.wsdl.WSDLFault;
-import com.sun.xml.internal.ws.api.model.wsdl.WSDLFeaturedObject;
-import com.sun.xml.internal.ws.api.model.wsdl.WSDLModel;
-import com.sun.xml.internal.ws.api.model.wsdl.WSDLOperation;
-import com.sun.xml.internal.ws.api.model.wsdl.WSDLPort;
-import com.sun.xml.internal.ws.api.model.wsdl.WSDLService;
+import com.sun.xml.internal.ws.api.model.wsdl.*;
 import com.sun.xml.internal.ws.api.wsdl.parser.WSDLParserExtension;
 import com.sun.xml.internal.ws.api.wsdl.parser.WSDLParserExtensionContext;
-import com.sun.xml.internal.ws.model.wsdl.WSDLBoundOperationImpl;
-import com.sun.xml.internal.ws.model.wsdl.WSDLBoundPortTypeImpl;
-import com.sun.xml.internal.ws.model.wsdl.WSDLOperationImpl;
-import com.sun.xml.internal.ws.model.wsdl.WSDLPortImpl;
-import com.sun.xml.internal.ws.model.wsdl.WSDLPortTypeImpl;
+import com.sun.xml.internal.ws.model.wsdl.*;
 import com.sun.xml.internal.ws.streaming.XMLStreamReaderUtil;
 import com.sun.xml.internal.ws.resources.AddressingMessages;
 
@@ -112,42 +101,30 @@ public class W3CAddressingWSDLParserExtension extends WSDLParserExtension {
         return false;
     }
 
-    @Override
-    public boolean portTypeOperationInput(WSDLOperation o, XMLStreamReader reader) {
-        WSDLOperationImpl impl = (WSDLOperationImpl)o;
-
-        String action = ParserUtil.getAttribute(reader, AddressingVersion.W3C.wsdlActionTag);
-        if (action != null) {
-            impl.getInput().setAction(action);
-            impl.getInput().setDefaultAction(false);
+    public void portTypeOperationInputAttributes(WSDLInput input, XMLStreamReader reader) {
+       String action = ParserUtil.getAttribute(reader, getWsdlActionTag());
+       if (action != null) {
+            ((WSDLInputImpl)input).setAction(action);
+            ((WSDLInputImpl)input).setDefaultAction(false);
         }
-
-        return false;
     }
 
-    @Override
-    public boolean portTypeOperationOutput(WSDLOperation o, XMLStreamReader reader) {
-        WSDLOperationImpl impl = (WSDLOperationImpl)o;
 
-        String action = ParserUtil.getAttribute(reader, AddressingVersion.W3C.wsdlActionTag);
-        if (action != null) {
-            impl.getOutput().setAction(action);
+    public void portTypeOperationOutputAttributes(WSDLOutput output, XMLStreamReader reader) {
+       String action = ParserUtil.getAttribute(reader, getWsdlActionTag());
+       if (action != null) {
+            ((WSDLOutputImpl)output).setAction(action);
+            ((WSDLOutputImpl)output).setDefaultAction(false);
         }
-
-        return false;
     }
 
-    @Override
-    public boolean portTypeOperationFault(WSDLOperation o, XMLStreamReader reader) {
-        WSDLOperationImpl impl = (WSDLOperationImpl)o;
 
-        String action = ParserUtil.getAttribute(reader, AddressingVersion.W3C.wsdlActionTag);
+    public void portTypeOperationFaultAttributes(WSDLFault fault, XMLStreamReader reader) {
+        String action = ParserUtil.getAttribute(reader, getWsdlActionTag());
         if (action != null) {
-            String name = ParserUtil.getMandatoryNonEmptyAttribute(reader, "name");
-            impl.getFaultActionMap().put(name, action);
+            ((WSDLFaultImpl) fault).setAction(action);
+            ((WSDLFaultImpl) fault).setDefaultAction(false);
         }
-
-        return false;
     }
 
     /**
@@ -181,6 +158,9 @@ public class W3CAddressingWSDLParserExtension extends WSDLParserExtension {
         return AddressingVersion.W3C.wsdlNsUri;
     }
 
+    protected QName getWsdlActionTag() {
+       return AddressingVersion.W3C.wsdlActionTag;
+    }
     /**
      * Populate all the Actions
      *
@@ -222,10 +202,11 @@ public class W3CAddressingWSDLParserExtension extends WSDLParserExtension {
             if (o.getFaults() == null || !o.getFaults().iterator().hasNext())
                 continue;
 
-            Map<String,String> map = o.getFaultActionMap();
             for (WSDLFault f : o.getFaults()) {
-                if (map.get(f.getName()) == null || map.get(f.getName()).equals(""))
-                    map.put(f.getName(), defaultFaultAction(f.getName(), o));
+                if (f.getAction() == null || f.getAction().equals("")) {
+                    ((WSDLFaultImpl)f).setAction(defaultFaultAction(f.getName(), o));
+                }
+
             }
         }
     }

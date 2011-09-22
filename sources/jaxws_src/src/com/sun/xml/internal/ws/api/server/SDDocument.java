@@ -34,6 +34,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Set;
 
+import com.sun.org.glassfish.gmbal.ManagedAttribute;
+import com.sun.org.glassfish.gmbal.ManagedData;
+
 /**
  * Represents an individual document that forms a {@link ServiceDefinition}.
  *
@@ -45,6 +48,7 @@ import java.util.Set;
  *
  * @author Jitendra Kotamraju
  */
+@ManagedData
 public interface SDDocument {
 
     /**
@@ -57,21 +61,25 @@ public interface SDDocument {
      * @return
      *      always non-null.
      */
+    @ManagedAttribute
     QName getRootName();
 
     /**
      * Returns true if this document is WSDL.
      */
+    @ManagedAttribute
     boolean isWSDL();
 
     /**
      * Returns true if this document is schema.
      */
+    @ManagedAttribute
     boolean isSchema();
 
     /**
      * returns the referenced documents
      */
+    @ManagedAttribute
     Set<String> getImports();
 
     /**
@@ -79,6 +87,7 @@ public interface SDDocument {
      * use a fake URL that can be used to resolve relative URLs. So donot use this URL
      * for reading or writing.
      */
+    @ManagedAttribute
     URL getURL();
 
     /**
@@ -129,6 +138,7 @@ public interface SDDocument {
         /**
          * Gets the target namepsace of this schema.
          */
+        @ManagedAttribute
         String getTargetNamespace();
     }
 
@@ -139,6 +149,7 @@ public interface SDDocument {
         /**
          * Gets the target namepsace of this schema.
          */
+        @ManagedAttribute
         String getTargetNamespace();
 
         /**
@@ -147,6 +158,7 @@ public interface SDDocument {
          *
          * TODO: does this info needs to be exposed?
          */
+        @ManagedAttribute
         boolean hasPortType();
 
         /**
@@ -155,12 +167,14 @@ public interface SDDocument {
          *
          * TODO: does this info need to be exposed?
          */
+        @ManagedAttribute
         boolean hasService();
 
         /**
          * All &lt;service> names that were in this WSDL, or empty set if there was none.
          * Used for error diagnostics.
          */
+        @ManagedAttribute
         Set<QName> getAllServices();
     }
 }

@@ -84,7 +84,7 @@ final class RuntimeTypeInfoSetImpl extends TypeInfoSetImpl<Type,Class,Field,Meth
     }
 
     public Map<Class,RuntimeArrayInfoImpl> arrays() {
-        return (Map<Class,RuntimeArrayInfoImpl>)super.arrays();
+        return (Map<Class,RuntimeArrayInfoImpl>)super.arrays(); 
     }
 
     public RuntimeElementInfoImpl getElementInfo(Class scope,QName name) {

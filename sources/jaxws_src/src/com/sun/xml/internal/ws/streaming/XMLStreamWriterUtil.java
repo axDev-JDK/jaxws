@@ -91,7 +91,7 @@ public class XMLStreamWriterUtil {
 
 
     public static String encodeQName(XMLStreamWriter writer, QName qname,
-        PrefixFactory prefixFactory)
+        PrefixFactory prefixFactory) 
     {
         // NOTE: Here it is assumed that we do not serialize using default
         // namespace declarations and therefore that writer.getPrefix will
@@ -103,7 +103,7 @@ public class XMLStreamWriterUtil {
 
             if (namespaceURI == null || namespaceURI.equals("")) {
                 return localPart;
-            }
+            } 
             else {
                 String prefix = writer.getPrefix(namespaceURI);
                 if (prefix == null) {

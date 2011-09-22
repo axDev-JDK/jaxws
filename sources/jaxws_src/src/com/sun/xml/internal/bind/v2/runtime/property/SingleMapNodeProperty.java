@@ -54,6 +54,7 @@ import com.sun.xml.internal.bind.v2.runtime.unmarshaller.TagName;
 import com.sun.xml.internal.bind.v2.runtime.unmarshaller.Loader;
 import com.sun.xml.internal.bind.v2.runtime.unmarshaller.Receiver;
 import com.sun.xml.internal.bind.v2.runtime.unmarshaller.UnmarshallingContext;
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.UnmarshallingContext.State;
 
 import org.xml.sax.SAXException;
 
@@ -138,15 +139,18 @@ final class SingleMapNodeProperty<BeanT,ValueT extends Map> extends PropertyImpl
      * The target will be set to a {@link Map}.
      */
     private final Loader itemsLoader = new Loader(false) {
+
+        private BeanT target;
+        private ValueT map;
+
         @Override
         public void startElement(UnmarshallingContext.State state, TagName ea) throws SAXException {
             // create or obtain the Map object
             try {
-                BeanT target = (BeanT)state.prev.target;
-                ValueT map = acc.get(target);
+                target = (BeanT)state.prev.target;
+                map = acc.get(target);
                 if(map==null) {
                     map = ClassFactory.create(mapImplClass);
-                    acc.set(target,map);
                 }
                 map.clear();
                 state.target = map;
@@ -154,6 +158,16 @@ final class SingleMapNodeProperty<BeanT,ValueT extends Map> extends PropertyImpl
                 // recover from error by setting a dummy Map that receives and discards the values
                 handleGenericException(e,true);
                 state.target = new HashMap();
+            }
+        }
+
+        @Override
+        public void leaveElement(State state, TagName ea) throws SAXException {
+            super.leaveElement(state, ea);
+            try {
+                acc.set(target, map);
+            } catch (AccessorException ex) {
+                handleGenericException(ex,true);
             }
         }
 

@@ -63,9 +63,9 @@ final class RestrictedComplexTypeBuilder extends CTBuilder {
         // build the base class
         CClass baseClass = selector.bindToType(baseType,ct,true);
         assert baseClass!=null;   // global complex type must map to a class
-
+        
         selector.getCurrentBean().setBaseClass(baseClass);
-
+        
         if (bgmBuilder.isGenerateMixedExtensions()) {
             boolean forceFallbackInExtension = baseType.isMixed() &&
                                                ct.isMixed() &&

@@ -117,7 +117,7 @@ public final class MemberSubmissionEndpointReference extends EndpointReference i
      *
      * @return Source A source object containing the wsdl in the MemeberSubmissionEndpointReference, if present.
      */
-    public Source toWSDLSource() {
+    public Source toWSDLSource() {        
         Element wsdlElement = null;
 
         for (Element elem : elements) {

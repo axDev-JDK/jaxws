@@ -28,9 +28,11 @@ package com.sun.xml.internal.bind.v2.runtime.output;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import java.io.StringWriter;
 import javax.xml.stream.XMLStreamException;
 
 import com.sun.xml.internal.bind.DatatypeConverterImpl;
+import com.sun.xml.internal.bind.marshaller.CharacterEscapeHandler;
 import com.sun.xml.internal.bind.v2.runtime.Name;
 import com.sun.xml.internal.bind.v2.runtime.XMLSerializer;
 import com.sun.xml.internal.bind.v2.runtime.MarshallerImpl;
@@ -60,7 +62,7 @@ public class UTF8XmlOutput extends XmlOutputAbstractImpl {
     private final Encoded[] localNames;
 
     /** Temporary buffer used to encode text. */
-    /*
+    /* 
      * TODO
      * The textBuffer could write directly to the _octetBuffer
      * when encoding a string if Encoder is modified.
@@ -71,7 +73,7 @@ public class UTF8XmlOutput extends XmlOutputAbstractImpl {
     /** Buffer of octets for writing. */
     // TODO: Obtain buffer size from property on the JAXB context
     protected final byte[] octetBuffer = new byte[1024];
-
+    
     /** Index in buffer to write to. */
     protected int octetBufferIndex;
 
@@ -87,16 +89,19 @@ public class UTF8XmlOutput extends XmlOutputAbstractImpl {
      */
     private String header;
 
+    private CharacterEscapeHandler escapeHandler = null;
+
     /**
      *
      * @param localNames
      *      local names encoded in UTF-8.
      */
-    public UTF8XmlOutput(OutputStream out, Encoded[] localNames) {
+    public UTF8XmlOutput(OutputStream out, Encoded[] localNames, CharacterEscapeHandler escapeHandler) {
         this.out = out;
         this.localNames = localNames;
         for( int i=0; i<prefixes.length; i++ )
             prefixes[i] = new Encoded();
+        this.escapeHandler = escapeHandler;
     }
 
     public void setHeader(String header) {
@@ -291,7 +296,14 @@ public class UTF8XmlOutput extends XmlOutputAbstractImpl {
     }
 
     private void doText(String value,boolean isAttribute) throws IOException {
-        textBuffer.setEscape(value,isAttribute);
+        if (escapeHandler != null) {
+            StringWriter sw = new StringWriter();
+            escapeHandler.escape(value.toCharArray(), 0, value.length(), isAttribute, sw);
+            textBuffer.setEscape(sw.toString(), isAttribute);
+        } else {
+            textBuffer.setEscape(value, isAttribute);
+        }
+
         textBuffer.write(this);
     }
 
@@ -341,7 +353,7 @@ public class UTF8XmlOutput extends XmlOutputAbstractImpl {
 
             if(batchSize<dataLen)
                 flushBuffer();
-
+            
             start += batchSize;
             dataLen -= batchSize;
 
@@ -374,7 +386,7 @@ public class UTF8XmlOutput extends XmlOutputAbstractImpl {
     protected final void write(byte[] b) throws IOException {
         write(b, 0,  b.length);
     }
-
+    
     protected final void write(byte[] b, int start, int length) throws IOException {
         if ((octetBufferIndex + length) < octetBuffer.length) {
             System.arraycopy(b, start, octetBuffer, octetBufferIndex, length);

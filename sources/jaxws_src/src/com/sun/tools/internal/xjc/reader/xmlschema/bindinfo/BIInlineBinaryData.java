@@ -36,7 +36,7 @@ import com.sun.xml.internal.xsom.XSComponent;
 
 /**
  * Generates {@link @XmlInlineBinaryData}.
- *
+ * 
  * @author Kohsuke Kawaguchi
  */
 @XmlRootElement(name="inlineBinaryData")

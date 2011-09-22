@@ -168,9 +168,9 @@ public class SchemaWriter implements XSVisitor, XSSimpleTypeVisitor {
 
         println(MessageFormat.format("<attGroup name=\"{0}\">", decl.getName()));
         indent++;
-
+        
         // TODO: wildcard
-
+        
         itr = decl.iterateAttGroups();
         while(itr.hasNext())
             dumpRef( (XSAttGroupDecl)itr.next() );
@@ -332,9 +332,9 @@ public class SchemaWriter implements XSVisitor, XSSimpleTypeVisitor {
         println(MessageFormat.format("<complexType{0}>",
             type.isLocal()?"":" name=\""+type.getName()+'\"'));
         indent++;
-
+        
         // TODO: wildcard
-
+        
         if(type.getContentType().asSimpleType()!=null) {
             // simple content
             println("<simpleContent>");
@@ -454,10 +454,10 @@ public class SchemaWriter implements XSVisitor, XSSimpleTypeVisitor {
     }
     private void elementDecl( XSElementDecl decl, String extraAtts ) {
         XSType type = decl.getType();
+        
+        // TODO: various other attributes 
 
-        // TODO: various other attributes
-
-        // qualified attr; Issue
+        // qualified attr; Issue 
         if(decl.getForm() != null) {
             extraAtts += " form=\"" + (decl.getForm() ? "qualified" : "unqualified" ) + "\"";
         }

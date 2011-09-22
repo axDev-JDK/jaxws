@@ -28,9 +28,10 @@ package com.sun.xml.internal.xsom.parser;
 
 /**
  * Factory for {@link AnnotationParser}.
- *
+ * 
  * @author Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
 public interface AnnotationParserFactory {
     AnnotationParser create();
 }
+

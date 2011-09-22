@@ -61,7 +61,7 @@ package com.sun.xml.internal.ws.org.objectweb.asm;
 
 /**
  * A visitor to visit a Java annotation. The methods of this interface must be
- * called in the following order: (<tt>visit<tt> | <tt>visitEnum<tt> |
+ * called in the following order: (<tt>visit<tt> | <tt>visitEnum<tt> | 
  * <tt>visitAnnotation<tt> | <tt>visitArray<tt>)* <tt>visitEnd<tt>.
  *
  * @author Eric Bruneton
@@ -71,7 +71,7 @@ public interface AnnotationVisitor {
 
     /**
      * Visits a primitive value of the annotation.
-     *
+     * 
      * @param name the value name.
      * @param value the actual value, whose type must be {@link Byte},
      *        {@link Boolean}, {@link Character}, {@link Short},
@@ -85,7 +85,7 @@ public interface AnnotationVisitor {
 
     /**
      * Visits an enumeration value of the annotation.
-     *
+     * 
      * @param name the value name.
      * @param desc the class descriptor of the enumeration class.
      * @param value the actual enumeration value.
@@ -94,7 +94,7 @@ public interface AnnotationVisitor {
 
     /**
      * Visits a nested annotation value of the annotation.
-     *
+     * 
      * @param name the value name.
      * @param desc the class descriptor of the nested annotation class.
      * @return a visitor to visit the actual nested annotation value, or
@@ -110,7 +110,7 @@ public interface AnnotationVisitor {
      * types (such as byte, boolean, short, char, int, long, float or double)
      * can be passed as value to {@link #visit visit}. This is what
      * {@link ClassReader} does.
-     *
+     * 
      * @param name the value name.
      * @return a visitor to visit the actual array value elements, or
      *         <tt>null</tt> if this visitor is not interested in visiting

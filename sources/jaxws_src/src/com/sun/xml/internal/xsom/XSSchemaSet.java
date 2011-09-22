@@ -32,7 +32,7 @@ import java.util.Collection;
 
 /**
  * Set of {@link XSSchema} objects.
- *
+ * 
  * @author
  *  Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */

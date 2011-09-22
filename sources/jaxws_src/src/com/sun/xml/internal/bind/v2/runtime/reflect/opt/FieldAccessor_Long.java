@@ -32,7 +32,7 @@ import com.sun.xml.internal.bind.v2.runtime.reflect.Accessor;
  *
  * <p>
  * All the FieldAccessors are generated from <code>FieldAccessor_B y t e</code>
- *
+ * 
  * @author Kohsuke Kawaguchi
  */
 public class FieldAccessor_Long extends Accessor {

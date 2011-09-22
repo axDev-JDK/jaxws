@@ -121,3 +121,4 @@ class WhitespaceStripper extends XMLFilterImpl {
         // ignore completely.
     }
 }
+

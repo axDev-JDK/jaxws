@@ -38,6 +38,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 import java.security.AccessController;
@@ -55,6 +56,8 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.Validator;
 import javax.xml.bind.annotation.XmlAttachmentRef;
 import javax.xml.bind.annotation.XmlList;
+import javax.xml.bind.annotation.XmlNs;
+import javax.xml.bind.annotation.XmlSchema;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
@@ -235,6 +238,17 @@ public final class JAXBContextImpl extends JAXBRIContext {
      */
     public final boolean fastBoot;
 
+    private Set<XmlNs> xmlNsSet = null;
+
+    /**
+     * Returns declared XmlNs annotations (from package-level annotation XmlSchema
+     *
+     * @return set of all present XmlNs annotations
+     */
+    public Set<XmlNs> getXmlNsSet() {
+        return xmlNsSet;
+    }
+
     /**
      *
      * @param typeRefs
@@ -245,7 +259,7 @@ public final class JAXBContextImpl extends JAXBRIContext {
      *      Use custom com.sun.xml.internal.bind.v2.runtime.reflect.Accessor implementation.
      */
     public JAXBContextImpl(JAXBContextBuilder builder) throws JAXBException {
-
+        
         this.defaultNsUri = builder.defaultNsUri;
         this.retainPropertyInfo = builder.retainPropertyInfo;
         this.annotaitonReader = builder.annotationReader;
@@ -301,11 +315,22 @@ public final class JAXBContextImpl extends JAXBRIContext {
                 typeMap.put( qn, ai );
         }
 
-        for( RuntimeClassInfo ci : typeSet.beans().values() ) {
-            ClassBeanInfoImpl<?> bi = getOrCreate(ci);
+        for( Entry<Class, ? extends RuntimeClassInfo> e : typeSet.beans().entrySet() ) {
+            ClassBeanInfoImpl<?> bi = getOrCreate(e.getValue());
+
+            XmlSchema xs = this.annotaitonReader.getPackageAnnotation(XmlSchema.class, e.getKey(), null);
+            if(xs != null) {
+                if(xs.xmlns() != null && xs.xmlns().length > 0) {
+                    if(xmlNsSet == null)
+                        xmlNsSet = new HashSet<XmlNs>();
+
+                    for(int i = 0; i < xs.xmlns().length; i++)
+                        xmlNsSet.add(xs.xmlns()[i]);
+                }
+            }
 
             if(bi.isElement())
-                rootMap.put( ci.getElementName(), bi );
+                rootMap.put( e.getValue().getElementName(), bi );
 
             for (QName qn : bi.getTypeNames())
                 typeMap.put( qn, bi );
@@ -386,7 +411,7 @@ public final class JAXBContextImpl extends JAXBRIContext {
 
         // no use for them now
         nameBuilder = null;
-        beanInfos = null;
+        beanInfos = null;        
     }
 
     /**
@@ -534,6 +559,10 @@ public final class JAXBContextImpl extends JAXBRIContext {
         }
         if(o instanceof Element)
             return beanInfoMap.get(Object.class);   // return the BeanInfo for xs:anyType
+        for( Class c : o.getClass().getInterfaces()) {
+            JaxBeanInfo bi = beanInfoMap.get(c);
+            if(bi!=null)    return bi;
+        }
         return null;
     }
 
@@ -670,15 +699,15 @@ public final class JAXBContextImpl extends JAXBRIContext {
     public int getNumberOfLocalNames() {
         return nameList.localNames.length;
     }
-
+    
     public int getNumberOfElementNames() {
         return nameList.numberOfElementNames;
     }
-
+    
     public int getNumberOfAttributeNames() {
         return nameList.numberOfAttributeNames;
     }
-
+    
     /**
      * Creates a new identity transformer.
      */
@@ -734,8 +763,8 @@ public final class JAXBContextImpl extends JAXBRIContext {
 
     public UnmarshallerImpl createUnmarshaller() {
         return new UnmarshallerImpl(this,null);
-    }
-
+    }    
+        
     public Validator createValidator() {
         throw new UnsupportedOperationException(Messages.NOT_IMPLEMENTED_IN_2_0.format());
     }
@@ -992,7 +1021,7 @@ public final class JAXBContextImpl extends JAXBRIContext {
         Class[] newList = new Class[classes.length+1];
         System.arraycopy(classes,0,newList,0,classes.length);
         newList[classes.length] = clazz;
-
+        
         JAXBContextBuilder builder = new JAXBContextBuilder(this);
         builder.setClasses(newList);
         return builder.build();
@@ -1083,7 +1112,7 @@ public final class JAXBContextImpl extends JAXBRIContext {
             // fool-proof
             if (this.defaultNsUri == null) {
                 this.defaultNsUri = "";
-            }
+            }   
 
             if (this.subclassReplacements == null) {
                 this.subclassReplacements = Collections.emptyMap();
