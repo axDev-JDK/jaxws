@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -23,7 +23,6 @@
  * questions.
  */
 
-
 package com.sun.xml.internal.xsom.util;
 
 import com.sun.xml.internal.xsom.XSType;
@@ -32,7 +31,7 @@ import com.sun.xml.internal.xsom.XSType;
  * Perform a transitive closure operation on a type to determine if it
  * belongs to this set.
  *
- * The contains method returns true iff the TypeSet contains an instance
+ * The contains method returns true if the TypeSet contains an instance
  * of the specified XSType or any of the base types of the XSType.
  *
  * @author <a href="mailto:Ryan.Shoemaker@Sun.COM">Ryan Shoemaker</a>, Sun Microsystems, Inc.

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2004, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -56,10 +56,10 @@ import static java.lang.annotation.ElementType.METHOD;
  * support for substitution groups using an <i>element property</i>,
  * (section 5.5.5, "Element Property" of JAXB 2.0 specification). An
  * element property method signature is of the form:
- * <pre><xmp>
+ * <pre>
  *     public void setTerm(JAXBElement<? extends Operator>);
  *     public JAXBElement<? extends Operator> getTerm();
- * </xmp></pre>
+ * </pre>
  * <p>
  * An element factory method annotated with  {@link XmlElementDecl} is
  * used to create a <tt>JAXBElement</tt> instance, containing an XML
@@ -94,7 +94,7 @@ import static java.lang.annotation.ElementType.METHOD;
  * <p>See "Package Specification" in javax.xml.bind.package javadoc for
  * additional common information.</p>
  *
- * <p><b>Example 1: </b>Ant Task Example</b></p>
+ * <p><b>Example 1: Ant Task Example</b></p>
  * The following Java class hierarchy models an Ant build
  * script.  An Ant task corresponds to a class in the class
  * hierarchy. The XML element name of an Ant task is indicated by the
@@ -143,16 +143,16 @@ import static java.lang.annotation.ElementType.METHOD;
  *     marshal(target);
  * </pre>
  * will produce the following XML output:
- * <pre><xmp>
- *     <target>
- *       <jar>
+ * <pre>
+ *     &lt;target>
+ *       &lt;jar>
  *         ....
- *       </jar>
- *       <javac>
+ *       &lt;/jar>
+ *       &lt;javac>
  *         ....
- *       </javac>
- *     </target>
- * </xmp></pre>
+ *       &lt;/javac>
+ *     &lt;/target>
+ * </pre>
  * <p>
  * It is not an error to have a class that extends <tt>Task</tt>
  * that doesn't have {@link XmlRootElement}. But they can't show up in an

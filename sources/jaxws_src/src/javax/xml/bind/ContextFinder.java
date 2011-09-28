@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2003, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -301,9 +301,14 @@ class ContextFinder {
         logger.fine("Searching the system property");
 
         // search for a system property second (javax.xml.bind.JAXBContext)
-        factoryClassName = AccessController.doPrivileged(new GetPropertyAction(jaxbContextFQCN));
+        factoryClassName = AccessController.doPrivileged(new GetPropertyAction(JAXBContext.JAXB_CONTEXT_FACTORY));
         if(  factoryClassName != null ) {
             return newInstance( contextPath, factoryClassName, classLoader, properties );
+        } else { // leave this here to assure compatibility
+            factoryClassName = AccessController.doPrivileged(new GetPropertyAction(jaxbContextFQCN));
+            if(  factoryClassName != null ) {
+                return newInstance( contextPath, factoryClassName, classLoader, properties );
+            }
         }
 
         if (Thread.currentThread().getContextClassLoader() == classLoader) {
@@ -342,10 +347,7 @@ class ContextFinder {
         return newInstance(contextPath, PLATFORM_DEFAULT_FACTORY_CLASS, classLoader, properties);
     }
 
-    // TODO: log each step in the look up process
     static JAXBContext find( Class[] classes, Map properties ) throws JAXBException {
-
-        // TODO: do we want/need another layer of searching in $java.home/lib/jaxb.properties like JAXP?
 
         final String jaxbContextFQCN = JAXBContext.class.getName();
         String factoryClassName;
@@ -388,13 +390,22 @@ class ContextFinder {
         }
 
         // search for a system property second (javax.xml.bind.JAXBContext)
-        logger.log(Level.FINE, "Checking system property {0}", jaxbContextFQCN);
-        factoryClassName = AccessController.doPrivileged(new GetPropertyAction(jaxbContextFQCN));
+        logger.log(Level.FINE, "Checking system property {0}", JAXBContext.JAXB_CONTEXT_FACTORY);
+        factoryClassName = AccessController.doPrivileged(new GetPropertyAction(JAXBContext.JAXB_CONTEXT_FACTORY));
         if (factoryClassName != null) {
             logger.log(Level.FINE, "  found {0}", factoryClassName);
             return newInstance( classes, properties, factoryClassName );
+        } else { // leave it here for compatibility reasons
+            logger.fine("  not found");
+            logger.log(Level.FINE, "Checking system property {0}", jaxbContextFQCN);
+            factoryClassName = AccessController.doPrivileged(new GetPropertyAction(jaxbContextFQCN));
+            if (factoryClassName != null) {
+                logger.log(Level.FINE, "  found {0}", factoryClassName);
+                return newInstance( classes, properties, factoryClassName );
+            } else {
+                logger.fine("  not found");
+            }
         }
-        logger.fine("  not found");
 
         Class factory = lookupUsingOSGiServiceLoader("javax.xml.bind.JAXBContext");
         if (factory != null) {

@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.ws.policy.privateutil;
 
 import com.sun.istack.internal.localization.Localizable;

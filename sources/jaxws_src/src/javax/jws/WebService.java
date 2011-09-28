@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2004, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,10 +23,6 @@
  * questions.
  */
 
-/*
- * Copyright (c) 2004 by BEA Systems, Inc. All Rights Reserved.
- */
-
 package javax.jws;
 
 import java.lang.annotation.Target;
@@ -35,8 +32,6 @@ import java.lang.annotation.ElementType;
 
 /**
  * Marks a Java class as implementing a Web Service, or a Java interface as defining a Web Service interface.
- *
- * @author Copyright (c) 2004 by BEA Systems, Inc. All Rights Reserved.
  */
 @Retention(value = RetentionPolicy.RUNTIME)
 @Target(value = {ElementType.TYPE})

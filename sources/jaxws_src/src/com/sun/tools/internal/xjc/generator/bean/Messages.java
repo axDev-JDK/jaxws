@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -35,6 +35,7 @@ enum Messages {
     // AnnotationParser
     METHOD_COLLISION, // 3 args
     ERR_UNUSABLE_NAME, // 2 args
+    ERR_KEYNAME_COLLISION, // 1 arg
     ERR_NAME_COLLISION, // 1 arg
     ILLEGAL_CONSTRUCTOR_PARAM, // 1 arg
     OBJECT_FACTORY_CONFLICT,    // 1 arg

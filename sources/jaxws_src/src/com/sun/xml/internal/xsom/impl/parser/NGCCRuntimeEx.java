@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -47,6 +47,7 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.LocatorImpl;
 
 import java.io.IOException;
+import java.net.URI;
 import java.text.MessageFormat;
 import java.util.Stack;
 
@@ -184,18 +185,28 @@ public class NGCCRuntimeEx extends NGCCRuntime implements PatcherManager {
                 // better than nothing.
                 baseUri=documentSystemId;
 
+            EntityResolver er = parser.getEntityResolver();
             String systemId = null;
-            if(relativeUri!=null)
+
+            if (relativeUri!=null)
                 systemId = Uri.resolve(baseUri,relativeUri);
 
-            EntityResolver er = parser.getEntityResolver();
-            if(er!=null) {
+            if (er!=null) {
                 InputSource is = er.resolveEntity(namespaceURI,systemId);
-                if(is!=null)
+                if (is == null) {
+                    try {
+                        String normalizedSystemId = URI.create(systemId).normalize().toASCIIString();
+                        is = er.resolveEntity(namespaceURI,normalizedSystemId);
+                    } catch (Exception e) {
+                        // just ignore, this is a second try, return the fallback if this breaks
+                    }
+                }
+                if (is != null) {
                     return is;
+                }
             }
 
-            if(systemId!=null)
+            if (systemId!=null)
                 return new InputSource(systemId);
             else
                 return null;
@@ -314,23 +325,14 @@ public class NGCCRuntimeEx extends NGCCRuntime implements PatcherManager {
             throws SAXException {
 
         documentSystemId = source.getSystemId();
-//        System.out.println("parsing "+baseUri);
-
-
-
         try {
             Schema s = new Schema(this,includeMode,expectedNamespace);
             setRootHandler(s);
-
             try {
-                parser.parser.parse(source,this,
-                    getErrorHandler(),
-                    parser.getEntityResolver());
-            } catch( IOException e ) {
-                SAXParseException se = new SAXParseException(
-                    e.toString(),importLocation,e);
-                parser.errorHandler.fatalError(se);
-                throw se;
+                parser.parser.parse(source,this, getErrorHandler(), parser.getEntityResolver());
+            } catch( IOException fnfe ) {
+                SAXParseException se = new SAXParseException(fnfe.toString(), importLocation, fnfe);
+                parser.errorHandler.warning(se);
             }
         } catch( SAXException e ) {
             parser.setErrorFlag();
@@ -365,12 +367,14 @@ public class NGCCRuntimeEx extends NGCCRuntime implements PatcherManager {
         return parser.errorHandler;
     }
 
+    @Override
     public void onEnterElementConsumed(String uri, String localName, String qname, Attributes atts)
         throws SAXException {
         super.onEnterElementConsumed(uri, localName, qname, atts);
         elementNames.push(localName);
     }
 
+    @Override
     public void onLeaveElementConsumed(String uri, String localName, String qname) throws SAXException {
         super.onLeaveElementConsumed(uri, localName, qname);
         elementNames.pop();
@@ -421,10 +425,12 @@ public class NGCCRuntimeEx extends NGCCRuntime implements PatcherManager {
         else    return new XmlString(value,createValidationContext());
     }
 
+    @Override
     public void startPrefixMapping( String prefix, String uri ) throws SAXException {
         super.startPrefixMapping(prefix,uri);
         currentContext = new Context(prefix,uri,currentContext);
     }
+    @Override
     public void endPrefixMapping( String prefix ) throws SAXException {
         super.endPrefixMapping(prefix);
         currentContext = currentContext.previous;
@@ -473,6 +479,7 @@ public class NGCCRuntimeEx extends NGCCRuntime implements PatcherManager {
     }
 
 
+    @Override
     protected void unexpectedX(String token) throws SAXException {
         SAXParseException e = new SAXParseException(MessageFormat.format(
             "Unexpected {0} appears at line {1} column {2}",

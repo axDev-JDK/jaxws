@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -96,7 +96,7 @@ public class SingleField extends AbstractFieldWithVar {
         // if Type is a wrapper and we have a default value,
         // we can use the primitive type.
         JType getterType;
-        if(defaultValue!=null || forcePrimitiveAccess)
+        if (defaultValue!=null || forcePrimitiveAccess)
             getterType = exposedType.unboxify();
         else
             getterType = exposedType;
@@ -130,7 +130,11 @@ public class SingleField extends AbstractFieldWithVar {
         if(forcePrimitiveAccess)    setterType = setterType.unboxify();
         JVar $value = writer.addParameter( setterType, "value" );
         JBlock body = $set.body();
-        body.assign(JExpr._this().ref(ref()),castToImplType($value));
+        if ($value.type().equals(implType)) {
+            body.assign(JExpr._this().ref(ref()), $value);
+        } else {
+            body.assign(JExpr._this().ref(ref()), castToImplType($value));
+        }
 
         // setter always get the default javadoc. See issue #381
         writer.javadoc().append(Messages.DEFAULT_SETTER_JAVADOC.format(nc.toVariableName(prop.getName(true))));

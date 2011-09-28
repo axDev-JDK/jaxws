@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2004, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -143,7 +143,7 @@ public class JAXBElement<T> implements Serializable {
      * <p>Set the content model and attributes of this xml element.</p>
      *
      * <p>When this property is set to <tt>null</tt>, <tt>isNil()</tt> must by <tt>true</tt>.
-     *    Details of constraint are described at {@link #isNil()}.</pp>
+     *    Details of constraint are described at {@link #isNil()}.</p>
      *
      * @see #isTypeSubstituted()
      */

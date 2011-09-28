@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.xml.bind.DatatypeConverter;
 import javax.xml.namespace.QName;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
@@ -57,7 +56,6 @@ import com.sun.tools.internal.xjc.reader.xmlschema.bindinfo.BISerializable;
 import com.sun.tools.internal.xjc.reader.xmlschema.bindinfo.BindInfo;
 import com.sun.tools.internal.xjc.util.CodeModelClassFactory;
 import com.sun.tools.internal.xjc.util.ErrorReceiverFilter;
-import com.sun.xml.internal.bind.DatatypeConverterImpl;
 import com.sun.xml.internal.bind.api.impl.NameConverter;
 import com.sun.xml.internal.xsom.XSAnnotation;
 import com.sun.xml.internal.xsom.XSAttributeUse;
@@ -146,9 +144,6 @@ public class BGMBuilder extends BindingComponent {
 
     private List<Plugin> activePlugins;
 
-
-
-
     protected BGMBuilder(String defaultPackage1, String defaultPackage2,
             boolean _inExtensionMode, FieldRendererFactory fieldRendererFactory,
             List<Plugin> activePlugins) {
@@ -157,14 +152,8 @@ public class BGMBuilder extends BindingComponent {
         this.defaultPackage2 = defaultPackage2;
         this.fieldRendererFactory = fieldRendererFactory;
         this.activePlugins = activePlugins;
-
-        DatatypeConverter.setDatatypeConverter(DatatypeConverterImpl.theInstance);
-
         promoteGlobalBindings();
     }
-
-
-
 
     private void _build() {
         // do the binding
@@ -470,16 +459,19 @@ public class BGMBuilder extends BindingComponent {
      * Returns true if the component should be processed by purple.
      */
     private final XSFinder toPurple = new XSFinder() {
+        @Override
         public Boolean attributeUse(XSAttributeUse use) {
             // attribute use always maps to a property
             return true;
         }
 
+        @Override
         public Boolean simpleType(XSSimpleType xsSimpleType) {
             // simple type always maps to a type, hence we should take purple
             return true;
         }
 
+        @Override
         public Boolean wildcard(XSWildcard xsWildcard) {
             // attribute wildcards always maps to a property.
             // element wildcards should have been processed with particle binders

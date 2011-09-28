@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package javax.xml.bind.attachment;
 
 import javax.activation.DataHandler;
@@ -161,7 +162,7 @@ public abstract class AttachmentMarshaller {
      *
      * <p>Marshaller.marshal() must throw IllegalStateException if this value is <code>true</code>
      * and the XML content to be marshalled violates Step 1 in
-     * <a ref="http://www.w3.org/TR/2005/REC-xop10-20050125/#creating_xop_packages">Creating XOP Pacakges</a>
+     * <a href="http://www.w3.org/TR/2005/REC-xop10-20050125/#creating_xop_packages">Creating XOP Pacakges</a>
      * http://www.w3.org/TR/2005/REC-xop10-20050125/#creating_xop_packages.
      * <i>"Ensure the Original XML Infoset contains no element information item with a
      * [namespace name] of "http://www.w3.org/2004/08/xop/include" and a [local name] of Include"</i>
@@ -171,7 +172,7 @@ public abstract class AttachmentMarshaller {
      * a content-id, the MIME-based package processor must label the
      * root part with the application/xop+xml media type as described in
      * Step 5 of
-     * <a ref="http://www.w3.org/TR/2005/REC-xop10-20050125/#creating_xop_packages">Creating XOP Pacakges</a>.<p>
+     * <a href="http://www.w3.org/TR/2005/REC-xop10-20050125/#creating_xop_packages">Creating XOP Pacakges</a>.<p>
      *
      * @return true when MIME context is a XOP Package.
      */

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -176,7 +176,7 @@ public class EndpointImpl extends Endpoint {
         if (!com.sun.net.httpserver.HttpContext.class.isAssignableFrom(serverContext.getClass())) {
             throw new IllegalArgumentException(serverContext.getClass() + " is not a supported context.");
         }
-        createEndpoint("");
+        createEndpoint(((com.sun.net.httpserver.HttpContext)serverContext).getPath());
         ((HttpEndpoint) actualEndpoint).publish(serverContext);
     }
 

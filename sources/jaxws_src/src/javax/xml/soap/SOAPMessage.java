@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2004, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package javax.xml.soap;
 import java.io.OutputStream;
 import java.io.IOException;
@@ -242,7 +243,7 @@ public abstract class SOAPMessage {
      * {@link <a href="http://www.w3.org/TR/SOAP-attachments#SOAPReferenceToAttachements">SOAP Messages with Attachments</a>},
      * or via a single <code>Text</code> child node containing a URI as
      * described in the WS-I Attachments Profile 1.0 for elements of schema
-     * type <i>ref:swaRef</i>({@link <a href=http://www.ws-i.org/Profiles/AttachmentsProfile-1.0-2004-08-24.html">ref:swaRef</a>}).  These two mechanisms must be supported.
+     * type {@link <a href="http://www.ws-i.org/Profiles/AttachmentsProfile-1.0-2004-08-24.html">ref:swaRef</a>}.  These two mechanisms must be supported.
      * The support for references via <code>href</code> attribute also implies that
      * this method should also be supported on an element that is an
      * <i>xop:Include</i> element (

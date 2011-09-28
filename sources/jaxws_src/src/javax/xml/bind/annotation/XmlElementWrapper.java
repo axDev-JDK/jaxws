@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package javax.xml.bind.annotation;
 
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
@@ -75,7 +76,7 @@ import java.lang.annotation.Target;
  *            {@link XmlElements},
  *            {@link XmlElementRef},
  *            {@link XmlElementRefs},
- *            {@link XmlJavaTypeAdapter}</li>.
+ *            {@link XmlJavaTypeAdapter}.</li>
  * </ul>
  *
  * <p>See "Package Specification" in javax.xml.bind.package javadoc for

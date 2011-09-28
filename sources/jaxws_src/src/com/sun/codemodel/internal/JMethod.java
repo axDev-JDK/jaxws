@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -155,6 +155,15 @@ public class JMethod extends JGenerifiableImpl implements JDeclaration, JAnnotat
 
         public JMethod _throws(Class<? extends Throwable> exception) {
                 return _throws(outer.owner().ref(exception));
+        }
+
+        /**
+         * Returns the list of variable of this method.
+         *
+         * @return List of parameters of this method. This list is not modifiable.
+         */
+        public List<JVar> params() {
+                return Collections.<JVar>unmodifiableList(params);
         }
 
         /**

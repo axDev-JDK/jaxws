@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -348,6 +348,7 @@ public class JDefinedClass
             return p.name() + '.' + name();
     }
 
+    @Override
     public String binaryName() {
         if (outer instanceof JDefinedClass)
             return ((JDefinedClass) outer).binaryName() + '$' + name();
@@ -406,9 +407,11 @@ public class JDefinedClass
         JExpression init) {
         JFieldVar f = new JFieldVar(this,JMods.forField(mods), type, name, init);
 
-        if(fields.put(name, f)!=null)
+        if (fields.containsKey(name)) {
             throw new IllegalArgumentException("trying to create the same field twice: "+name);
+        }
 
+        fields.put(name, f);
         return f;
     }
 

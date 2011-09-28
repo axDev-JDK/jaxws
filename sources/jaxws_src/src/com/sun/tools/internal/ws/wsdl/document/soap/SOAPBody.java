@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -26,6 +26,7 @@
 package com.sun.tools.internal.ws.wsdl.document.soap;
 
 import com.sun.tools.internal.ws.wsdl.framework.ExtensionImpl;
+import com.sun.tools.internal.ws.wsdl.framework.ValidationException;
 import org.xml.sax.Locator;
 
 import javax.xml.namespace.QName;
@@ -86,6 +87,9 @@ public class SOAPBody extends ExtensionImpl {
     }
 
     public void validateThis() {
+        if(_use == SOAPUse.ENCODED) {
+            throw new ValidationException("validation.unsupportedUse.encoded", getLocator().getLineNumber(),getLocator().getSystemId());
+        }
     }
 
     private String _encodingStyle;

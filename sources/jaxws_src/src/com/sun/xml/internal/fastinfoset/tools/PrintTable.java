@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2004, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -25,8 +25,6 @@
  * THIS FILE WAS MODIFIED BY SUN MICROSYSTEMS, INC.
  */
 
-
-
 package com.sun.xml.internal.fastinfoset.tools;
 
 import com.sun.xml.internal.fastinfoset.QualifiedName;
@@ -35,7 +33,6 @@ import java.io.File;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import com.sun.xml.internal.fastinfoset.tools.VocabularyGenerator;
 import com.sun.xml.internal.fastinfoset.util.CharArrayArray;
 import com.sun.xml.internal.fastinfoset.util.ContiguousCharArrayArray;
 import com.sun.xml.internal.fastinfoset.util.PrefixArray;

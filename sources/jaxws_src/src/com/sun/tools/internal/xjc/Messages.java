@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -139,6 +139,9 @@ class Messages
 
     static final String VERSION = // 0 args
         "Driver.Version";
+
+    static final String FULLVERSION = // 0 args
+        "Driver.FullVersion";
 
     static final String BUILD_ID = // 0 args
         "Driver.BuildID";

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2004, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -65,9 +65,9 @@ import static java.lang.annotation.ElementType.METHOD;
  *         JAXBElement&lt;String> createFoo(String s) { ... }
  *     }
  * </pre>
- * <pre><xmp>
- *     <!-- XML input -->
- *       <foo>string</foo>
+ * <pre>
+ *     &lt;!-- XML input -->
+ *       &lt;foo>string</foo>
  *
  *     // Example: code fragment corresponding to XML input
  *     JAXBElement<String> o =
@@ -77,9 +77,9 @@ import static java.lang.annotation.ElementType.METHOD;
  *     System.out.println(o.getValue());  // prints  "string"
  *     System.out.println(o.getValue().getClass()); // prints "java.lang.String"
  *
- *     <!-- Example: XML schema definition -->
- *     <xs:element name="foo" type="xs:string"/>
- * </xmp></pre>
+ *     &lt;!-- Example: XML schema definition -->
+ *     &lt;xs:element name="foo" type="xs:string"/>
+ * </pre>
  *
  * <p><b>Example 2: </b> Element declaration with non local scope
  * <p>
@@ -90,18 +90,18 @@ import static java.lang.annotation.ElementType.METHOD;
  * The following example may be replaced in a future revision of
  * this javadoc.
  *
- * <pre><xmp>
- *     <!-- Example: XML schema definition -->
- *     <xs:schema>
- *       <xs:complexType name="pea">
- *         <xs:choice maxOccurs="unbounded">
- *           <xs:element name="foo" type="xs:string"/>
- *           <xs:element name="bar" type="xs:string"/>
- *         </xs:choice>
- *       </xs:complexType>
- *       <xs:element name="foo" type="xs:int"/>
- *     </xs:schema>
- * </xmp></pre>
+ * <pre>
+ *     &lt;!-- Example: XML schema definition -->
+ *     &lt;xs:schema>
+ *       &lt;xs:complexType name="pea">
+ *         &lt;xs:choice maxOccurs="unbounded">
+ *           &lt;xs:element name="foo" type="xs:string"/>
+ *           &lt;xs:element name="bar" type="xs:string"/>
+ *         &lt;/xs:choice>
+ *       &lt;/xs:complexType>
+ *       &lt;xs:element name="foo" type="xs:int"/>
+ *     &lt;/xs:schema>
+ * </pre>
  * <pre>
  *     // Example: expected default binding
  *     class Pea {
@@ -202,7 +202,7 @@ public @interface XmlElementDecl {
      * Default value of this element.
      *
      * <p>
-     * The '\u0000' value specified as a default of this annotation element
+     * The <pre>'\u0000'</pre> value specified as a default of this annotation element
      * is used as a poor-man's substitute for null to allow implementations
      * to recognize the 'no default value' state.
      */

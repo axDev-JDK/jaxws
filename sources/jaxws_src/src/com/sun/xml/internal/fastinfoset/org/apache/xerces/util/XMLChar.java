@@ -3,7 +3,7 @@
  * DO NOT REMOVE OR ALTER!
  */
  /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2004, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -112,7 +112,7 @@ import java.util.Arrays;
  * @author Michael Glavassevich, IBM
  * @author Rahul Srivastava, Sun Microsystems Inc.
  *
- * @version $Id: XMLChar.java,v 1.2 2006/03/16 16:22:16 sandoz Exp $
+ * @version $Id: XMLChar.java,v 1.2 2006-03-16 16:22:16 sandoz Exp $
  */
 public class XMLChar {
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -24,11 +24,6 @@
  */
 
 package com.sun.xml.internal.ws.encoding;
-
-/*
- * @(#)ParameterList.java     1.10 03/02/12
- */
-
 
 import javax.xml.ws.WebServiceException;
 import java.util.HashMap;

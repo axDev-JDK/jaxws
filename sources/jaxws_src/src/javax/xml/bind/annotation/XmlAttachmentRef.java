@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,7 +22,6 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
-
 
 package javax.xml.bind.annotation;
 
@@ -52,16 +51,16 @@ import java.lang.annotation.Target;
  * }
  * </pre>
  * The above code maps to the following XML:
- * <pre><xmp>
- * <xs:element name="foo" xmlns:ref="http://ws-i.org/profiles/basic/1.1/xsd">
- *   <xs:complexType>
- *     <xs:sequence>
- *       <xs:element name="body" type="ref:swaRef" minOccurs="0" />
- *     </xs:sequence>
- *     <xs:attribute name="data" type="ref:swaRef" use="optional" />
- *   </xs:complexType>
- * </xs:element>
- * </xmp></pre>
+ * <pre>
+ * &lt;xs:element name="foo" xmlns:ref="http://ws-i.org/profiles/basic/1.1/xsd">
+ *   &lt;xs:complexType>
+ *     &lt;xs:sequence>
+ *       &lt;xs:element name="body" type="ref:swaRef" minOccurs="0" />
+ *     &lt;/xs:sequence>
+ *     &lt;xs:attribute name="data" type="ref:swaRef" use="optional" />
+ *   &lt;/xs:complexType>
+ * &lt;/xs:element>
+ * </pre>
  *
  * <p>
  * The above binding supports WS-I AP 1.0 <a href="http://www.ws-i.org/Profiles/AttachmentsProfile-1.0-2004-08-24.html#Referencing_Attachments_from_the_SOAP_Envelope">WS-I Attachments Profile Version 1.0.</a>

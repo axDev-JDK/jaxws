@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -277,7 +277,9 @@ final class HttpClientTransport {
 
         // set the properties on HttpURLConnection
         for (Map.Entry<String, List<String>> entry : reqHeaders.entrySet()) {
-            httpConnection.addRequestProperty(entry.getKey(), entry.getValue().get(0));
+            for(String value : entry.getValue()) {
+                httpConnection.addRequestProperty(entry.getKey(), value);
+            }
         }
     }
 

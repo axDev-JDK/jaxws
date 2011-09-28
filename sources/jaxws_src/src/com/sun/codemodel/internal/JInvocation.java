@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -140,6 +140,14 @@ public final class JInvocation extends JExpressionImpl implements JStatement {
         return arg(JExpr.lit(v));
     }
 
+        /**
+         * Returns all arguments of the invocation.
+         * @return
+         *      If there's no arguments, an empty array will be returned.
+         */
+        public JExpression[] listArgs() {
+                return args.toArray(new JExpression[args.size()]);
+        }
 
     public void generate(JFormatter f) {
         if (isConstructor && type.isArray()) {

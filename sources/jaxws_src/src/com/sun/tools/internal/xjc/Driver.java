@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -81,6 +81,7 @@ public class Driver {
         final Throwable[] ex = new Throwable[1];
 
         Thread th = new Thread() {
+            @Override
             public void run() {
                 try {
                     _main(args);
@@ -153,9 +154,11 @@ public class Driver {
         class Listener extends XJCListener {
             ConsoleErrorReporter cer = new ConsoleErrorReporter(out==null?new PrintStream(new NullStream()):out);
 
+            @Override
             public void generatedFile(String fileName, int count, int total) {
                 message(fileName);
             }
+            @Override
             public void message(String msg) {
                 if(status!=null)
                     status.println(msg);
@@ -209,6 +212,10 @@ public class Driver {
                 listener.message(Messages.format(Messages.VERSION));
                 return -1;
             }
+            if (arg.equals("-fullversion")) {
+                listener.message(Messages.format(Messages.FULLVERSION));
+                return -1;
+            }
         }
 
         final OptionsEx opt = new OptionsEx();
@@ -245,10 +252,12 @@ public class Driver {
             final boolean[] hadWarning = new boolean[1];
 
             ErrorReceiver receiver = new ErrorReceiverFilter(listener) {
+                @Override
                 public void info(SAXParseException exception) {
                     if(opt.verbose)
                         super.info(exception);
                 }
+                @Override
                 public void warning(SAXParseException exception) {
                     hadWarning[0] = true;
                     if(!opt.quiet)
@@ -441,6 +450,7 @@ public class Driver {
         public boolean noNS = false;
 
         /** Parse XJC-specific options. */
+        @Override
         public int parseArgument(String[] args, int i) throws BadCommandLineException {
             if (args[i].equals("-noNS")) {
                 noNS = true;
@@ -497,7 +507,7 @@ public class Driver {
             System.out.println(Messages.format(Messages.DRIVER_PUBLIC_USAGE));
         }
 
-        if( opts!=null && opts.getAllPlugins().size()!=0 ) {
+        if( opts!=null && opts.getAllPlugins().isEmpty()) {
             System.out.println(Messages.format(Messages.ADDON_USAGE));
             for (Plugin p : opts.getAllPlugins()) {
                 System.out.println(p.getUsage());

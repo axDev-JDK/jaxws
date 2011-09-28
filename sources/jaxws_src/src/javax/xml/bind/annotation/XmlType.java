@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2004, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -122,7 +122,7 @@ import java.lang.annotation.Target;
  *   <table border="1" cellpadding="4" cellspacing="3">
  *     <tbody>
  *       <tr>
- *         <td><b>Target</td>
+ *         <td><b>Target</b></td>
  *         <td><b>propOrder</b></td>
  *         <td><b>ClassBody</b></td>
  *         <td><b>ComplexType</b></td>

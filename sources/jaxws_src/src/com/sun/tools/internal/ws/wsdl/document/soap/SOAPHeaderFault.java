@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -27,6 +27,7 @@ package com.sun.tools.internal.ws.wsdl.document.soap;
 
 import com.sun.tools.internal.ws.wsdl.framework.ExtensionImpl;
 import com.sun.tools.internal.ws.wsdl.framework.QNameAction;
+import com.sun.tools.internal.ws.wsdl.framework.ValidationException;
 import org.xml.sax.Locator;
 
 import javax.xml.namespace.QName;
@@ -109,8 +110,8 @@ public class SOAPHeaderFault extends ExtensionImpl {
         if (_part == null) {
             failValidation("validation.missingRequiredAttribute", "part");
         }
-        if (_use == null) {
-            failValidation("validation.missingRequiredAttribute", "use");
+        if(_use == SOAPUse.ENCODED) {
+            throw new ValidationException("validation.unsupportedUse.encoded", getLocator().getLineNumber(),getLocator().getSystemId());
         }
     }
 

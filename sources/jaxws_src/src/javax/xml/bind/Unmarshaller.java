@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2003, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -254,7 +254,6 @@ import java.io.Reader;
  *       <th>JAXBElement Property</th>
  *       <th>Value</th>
  *     </tr>
- *     </tr>
  *     <tr>
  *       <td>name</td>
  *       <td><code>xml element name</code></td>
@@ -271,7 +270,7 @@ import java.io.Reader;
  *     </tr>
  *     <tr>
  *       <td>scope</td>
- *       <td><code>null</code> <i>(actual scope is unknown)</td>
+ *       <td><code>null</code> <i>(actual scope is unknown)</i></td>
  *     </tr>
  *   </tbody>
  *  </table>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -43,9 +43,9 @@ import java.util.Set;
 public interface SOAPMessageContext
                     extends javax.xml.ws.handler.MessageContext {
 
-  /** Gets the <code>SOAPMessage<code> from this message context. Modifications
+  /** Gets the <code>SOAPMessage</code> from this message context. Modifications
    *  to the returned <code>SOAPMessage</code> change the message in-place, there
-   *  is no need to susequently call <code>setMessage</code>.
+   *  is no need to subsequently call <code>setMessage</code>.
    *
    *  @return Returns the <code>SOAPMessage</code>; returns <code>null</code> if no
    *          <code>SOAPMessage</code> is present in this message context

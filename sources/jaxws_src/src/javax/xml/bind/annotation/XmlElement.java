@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2004, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -38,7 +38,7 @@ import static java.lang.annotation.RetentionPolicy.*;
  *
  * <p> <b>Usage</b> </p>
  * <p>
- * </tt>@XmlElement</tt> annotation can be used with the following program
+ * <tt>@XmlElement</tt> annotation can be used with the following program
  * elements:
  * <ul>
  *   <li> a JavaBean property </li>
@@ -180,7 +180,7 @@ public @interface XmlElement {
      *  the enclosing class.
      *
      *  <li>
-     *  Otherwise "" (which produces unqualified element in the default
+     *  Otherwise &#39;&#39; (which produces unqualified element in the default
      *  namespace.
      * </ol>
      */
@@ -190,7 +190,7 @@ public @interface XmlElement {
      * Default value of this element.
      *
      * <p>
-     * The '\u0000' value specified as a default of this annotation element
+     * The <pre>'\u0000'</pre> value specified as a default of this annotation element
      * is used as a poor-man's substitute for null to allow implementations
      * to recognize the 'no default value' state.
      */

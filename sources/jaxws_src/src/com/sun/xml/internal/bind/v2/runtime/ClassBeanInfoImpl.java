@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -69,8 +69,6 @@ import org.xml.sax.helpers.LocatorImpl;
  * @author Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
 public final class ClassBeanInfoImpl<BeanT> extends JaxBeanInfo<BeanT> implements AttributeAccessor<BeanT> {
-
-    private boolean isNilIncluded = false;
 
     /**
      * Properties of this bean class but not its ancestor classes.
@@ -170,6 +168,7 @@ public final class ClassBeanInfoImpl<BeanT> extends JaxBeanInfo<BeanT> implement
                 idProperty = p;
             properties[idx++] = p;
             elementOnly &= info.elementOnlyContent();
+            checkOverrideProperties(p);
         }
         // super class' idProperty might not be computed at this point,
         // so check that later
@@ -183,6 +182,19 @@ public final class ClassBeanInfoImpl<BeanT> extends JaxBeanInfo<BeanT> implement
             tagName = null;
 
         setLifecycleFlags();
+    }
+
+    private void checkOverrideProperties(Property p) {
+        ClassBeanInfoImpl bi = this;
+        while ((bi = bi.superClazz) != null) {
+            for (Property superProperty : bi.properties) {
+                if (superProperty == null) break;
+                String spName = superProperty.getFieldName();
+                if ((spName != null) && (spName.equals(p.getFieldName()))) {
+                    superProperty.setHiddenByOverride(true);
+                }
+            }
+        }
     }
 
     @Override
@@ -232,6 +244,7 @@ public final class ClassBeanInfoImpl<BeanT> extends JaxBeanInfo<BeanT> implement
             uriProperties = uriProps.toArray(new Property[uriProps.size()]);
     }
 
+    @Override
     public void wrapUp() {
         for (Property p : properties)
             p.wrapUp();
@@ -299,37 +312,37 @@ public final class ClassBeanInfoImpl<BeanT> extends JaxBeanInfo<BeanT> implement
         if(tagName==null) {
             Class beanClass = bean.getClass();
             String message;
-
             if (beanClass.isAnnotationPresent(XmlRootElement.class)) {
                 message = Messages.UNABLE_TO_MARSHAL_UNBOUND_CLASS.format(beanClass.getName());
             } else {
                 message = Messages.UNABLE_TO_MARSHAL_NON_ELEMENT.format(beanClass.getName());
             }
-
             target.reportError(new ValidationEventImpl(ValidationEvent.ERROR,message,null, null));
-        }
-        else {
+        } else {
             target.startElement(tagName,bean);
             target.childAsSoleContent(bean,null);
             target.endElement();
             if (retainPropertyInfo) {
-            target.currentProperty.remove();
+                target.currentProperty.remove();
+            }
         }
-    }
     }
 
     public void serializeBody(BeanT bean, XMLSerializer target) throws SAXException, IOException, XMLStreamException {
-        if(superClazz!=null)
-            superClazz.serializeBody(bean,target);
+        if (superClazz != null) {
+            superClazz.serializeBody(bean, target);
+        }
         try {
-            for( Property<BeanT> p : properties ) {
+            for (Property<BeanT> p : properties) {
                 if (retainPropertyInfo) {
-                target.currentProperty.set(p);
+                    target.currentProperty.set(p);
                 }
-                p.serializeBody(bean,target, null);
+                if (!(p.isHiddenByOverride() && !bean.getClass().equals(jaxbType))) {
+                    p.serializeBody(bean, target, null);
+                }
             }
         } catch (AccessorException e) {
-            target.reportError(null,e);
+            target.reportError(null, e);
         }
     }
 

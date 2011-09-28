@@ -23,7 +23,6 @@
  * questions.
  */
 
-
 package com.sun.xml.internal.txw2.output;
 
 import java.io.IOException;

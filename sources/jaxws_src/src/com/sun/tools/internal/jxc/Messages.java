@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -38,11 +38,13 @@ enum Messages {
     UNEXPECTED_NGCC_TOKEN, // 3 args
     BASEDIR_DOESNT_EXIST, // 1 arg
     USAGE, //0 args
+    FULLVERSION, // 0 args
     VERSION, // 0 args
     ;
 
     private static final ResourceBundle rb = ResourceBundle.getBundle(Messages.class.getPackage().getName() +".MessageBundle");
 
+    @Override
     public String toString() {
         return format();
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -100,8 +100,9 @@ final class SingleElementLeafProperty<BeanT> extends PropertyImpl<BeanT> {
         Class valueType = acc.getValueType();
 
         // check for different type than expected. If found, add xsi:type declaration
-        if (improvedXsiTypeHandling && !acc.isAdapted() && !valueType.isPrimitive() && acc.isValueTypeAbstractable() &&
-                ((obj != null) && !obj.getClass().equals(valueType))) {
+        if (improvedXsiTypeHandling && !acc.isAdapted() &&
+                (obj!=null) && ( !obj.getClass().equals(valueType))&&
+                (!valueType.isPrimitive() && acc.isValueTypeAbstractable() )) {
 
             w.startElement(tagName, outerPeer);
             w.childAsXsiType(obj, fieldName, w.grammar.getBeanInfo(valueType), nillable);

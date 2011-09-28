@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2004, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -25,7 +25,6 @@
  * THIS FILE WAS MODIFIED BY SUN MICROSYSTEMS, INC.
  */
 
-
 package com.sun.xml.internal.fastinfoset.stax.events ;
 
 import java.util.ArrayList;
@@ -42,8 +41,6 @@ import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.Namespace;
 import javax.xml.stream.events.StartElement;
 
-import com.sun.xml.internal.fastinfoset.stax.events.EmptyIterator;
-import com.sun.xml.internal.fastinfoset.stax.events.ReadIterator;
 
 public class StartElementEvent extends EventBase implements StartElement {
 

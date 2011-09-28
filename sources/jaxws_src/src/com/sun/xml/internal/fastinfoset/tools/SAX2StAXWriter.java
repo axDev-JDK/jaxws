@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2004, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -25,12 +25,12 @@
  * THIS FILE WAS MODIFIED BY SUN MICROSYSTEMS, INC.
  */
 
-
-
 package com.sun.xml.internal.fastinfoset.tools;
 
 import com.sun.xml.internal.fastinfoset.QualifiedName;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import org.xml.sax.Attributes;
@@ -40,6 +40,7 @@ import org.xml.sax.ext.LexicalHandler;
 import org.xml.sax.helpers.DefaultHandler;
 
 public class SAX2StAXWriter extends DefaultHandler implements LexicalHandler {
+    private static final Logger logger = Logger.getLogger(SAX2StAXWriter.class.getName());
 
     /**
      * XML stream writer where events are pushed.
@@ -123,7 +124,7 @@ public class SAX2StAXWriter extends DefaultHandler implements LexicalHandler {
             _writer.writeEndElement();
         }
         catch (XMLStreamException e) {
-            e.printStackTrace();
+            logger.log(Level.FINE, "Exception on endElement", e);
             throw new SAXException(e);
         }
     }

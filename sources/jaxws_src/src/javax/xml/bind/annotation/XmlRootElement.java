@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2004, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -73,28 +73,28 @@ import static java.lang.annotation.ElementType.TYPE;
  *     marshal( new Point(3,5), System.out);
  * </pre>
  *
- * <pre><xmp>
- *     <!-- Example: XML output -->
- *     <point>
- *       <x> 3 </x>
- *       <y> 5 </y>
- *     </point>
- * </xmp></pre>
+ * <pre>
+ *     &lt;!-- Example: XML output -->
+ *     &lt;point>
+ *       &lt;x> 3 </x>
+ *       &lt;y> 5 </y>
+ *     &lt;/point>
+ * </pre>
  *
  * The annotation causes an global element declaration to be produced
  * in the schema. The global element declaration is associated with
  * the XML schema type to which the class is mapped.
  *
- * <pre><xmp>
- *     <!-- Example: XML schema definition -->
- *     <xs:element name="point" type="point"/>
- *     <xs:complexType name="point">
- *       <xs:sequence>
- *         <xs:element name="x" type="xs:int"/>
- *         <xs:element name="y" type="xs:int"/>
- *       </xs:sequence>
- *     </xs:complexType>
- * </xmp></pre>
+ * <pre>
+ *     &lt;!-- Example: XML schema definition -->
+ *     &lt;xs:element name="point" type="point"/>
+ *     &lt;xs:complexType name="point">
+ *       &lt;xs:sequence>
+ *         &lt;xs:element name="x" type="xs:int"/>
+ *         &lt;xs:element name="y" type="xs:int"/>
+ *       &lt;/xs:sequence>
+ *     &lt;/xs:complexType>
+ * </pre>
  *
  * <p>
  *

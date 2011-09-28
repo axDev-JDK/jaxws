@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.codemodel.internal;
 
 
@@ -196,6 +197,18 @@ public final class JAnnotationArrayMember extends JAnnotationValue implements JA
         return this;
     }
 
+    /**
+     * Adds an expression array member to this annotation
+     *
+     * @param value Adds an expression value to the array member
+     * @return The JAnnotationArrayMember. More elements can be added by calling
+     *         the same method multiple times
+     */
+    public JAnnotationArrayMember param(final JExpression value) {
+        JAnnotationValue annotationValue = new JAnnotationStringValue(value);
+        values.add(annotationValue);
+        return this;
+    }
 
     /**
      * Adds a class array member to this annotation

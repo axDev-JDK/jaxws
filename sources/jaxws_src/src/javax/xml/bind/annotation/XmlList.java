@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package javax.xml.bind.annotation;
 
 import java.lang.annotation.Retention;
@@ -58,12 +59,12 @@ import static java.lang.annotation.ElementType.PARAMETER;
  *
  * would produce XML like this:
  *
- * <pre><xmp>
- * <foo>
- *   <data>abc</data>
- *   <data>def</data>
- * </foo>
- * </xmp></pre>
+ * <pre>
+ * &lt;foo>
+ *   &lt;data>abc</data>
+ *   &lt;data>def</data>
+ * &lt;/foo>
+ * </pre>
  *
  * &#64;XmlList annotation, on the other hand, allows multiple values to be
  * represented as whitespace-separated tokens in a single element. For example,
@@ -79,11 +80,11 @@ import static java.lang.annotation.ElementType.PARAMETER;
  *
  * the above code will produce XML like this:
  *
- * <pre><xmp>
- * <foo>
- *   <data>abc def</data>
- * </foo>
- * </xmp></pre>
+ * <pre>
+ * &lt;foo>
+ *   &lt;data>abc def</data>
+ * &lt;/foo>
+ * </pre>
  *
  * <p>This annotation can be used with the following annotations:
  *        {@link XmlElement},

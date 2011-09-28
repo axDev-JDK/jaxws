@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -53,6 +53,8 @@ public final class CollisionCheckStack<E> extends AbstractList<E> {
     private int[] next;
     private int size = 0;
 
+    private boolean latestPushResult = false;
+
     /**
      * True if the check shall be done by using the object identity.
      * False if the check shall be done with the equals method.
@@ -81,6 +83,10 @@ public final class CollisionCheckStack<E> extends AbstractList<E> {
         return useIdentity;
     }
 
+    public boolean getLatestPushResult() {
+        return latestPushResult;
+    }
+
     /**
      * Pushes a new object to the stack.
      *
@@ -97,7 +103,8 @@ public final class CollisionCheckStack<E> extends AbstractList<E> {
         next[size] = initialHash[hash];
         initialHash[hash] = size+1;
         size++;
-        return r;
+        this.latestPushResult = r;
+        return latestPushResult;
     }
 
     /**
@@ -110,6 +117,11 @@ public final class CollisionCheckStack<E> extends AbstractList<E> {
         data[size] = o;
         next[size] = -1;
         size++;
+    }
+
+    public boolean findDuplicate(E o) {
+        int hash = hash(o);
+        return findDuplicate(o, hash);
     }
 
     @Override

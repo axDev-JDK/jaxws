@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -389,6 +389,19 @@ public final class WsdlMessages {
      */
     public static String PARSING_ONLY_ONE_OF_ELEMENT_OR_TYPE_REQUIRED(Object arg0) {
         return localizer.localize(localizablePARSING_ONLY_ONE_OF_ELEMENT_OR_TYPE_REQUIRED(arg0));
+    }
+
+    public static Localizable localizableVALIDATION_UNSUPPORTED_USE_ENCODED(Object arg0, Object arg1) {
+        return messageFactory.getMessage("validation.unsupportedUse.encoded", arg0, arg1);
+    }
+
+    /**
+     * "Use of SOAP Encoding is not supported.
+     * SOAP extension element on line {0} in {1} has use="encoded" "
+     *
+     */
+    public static String VALIDATION_UNSUPPORTED_USE_ENCODED(Object arg0, Object arg1) {
+        return localizer.localize(localizableVALIDATION_UNSUPPORTED_USE_ENCODED(arg0, arg1));
     }
 
     public static Localizable localizablePARSING_INCORRECT_ROOT_ELEMENT(Object arg0, Object arg1, Object arg2, Object arg3) {

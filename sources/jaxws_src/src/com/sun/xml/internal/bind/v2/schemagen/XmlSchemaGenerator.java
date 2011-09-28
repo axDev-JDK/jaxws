@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -68,6 +68,7 @@ import com.sun.xml.internal.bind.v2.model.core.ElementPropertyInfo;
 import com.sun.xml.internal.bind.v2.model.core.EnumConstant;
 import com.sun.xml.internal.bind.v2.model.core.EnumLeafInfo;
 import com.sun.xml.internal.bind.v2.model.core.MapPropertyInfo;
+import com.sun.xml.internal.bind.v2.model.core.MaybeElement;
 import com.sun.xml.internal.bind.v2.model.core.NonElement;
 import com.sun.xml.internal.bind.v2.model.core.NonElementRef;
 import com.sun.xml.internal.bind.v2.model.core.PropertyInfo;
@@ -77,6 +78,7 @@ import com.sun.xml.internal.bind.v2.model.core.TypeInfoSet;
 import com.sun.xml.internal.bind.v2.model.core.TypeRef;
 import com.sun.xml.internal.bind.v2.model.core.ValuePropertyInfo;
 import com.sun.xml.internal.bind.v2.model.core.WildcardMode;
+import com.sun.xml.internal.bind.v2.model.impl.ClassInfoImpl;
 import com.sun.xml.internal.bind.v2.model.nav.Navigator;
 import com.sun.xml.internal.bind.v2.runtime.SwaRefAdapter;
 import static com.sun.xml.internal.bind.v2.schemagen.Util.*;
@@ -107,7 +109,7 @@ import com.sun.xml.internal.txw2.TxwException;
 import com.sun.xml.internal.txw2.TypedXmlWriter;
 import com.sun.xml.internal.txw2.output.ResultFactory;
 import com.sun.xml.internal.txw2.output.XmlSerializer;
-
+import java.util.Collection;
 import org.xml.sax.SAXParseException;
 
 /**
@@ -750,21 +752,39 @@ public final class XmlSchemaGenerator<T,C,F,M> {
          *      The name of the attribute used when referencing a type by QName.
          */
         private void writeTypeRef(TypeHost th, NonElement<T,C> type, String refAttName) {
-            if(type.getTypeName()==null) {
-                // anonymous
-                th.block(); // so that the caller may write other attribuets
-                if(type instanceof ClassInfo) {
-                    if(collisionChecker.push((ClassInfo<T,C>)type)) {
-                        errorListener.error(new SAXParseException(
-                            Messages.ANONYMOUS_TYPE_CYCLE.format(collisionChecker.getCycleString()),
-                            null
-                        ));
-                    } else {
+            Element e = null;
+            if (type instanceof MaybeElement) {
+                MaybeElement me = (MaybeElement)type;
+                boolean isElement = me.isElement();
+                if (isElement) e = me.asElement();
+            }
+            if (type instanceof Element) {
+                e = (Element)type;
+            }
+            if (type.getTypeName()==null) {
+                if ((e != null) && (e.getElementName() != null)) {
+                    th.block(); // so that the caller may write other attributes
+                    if(type instanceof ClassInfo) {
                         writeClass( (ClassInfo<T,C>)type, th );
+                    } else {
+                        writeEnum( (EnumLeafInfo<T,C>)type, (SimpleTypeHost)th);
                     }
-                    collisionChecker.pop();
                 } else {
-                    writeEnum( (EnumLeafInfo<T,C>)type, (SimpleTypeHost)th);
+                    // anonymous
+                    th.block(); // so that the caller may write other attributes
+                    if(type instanceof ClassInfo) {
+                        if(collisionChecker.push((ClassInfo<T,C>)type)) {
+                            errorListener.warning(new SAXParseException(
+                                Messages.ANONYMOUS_TYPE_CYCLE.format(collisionChecker.getCycleString()),
+                                null
+                            ));
+                        } else {
+                            writeClass( (ClassInfo<T,C>)type, th );
+                        }
+                        collisionChecker.pop();
+                    } else {
+                        writeEnum( (EnumLeafInfo<T,C>)type, (SimpleTypeHost)th);
+                    }
                 }
             } else {
                 th._attribute(refAttName,type.getTypeName());
@@ -1009,8 +1029,32 @@ public final class XmlSchemaGenerator<T,C,F,M> {
 
                         QName tn = t.getTagName();
 
-                        if(canBeDirectElementRef(t,tn) || (!tn.getNamespaceURI().equals(uri) && tn.getNamespaceURI().length()>0)) {
-                            e.ref(tn);
+                        PropertyInfo propInfo = t.getSource();
+                        TypeInfo parentInfo = (propInfo == null) ? null : propInfo.parent();
+
+                        if (canBeDirectElementRef(t, tn, parentInfo)) {
+                            if ((!t.getTarget().isSimpleType()) && (t.getTarget() instanceof ClassInfo) && collisionChecker.findDuplicate((ClassInfo<T, C>) t.getTarget())) {
+                                e.ref(new QName(uri, tn.getLocalPart()));
+                            } else {
+
+                                QName elemName = null;
+                                if (t.getTarget() instanceof Element) {
+                                    Element te = (Element) t.getTarget();
+                                    elemName = te.getElementName();
+                                }
+
+                                Collection refs = propInfo.ref();
+                                if ((refs != null) && (!refs.isEmpty()) && (elemName != null)) {
+                                    ClassInfoImpl cImpl = (ClassInfoImpl)refs.iterator().next();
+                                    if ((cImpl != null) && (cImpl.getElementName() != null)) {
+                                        e.ref(new QName(cImpl.getElementName().getNamespaceURI(), tn.getLocalPart()));
+                                    } else {
+                                        e.ref(new QName("", tn.getLocalPart()));
+                                    }
+                                } else {
+                                    e.ref(tn);
+                                }
+                            }
                         } else {
                             e.name(tn.getLocalPart());
                             writeTypeRef(e,t, "type");
@@ -1068,14 +1112,38 @@ public final class XmlSchemaGenerator<T,C,F,M> {
          *
          * This is possible if we already have such declaration to begin with.
          */
-        private boolean canBeDirectElementRef(TypeRef<T, C> t, QName tn) {
-            if(t.isNillable() || t.getDefaultValue()!=null)
+        private boolean canBeDirectElementRef(TypeRef<T, C> t, QName tn, TypeInfo parentInfo) {
+            Element te = null;
+            ClassInfo ci = null;
+            QName targetTagName = null;
+
+            if (t.getTarget() instanceof Element) {
+                te = (Element) t.getTarget();
+                targetTagName = te.getElementName();
+                if (te instanceof ClassInfo) {
+                    ci = (ClassInfo)te;
+                }
+            }
+
+            String nsUri = tn.getNamespaceURI();
+            if ((!nsUri.equals(uri) && nsUri.length()>0) && (!((parentInfo instanceof ClassInfo) && (((ClassInfo)parentInfo).getTypeName() == null)))) {
+                return true;
+            }
+
+            // there's a circular reference from an anonymous subtype to a global element
+            if ((ci != null) && ((targetTagName != null) && (te.getScope() == null))) {
+                if (targetTagName.getLocalPart().equals(tn.getLocalPart())) {
+                    return true;
+                }
+            }
+
+            if(t.isNillable() || t.getDefaultValue()!=null) {
                 // can't put those attributes on <element ref>
                 return false;
+            }
 
-            if(t.getTarget() instanceof Element) {
-                Element te = (Element) t.getTarget();
-                QName targetTagName = te.getElementName();
+            // we have the precise element defined already
+            if (te != null) { // it is instanceof Element
                 return targetTagName!=null && targetTagName.equals(tn);
             }
 
@@ -1304,7 +1372,9 @@ public final class XmlSchemaGenerator<T,C,F,M> {
              * Returns true if two {@link ElementDeclaration}s are representing
              * the same schema fragment.
              */
+            @Override
             public abstract boolean equals(Object o);
+            @Override
             public abstract int hashCode();
 
             /**
@@ -1329,7 +1399,7 @@ public final class XmlSchemaGenerator<T,C,F,M> {
                 TopLevelElement e = schema.element().name(localName);
                 if(nillable)
                     e.nillable(true);
-                if(type!=null) {
+                if (type != null) {
                     writeTypeRef(e,type, "type");
                 } else {
                     e.complexType();    // refer to the nested empty complex type
@@ -1373,6 +1443,7 @@ public final class XmlSchemaGenerator<T,C,F,M> {
     /**
      * Debug information of what's in this {@link XmlSchemaGenerator}.
      */
+    @Override
     public String toString() {
         StringBuilder buf = new StringBuilder();
         for (Namespace ns : namespaces.values()) {
@@ -1449,7 +1520,7 @@ public final class XmlSchemaGenerator<T,C,F,M> {
 
             if (relPath == null)
                 return uri; // recursion found no commonality in the two uris at all
-            StringBuffer relUri = new StringBuffer();
+            StringBuilder relUri = new StringBuilder();
             relUri.append(relPath);
             if (theUri.getQuery() != null)
                 relUri.append('?').append(theUri.getQuery());

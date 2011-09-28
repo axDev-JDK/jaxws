@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1998, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,7 +22,6 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
-
 
 package com.sun.xml.internal.dtdparser;
 
@@ -58,7 +57,7 @@ import java.util.Vector;
  * @author David Brownell
  * @author Janet Koenig
  * @author Kohsuke KAWAGUCHI
- * @version $Id: DTDParser.java,v 1.1 2005/05/31 22:28:54 kohsuke Exp $
+ * @version $Id: DTDParser.java,v 1.2 2009-04-16 15:25:49 snajper Exp $
  */
 public class DTDParser {
     public final static String TYPE_CDATA = "CDATA";
@@ -216,25 +215,25 @@ public class DTDParser {
      */
     public void parse(String uri)
             throws IOException, SAXException {
-        InputSource in;
+        InputSource inSource;
 
         init();
         // System.out.println ("parse (\"" + uri + "\")");
-        in = resolver.resolveEntity(null, uri);
+        inSource = resolver.resolveEntity(null, uri);
 
         // If custom resolver punts resolution to parser, handle it ...
-        if (in == null) {
-            in = Resolver.createInputSource(new java.net.URL(uri), false);
+        if (inSource == null) {
+            inSource = Resolver.createInputSource(new java.net.URL(uri), false);
 
             // ... or if custom resolver doesn't correctly construct the
             // input entity, patch it up enough so relative URIs work, and
             // issue a warning to minimize later confusion.
-        } else if (in.getSystemId() == null) {
+        } else if (inSource.getSystemId() == null) {
             warning("P-065", null);
-            in.setSystemId(uri);
+            inSource.setSystemId(uri);
         }
 
-        parseInternal(in);
+        parseInternal(inSource);
     }
 
     // makes sure the parser is reset to "before a document"

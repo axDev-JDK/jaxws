@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2004, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -73,10 +73,11 @@ class FactoryFinder {
      *                              a system property
      * @exception SOAPException if there is a SOAP error
      */
-    static Object find(String factoryId)
+    static Object find(String factId)
         throws SOAPException
     {
-        ClassLoader classLoader;
+        final ClassLoader classLoader;
+        final String factoryId = factId;
         try {
             classLoader = Thread.currentThread().getContextClassLoader();
         } catch (Exception x) {
@@ -98,7 +99,7 @@ class FactoryFinder {
             String javah=System.getProperty( "java.home" );
             String configFile = javah + File.separator +
                 "lib" + File.separator + "jaxm.properties";
-            File f=new File( configFile );
+            final File f=new File( configFile );
             if( f.exists()) {
                 Properties props=new Properties();
                 props.load( new FileInputStream(f));

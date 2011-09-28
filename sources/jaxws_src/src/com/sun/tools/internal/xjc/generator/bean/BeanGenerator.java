@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -226,6 +226,16 @@ public final class BeanGenerator implements Outline {
                             JExpr.lit(model.serialVersionUID));
                 }
             }
+
+            CClassInfoParent base = cc.target.parent();
+            if ((base != null) && (base instanceof CClassInfo)) {
+                String pkg = base.getOwnerPackage().name();
+                String shortName = base.fullName().substring(base.fullName().indexOf(pkg)+pkg.length()+1);
+                if (cc.target.shortName.equals(shortName)) {
+                    getErrorReceiver().error(cc.target.getLocator(), Messages.ERR_KEYNAME_COLLISION.format(shortName));
+                }
+            }
+
         }
 
         // fill in implementation classes

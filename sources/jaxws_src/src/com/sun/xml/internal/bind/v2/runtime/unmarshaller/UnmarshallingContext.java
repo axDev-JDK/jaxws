@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -55,7 +55,6 @@ import com.sun.xml.internal.bind.api.AccessorException;
 import com.sun.xml.internal.bind.api.ClassResolver;
 import com.sun.xml.internal.bind.unmarshaller.InfosetScanner;
 import com.sun.xml.internal.bind.v2.ClassFactory;
-import com.sun.xml.internal.bind.v2.WellKnownNamespace;
 import com.sun.xml.internal.bind.v2.runtime.AssociationMap;
 import com.sun.xml.internal.bind.v2.runtime.Coordinator;
 import com.sun.xml.internal.bind.v2.runtime.JAXBContextImpl;
@@ -249,7 +248,7 @@ public final class UnmarshallingContext extends Coordinator
          *
          * {@link State} objects form a doubly linked list.
          */
-        public final State prev;
+        public State prev;
         private State next;
 
         public boolean nil = false;
@@ -384,6 +383,23 @@ public final class UnmarshallingContext extends Coordinator
         State s = current;
         for( int i=0; i<8; i++ )
             s = new State(s);
+    }
+
+    public void clearStates() {
+        State last = current;
+        while (last.next != null) last = last.next;
+        while (last.prev != null) {
+            last.loader = null;
+            last.nil = false;
+            last.receiver = null;
+            last.intercepter = null;
+            last.elementDefaultValue = null;
+            last.target = null;
+            last = last.prev;
+            last.next.prev = null;
+            last.next = null;
+        }
+        current = last;
     }
 
     /**
@@ -801,7 +817,7 @@ public final class UnmarshallingContext extends Coordinator
     }
     private String resolveNamespacePrefix( String prefix ) {
         if(prefix.equals("xml"))
-            return WellKnownNamespace.XML_NAMESPACE_URI;
+            return XMLConstants.XML_NS_URI;
 
         for( int i=nsLen-2; i>=0; i-=2 ) {
             if(prefix.equals(nsBind[i]))
@@ -913,8 +929,6 @@ public final class UnmarshallingContext extends Coordinator
         return resolveNamespacePrefix(prefix);
     }
 
-
-
 //
 //
 //
@@ -997,8 +1011,6 @@ public final class UnmarshallingContext extends Coordinator
     public Scope getScope(int offset) {
         return scopes[scopeTop-offset];
     }
-
-
 
 //
 //
@@ -1092,8 +1104,6 @@ public final class UnmarshallingContext extends Coordinator
         }
     }
 
-
-
 //
 // in-place unmarshalling related capabilities
 //
@@ -1148,9 +1158,6 @@ public final class UnmarshallingContext extends Coordinator
         else
             return null;
     }
-
-
-
 
     /**
      * Gets the xmime:contentType value for the current object.

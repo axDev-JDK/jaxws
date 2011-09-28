@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -40,6 +40,7 @@ import com.sun.xml.internal.messaging.saaj.util.LogDomainConstants;
 
 public class SOAPDocumentImpl extends DocumentImpl implements SOAPDocument {
 
+    private static final String XMLNS = "xmlns".intern();
     protected static final Logger log =
         Logger.getLogger(LogDomainConstants.SOAP_DOMAIN,
                          "com.sun.xml.internal.messaging.saaj.soap.LocalStrings");
@@ -126,6 +127,18 @@ public class SOAPDocumentImpl extends DocumentImpl implements SOAPDocument {
     }
 
     public Attr createAttribute(String name) throws DOMException {
+        boolean isQualifiedName = (name.indexOf(":") > 0);
+        if (isQualifiedName) {
+            String nsUri = null;
+            String prefix = name.substring(0, name.indexOf(":"));
+            //cannot do anything to resolve the URI if prefix is not
+            //XMLNS.
+            if (XMLNS.equals(prefix)) {
+                nsUri = ElementImpl.XMLNS_URI;
+                return createAttributeNS(nsUri, name);
+            }
+        }
+
         return super.createAttribute(name);
     }
 

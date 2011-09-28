@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2004, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -68,7 +68,7 @@ package javax.xml.bind.annotation.adapters;
  *        XmlJavaTypeAdapter} </li>
  * </ul>
  *
- * <p><b>Example:</b> Customized mapping of </tt>HashMap</tt></p>
+ * <p><b>Example:</b> Customized mapping of <tt>HashMap</tt></p>
  * <p> The following example illustrates the use of
  * <tt>&#64;XmlAdapter</tt> and <tt>&#64;XmlJavaTypeAdapter</tt> to
  * customize the mapping of a <tt>HashMap</tt>.

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2008, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.codemodel.internal;
 
 
@@ -323,6 +324,23 @@ public final class JAnnotationUse extends JAnnotationValue {
     public JAnnotationUse param(String name, JType type){
         JClass clazz = type.boxify();
         addValue(name, new JAnnotationStringValue ( clazz.dotclass() ));
+        return this;
+    }
+
+    /**
+     * Adds a member value pair to this annotation.
+     * @param name
+     *        The simple name for this annotation
+     *
+     * @param value
+     *        The JExpression which provides the contant value for this annotation
+     * @return
+     *         The JAnnotationUse. More member value pairs can
+     *         be added to it using the same or the overloaded methods.
+     *
+     */
+    public JAnnotationUse param(String name, JExpression value){
+        addValue(name, new JAnnotationStringValue(value));
         return this;
     }
 

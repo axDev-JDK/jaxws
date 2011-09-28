@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -42,11 +42,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 
 import javax.xml.bind.Binder;
-import javax.xml.bind.DatatypeConverter;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -75,7 +72,6 @@ import javax.xml.transform.sax.TransformerHandler;
 
 import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Pool;
-import com.sun.xml.internal.bind.DatatypeConverterImpl;
 import com.sun.xml.internal.bind.api.AccessorException;
 import com.sun.xml.internal.bind.api.Bridge;
 import com.sun.xml.internal.bind.api.BridgeContext;
@@ -283,13 +279,6 @@ public final class JAXBContextImpl extends JAXBRIContext {
         this.improvedXsiTypeHandling = builder.improvedXsiTypeHandling;
 
         Collection<TypeReference> typeRefs = builder.typeRefs;
-
-        AccessController.doPrivileged(new PrivilegedAction<Void>() {
-            public Void run() {
-                DatatypeConverter.setDatatypeConverter(DatatypeConverterImpl.theInstance);
-                return null;
-            }
-        });
 
         boolean fastB;
         try {
@@ -1061,7 +1050,7 @@ public final class JAXBContextImpl extends JAXBRIContext {
         private Collection<TypeReference> typeRefs;
         private boolean xmlAccessorFactorySupport = false;
         private boolean allNillable;
-        private boolean improvedXsiTypeHandling = false;
+        private boolean improvedXsiTypeHandling = true;
 
         public JAXBContextBuilder() {};
 

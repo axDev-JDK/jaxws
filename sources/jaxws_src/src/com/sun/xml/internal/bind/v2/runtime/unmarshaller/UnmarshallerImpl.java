@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -179,6 +179,7 @@ public final class UnmarshallerImpl extends AbstractUnmarshallerImpl implements 
             throw new IllegalArgumentException();
         return (JAXBElement)unmarshal0(reader,source,getBeanInfo(expectedType));
     }
+
     private Object unmarshal0( XMLReader reader, InputSource source, JaxBeanInfo expectedType ) throws JAXBException {
 
         SAXConnector connector = getUnmarshallerHandler(needsInterning(reader),expectedType);
@@ -200,8 +201,10 @@ public final class UnmarshallerImpl extends AbstractUnmarshallerImpl implements 
         try {
             reader.parse(source);
         } catch( IOException e ) {
+            coordinator.clearStates();
             throw new UnmarshalException(e);
         } catch( SAXException e ) {
+            coordinator.clearStates();
             throw createUnmarshalException(e);
         }
 
@@ -510,7 +513,7 @@ public final class UnmarshallerImpl extends AbstractUnmarshallerImpl implements 
 
 
     /**
-     * Default error handling behavior fot {@link Unmarshaller}.
+     * Default error handling behavior for {@link Unmarshaller}.
      */
     public boolean handleEvent(ValidationEvent event) {
         return event.getSeverity()!=ValidationEvent.FATAL_ERROR;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -90,7 +90,7 @@ public class ContextFactory {
 
         Boolean improvedXsiTypeHandling = getPropertyValue(properties, JAXBRIContext.IMPROVED_XSI_TYPE_HANDLING, Boolean.class);
         if(improvedXsiTypeHandling == null)
-            improvedXsiTypeHandling = false;
+            improvedXsiTypeHandling = true;
 
         Boolean xmlAccessorFactorySupport = getPropertyValue(properties,
            JAXBRIContext.XMLACCESSORFACTORY_SUPPORT,Boolean.class);

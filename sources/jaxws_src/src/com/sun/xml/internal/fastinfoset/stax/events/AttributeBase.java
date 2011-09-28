@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2004, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -25,13 +25,11 @@
  * THIS FILE WAS MODIFIED BY SUN MICROSYSTEMS, INC.
  */
 
-
 package com.sun.xml.internal.fastinfoset.stax.events;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.events.Attribute;
 
-import com.sun.xml.internal.fastinfoset.stax.events.Util;
 
 
 public class AttributeBase extends EventBase implements Attribute

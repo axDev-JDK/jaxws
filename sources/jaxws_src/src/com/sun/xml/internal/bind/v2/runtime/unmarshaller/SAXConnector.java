@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -45,11 +45,10 @@ public final class SAXConnector implements UnmarshallerHandler {
     private LocatorEx loc;
 
     /**
-     * SAX may fire consective characters event, but we don't allow it.
+     * SAX may fire consecutive characters event, but we don't allow it.
      * so use this buffer to perform buffering.
      */
     private final StringBuilder buffer = new StringBuilder();
-
 
     private final XmlVisitor next;
     private final UnmarshallingContext context;
@@ -61,11 +60,10 @@ public final class SAXConnector implements UnmarshallerHandler {
             return qname;
         }
     }
+
     private final TagNameImpl tagName = new TagNameImpl();
 
-
     /**
-     *
      * @param externalLocator
      *      If the caller is producing SAX events from sources other than Unicode and angle brackets,
      *      the caller can override the default SAX {@link Locator} object by this object

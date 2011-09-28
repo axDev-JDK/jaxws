@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -340,7 +340,7 @@ public abstract class Provider {
      * @param referenceParameters Reference parameters to be associated
      * with the returned <code>EndpointReference</code> instance.
      *
-     * @return the <code>W3CEndpointReference<code> created from
+     * @return the <code>W3CEndpointReference</code> created from
      *          <code>serviceName</code>, <code>portName</code>,
      *          <code>metadata</code>, <code>wsdlDocumentLocation</code>
      *          and <code>referenceParameters</code>. This method
@@ -351,14 +351,14 @@ public abstract class Provider {
      *        <li>If the <code>address</code>, <code>serviceName</code> and
      *            <code>portName</code> are all <code>null</code>.
      *        <li>If the <code>serviceName</code> service is <code>null</code> and the
-     *            <code>portName> is NOT <code>null</code>.
+     *            <code>portName</code> is NOT <code>null</code>.
      *        <li>If the <code>address</code> property is <code>null</code> and
      *            the <code>serviceName</code> and <code>portName</code> do not
      *            specify a valid endpoint published by the same Java EE
      *            application.
      *        <li>If the <code>serviceName</code>is NOT <code>null</code>
      *             and is not present in the specified WSDL.
-     *        <li>If the <code>portName</code> port is not <code>null<code> and it
+     *        <li>If the <code>portName</code> port is not <code>null</code> and it
      *             is not present in <code>serviceName</code> service in the WSDL.
      *        <li>If the <code>wsdlDocumentLocation</code> is NOT <code>null</code>
      *            and does not represent a valid WSDL.
@@ -396,7 +396,7 @@ public abstract class Provider {
      * <code>javax.lang.IllegalStateException</code> MUST be thrown.
      *
      * @param address Specifies the address of the target endpoint
-     * @param interfaceName the wsam:InterfaceName</code> element in the
+     * @param interfaceName the <code>wsam:InterfaceName</code> element in the
      * <code>wsa:Metadata</code> element.
      * @param serviceName Qualified name of the service in the WSDL.
      * @param portName Qualified name of the endpoint in the WSDL.
@@ -412,7 +412,7 @@ public abstract class Provider {
      * @param attributes extension attributes to be associated
      * with the returned <code>EndpointReference</code> instance.
      *
-     * @return the <code>W3CEndpointReference<code> created from
+     * @return the <code>W3CEndpointReference</code> created from
      *          <code>serviceName</code>, <code>portName</code>,
      *          <code>metadata</code>, <code>wsdlDocumentLocation</code>
      *          and <code>referenceParameters</code>. This method
@@ -423,14 +423,14 @@ public abstract class Provider {
      *        <li>If the <code>address</code>, <code>serviceName</code> and
      *            <code>portName</code> are all <code>null</code>.
      *        <li>If the <code>serviceName</code> service is <code>null</code> and the
-     *            <code>portName> is NOT <code>null</code>.
+     *            <code>portName</code> is NOT <code>null</code>.
      *        <li>If the <code>address</code> property is <code>null</code> and
      *            the <code>serviceName</code> and <code>portName</code> do not
      *            specify a valid endpoint published by the same Java EE
      *            application.
      *        <li>If the <code>serviceName</code>is NOT <code>null</code>
      *             and is not present in the specified WSDL.
-     *        <li>If the <code>portName</code> port is not <code>null<code> and it
+     *        <li>If the <code>portName</code> port is not <code>null</code> and it
      *             is not present in <code>serviceName</code> service in the WSDL.
      *        <li>If the <code>wsdlDocumentLocation</code> is NOT <code>null</code>
      *            and does not represent a valid WSDL.

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2003, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -64,8 +64,8 @@ import java.io.InputStream;
  * class containing the following method signatures:</i>
  *
  * <pre>
- * public static JAXBContext createContext( String contextPath, ClassLoader classLoader, Map<String,Object> properties ) throws JAXBException
- * public static JAXBContext createContext( Class[] classes, Map<String,Object> properties ) throws JAXBException
+ * public static JAXBContext createContext( String contextPath, ClassLoader classLoader, Map&lt;String,Object> properties ) throws JAXBException
+ * public static JAXBContext createContext( Class[] classes, Map&lt;String,Object> properties ) throws JAXBException
  * </pre>
  *
  * <p><i>
@@ -252,7 +252,6 @@ import java.io.InputStream;
  * or <tt>public static JAXBContext createContet(Class[],Map)</tt> method
  * (see {@link #newInstance(Class[], Map)} for the parameter semantics) are invoked
  * to create a {@link JAXBContext}.
- * <tt>
  *
  * @author <ul><li>Ryan Shoemaker, Sun Microsystems, Inc.</li><li>Kohsuke Kawaguchi, Sun Microsystems, Inc.</li><li>Joe Fialli, Sun Microsystems, Inc.</li></ul>
  * @see Marshaller
@@ -353,7 +352,7 @@ public abstract class JAXBContext {
      * <p>
      * To maintain compatibility with JAXB 1.0 schema to java
      * interface/implementation binding, enabled by schema customization
-     * <tt><jaxb:globalBindings valueClass="false"></tt>,
+     * <tt>&lt;jaxb:globalBindings valueClass="false"></tt>,
      * the JAXB provider will ensure that each package on the context path
      * has a <tt>jaxb.properties</tt> file which contains a value for the
      * <tt>javax.xml.bind.context.factory</tt> property and that all values
@@ -457,13 +456,13 @@ public abstract class JAXBContext {
 //     * For example, in the following Java code, if you do
 //     * <tt>newInstance(Foo.class)</tt>, the newly created {@link JAXBContext}
 //     * will recognize both <tt>Foo</tt> and <tt>Bar</tt>, but not <tt>Zot</tt>:
-//     * <pre><xmp>
+//     * <pre>
 //     * class Foo {
 //     *      Bar b;
 //     * }
 //     * class Bar { int x; }
 //     * class Zot extends Bar { int y; }
-//     * </xmp></pre>
+//     * </pre>
 //     *
 //     * Therefore, a typical client application only needs to specify the
 //     * top-level classes, but it needs to be careful.

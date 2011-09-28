@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -39,11 +39,13 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -59,6 +61,9 @@ import com.sun.tools.internal.xjc.generator.bean.field.FieldRendererFactory;
 import com.sun.tools.internal.xjc.model.Model;
 import com.sun.tools.internal.xjc.reader.Util;
 import com.sun.xml.internal.bind.api.impl.NameConverter;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.logging.Logger;
 
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
@@ -68,7 +73,7 @@ import org.xml.sax.InputSource;
  *
  * <p>
  * This class stores invocation configuration for XJC.
- * The configuration in this class shoule be abstract enough so that
+ * The configuration in this class should be abstract enough so that
  * it could be parsed from both command-line or Ant.
  */
 public class Options
@@ -133,6 +138,8 @@ public class Options
     public boolean isExtensionMode() {
         return compatibilityMode==EXTENSION;
     }
+
+    private static final Logger logger = com.sun.xml.internal.bind.Util.getClassLogger();
 
     /**
      * Generates output for the specified version of the runtime.
@@ -343,8 +350,7 @@ public class Options
         if(allPlugins==null) {
             allPlugins = new ArrayList<Plugin>();
             ClassLoader ucl = getUserClassLoader(getClass().getClassLoader());
-            for( Plugin aug : findServices(Plugin.class,ucl) )
-                allPlugins.add(aug);
+            allPlugins.addAll(Arrays.asList(findServices(Plugin.class,ucl)));
         }
 
         return allPlugins;
@@ -373,9 +379,11 @@ public class Options
 
     private InputSource fileToInputSource( File source ) {
         try {
-            String url = source.toURL().toExternalForm();
-            return new InputSource(Util.escapeSpace(url));
-        } catch (MalformedURLException e) {
+            String uri = new URI("file", source.getCanonicalPath(), null).toASCIIString();
+            return new InputSource(uri);
+        } catch (URISyntaxException ex) {
+            return new InputSource(source.getPath());
+        } catch (IOException ex) {
             return new InputSource(source.getPath());
         }
     }
@@ -406,17 +414,19 @@ public class Options
 
 
     private InputSource absolutize(InputSource is) {
-        // absolutize all the system IDs in the input,
-        // so that we can map system IDs to DOM trees.
+        // absolutize all the system IDs in the input, so that we can map system IDs to DOM trees.
         try {
-            URL baseURL = new File(".").getCanonicalFile().toURL();
-            is.setSystemId( new URL(baseURL,is.getSystemId()).toExternalForm() );
-        } catch( IOException e ) {
-            // ignore
+            String base = new File(".").getCanonicalFile().getAbsolutePath();
+            URI uri = URI.create(base).resolve(is.getSystemId());
+            if ("file".equals(uri.getScheme())) {
+               uri = new URI(uri.getScheme(), new File(uri).getCanonicalPath(), null);
+            }
+            is.setSystemId(uri.toURL().toExternalForm());
+        } catch( Exception e ) {
+            logger.log(Level.FINE, "{0}, {1}", new Object[]{is.getSystemId(), e.getLocalizedMessage()});
         }
         return is;
     }
-
 
     /** Input external binding files. */
     public InputSource[] getBindFiles() {
@@ -794,7 +804,7 @@ public class Options
 
         }
 
-        if (grammars.size() == 0)
+        if (grammars.isEmpty())
             throw new BadCommandLineException(
                 Messages.format(Messages.MISSING_GRAMMAR));
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -51,7 +51,7 @@ public interface MessageContext extends Map<String, Object> {
     /**
      * Standard property: Map of attachments to a message for the inbound
      * message, key is  the MIME Content-ID, value is a DataHandler.
-     * <p>Type: java.util.Map<String,DataHandler>
+     * <p>Type: java.util.Map&lt;String,DataHandler>
      */
     public static final String INBOUND_MESSAGE_ATTACHMENTS =
             "javax.xml.ws.binding.attachments.inbound";
@@ -59,7 +59,7 @@ public interface MessageContext extends Map<String, Object> {
     /**
      * Standard property: Map of attachments to a message for the outbound
      * message, key is the MIME Content-ID, value is a DataHandler.
-     * <p>Type: java.util.Map<String,DataHandler>
+     * <p>Type: java.util.Map&lt;String,DataHandler>
      */
     public static final String OUTBOUND_MESSAGE_ATTACHMENTS =
             "javax.xml.ws.binding.attachments.outbound";
@@ -166,7 +166,7 @@ public interface MessageContext extends Map<String, Object> {
      * Standard property: WS Addressing Reference Parameters.
      * The list MUST include all SOAP headers marked with the
      * wsa:IsReferenceParameter="true" attribute.
-     * <p>Type: List<Element>
+     * <p>Type: List&lt;Element>
      *
      * @since JAX-WS 2.1
      */

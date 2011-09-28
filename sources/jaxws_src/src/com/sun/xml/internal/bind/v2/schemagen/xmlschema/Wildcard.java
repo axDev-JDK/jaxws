@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.bind.v2.schemagen.xmlschema;
 
 import com.sun.xml.internal.txw2.TypedXmlWriter;
@@ -36,9 +37,9 @@ public interface Wildcard
     public Wildcard processContents(String value);
 
     @XmlAttribute
-    public Wildcard namespace(String[] value);
+    public Wildcard namespace(String value);
 
     @XmlAttribute
-    public Wildcard namespace(String value);
+    public Wildcard namespace(String[] value);
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2004, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -40,8 +40,8 @@ package javax.xml.bind.annotation;
  * <table border="1" cellpadding="4" cellspacing="3">
  *   <tbody>
  *     <tr>
- *       <td><b>Enum Value<b></td>
- *       <td><b>XML Schema Value<b></td>
+ *       <td><b>Enum Value</b></td>
+ *       <td><b>XML Schema Value</b></td>
  *     </tr>
  *
  *     <tr valign="top">

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2004, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -24,7 +24,6 @@
  *
  * THIS FILE WAS MODIFIED BY SUN MICROSYSTEMS, INC.
  */
-
 
 package com.sun.xml.internal.fastinfoset.stax.events ;
 
@@ -52,7 +51,7 @@ public class EndElementEvent extends EventBase implements EndElement {
         setEventType(END_ELEMENT);
     }
 
-    public EndElementEvent(String namespaceURI, String localpart, String prefix) {
+    public EndElementEvent(String prefix, String namespaceURI, String localpart) {
         _qname = getQName(namespaceURI,localpart,prefix);
         setEventType(END_ELEMENT);
     }

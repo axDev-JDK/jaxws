@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -177,6 +177,18 @@ public final class ElementBeanInfoImpl extends JaxBeanInfo<JAXBElement> {
 
             public RuntimePropertyInfo getInfo() {
                 return property.getInfo();
+            }
+
+            public boolean isHiddenByOverride() {
+                return false;
+            }
+
+            public void setHiddenByOverride(boolean hidden) {
+                throw new UnsupportedOperationException("Not supported on jaxbelements.");
+            }
+
+            public String getFieldName() {
+                return null;
             }
 
         };

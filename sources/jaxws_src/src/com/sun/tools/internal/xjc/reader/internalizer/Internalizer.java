@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -52,6 +52,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.xml.XMLConstants;
 
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -71,6 +72,8 @@ import org.xml.sax.SAXParseException;
  *     Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
 class Internalizer {
+
+    private static final String WSDL_NS = "http://schemas.xmlsoap.org/wsdl/";
 
     private static final XPathFactory xpf = XPathFactory.newInstance();
 
@@ -229,7 +232,8 @@ class Internalizer {
                                 new URL(forest.getSystemId(bindings.getOwnerDocument())), schemaLocation
                               );
                     schemaLocation = loc.toExternalForm();
-                    if (loc.getProtocol().startsWith("file")) {
+                    target = forest.get(schemaLocation);
+                    if ((target == null) && (loc.getProtocol().startsWith("file"))) {
                         File f = new File(loc.getFile());
                         schemaLocation = new File(f.getCanonicalPath()).toURI().toString();
                     }
@@ -402,7 +406,18 @@ class Internalizer {
                     move(item, targetNodes);
                 } else if ("globalBindings".equals(localName)) {
                         // <jaxb:globalBindings> always go to the root of document.
-                    moveUnder(item, forest.getOneDocument().getDocumentElement());
+                    Element root = forest.getOneDocument().getDocumentElement();
+                    if (root.getNamespaceURI().equals(WSDL_NS)) {
+                        NodeList elements = root.getElementsByTagNameNS(XMLConstants.W3C_XML_SCHEMA_NS_URI, "schema");
+                        if ((elements == null) || (elements.getLength() < 1)) {
+                            reportError(item, Messages.format(Messages.ORPHANED_CUSTOMIZATION, item.getNodeName()));
+                            return;
+                        } else {
+                            moveUnder(item, (Element)elements.item(0));
+                        }
+                    } else {
+                        moveUnder(item, root);
+                    }
                 } else {
                     if (!(target instanceof Element)) {
                         reportError(item,

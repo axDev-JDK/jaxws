@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -459,7 +459,7 @@ public abstract class Endpoint {
      * @param referenceParameters Reference parameters to be associated with the
      * returned <code>EndpointReference</code> instance.
      * @return EndpointReference of type <code>clazz</code> of this
-     * <code>Endpoint<code> instance.
+     * <code>Endpoint</code> instance.
      * If the returned <code>EndpointReference</code> is of type
      * <code>W3CEndpointReference</code> then it MUST contain the
      * the specified <code>referenceParameters</code>.

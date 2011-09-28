@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -23,7 +23,6 @@
  * questions.
  */
 
-
 package com.sun.xml.internal.xsom.impl;
 
 import com.sun.xml.internal.xsom.SCD;
@@ -34,7 +33,6 @@ import com.sun.xml.internal.xsom.util.ComponentNameFunction;
 import com.sun.xml.internal.xsom.impl.parser.SchemaDocumentImpl;
 import com.sun.xml.internal.xsom.parser.SchemaDocument;
 import org.xml.sax.Locator;
-import org.xml.sax.helpers.LocatorImpl;
 
 import javax.xml.namespace.NamespaceContext;
 import java.text.ParseException;
@@ -138,6 +136,7 @@ public abstract class ComponentImpl implements XSComponent
         }
     }
 
+    @Override
     public String toString() {
         return apply(new ComponentNameFunction());
     }

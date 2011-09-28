@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -47,11 +47,11 @@ import com.sun.tools.internal.xjc.reader.xmlschema.parser.IncorrectNamespaceURIC
 import com.sun.tools.internal.xjc.reader.xmlschema.parser.SchemaConstraintChecker;
 import com.sun.tools.internal.xjc.reader.xmlschema.parser.XMLSchemaInternalizationLogic;
 import com.sun.tools.internal.xjc.util.ErrorReceiverFilter;
-import com.sun.xml.internal.bind.v2.WellKnownNamespace;
 import com.sun.xml.internal.xsom.XSSchemaSet;
 import com.sun.xml.internal.xsom.parser.JAXPParser;
 import com.sun.xml.internal.xsom.parser.XMLParser;
 import com.sun.xml.internal.xsom.parser.XSOMParser;
+import javax.xml.XMLConstants;
 
 import com.sun.xml.internal.rngom.ast.builder.SchemaBuilder;
 import com.sun.xml.internal.rngom.ast.util.CheckingSchemaBuilder;
@@ -244,7 +244,7 @@ public final class ModelLoader {
         public void parse(InputSource source, ContentHandler handler,
             ErrorHandler errorHandler, EntityResolver entityResolver ) throws SAXException, IOException {
             // set up the chain of handlers.
-            handler = wrapBy( new ExtensionBindingChecker(WellKnownNamespace.XML_SCHEMA,opt,errorReceiver), handler );
+            handler = wrapBy( new ExtensionBindingChecker(XMLConstants.W3C_XML_SCHEMA_NS_URI,opt,errorReceiver), handler );
             handler = wrapBy( new IncorrectNamespaceURIChecker(errorReceiver), handler );
             handler = wrapBy( new CustomizationContextChecker(errorReceiver), handler );
 //          handler = wrapBy( new VersionChecker(controller), handler );
@@ -381,7 +381,7 @@ public final class ModelLoader {
         for( InputSource grammar : opt.getGrammars() ) {
             Document wsdlDom = forest.get( grammar.getSystemId() );
 
-            NodeList schemas = wsdlDom.getElementsByTagNameNS(WellKnownNamespace.XML_SCHEMA,"schema");
+            NodeList schemas = wsdlDom.getElementsByTagNameNS(XMLConstants.W3C_XML_SCHEMA_NS_URI,"schema");
             for( int i=0; i<schemas.getLength(); i++ )
                 scanner.scan( (Element)schemas.item(i), xsomParser.getParserHandler() );
         }
@@ -499,8 +499,9 @@ public final class ModelLoader {
         for (String systemId : forest.getRootDocuments()) {
             errorReceiver.pollAbort();
             Document dom = forest.get(systemId);
-            if (!dom.getDocumentElement().getNamespaceURI().equals(Const.JAXB_NSURI))
+            if (!dom.getDocumentElement().getNamespaceURI().equals(Const.JAXB_NSURI)) {
                 reader.parse(systemId);
+            }
         }
 
         XSSchemaSet result = reader.getResult();

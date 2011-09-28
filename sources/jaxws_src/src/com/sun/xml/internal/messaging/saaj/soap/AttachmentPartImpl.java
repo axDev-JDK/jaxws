@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -170,11 +170,8 @@ public class AttachmentPartImpl extends AttachmentPart {
                     new String[] { ex.getLocalizedMessage()});
                 throw new SOAPExceptionImpl("Data handler error: " + ex);
             }
-            bytes = bout.getBytes();
-            if (bytes != null)
-                return bytes.length;
+            return bout.size();
         }
-        return -1;
     }
 
     public void clearContent() {

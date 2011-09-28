@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -176,12 +176,22 @@ public final class JCodeModel {
      * @exception JClassAlreadyExistsException
      *      When the specified class/interface was already created.
      */
-    public JDefinedClass _class(String fullyqualifiedName,ClassType t) throws JClassAlreadyExistsException {
+    public JDefinedClass _class(int mods, String fullyqualifiedName,ClassType t) throws JClassAlreadyExistsException {
         int idx = fullyqualifiedName.lastIndexOf('.');
         if( idx<0 )     return rootPackage()._class(fullyqualifiedName);
         else
             return _package(fullyqualifiedName.substring(0,idx))
-                ._class( JMod.PUBLIC, fullyqualifiedName.substring(idx+1), t );
+                ._class(mods, fullyqualifiedName.substring(idx+1), t );
+    }
+
+    /**
+     * Creates a new generated class.
+     *
+     * @exception JClassAlreadyExistsException
+     *      When the specified class/interface was already created.
+     */
+    public JDefinedClass _class(String fullyqualifiedName,ClassType t) throws JClassAlreadyExistsException {
+        return _class( JMod.PUBLIC, fullyqualifiedName, t );
     }
 
     /**

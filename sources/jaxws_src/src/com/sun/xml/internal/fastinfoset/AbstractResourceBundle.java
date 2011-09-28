@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2004, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -24,13 +24,14 @@
  *
  * THIS FILE WAS MODIFIED BY SUN MICROSYSTEMS, INC.
  */
+
 /*
  *
  * This code is subject to the freebxml License, Version 1.1
  *
  * Copyright (c) 2001 - 2005 freebxml.org.  All rights reserved.
  *
- * $Header: /cvs/fi/FastInfoset/src/com/sun/xml/internal/fastinfoset/AbstractResourceBundle.java,v 1.3.2.4 2009/05/13 08:53:01 oleksiys Exp $
+ * $Header: /zpool01/javanet/scm/svn/tmp/cvs2svn/fi/FastInfoset/src/com/sun/xml/internal/fastinfoset/AbstractResourceBundle.java,v 1.3.2.4 2009-05-13 08:53:01 oleksiys Exp $
  */
 package com.sun.xml.internal.fastinfoset;
 
