@@ -45,7 +45,6 @@ import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -61,9 +60,8 @@ import com.sun.tools.internal.xjc.generator.bean.field.FieldRendererFactory;
 import com.sun.tools.internal.xjc.model.Model;
 import com.sun.tools.internal.xjc.reader.Util;
 import com.sun.xml.internal.bind.api.impl.NameConverter;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Locale;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.xml.sax.EntityResolver;
@@ -380,11 +378,9 @@ public class Options
 
     private InputSource fileToInputSource( File source ) {
         try {
-            String uri = new URI("file", source.getCanonicalPath(), null).toASCIIString();
-            return new InputSource(uri);
-        } catch (URISyntaxException ex) {
-            return new InputSource(source.getPath());
-        } catch (IOException ex) {
+            String url = source.toURL().toExternalForm();
+            return new InputSource(Util.escapeSpace(url));
+        } catch (MalformedURLException e) {
             return new InputSource(source.getPath());
         }
     }
@@ -417,13 +413,9 @@ public class Options
     private InputSource absolutize(InputSource is) {
         // absolutize all the system IDs in the input, so that we can map system IDs to DOM trees.
         try {
-            String base = new File(".").getCanonicalFile().getAbsolutePath();
-            URI uri = URI.create(base).resolve(is.getSystemId());
-            if ("file".equals(uri.getScheme())) {
-               uri = new URI(uri.getScheme(), new File(uri).getCanonicalPath(), null);
-            }
-            is.setSystemId(uri.toURL().toExternalForm());
-        } catch( Exception e ) {
+            URL baseURL = new File(".").getCanonicalFile().toURL();
+            is.setSystemId( new URL(baseURL,is.getSystemId()).toExternalForm() );
+        } catch( IOException e ) {
             logger.log(Level.FINE, "{0}, {1}", new Object[]{is.getSystemId(), e.getLocalizedMessage()});
         }
         return is;
