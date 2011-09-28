@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -24,7 +24,7 @@
  */
 
 /**
- * The part of public policy API that defines the classes and interfaces dealing with 
+ * The part of public policy API that defines the classes and interfaces dealing with
  * the policy tree structure (policy source model) creation and manipulation.
  */
 package com.sun.xml.internal.ws.policy.sourcemodel;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.tools.internal.xjc.reader.xmlschema.bindinfo;
 
 import java.io.FilterWriter;
@@ -76,9 +77,9 @@ public final class BindInfo implements Iterable<BIDeclaration> {
 
     @XmlLocation
     private Locator location;
-    
+
     /**
-     * Documentation taken from &lt;xs:documentation>s. 
+     * Documentation taken from &lt;xs:documentation>s.
      */
     @XmlElement(namespace=WellKnownNamespace.XML_SCHEMA)
     private Documentation documentation;
@@ -153,7 +154,7 @@ public final class BindInfo implements Iterable<BIDeclaration> {
 
     /**
      * Gets the location of this annotation in the source file.
-     * 
+     *
      * @return
      *      If the declarations are in fact specified in the source
      *      code, a non-null valid object will be returned.
@@ -161,8 +162,8 @@ public final class BindInfo implements Iterable<BIDeclaration> {
      *      null will be returned.
      */
     public Locator getSourceLocation() { return location; }
-    
-    
+
+
     private XSComponent owner;
     /**
      * Sets the owner schema component and a reference to BGMBuilder.
@@ -176,7 +177,7 @@ public final class BindInfo implements Iterable<BIDeclaration> {
             d.onSetOwner();
     }
     public XSComponent getOwner() { return owner; }
-    
+
     /**
      * Back pointer to the BGMBuilder which is building
      * a BGM from schema components including this customization.
@@ -189,7 +190,7 @@ public final class BindInfo implements Iterable<BIDeclaration> {
         decl.setParent(this);
         decls.add(decl);
     }
-    
+
     /**
      * Gets the first declaration with a given name, or null
      * if none is found.
@@ -202,10 +203,10 @@ public final class BindInfo implements Iterable<BIDeclaration> {
         }
         return null; // not found
     }
-   
+
     /**
      * Gets all the declarations
-     */ 
+     */
     public BIDeclaration[] getDecls() {
         return decls.toArray(new BIDeclaration[decls.size()]);
     }
@@ -270,10 +271,10 @@ public final class BindInfo implements Iterable<BIDeclaration> {
         else
             this.documentation.addAll(bi.documentation);
     }
-    
+
     /** Gets the number of declarations. */
     public int size() { return decls.size(); }
-    
+
     public BIDeclaration get( int idx ) { return decls.get(idx); }
 
     public Iterator<BIDeclaration> iterator() {
@@ -345,4 +346,3 @@ public final class BindInfo implements Iterable<BIDeclaration> {
      */
     public static final SchemaCache bindingFileSchema = new SchemaCache(BindInfo.class.getResource("binding.xsd"));
 }
-

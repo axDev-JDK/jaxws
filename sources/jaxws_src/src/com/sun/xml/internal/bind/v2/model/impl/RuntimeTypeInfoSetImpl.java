@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -84,7 +84,7 @@ final class RuntimeTypeInfoSetImpl extends TypeInfoSetImpl<Type,Class,Field,Meth
     }
 
     public Map<Class,RuntimeArrayInfoImpl> arrays() {
-        return (Map<Class,RuntimeArrayInfoImpl>)super.arrays(); 
+        return (Map<Class,RuntimeArrayInfoImpl>)super.arrays();
     }
 
     public RuntimeElementInfoImpl getElementInfo(Class scope,QName name) {

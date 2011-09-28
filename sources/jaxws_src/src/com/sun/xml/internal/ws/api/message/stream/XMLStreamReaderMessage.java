@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.ws.api.message.stream;
 
 import com.sun.xml.internal.ws.api.message.AttachmentSet;
@@ -32,13 +33,13 @@ import javax.xml.stream.XMLStreamReader;
  * Low level representation of an XML or SOAP message as an {@link XMLStreamReader}.
  *
  */
-public class XMLStreamReaderMessage extends StreamBasedMessage {  
+public class XMLStreamReaderMessage extends StreamBasedMessage {
     /**
      * The message represented as an {@link XMLStreamReader}.
      */
     public final XMLStreamReader msg;
-    
-    /** 
+
+    /**
      * Create a new message.
      *
      * @param properties
@@ -51,9 +52,9 @@ public class XMLStreamReaderMessage extends StreamBasedMessage {
     public XMLStreamReaderMessage(Packet properties, XMLStreamReader msg) {
         super(properties);
         this.msg = msg;
-    }    
-    
-    /** 
+    }
+
+    /**
      * Create a new message.
      *
      * @param properties
@@ -69,5 +70,5 @@ public class XMLStreamReaderMessage extends StreamBasedMessage {
     public XMLStreamReaderMessage(Packet properties, AttachmentSet attachments, XMLStreamReader msg) {
         super(properties, attachments);
         this.msg = msg;
-    }    
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.tools.internal.xjc.reader.xmlschema.bindinfo;
 
 import javax.xml.bind.DatatypeConverter;
@@ -58,11 +59,11 @@ import org.xml.sax.Locator;
 
 /**
  * Conversion declaration.
- * 
+ *
  * <p>
  * A conversion declaration specifies how an XML type gets mapped
  * to a Java type.
- * 
+ *
  * @author
  *     Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
@@ -89,7 +90,7 @@ public abstract class BIConversion extends AbstractDeclarationImpl {
     public abstract TypeUse getTypeUse( XSSimpleType owner );
 
     public QName getName() { return NAME; }
-    
+
     /** Name of the conversion declaration. */
     public static final QName NAME = new QName(
         Const.JAXB_NSURI, "conversion" );
@@ -233,7 +234,7 @@ public abstract class BIConversion extends AbstractDeclarationImpl {
 
                 // RESULT: <value>.<method>()
                 inv = $value.invoke(printMethod);
-                
+
                 // check value is not null ... if(value == null) return null;
                 JConditional jcon = marshal.body()._if($value.eq(JExpr._null()));
                 jcon._then()._return(JExpr._null());
@@ -346,4 +347,3 @@ public abstract class BIConversion extends AbstractDeclarationImpl {
         }
     }
 }
-

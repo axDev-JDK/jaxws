@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -36,7 +36,7 @@ import org.xml.sax.SAXException;
 
 /**
  * Interface that hides the detail of parsing mechanism.
- * 
+ *
  * @author
  *     Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
@@ -44,10 +44,10 @@ public interface XMLParser {
     /**
      * Parses the document identified by the given input source
      * and sends SAX events to the given content handler.
-     * 
+     *
      * <p>
      * This method must be re-entrant.
-     * 
+     *
      * @param errorHandler
      *      Errors found during the parsing must be reported to
      *      this handler so that XSOM can recognize that something went wrong.
@@ -55,7 +55,7 @@ public interface XMLParser {
      * @param entityResolver
      *      Entity resolution should be done through this interface.
      *      Can be null.
-     * 
+     *
      * @exception SAXException
      *      If ErrorHandler throws a SAXException, this method
      *      will tunnel it to the caller. All the other errors
@@ -63,6 +63,6 @@ public interface XMLParser {
      */
     void parse( InputSource source, ContentHandler handler,
         ErrorHandler errorHandler, EntityResolver entityResolver )
-        
+
         throws SAXException, IOException;
 }

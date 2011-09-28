@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -149,6 +149,10 @@ final class DatatypeConverterImpl implements DatatypeConverterInterface {
     public static BigDecimal _parseDecimal(CharSequence content) {
         content = WhiteSpaceProcessor.trim(content);
 
+        if (content.length() <= 0) {
+            return null;
+        }
+
         return new BigDecimal(content.toString());
 
         // from purely XML Schema perspective,
@@ -203,7 +207,7 @@ final class DatatypeConverterImpl implements DatatypeConverterInterface {
     }
 
     public static String _printFloat(float v) {
-        if( v==Float.NaN )                  return "NaN";
+        if( Float.isNaN(v) )                return "NaN";
         if( v==Float.POSITIVE_INFINITY )    return "INF";
         if( v==Float.NEGATIVE_INFINITY )    return "-INF";
         return String.valueOf(v);
@@ -233,22 +237,71 @@ final class DatatypeConverterImpl implements DatatypeConverterInterface {
     }
 
     public boolean parseBoolean(String lexicalXSDBoolean) {
+        if (lexicalXSDBoolean.length() <= 0) {
+            throw new IllegalArgumentException("Input is empty");
+        }
         return _parseBoolean(lexicalXSDBoolean);
     }
 
-    public static boolean _parseBoolean(CharSequence literal) {
+    public static Boolean _parseBoolean(CharSequence literal) {
         int i=0;
         int len = literal.length();
         char ch;
+        boolean value = false;
+
+        if (literal.length() <= 0) {
+            return null;
+            // throw new IllegalArgumentException("Input is empty");
+        }
+
         do {
             ch = literal.charAt(i++);
         } while(WhiteSpaceProcessor.isWhiteSpace(ch) && i<len);
 
-        // if we are strict about errors, check i==len. and report an error
+        int strIndex = 0;
 
-        if( ch=='t' || ch=='1' )        return true;
-        if( ch=='f' || ch=='0' )        return false;
-        return false;
+        switch(ch) {
+            case '1':
+                value = true;
+                break;
+            case '0':
+                value = false;
+                break;
+            case 't':
+                String strTrue = "rue";
+                do {
+                    ch = literal.charAt(i++);
+                } while ((strTrue.charAt(strIndex++) == ch) && i < len && strIndex < 3);
+
+                if(strIndex == 3)
+                    value = true;
+                else
+                    throw new IllegalArgumentException("String \"" + literal + "\" is not valid boolean value.");
+
+                break;
+            case 'f':
+                String strFalse = "alse";
+                do {
+                    ch = literal.charAt(i++);
+                } while ((strFalse.charAt(strIndex++) == ch) && i < len && strIndex < 4);
+
+
+                if(strIndex == 4)
+                    value = false;
+                else
+                    throw new IllegalArgumentException("String \"" + literal + "\" is not valid boolean value.");
+
+                break;
+        }
+
+        if(i < len) do {
+            ch = literal.charAt(i++);
+        } while (WhiteSpaceProcessor.isWhiteSpace(ch) && i < len);
+
+        if(i == len)
+            return value;
+        else
+            throw new IllegalArgumentException("String \"" + literal + "\" is not valid boolean value.");
     }
 
     public String printBoolean(boolean val) {
@@ -412,7 +465,10 @@ final class DatatypeConverterImpl implements DatatypeConverterInterface {
     }
 
     public String printDate(Calendar val) {
+        return _printDate(val);
+    }
 
+    public static String _printDate(Calendar val) {
         return CalendarFormatter.doFormat((new StringBuilder("%Y-%M-%D").append("%z")).toString(),val);
     }
 
@@ -456,7 +512,7 @@ final class DatatypeConverterImpl implements DatatypeConverterInterface {
     }
 
     public static String _printDouble(double v) {
-        if( v==Double.NaN )                    return "NaN";
+        if(Double.isNaN(v))                  return "NaN";
         if( v==Double.POSITIVE_INFINITY )    return "INF";
         if( v==Double.NEGATIVE_INFINITY )    return "-INF";
         return String.valueOf(v);
@@ -878,12 +934,7 @@ final class DatatypeConverterImpl implements DatatypeConverterInterface {
             if (tz == null)      return;
 
             // otherwise print out normally.
-            int offset;
-            if (tz.inDaylightTime(cal.getTime())) {
-                offset = tz.getRawOffset() + (tz.useDaylightTime()?3600000:0);
-            } else {
-                offset = tz.getRawOffset();
-            }
+            int offset = tz.getOffset(cal.getTime().getTime());
 
             if(offset==0) {
                 buf.append('Z');

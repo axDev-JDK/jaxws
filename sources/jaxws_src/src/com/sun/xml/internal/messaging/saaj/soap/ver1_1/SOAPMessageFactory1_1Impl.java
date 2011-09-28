@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -23,8 +23,6 @@
  * questions.
  */
 
-
-
 /**
 *
 * @author SAAJ RI Development Team
@@ -46,12 +44,12 @@ public class SOAPMessageFactory1_1Impl extends MessageFactoryImpl {
         return new Message1_1Impl();
     }
 
-    public SOAPMessage createMessage(boolean isFastInfoset, 
-        boolean acceptFastInfoset) throws SOAPException 
+    public SOAPMessage createMessage(boolean isFastInfoset,
+        boolean acceptFastInfoset) throws SOAPException
     {
         return new Message1_1Impl(isFastInfoset, acceptFastInfoset);
     }
-    
+
     public SOAPMessage createMessage(MimeHeaders headers, InputStream in)
         throws IOException, SOAPExceptionImpl {
         if ((headers == null) || (getContentType(headers) == null)) {

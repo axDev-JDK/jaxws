@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -50,7 +50,7 @@ import java.util.Collections;
  * This class acts as a filter for the Extension elements in the wsa:EndpointReference in the wsdl.
  * In addition to filtering the EPR extensions from WSDL, it adds the extensions configured by the JAX-WS runtime
  * specifc to an endpoint.
- *  
+ *
  * @author Rama Pulavarthi
  */
 public class EPRSDDocumentFilter implements SDDocumentFilter {
@@ -92,7 +92,7 @@ public class EPRSDDocumentFilter implements SDDocumentFilter {
         if (!doc.isWSDL()) {
             return w;
         }
-        
+
         return new XMLStreamWriterFilter(w) {
             private boolean eprExtnFilterON = false; //when true, all writer events are filtered out
 

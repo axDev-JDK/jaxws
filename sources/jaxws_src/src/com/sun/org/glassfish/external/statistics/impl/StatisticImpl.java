@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -30,11 +30,11 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-/** 
+/**
  * @author Sreenivas Munnangi
  */
 public abstract class StatisticImpl implements Statistic {
-    
+
     private final String statisticName;
     private final String statisticUnit;
     private final String statisticDesc;
@@ -49,10 +49,10 @@ public abstract class StatisticImpl implements Statistic {
     public static final String LAST_SAMPLE_TIME = "lastsampletime";
 
     protected final Map<String, Object> statMap = new ConcurrentHashMap<String, Object> ();
-    
+
     protected static final String NEWLINE = System.getProperty( "line.separator" );
 
-    protected StatisticImpl(String name, String unit, String desc, 
+    protected StatisticImpl(String name, String unit, String desc,
                           long start_time, long sample_time) {
 
         if (isValidString(name)) {
@@ -95,19 +95,19 @@ public abstract class StatisticImpl implements Statistic {
         statMap.put(StatisticImpl.LAST_SAMPLE_TIME, sampleTime);
         return statMap;
     }
-    
+
     public String getName() {
         return this.statisticName;
     }
-    
+
     public String getDescription() {
         return this.statisticDesc;
     }
-    
+
     public String getUnit() {
         return this.statisticUnit;
     }
-    
+
     public synchronized long getLastSampleTime() {
         return sampleTime;
     }

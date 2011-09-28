@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -25,7 +25,7 @@
 
 package javax.xml.ws.handler;
 
-/** 
+/**
  *  <code>HandlerResolver</code> is an interface implemented
  *  by an application to get control over the handler chain
  *  set on proxy/dispatch objects at the time of their creation.
@@ -43,7 +43,7 @@ package javax.xml.ws.handler;
 **/
 public interface HandlerResolver {
 
-  /** 
+  /**
    *  Gets the handler chain for the specified port.
    *
    *  @param portInfo Contains information about the port being accessed.

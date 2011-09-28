@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -29,7 +29,7 @@ class Init {
 
 
     static Quick[] getAll() {
-        return new Quick[] {new XmlElementDeclQuick(null, null), new XmlSchemaTypeQuick(null, null), new XmlElementQuick(null, null), new XmlTransientQuick(null, null), new XmlEnumQuick(null, null), new XmlElementRefQuick(null, null), new XmlSchemaQuick(null, null), new XmlElementRefsQuick(null, null), new XmlValueQuick(null, null), new XmlRootElementQuick(null, null), new XmlAttributeQuick(null, null), new XmlTypeQuick(null, null)};
+        return new Quick[] {new XmlAttributeQuick(null, null), new XmlElementQuick(null, null), new XmlElementDeclQuick(null, null), new XmlElementRefQuick(null, null), new XmlElementRefsQuick(null, null), new XmlEnumQuick(null, null), new XmlRootElementQuick(null, null), new XmlSchemaQuick(null, null), new XmlSchemaTypeQuick(null, null), new XmlTransientQuick(null, null), new XmlTypeQuick(null, null), new XmlValueQuick(null, null)};
     }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,12 +22,11 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
-package com.sun.xml.internal.ws.server;
 
+package com.sun.xml.internal.ws.wsdl.writer;
+
+import com.sun.istack.internal.NotNull;
 import com.sun.xml.internal.ws.api.server.PortAddressResolver;
-import com.sun.xml.internal.ws.api.server.WSEndpoint;
-import com.sun.xml.internal.ws.api.server.DocumentAddressResolver;
-import com.sun.xml.internal.ws.api.server.SDDocument;
 import com.sun.xml.internal.ws.util.xml.XMLStreamReaderToXMLStreamWriter;
 import com.sun.xml.internal.ws.wsdl.parser.WSDLConstants;
 import com.sun.xml.internal.ws.addressing.W3CAddressingConstants;
@@ -35,8 +34,6 @@ import com.sun.istack.internal.Nullable;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.logging.Logger;
 
 /**
@@ -46,8 +43,8 @@ import java.util.logging.Logger;
  * @author Jitendra Kotamraju
  * @author Kohsuke Kawaguchi
  */
-final class WSDLPatcher extends XMLStreamReaderToXMLStreamWriter {
-    
+public final class WSDLPatcher extends XMLStreamReaderToXMLStreamWriter {
+
     private static final String NS_XSD = "http://www.w3.org/2001/XMLSchema";
     private static final QName SCHEMA_INCLUDE_QNAME = new QName(NS_XSD, "include");
     private static final QName SCHEMA_IMPORT_QNAME = new QName(NS_XSD, "import");
@@ -56,19 +53,8 @@ final class WSDLPatcher extends XMLStreamReaderToXMLStreamWriter {
     private static final Logger logger = Logger.getLogger(
             com.sun.xml.internal.ws.util.Constants.LoggingDomain + ".wsdl.patcher");
 
-    /**
-     * {@link WSEndpoint} that owns the WSDL we are patching right now.
-     */
-    private final WSEndpointImpl<?> endpoint;
-
-    /**
-     * Document that is being patched.
-     */
-    private final SDDocumentImpl current;
-
-    private final DocumentAddressResolver resolver;
+    private final DocumentLocationResolver docResolver;
     private final PortAddressResolver portAddressResolver;
-
 
     //
     // fields accumulated as we parse through documents
@@ -86,23 +72,16 @@ final class WSDLPatcher extends XMLStreamReaderToXMLStreamWriter {
     /**
      * Creates a {@link WSDLPatcher} for patching WSDL.
      *
-     * @param endpoint
-     *      The endpoint that we are patchinig WSDL for. This object is consulted
-     *      to check other {@link SDDocument}s. Must not be null.
-     * @param current
-     *      The document that we are patching. Must not be null.
      * @param portAddressResolver
-     *      address of the endpoint is resolved using this resolver.
-     * @param resolver
-     *      Consulted to generate references among  {@link SDDocument}s.
+     *      address of the endpoint is resolved using this docResolver.
+     * @param docResolver
+     *      Consulted to get the import/include document locations.
      *      Must not be null.
      */
-    public WSDLPatcher(WSEndpointImpl<?> endpoint, SDDocumentImpl current,
-            PortAddressResolver portAddressResolver, DocumentAddressResolver resolver) {
-        this.endpoint = endpoint;
-        this.current = current;
+    public WSDLPatcher(@NotNull PortAddressResolver portAddressResolver,
+            @NotNull DocumentLocationResolver docResolver) {
         this.portAddressResolver = portAddressResolver;
-        this.resolver = resolver;
+        this.docResolver = docResolver;
     }
 
     @Override
@@ -237,19 +216,7 @@ final class WSDLPatcher extends XMLStreamReaderToXMLStreamWriter {
      *      null to leave it to the "implicit reference".
      */
     private @Nullable String getPatchedImportLocation(String relPath) {
-        try {
-            ServiceDefinitionImpl def = endpoint.getServiceDefinition();
-            assert def !=null; // this code is only used by ServieDefinitionImpl, so this must not be null.
-
-            URL ref = new URL(current.getURL(), relPath);
-            SDDocument refDoc = def.getBySystemId(ref);
-            if(refDoc==null)
-                return relPath;  // not something we know. just leave it as is.
-
-            return resolver.getRelativeAddressFor(current,refDoc);
-        } catch(MalformedURLException mue) {
-            return null;
-        }
+        return docResolver.getLocationFor(null, relPath);
     }
 
     /**
@@ -263,5 +230,3 @@ final class WSDLPatcher extends XMLStreamReaderToXMLStreamWriter {
                 ? null : portAddressResolver.getAddressFor(serviceName, portName.getLocalPart(), portAddress);
     }
 }
-    
-

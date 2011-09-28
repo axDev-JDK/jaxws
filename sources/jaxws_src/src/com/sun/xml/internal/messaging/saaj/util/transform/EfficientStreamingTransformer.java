@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -51,7 +51,7 @@ import javax.xml.transform.TransformerFactory;
 /**
  * This class is a proxy for a Transformer object with optimizations
  * for certain cases. If source and result are of type stream, then
- * bytes are simply copied whenever possible (note that this assumes 
+ * bytes are simply copied whenever possible (note that this assumes
  * that the input is well formed). In addition, it provides support for
  * FI using native DOM parsers and serializers.
  *
@@ -67,43 +67,43 @@ public class EfficientStreamingTransformer
   // removing static : security issue : CR 6813167Z
   private final TransformerFactory transformerFactory = TransformerFactory.newInstance();
 
-  /** 
+  /**
   removing support for Java 1.4 and 1.3 : CR6658158
   static {
         version = System.getProperty("java.vm.version");
         vendor = System.getProperty("java.vm.vendor");
-        if (vendor.startsWith("Sun") && 
+        if (vendor.startsWith("Sun") &&
             (version.startsWith("1.4") || version.startsWith("1.3"))) {
-            transformerFactory = 
+            transformerFactory =
                 new com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl();
         }
   }*/
-                                                                                                                                                  
+
     /**
      * TransformerFactory instance.
      */
-    
+
     /**
      * Underlying XSLT transformer.
      */
     private Transformer m_realTransformer = null;
-    
+
     /**
      * Undelying FI DOM parser.
      */
     private Object m_fiDOMDocumentParser = null;
-    
+
     /**
      * Underlying FI DOM serializer.
      */
     private Object m_fiDOMDocumentSerializer = null;
-    
+
     private EfficientStreamingTransformer() {
     }
 
     private void materialize() throws TransformerException {
         if (m_realTransformer == null) {
-            m_realTransformer = transformerFactory.newTransformer(); 
+            m_realTransformer = transformerFactory.newTransformer();
         }
     }
 
@@ -275,7 +275,7 @@ public class EfficientStreamingTransformer
     public void transform(
         javax.xml.transform.Source source,
         javax.xml.transform.Result result)
-        throws javax.xml.transform.TransformerException 
+        throws javax.xml.transform.TransformerException
     {
         // StreamSource -> StreamResult
         if ((source instanceof StreamSource)
@@ -309,7 +309,7 @@ public class EfficientStreamingTransformer
                     if (reader.markSupported())
                         reader.mark(Integer.MAX_VALUE);
 
-                    PushbackReader pushbackReader = new PushbackReader(reader, 4096); 
+                    PushbackReader pushbackReader = new PushbackReader(reader, 4096);
                     //some size to unread <?xml ....?>
                     XMLDeclarationParser ev =
                         new XMLDeclarationParser(pushbackReader);
@@ -322,7 +322,7 @@ public class EfficientStreamingTransformer
                     }
                     Writer writer =
                         new OutputStreamWriter(os /*, ev.getEncoding()*/);
-                    ev.writeTo(writer);		// doesn't write any, if no header
+                    ev.writeTo(writer);         // doesn't write any, if no header
 
                     int num;
                     char[] ac = new char[8192];
@@ -334,7 +334,7 @@ public class EfficientStreamingTransformer
                     if (reader.markSupported())
                         reader.reset();
                     return;
-                } 
+                }
             } catch (IOException e) {
                 e.printStackTrace();
                 throw new TransformerException(e.toString());
@@ -344,7 +344,7 @@ public class EfficientStreamingTransformer
         }
         // FastInfosetSource -> DOMResult
         else if (FastInfosetReflection.isFastInfosetSource(source)
-                && (result instanceof DOMResult)) 
+                && (result instanceof DOMResult))
         {
             try {
                 // Use reflection to avoid a static dep with FI
@@ -354,12 +354,12 @@ public class EfficientStreamingTransformer
 
                 // m_fiDOMDocumentParser.parse(document, source.getInputStream())
                 FastInfosetReflection.DOMDocumentParser_parse(
-                    m_fiDOMDocumentParser, 
+                    m_fiDOMDocumentParser,
                     (Document) ((DOMResult) result).getNode(),
                     FastInfosetReflection.FastInfosetSource_getInputStream(source));
 
                 // We're done!
-                return;           
+                return;
             }
             catch (Exception e) {
                 throw new TransformerException(e);
@@ -367,7 +367,7 @@ public class EfficientStreamingTransformer
         }
         // DOMSource -> FastInfosetResult
         else if ((source instanceof DOMSource)
-                && FastInfosetReflection.isFastInfosetResult(result)) 
+                && FastInfosetReflection.isFastInfosetResult(result))
         {
             try {
                 // Use reflection to avoid a static dep with FI
@@ -377,16 +377,16 @@ public class EfficientStreamingTransformer
 
                 // m_fiDOMDocumentSerializer.setOutputStream(result.getOutputStream())
                 FastInfosetReflection.DOMDocumentSerializer_setOutputStream(
-                    m_fiDOMDocumentSerializer, 
+                    m_fiDOMDocumentSerializer,
                     FastInfosetReflection.FastInfosetResult_getOutputStream(result));
 
                 // m_fiDOMDocumentSerializer.serialize(node)
                 FastInfosetReflection.DOMDocumentSerializer_serialize(
-                    m_fiDOMDocumentSerializer, 
+                    m_fiDOMDocumentSerializer,
                     ((DOMSource) source).getNode());
 
                 // We're done!
-                return;                  
+                return;
             }
             catch (Exception e) {
                 throw new TransformerException(e);
@@ -394,7 +394,7 @@ public class EfficientStreamingTransformer
         }
 
         // All other cases -- use transformer object
-        
+
         materialize();
         m_realTransformer.transform(source, result);
     }
@@ -403,11 +403,11 @@ public class EfficientStreamingTransformer
      * Threadlocal to hold a Transformer instance for this thread.
      * CR : 6813167
      */
-    //private static ThreadLocal effTransformer = new ThreadLocal(); 
-    
+    //private static ThreadLocal effTransformer = new ThreadLocal();
+
     /**
-     * Return Transformer instance for this thread, allocating a new one if 
-     * necessary. Note that this method does not clear global parameters, 
+     * Return Transformer instance for this thread, allocating a new one if
+     * necessary. Note that this method does not clear global parameters,
      * properties or any other data set on a previously used transformer.
      */
     public static Transformer newTransformer() {
@@ -415,9 +415,9 @@ public class EfficientStreamingTransformer
         /*Transformer tt = (Transformer) effTransformer.get();
         if (tt == null) {
             effTransformer.set(tt = new EfficientStreamingTransformer());
-        }       
+        }
         return tt;*/
-        return new EfficientStreamingTransformer(); 
+        return new EfficientStreamingTransformer();
     }
 
 }

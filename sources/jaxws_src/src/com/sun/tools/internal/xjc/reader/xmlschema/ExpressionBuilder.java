@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -42,6 +42,7 @@ import com.sun.xml.internal.xsom.XSModelGroupDecl;
 import com.sun.xml.internal.xsom.XSParticle;
 import com.sun.xml.internal.xsom.XSWildcard;
 import com.sun.xml.internal.xsom.visitor.XSTermFunction;
+import java.math.BigInteger;
 
 /**
  * Visits {@link XSParticle} and creates a corresponding {@link Expression} tree.
@@ -124,7 +125,7 @@ public final class ExpressionBuilder implements XSTermFunction<Expression> {
         if(p.isRepeated())
             e = new OneOrMore(e);
 
-        if(p.getMinOccurs()==0)
+        if (BigInteger.ZERO.equals(p.getMinOccurs()))
             e = new Choice(e,Expression.EPSILON);
 
         return e;

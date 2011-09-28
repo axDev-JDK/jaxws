@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -43,6 +43,13 @@ import com.sun.tools.internal.xjc.model.CTypeRef;
 import com.sun.xml.internal.bind.v2.model.core.ClassInfo;
 import com.sun.xml.internal.bind.v2.model.core.ReferencePropertyInfo;
 
+import com.sun.xml.internal.xsom.XSComplexType;
+import com.sun.xml.internal.xsom.XSComponent;
+import com.sun.xml.internal.xsom.XSContentType;
+import com.sun.xml.internal.xsom.XSModelGroup;
+import com.sun.xml.internal.xsom.XSParticle;
+import com.sun.xml.internal.xsom.XSTerm;
+
 /**
  * Partial common implementation between {@link ElementMappingImpl} and {@link BeanMappingImpl}
  *
@@ -52,7 +59,6 @@ abstract class AbstractMappingImpl<InfoT extends CElement> implements Mapping {
 
     protected final JAXBModelImpl parent;
     protected final InfoT clazz;
-
     /**
      * Lazily computed.
      *
@@ -75,7 +81,7 @@ abstract class AbstractMappingImpl<InfoT extends CElement> implements Mapping {
     }
 
     public final List<? extends Property> getWrapperStyleDrilldown() {
-        if(!drilldownComputed) {
+        if (!drilldownComputed) {
             drilldownComputed = true;
             drilldown = calcDrilldown();
         }
@@ -84,22 +90,30 @@ abstract class AbstractMappingImpl<InfoT extends CElement> implements Mapping {
 
     protected abstract List<Property> calcDrilldown();
 
-
     /**
      * Derived classes can use this method to implement {@link #calcDrilldown}.
      */
     protected List<Property> buildDrilldown(CClassInfo typeBean) {
+        //JAXWS 2.1 spec 2.3.1.2:
+        //Wrapper style if the wrapper elements only contain child elements,
+        //they must not contain xsd:choice
+        if (containingChoice(typeBean)) {
+            return null;
+        }
+
         List<Property> result;
 
         CClassInfo bc = typeBean.getBaseClass();
-        if(bc!=null) {
+        if (bc != null) {
             result = buildDrilldown(bc);
-            if(result==null)
+            if (result == null) {
                 return null;        // aborted
-        } else
+            }
+        } else {
             result = new ArrayList<Property>();
+        }
 
-        for( CPropertyInfo p : typeBean.getProperties() ) {
+        for (CPropertyInfo p : typeBean.getProperties()) {
             if (p instanceof CElementPropertyInfo) {
                 CElementPropertyInfo ep = (CElementPropertyInfo) p;
 // wrong. A+,B,C is eligible for drill-down.
@@ -108,49 +122,67 @@ abstract class AbstractMappingImpl<InfoT extends CElement> implements Mapping {
 //                    return null;
 
                 List<? extends CTypeRef> ref = ep.getTypes();
-                if(ref.size()!=1)
-                    // content model like (A|B),C is not eligible
+                if (ref.size() != 1) {// content model like (A|B),C is not eligible
                     return null;
+                }
 
-                result.add(createPropertyImpl(ep,ref.get(0).getTagName()));
-            } else
-            if (p instanceof ReferencePropertyInfo) {
+                result.add(createPropertyImpl(ep, ref.get(0).getTagName()));
+            } else if (p instanceof ReferencePropertyInfo) {
                 CReferencePropertyInfo rp = (CReferencePropertyInfo) p;
 
                 Collection<CElement> elements = rp.getElements();
-                if(elements.size()!=1)
+                if (elements.size() != 1) {
                     return null;
+                }
 
                 CElement ref = elements.iterator().next();
-                if(ref instanceof ClassInfo) {
-                    result.add(createPropertyImpl(rp,ref.getElementName()));
+                if (ref instanceof ClassInfo) {
+                    result.add(createPropertyImpl(rp, ref.getElementName()));
                 } else {
-                    CElementInfo eref = (CElementInfo)ref;
-                    if(!eref.getSubstitutionMembers().isEmpty())
+                    CElementInfo eref = (CElementInfo) ref;
+                    if (!eref.getSubstitutionMembers().isEmpty()) {
                         return null;    // elements with a substitution group isn't qualified for the wrapper style
-
+                    }
                     // JAX-WS doesn't want to see JAXBElement, so we have to hide it for them.
                     ElementAdapter fr;
-                    if(rp.isCollection())
+                    if (rp.isCollection()) {
                         fr = new ElementCollectionAdapter(parent.outline.getField(rp), eref);
-                    else
+                    } else {
                         fr = new ElementSingleAdapter(parent.outline.getField(rp), eref);
+                    }
 
                     result.add(new PropertyImpl(this,
-                        fr, eref.getElementName()));
+                            fr, eref.getElementName()));
                 }
-            } else
-                // to be eligible for the wrapper style, only elements are allowed.
-                // according to the JAX-RPC spec 2.3.1.2, element refs are disallowed
+            } else {// to be eligible for the wrapper style, only elements are allowed.
+                    // according to the JAX-RPC spec 2.3.1.2, element refs are disallowed
                 return null;
+            }
 
         }
 
         return result;
     }
 
+    private boolean containingChoice(CClassInfo typeBean) {
+        XSComponent component = typeBean.getSchemaComponent();
+        if (component instanceof XSComplexType) {
+            XSContentType contentType = ((XSComplexType) component).getContentType();
+            XSParticle particle = contentType.asParticle();
+            if (particle != null) {
+                XSTerm term = particle.getTerm();
+                XSModelGroup modelGroup = term.asModelGroup();
+                if (modelGroup != null) {
+                    return (modelGroup.getCompositor() == XSModelGroup.Compositor.CHOICE);
+                }
+            }
+        }
+
+        return false;
+    }
+
     private Property createPropertyImpl(CPropertyInfo p, QName tagName) {
         return new PropertyImpl(this,
-            parent.outline.getField(p),tagName);
+                parent.outline.getField(p), tagName);
     }
 }

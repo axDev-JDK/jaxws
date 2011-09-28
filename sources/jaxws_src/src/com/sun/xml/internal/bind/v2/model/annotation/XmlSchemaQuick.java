@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -53,16 +53,8 @@ final class XmlSchemaQuick
         return XmlSchema.class;
     }
 
-    public String location() {
-        return core.location();
-    }
-
     public String namespace() {
         return core.namespace();
-    }
-
-    public XmlNs[] xmlns() {
-        return core.xmlns();
     }
 
     public XmlNsForm elementFormDefault() {
@@ -71,6 +63,14 @@ final class XmlSchemaQuick
 
     public XmlNsForm attributeFormDefault() {
         return core.attributeFormDefault();
+    }
+
+    public String location() {
+        return core.location();
+    }
+
+    public XmlNs[] xmlns() {
+        return core.xmlns();
     }
 
 }

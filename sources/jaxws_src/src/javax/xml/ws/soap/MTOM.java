@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -36,7 +36,7 @@ import javax.xml.ws.WebServiceRef;
 import javax.xml.ws.WebServiceProvider;
 
 /**
- * This feature represents the use of MTOM with a 
+ * This feature represents the use of MTOM with a
  * web service.
  * <p>
  * This annotation MUST only be used in conjunction the
@@ -55,7 +55,7 @@ import javax.xml.ws.WebServiceProvider;
  * {@link MTOMFeature}.
  *
  * @since JAX-WS 2.1
- */   
+ */
 @Target({ElementType.TYPE, ElementType.METHOD, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
@@ -64,12 +64,12 @@ public @interface MTOM {
     /**
      * Specifies if this feature is enabled or disabled.
      */
-    boolean enabled() default true; 
-     
+    boolean enabled() default true;
+
     /**
-     * Property for MTOM threshold value. When MTOM is enabled, binary data above this 
-     * size in bytes will be XOP encoded or sent as attachment. The value of this property 
-     * MUST always be >= 0. Default value is 0.      
-     */         
+     * Property for MTOM threshold value. When MTOM is enabled, binary data above this
+     * size in bytes will be XOP encoded or sent as attachment. The value of this property
+     * MUST always be >= 0. Default value is 0.
+     */
     int threshold() default 0;
 }

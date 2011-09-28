@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -33,10 +33,10 @@ import com.sun.xml.internal.bind.v2.runtime.unmarshaller.UnmarshallingContext;
 /**
  * This class is a simple container for caching lifecycle methods that are
  * discovered during construction of (@link JAXBContext}.
- * 
+ *
  * @see JaxBeanInfo#lcm
  * @see Loader#fireBeforeUnmarshal(JaxBeanInfo, Object, UnmarshallingContext.State)
- * @see Loader#fireAfterUnmarshal(JaxBeanInfo, Object, UnmarshallingContext.State) 
+ * @see Loader#fireAfterUnmarshal(JaxBeanInfo, Object, UnmarshallingContext.State)
  * @see XMLSerializer#fireMarshalEvent(Object, Method)
  */
 final class LifecycleMethods {

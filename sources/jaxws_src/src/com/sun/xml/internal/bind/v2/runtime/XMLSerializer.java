@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -72,40 +72,40 @@ import org.xml.sax.SAXException;
 
 /**
  * Receives XML serialization event and writes to {@link XmlOutput}.
- * 
+ *
  * <p>
  * This object coordinates the overall marshalling efforts across different
  * content-tree objects and different target formats.
- * 
+ *
  * <p>
  * The following CFG gives the proper sequence of method invocation.
- * 
+ *
  * <pre>
  * MARSHALLING  :=  ELEMENT
  * ELEMENT      :=  "startElement" NSDECL* "endNamespaceDecls"
  *                        ATTRIBUTE* "endAttributes" BODY "endElement"
- * 
+ *
  * NSDECL       :=  "declareNamespace"
- * 
+ *
  * ATTRIBUTE    :=  "attribute"
  * ATTVALUES    :=  "text"*
- * 
- * 
+ *
+ *
  * BODY         :=  ( "text" | ELEMENT )*
  * </pre>
- * 
+ *
  * <p>
  * A marshalling of one element consists of two stages. The first stage is
  * for marshalling attributes and collecting namespace declarations.
  * The second stage is for marshalling characters/child elements of that element.
- * 
+ *
  * <p>
  * Observe that multiple invocation of "text" is allowed.
- * 
+ *
  * <p>
  * Also observe that the namespace declarations are allowed only between
  * "startElement" and "endAttributes".
- * 
+ *
  * <h2>Exceptions in marshaller</h2>
  * <p>
  * {@link IOException}, {@link SAXException}, and {@link XMLStreamException}
@@ -135,7 +135,7 @@ public final class XMLSerializer extends Coordinator {
 
     // Introduced based on Jersey requirements - to be able to retrieve marshalled name
     ThreadLocal<Property> currentProperty = new ThreadLocal<Property>();
-    
+
     /**
      * Set to true if a text is already written,
      * and we need to print ' ' for additional text methods.
@@ -204,7 +204,7 @@ public final class XMLSerializer extends Coordinator {
     public Base64Data getCachedBase64DataInstance() {
         return new Base64Data();
     }
-    
+
     /**
      * Gets the ID value from an identifiable object.
      */
@@ -294,7 +294,7 @@ public final class XMLSerializer extends Coordinator {
 
         out.endStartTag();
     }
-    
+
     /**
      * Ends marshalling of an element.
      * Pops the internal stack.
@@ -438,13 +438,13 @@ public final class XMLSerializer extends Coordinator {
     public NamespaceContext2 getNamespaceContext() {
         return nsContext;
     }
-    
-    
+
+
     public String onID( Object owner, String value ) {
         objectsWithId.add(owner);
         return value;
     }
-    
+
     public String onIDREF( Object obj ) throws SAXException {
         String id;
         try {
@@ -462,8 +462,8 @@ public final class XMLSerializer extends Coordinator {
         }
         return id;
     }
-    
-    
+
+
     // TODO: think about the exception handling.
     // I suppose we don't want to use SAXException. -kk
 
@@ -668,7 +668,7 @@ public final class XMLSerializer extends Coordinator {
             if (nillable) {
                 getNamespaceContext().declareNamespace(WellKnownNamespace.XML_SCHEMA_INSTANCE,"xsi",true);
             }
-            
+
             endNamespaceDecls(child);
             if(!asExpected) {
                 attribute(WellKnownNamespace.XML_SCHEMA_INSTANCE,"type",
@@ -680,7 +680,7 @@ public final class XMLSerializer extends Coordinator {
             if ((nillable) && (!nilDefined)) {
                 attribute(WellKnownNamespace.XML_SCHEMA_INSTANCE,"nil","true");
             }
-            
+
             endAttributes();
             actual.serializeBody(child,this);
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -98,7 +98,7 @@ public interface WSDLBoundOperation extends WSDLObject, WSDLExtensible {
      *
      * <p>
      * It's possible for an operation to define no body part, in which case
-     * this method returns null. 
+     * this method returns null.
      */
     @Nullable QName getReqPayloadName();
 

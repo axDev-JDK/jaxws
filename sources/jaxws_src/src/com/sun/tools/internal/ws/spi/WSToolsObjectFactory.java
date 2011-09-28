@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.tools.internal.ws.spi;
 
 import com.sun.tools.internal.ws.util.WSToolsObjectFactoryImpl;
@@ -84,7 +85,7 @@ public abstract class WSToolsObjectFactory {
      * @return true if there is no error, otherwise false
      */
     public abstract boolean wsgen(OutputStream logStream, Container container, String[] args);
-    
+
     /**
      * Invokes wsgen on the endpoint implementation, and generates the necessary
      * artifacts like wrapper, exception bean classes etc.

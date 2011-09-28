@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.ws.api.model;
 /**
  * Type of java exception as defined by JAXWS 2.0 JSR 224.
@@ -35,7 +36,7 @@ package com.sun.xml.internal.ws.api.model;
  * and accessor method
  *
  * <code>public FaultBean getFaultInfo();</code>
- * 
+ *
  * @author Vivek Pandey
  */
 public enum ExceptionType {

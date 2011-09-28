@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -87,7 +87,7 @@ public abstract class Container {
 
     /**
      * Constant that represents a "no {@link Container}",
-     * which always returns null from {@link #getSPI(Class)}. 
+     * which always returns null from {@link #getSPI(Class)}.
      */
     public static final Container NONE = new Container() {
         public <T> T getSPI(Class<T> spiType) {

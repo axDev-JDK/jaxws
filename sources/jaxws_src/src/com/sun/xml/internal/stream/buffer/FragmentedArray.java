@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,17 +22,18 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.stream.buffer;
 
 class FragmentedArray<T> {
     protected T _item;
     protected FragmentedArray<T> _next;
     protected FragmentedArray<T> _previous;
-    
+
     FragmentedArray(T item) {
         this(item, null);
     }
-    
+
     FragmentedArray(T item, FragmentedArray<T> previous) {
         setArray(item);
         if (previous != null) {
@@ -40,32 +41,32 @@ class FragmentedArray<T> {
             _previous = previous;
         }
     }
-    
+
     T getArray() {
         return _item;
     }
-    
+
     void setArray(T item) {
         assert(item.getClass().isArray());
-        
+
         _item = item;
     }
-    
+
     FragmentedArray<T> getNext() {
         return _next;
     }
-    
+
     void setNext(FragmentedArray<T> next) {
         _next = next;
         if (next != null) {
             next._previous = this;
         }
     }
-    
+
     FragmentedArray<T> getPrevious() {
         return _previous;
     }
-    
+
     void setPrevious(FragmentedArray<T> previous) {
         _previous = previous;
         if (previous != null) {

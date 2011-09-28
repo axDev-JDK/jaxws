@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -59,7 +59,7 @@ public interface RuntimeLeafInfo extends LeafInfo<Type,Class>, RuntimeNonElement
      * While conceptually this method belongs to {@link RuntimeNonElement},
      * if we do that we have to put a lot of dummy implementations everywhere,
      * so it's placed here, where it's actually needed.
-     * 
+     *
      * @return
      *      Always non-null. Do not modify the returned array.
      */

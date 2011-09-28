@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -98,7 +98,7 @@ abstract class ResponseBuilder {
     static final class None extends ResponseBuilder {
         private None(){
         }
-        public Object readResponse(Message msg, Object[] args) {           
+        public Object readResponse(Message msg, Object[] args) {
             msg.consume();
             return null;
         }
@@ -191,7 +191,7 @@ abstract class ResponseBuilder {
             return retVal;
         }
     }
-    
+
     /**
      * Reads an Attachment into a Java parameter.
      */
@@ -200,7 +200,7 @@ abstract class ResponseBuilder {
         protected final ParameterImpl param;
         private final String pname;
         private final String pname1;
-            
+
         AttachmentBuilder(ParameterImpl param, ValueSetter setter) {
             this.setter = setter;
             this.param = param;
@@ -237,7 +237,7 @@ abstract class ResponseBuilder {
                 throw new UnsupportedOperationException("Unexpected Attachment type ="+type);
             }
         }
-        
+
         public Object readResponse(Message msg, Object[] args) throws JAXBException, XMLStreamException {
             // TODO not to loop
             for (Attachment att : msg.getAttachments()) {
@@ -251,15 +251,15 @@ abstract class ResponseBuilder {
             }
             return null;
         }
-        
+
         abstract Object mapAttachment(Attachment att, Object[] args) throws JAXBException;
     }
-        
+
     private static final class DataHandlerBuilder extends AttachmentBuilder {
         DataHandlerBuilder(ParameterImpl param, ValueSetter setter) {
             super(param, setter);
         }
-        
+
         Object mapAttachment(Attachment att, Object[] args) {
             return setter.put(att.asDataHandler(), args);
         }
@@ -287,27 +287,27 @@ abstract class ResponseBuilder {
         ByteArrayBuilder(ParameterImpl param, ValueSetter setter) {
             super(param, setter);
         }
-        
+
         Object mapAttachment(Attachment att, Object[] args) {
             return setter.put(att.asByteArray(), args);
         }
     }
-        
+
     private static final class SourceBuilder extends AttachmentBuilder {
         SourceBuilder(ParameterImpl param, ValueSetter setter) {
             super(param, setter);
         }
-        
+
         Object mapAttachment(Attachment att, Object[] args) {
             return setter.put(att.asSource(), args);
         }
     }
-        
+
     private static final class ImageBuilder extends AttachmentBuilder {
         ImageBuilder(ParameterImpl param, ValueSetter setter) {
             super(param, setter);
         }
-        
+
         Object mapAttachment(Attachment att, Object[] args) {
             Image image;
             InputStream is = null;
@@ -328,28 +328,28 @@ abstract class ResponseBuilder {
             return setter.put(image, args);
         }
     }
-        
+
     private static final class InputStreamBuilder extends AttachmentBuilder {
         InputStreamBuilder(ParameterImpl param, ValueSetter setter) {
             super(param, setter);
         }
-        
+
         Object mapAttachment(Attachment att, Object[] args) {
             return setter.put(att.asInputStream(), args);
         }
     }
-        
+
     private static final class JAXBBuilder extends AttachmentBuilder {
         JAXBBuilder(ParameterImpl param, ValueSetter setter) {
             super(param, setter);
         }
-        
+
         Object mapAttachment(Attachment att, Object[] args) throws JAXBException {
             Object obj = param.getBridge().unmarshal(att.asInputStream());
             return setter.put(obj, args);
         }
     }
-    
+
     /**
      * Gets the WSDL part name of this attachment.
      *
@@ -531,6 +531,9 @@ abstract class ResponseBuilder {
             Object retVal = null;
 
             if (parts.length>0) {
+                if (!msg.hasPayload()) {
+                    throw new WebServiceException("No payload. Expecting payload with "+wrapperName+" element");
+                }
                 XMLStreamReader reader = msg.readPayload();
                 XMLStreamReaderUtil.verifyTag(reader,wrapperName);
                 Object wrapperBean = wrapper.unmarshal(reader, (msg.getAttachments() != null) ?
@@ -620,10 +623,11 @@ abstract class ResponseBuilder {
         public Object readResponse(Message msg, Object[] args) throws JAXBException, XMLStreamException {
             Object retVal = null;
 
+            if (!msg.hasPayload()) {
+                throw new WebServiceException("No payload. Expecting payload with "+wrapperName+" element");
+            }
             XMLStreamReader reader = msg.readPayload();
-            if (!reader.getName().equals(wrapperName))
-                throw new WebServiceException( // TODO: i18n
-                    "Unexpected response element "+reader.getName()+" expected: "+wrapperName);
+            XMLStreamReaderUtil.verifyTag(reader,wrapperName);
             reader.nextTag();
 
             while(reader.getEventType()==XMLStreamReader.START_ELEMENT) {
@@ -682,7 +686,7 @@ abstract class ResponseBuilder {
 
         }
     }
-    
+
     private static boolean isXMLMimeType(String mimeType){
         return mimeType.equals("text/xml") || mimeType.equals("application/xml");
     }

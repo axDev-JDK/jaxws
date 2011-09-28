@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -34,22 +34,22 @@ import com.sun.codemodel.internal.JResourceFile;
 
 /**
  * Simple text file.
- * 
+ *
  * @author
- * 	Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
+ *      Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
 public class JTextFile extends JResourceFile
 {
     public JTextFile( String name ) {
         super(name);
     }
-    
+
     private String contents = null;
-    
+
     public void setContents( String _contents ) {
         this.contents = _contents;
     }
-    
+
     public void build( OutputStream out ) throws IOException {
         Writer w = new OutputStreamWriter(out);
         w.write(contents);

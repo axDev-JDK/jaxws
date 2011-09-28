@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,12 +22,14 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.ws.server.provider;
 
 import com.sun.xml.internal.ws.api.WSBinding;
 import com.sun.xml.internal.ws.api.pipe.Tube;
 import com.sun.xml.internal.ws.api.server.AsyncProvider;
 import com.sun.xml.internal.ws.api.server.Invoker;
+import com.sun.xml.internal.ws.binding.SOAPBindingImpl;
 import com.sun.xml.internal.ws.server.InvokerTube;
 
 import javax.xml.ws.Provider;
@@ -51,6 +53,11 @@ public abstract class ProviderInvokerTube<T> extends InvokerTube<Provider<T>> {
 
         ProviderEndpointModel<T> model = new ProviderEndpointModel<T>(implType, binding);
         ProviderArgumentsBuilder<?> argsBuilder = ProviderArgumentsBuilder.create(model, binding);
+        if (binding instanceof SOAPBindingImpl) {
+            //set portKnownHeaders on Binding, so that they can be used for MU processing
+            ((SOAPBindingImpl) binding).setMode(model.mode);
+        }
+
         return model.isAsync ? new AsyncProviderInvokerTube(invoker, argsBuilder)
             : new SyncProviderInvokerTube(invoker, argsBuilder);
     }

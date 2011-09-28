@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -33,7 +33,7 @@ import java.io.IOException;
  * Provides a way to filter {@link SDDocument} infoset while writing it. These
  * filter objects can be added to {@link ServiceDefinition} using
  * {@link ServiceDefinition#addFilter(SDDocumentFilter)}
- * 
+ *
  * @author Kohsuke Kawaguchi
  * @author Jitendra Kotamraju
  */

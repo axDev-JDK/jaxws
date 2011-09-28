@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -26,8 +26,8 @@
 package com.sun.xml.internal.bind.v2.runtime.reflect.opt;
 
 import com.sun.xml.internal.bind.DatatypeConverterImpl;
-import com.sun.xml.internal.bind.v2.runtime.reflect.TransducedAccessor;
 import com.sun.xml.internal.bind.v2.runtime.reflect.DefaultTransducedAccessor;
+import com.sun.xml.internal.bind.v2.runtime.reflect.TransducedAccessor;
 
 /**
  * Template {@link TransducedAccessor} for a boolean field.
@@ -45,7 +45,10 @@ public final class TransducedAccessor_field_Boolean extends DefaultTransducedAcc
     }
 
     public void parse(Object o, CharSequence lexical) {
-        ((Bean)o).f_boolean=DatatypeConverterImpl._parseBoolean(lexical);
+        Boolean b = DatatypeConverterImpl._parseBoolean(lexical);
+
+        if(b != null)
+            ((Bean)o).f_boolean=b;
     }
 
     public boolean hasValue(Object o) {

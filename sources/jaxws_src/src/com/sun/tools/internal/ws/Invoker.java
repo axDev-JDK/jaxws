@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -72,7 +72,7 @@ public final class Invoker {
             if(Arrays.asList(args).contains("-Xendorsed"))
                 cl = createClassLoader(cl); // perform JDK6 workaround hack
             else {
-                int targetArgIndex = Arrays.asList(args).indexOf("-target"); 
+                int targetArgIndex = Arrays.asList(args).indexOf("-target");
                 Options.Target targetVersion;
                 if (targetArgIndex != -1) {
                     targetVersion = Options.Target.parse(args[targetArgIndex+1]);
@@ -110,7 +110,7 @@ public final class Invoker {
                 }
 
             }
-            
+
             Thread.currentThread().setContextClassLoader(cl);
 
             Class compileTool = cl.loadClass(mainClass);
@@ -165,7 +165,7 @@ public final class Invoker {
 
     /**
      * Creates a classloader that can load JAXB/WS 2.2 API and tools.jar,
-     * and then return a classloader that can RI classes, which can see all those APIs and tools.jar.  
+     * and then return a classloader that can RI classes, which can see all those APIs and tools.jar.
      */
     public static ClassLoader createClassLoader(ClassLoader cl) throws ClassNotFoundException, IOException, ToolsJarNotFoundException {
 

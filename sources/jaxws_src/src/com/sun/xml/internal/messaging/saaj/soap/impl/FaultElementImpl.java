@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -23,7 +23,6 @@
  * questions.
  */
 
-
 package com.sun.xml.internal.messaging.saaj.soap.impl;
 
 import java.util.logging.Level;
@@ -37,14 +36,14 @@ import com.sun.xml.internal.messaging.saaj.soap.SOAPDocumentImpl;
 import com.sun.xml.internal.messaging.saaj.soap.name.NameImpl;
 
 public abstract class FaultElementImpl
-    extends ElementImpl 
+    extends ElementImpl
     implements SOAPFaultElement {
 
-    protected FaultElementImpl(SOAPDocumentImpl ownerDoc, NameImpl qname) { 
+    protected FaultElementImpl(SOAPDocumentImpl ownerDoc, NameImpl qname) {
         super(ownerDoc, qname);
     }
 
-    protected FaultElementImpl(SOAPDocumentImpl ownerDoc, QName qname) { 
+    protected FaultElementImpl(SOAPDocumentImpl ownerDoc, QName qname) {
         super(ownerDoc, qname);
     }
 

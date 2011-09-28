@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -23,9 +23,9 @@
  * questions.
  */
 
-
 package com.sun.tools.internal.ws.wsdl.parser;
 
+import com.sun.tools.internal.ws.wscompile.WsimportOptions;
 import com.sun.tools.internal.ws.wsdl.document.WSDLConstants;
 import com.sun.tools.internal.ws.wsdl.document.jaxws.JAXWSBindingsConstants;
 import com.sun.tools.internal.ws.wsdl.document.schema.SchemaConstants;
@@ -45,7 +45,7 @@ public class WSDLInternalizationLogic implements InternalizationLogic{
      * and parses those documents referenced by them.
      */
     private static final class ReferenceFinder extends AbstractReferenceFinderImpl {
-        ReferenceFinder( DOMForest parent ) {
+        ReferenceFinder( DOMForest parent) {
             super(parent);
         }
 
@@ -56,13 +56,14 @@ public class WSDLInternalizationLogic implements InternalizationLogic{
                 }
                 return atts.getValue("location");
             }
-            /*
-            We don't need to do this anymore, JAXB handles the schema imports, includes etc.
 
-            else if(SchemaConstants.NS_XSD.equals(nsURI) && "import".equals(localName)){
-                return atts.getValue("schemaLocation");
+            // We don't need to do this anymore, JAXB handles the schema imports, includes etc., but this is useful for the clientJar option in
+            // fetching  the imported schemas to package in the jar..
+            if (parent.options.clientjar != null) {
+                if (SchemaConstants.NS_XSD.equals(nsURI) && "import".equals(localName)) {
+                    return atts.getValue("schemaLocation");
+                }
             }
-            */
             return null;
         }
     }
@@ -88,7 +89,7 @@ public class WSDLInternalizationLogic implements InternalizationLogic{
             appinfo = insertXMLSchemaElement( annotation, "appinfo" );
 
         return appinfo;
-        
+
     }
 
     public Element refineWSDLTarget(Element target){
@@ -114,7 +115,7 @@ public class WSDLInternalizationLogic implements InternalizationLogic{
 
         return child;
     }
-    
+
 
     /**
      * Creates a new XML Schema element of the given local name

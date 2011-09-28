@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.tools.internal.xjc.reader.xmlschema.bindinfo;
 
 import java.util.Collection;
@@ -37,13 +38,13 @@ import org.xml.sax.Locator;
 
 /**
  * Abstract partial implementation of {@link BIDeclaration}
- * 
+ *
  * @author
  *     Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
 abstract class AbstractDeclarationImpl implements BIDeclaration {
 
-    @Deprecated // eventually delete this in favor of using JAXB    
+    @Deprecated // eventually delete this in favor of using JAXB
     protected AbstractDeclarationImpl(Locator loc) {
         this.loc = loc;
     }
@@ -54,7 +55,7 @@ abstract class AbstractDeclarationImpl implements BIDeclaration {
     @XmlLocation
     Locator loc;    // set by JAXB
     public Locator getLocation() { return loc; }
-    
+
     protected BindInfo parent;
     public void setParent(BindInfo p) { this.parent=p; }
 
@@ -70,7 +71,7 @@ abstract class AbstractDeclarationImpl implements BIDeclaration {
 
 
     private boolean isAcknowledged = false;
-    
+
     public final boolean isAcknowledged() { return isAcknowledged; }
 
     public void onSetOwner() {

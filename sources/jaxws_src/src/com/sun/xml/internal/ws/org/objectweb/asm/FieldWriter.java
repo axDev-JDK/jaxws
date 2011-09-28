@@ -61,7 +61,7 @@ package com.sun.xml.internal.ws.org.objectweb.asm;
 
 /**
  * An {@link FieldVisitor} that generates Java fields in bytecode form.
- * 
+ *
  * @author Eric Bruneton
  */
 final class FieldWriter implements FieldVisitor {
@@ -126,7 +126,7 @@ final class FieldWriter implements FieldVisitor {
 
     /**
      * Constructs a new {@link FieldWriter}.
-     * 
+     *
      * @param cw the class writer to which this field must be added.
      * @param access the field's access flags (see {@link Opcodes}).
      * @param name the field's name.
@@ -199,7 +199,7 @@ final class FieldWriter implements FieldVisitor {
 
     /**
      * Returns the size of this field.
-     * 
+     *
      * @return the size of this field.
      */
     int getSize() {
@@ -238,7 +238,7 @@ final class FieldWriter implements FieldVisitor {
 
     /**
      * Puts the content of this field into the given byte vector.
-     * 
+     *
      * @param out where the content of this field must be put.
      */
     void put(final ByteVector out) {

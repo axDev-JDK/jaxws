@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,7 +22,8 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
-package com.sun.xml.internal.ws.policy;
+
+package com.sun.xml.internal.ws.policy.jaxws;
 
 import com.sun.xml.internal.txw2.TypedXmlWriter;
 import com.sun.xml.internal.ws.addressing.policy.AddressingPolicyMapConfigurator;
@@ -47,6 +48,14 @@ import com.sun.xml.internal.ws.api.policy.ModelGenerator;
 import com.sun.xml.internal.ws.api.wsdl.writer.WSDLGeneratorExtension;
 import com.sun.xml.internal.ws.api.wsdl.writer.WSDLGenExtnContext;
 import com.sun.xml.internal.ws.encoding.policy.MtomPolicyMapConfigurator;
+import com.sun.xml.internal.ws.policy.Policy;
+import com.sun.xml.internal.ws.policy.PolicyConstants;
+import com.sun.xml.internal.ws.policy.PolicyException;
+import com.sun.xml.internal.ws.policy.PolicyMap;
+import com.sun.xml.internal.ws.policy.PolicyMapExtender;
+import com.sun.xml.internal.ws.policy.PolicyMapUtil;
+import com.sun.xml.internal.ws.policy.PolicyMerger;
+import com.sun.xml.internal.ws.policy.PolicySubject;
 import com.sun.xml.internal.ws.policy.jaxws.spi.PolicyMapConfigurator;
 import com.sun.xml.internal.ws.policy.privateutil.PolicyLogger;
 import com.sun.xml.internal.ws.policy.sourcemodel.PolicyModelGenerator;
@@ -118,7 +127,7 @@ public class PolicyWSDLGeneratorExtension extends WSDLGeneratorExtension {
                     policySubjects.addAll(policyMapConfigurators[i].update(policyMap, seiModel, binding));
                     extenders[i].disconnect();
                 }
-                PolicyUtil.insertPolicies(policyMap, policySubjects, this.seiModel.getServiceQName(), this.seiModel.getPortName());
+                PolicyMapUtil.insertPolicies(policyMap, policySubjects, this.seiModel.getServiceQName(), this.seiModel.getPortName());
             } catch (PolicyException e) {
                 throw LOGGER.logSevereException(new WebServiceException(PolicyMessages.WSP_1017_MAP_UPDATE_FAILED(), e));
             }
@@ -390,7 +399,7 @@ public class PolicyWSDLGeneratorExtension extends WSDLGeneratorExtension {
         LOGGER.exiting();
     }
 
-    private static final boolean isCorrectType(final PolicyMap map, final PolicySubject subject, final ScopeType type) {
+    private static boolean isCorrectType(final PolicyMap map, final PolicySubject subject, final ScopeType type) {
         switch (type) {
             case OPERATION:
                 return !(map.isInputMessageSubject(subject) || map.isOutputMessageSubject(subject) || map.isFaultMessageSubject(subject));
@@ -450,7 +459,7 @@ public class PolicyWSDLGeneratorExtension extends WSDLGeneratorExtension {
 
         // Dynamically discover remaining map configurators
         PolicyUtil.addServiceProviders(configurators, PolicyMapConfigurator.class);
-        
+
         return configurators.toArray(new PolicyMapConfigurator[configurators.size()]);
     }
 

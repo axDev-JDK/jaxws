@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -181,7 +181,7 @@ public class XMLStreamReaderUtil {
 
     /**
      * Read all attributes into an data structure. Note that this method cannot
-     * be called multiple times to get the same list of attributes. 
+     * be called multiple times to get the same list of attributes.
      */
     public static Attributes getAttributes(XMLStreamReader reader) {
         return (reader.getEventType() == START_ELEMENT ||
@@ -206,7 +206,7 @@ public class XMLStreamReaderUtil {
                     "{" + reader.getNamespaceURI() + "}" + reader.getLocalName());
         }
     }
-    
+
     public static void verifyTag(XMLStreamReader reader, QName name) {
         verifyTag(reader, name.getNamespaceURI(), name.getLocalPart());
     }
@@ -251,7 +251,7 @@ public class XMLStreamReaderUtil {
                 return "UNKNOWN";
         }
     }
-    
+
     private static XMLStreamReaderException wrapException(XMLStreamException e) {
         return new XMLStreamReaderException("xmlreader.ioException",e);
     }

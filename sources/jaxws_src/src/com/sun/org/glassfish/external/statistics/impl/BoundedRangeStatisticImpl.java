@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -30,32 +30,32 @@ import java.util.Map;
 import java.lang.reflect.*;
 
 
-/** 
+/**
  * @author Sreenivas Munnangi
  */
-public final class BoundedRangeStatisticImpl extends StatisticImpl 
+public final class BoundedRangeStatisticImpl extends StatisticImpl
     implements BoundedRangeStatistic, InvocationHandler {
-    
+
     private long lowerBound = 0L;
     private long upperBound = 0L;
     private long currentVal = 0L;
     private long highWaterMark = Long.MIN_VALUE;
     private long lowWaterMark = Long.MAX_VALUE;
-    
+
     private final long initLowerBound;
     private final long initUpperBound;
     private final long initCurrentVal;
     private final long initHighWaterMark;
     private final long initLowWaterMark;
-    
-    private final BoundedRangeStatistic bs = 
+
+    private final BoundedRangeStatistic bs =
             (BoundedRangeStatistic) Proxy.newProxyInstance(
             BoundedRangeStatistic.class.getClassLoader(),
             new Class[] { BoundedRangeStatistic.class },
             this);
 
     public synchronized String toString() {
-        return super.toString() + NEWLINE + 
+        return super.toString() + NEWLINE +
             "Current: " + getCurrent() + NEWLINE +
             "LowWaterMark: " + getLowWaterMark() + NEWLINE +
             "HighWaterMark: " + getHighWaterMark() + NEWLINE +
@@ -80,7 +80,7 @@ public final class BoundedRangeStatisticImpl extends StatisticImpl
         lowerBound = lower;
         initLowerBound = lower;
     }
-    
+
     public synchronized BoundedRangeStatistic getStatistic() {
         return bs;
     }
@@ -98,7 +98,7 @@ public final class BoundedRangeStatisticImpl extends StatisticImpl
     public synchronized long getCurrent() {
         return currentVal;
     }
-    
+
     public synchronized void setCurrent(long curVal) {
         currentVal = curVal;
         lowWaterMark = (curVal >= lowWaterMark ? lowWaterMark : curVal);
@@ -109,27 +109,27 @@ public final class BoundedRangeStatisticImpl extends StatisticImpl
     public synchronized long getHighWaterMark() {
         return highWaterMark;
     }
-    
+
     public synchronized void setHighWaterMark(long hwm) {
         highWaterMark = hwm;
     }
-    
+
     public synchronized long getLowWaterMark() {
         return lowWaterMark;
     }
-    
+
     public synchronized void setLowWaterMark(long lwm) {
         lowWaterMark = lwm;
     }
-    
+
     public synchronized long getLowerBound() {
         return lowerBound;
     }
-    
+
     public synchronized long getUpperBound() {
         return upperBound;
     }
-	
+
     @Override
     public synchronized void reset() {
         super.reset();

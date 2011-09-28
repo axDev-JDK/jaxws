@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -36,8 +36,8 @@ import java.util.Set;
 import java.security.Principal;
 
 /**
- * This class encapsulates a HTTP request received and a 
- * response to be generated in one exchange. It provides methods 
+ * This class encapsulates a HTTP request received and a
+ * response to be generated in one exchange. It provides methods
  * for examining the request from the client, and for building and
  * sending the response.
  * <p>
@@ -78,12 +78,12 @@ public abstract class HttpExchange {
             "javax.xml.ws.spi.http.request.cert.X509Certificate";
 
     /**
-     * Returns an immutable Map containing the HTTP headers that were 
-     * included with this request. The keys in this Map will be the header 
-     * names, while the values will be a List of Strings containing each value 
-     * that was included (either for a header that was listed several times, 
-     * or one that accepts a comma-delimited list of values on a single line). 
-     * In either of these cases, the values for the header name will be 
+     * Returns an immutable Map containing the HTTP headers that were
+     * included with this request. The keys in this Map will be the header
+     * names, while the values will be a List of Strings containing each value
+     * that was included (either for a header that was listed several times,
+     * or one that accepts a comma-delimited list of values on a single line).
+     * In either of these cases, the values for the header name will be
      * presented in the order that they were included in the request.
      * <p>
      * The keys in Map are case-insensitive.
@@ -108,9 +108,9 @@ public abstract class HttpExchange {
 
     /**
      * Returns a mutable Map into which the HTTP response headers can be stored
-     * and which will be transmitted as part of this response. The keys in the 
+     * and which will be transmitted as part of this response. The keys in the
      * Map will be the header names, while the values must be a List of Strings
-     * containing each value that should be included multiple times 
+     * containing each value that should be included multiple times
      * (in the order that they should be included).
      * <p>
      * The keys in Map are case-insensitive.
@@ -123,8 +123,8 @@ public abstract class HttpExchange {
      * Adds a response header with the given name and value. This method
      * allows a response header to have multiple values. This is a
      * convenience method to add a response header(instead of using the
-     * {link #getResponseHeaders()}).
-     * 
+     * {@link #getResponseHeaders()}).
+     *
      * @param name the name of the header
      * @param value the additional header value. If it contains octet string,
      *        it should be encoded according to
@@ -139,7 +139,7 @@ public abstract class HttpExchange {
      * name up to the query string in the first line of the HTTP request.
      * Container doesn't decode this string.
      *
-     * @return the request URI 
+     * @return the request URI
      */
     public abstract String getRequestURI();
 
@@ -231,7 +231,7 @@ public abstract class HttpExchange {
     public abstract InetSocketAddress getLocalAddress();
 
     /**
-     * Returns the protocol string from the request in the form 
+     * Returns the protocol string from the request in the form
      * <i>protocol/majorVersion.minorVersion</i>. For example,
      * "HTTP/1.1"
      *
@@ -305,7 +305,7 @@ public abstract class HttpExchange {
      * @see #getAttribute(String)
      */
     public abstract Set<String> getAttributeNames();
-    
+
     /**
      * Returns the {@link Principal} that represents the authenticated
      * user for this <code>HttpExchange</code>.

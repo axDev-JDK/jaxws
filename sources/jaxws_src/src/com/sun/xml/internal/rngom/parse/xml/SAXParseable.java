@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -43,7 +43,7 @@ import org.xml.sax.XMLReader;
 
 /**
  * RELAX NG schema in the XML syntax.
- * 
+ *
  */
 public class SAXParseable implements Parseable {
   private final InputSource in;
@@ -60,7 +60,7 @@ public class SAXParseable implements Parseable {
   public SAXParseable(InputSource in, ErrorHandler eh) {
       this(in,eh,new JAXPXMLReaderCreator());
   }
-  
+
   public ParsedPattern parse(SchemaBuilder schemaBuilder) throws BuildException, IllegalSchemaException {
     try {
       XMLReader xr = xrc.createXMLReader();

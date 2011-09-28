@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -32,7 +32,7 @@ import com.sun.xml.internal.bind.v2.runtime.reflect.Accessor;
  *
  * <p>
  * All the FieldAccessors are generated from <code>FieldAccessor_B y t e</code>
- * 
+ *
  * @author Kohsuke Kawaguchi
  */
 public class FieldAccessor_Character extends Accessor {

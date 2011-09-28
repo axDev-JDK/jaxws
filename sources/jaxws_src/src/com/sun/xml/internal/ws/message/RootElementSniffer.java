@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.ws.message;
 
 import org.xml.sax.Attributes;
@@ -52,7 +53,7 @@ public final class RootElementSniffer extends DefaultHandler {
     public void startElement(String uri, String localName, String qName, Attributes a) throws SAXException {
         this.nsUri = uri;
         this.localName = localName;
-        
+
         if(parseAttributes) {
             if(a.getLength()==0)    // often there's no attribute
                 this.atts = EMPTY_ATTRIBUTES;

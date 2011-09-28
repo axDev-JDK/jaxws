@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -115,7 +115,7 @@ final class PayloadQNameBasedOperationFinder extends WSDLOperationFinder {
      *
      * @return not null if it finds a unique handler for the request
      *         null if it cannot idenitify a unique wsdl operation from the Payload QName.
-     *  
+     *
      * @throws DispatchException if the payload itself is incorrect, this happens when the payload is not accepted by
      *          any operation in the port.
      */

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -31,7 +31,7 @@
  * We are not trying to provide an exact model of WSDL elements. The JAX-WS
  * WSDLModel does that already. Instead, we are aiming at providing a light-weight
  * and easy to use representation of WSDL elements.
- * 
+ *
  * At the same time, this implementation is providing a simple way of mapping the
  * subjects to WSDL scopes. That limits how the WsdlSubjects can be used. Ultimately,
  * each subject is always linked to one service, port and binding element. That

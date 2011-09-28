@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -32,7 +32,7 @@ package com.sun.codemodel.internal;
  * A type is always either primitive ({@link JPrimitiveType}) or
  * a reference type ({@link JClass}).
  */
-public abstract class JType implements JGenerable, Comparable {
+public abstract class JType implements JGenerable, Comparable<JType> {
 
     /**
      * Obtains a reference to the primitive type object from a type name.
@@ -62,7 +62,7 @@ public abstract class JType implements JGenerable, Comparable {
 
     /** Gets the owner code model object. */
     public abstract JCodeModel owner();
-    
+
     /**
      * Gets the full name of the type.
      *
@@ -93,10 +93,10 @@ public abstract class JType implements JGenerable, Comparable {
      *     Names like "int", "void", "BigInteger".
      */
     public abstract String name();
-    
+
     /**
      * Create an array type of this type.
-     * 
+     *
      * This method is undefined for primitive void type, which
      * doesn't have any corresponding array representation.
      *
@@ -138,12 +138,12 @@ public abstract class JType implements JGenerable, Comparable {
     public JType erasure() {
         return this;
     }
-    
+
     /**
      * Returns true if this is a referenced type.
      */
     public final boolean isReference() {
-    	return !isPrimitive();
+        return !isPrimitive();
     }
 
     /**
@@ -166,8 +166,8 @@ public abstract class JType implements JGenerable, Comparable {
      * This method is used to sort generated import statments in a
      * conventional way for readability.
      */
-    public int compareTo(Object o) {
-        final String rhs = ((JType)o).fullName();
+    public int compareTo(JType o) {
+        final String rhs = o.fullName();
         boolean p = fullName().startsWith("java");
         boolean q = rhs.startsWith("java");
 

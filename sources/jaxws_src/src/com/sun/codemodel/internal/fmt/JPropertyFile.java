@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -38,9 +38,9 @@ public class JPropertyFile extends JResourceFile
     public JPropertyFile( String name ) {
         super(name);
     }
-    
+
     private final Properties data = new Properties();
-    
+
     /**
      * Adds key/value pair into the property file.
      * If you call this method twice with the same key,
@@ -49,11 +49,11 @@ public class JPropertyFile extends JResourceFile
     public void add( String key, String value ) {
         data.put(key,value);
     }
-    
+
     // TODO: method to iterate values in data?
     // TODO: should we rather expose Properties object directly via
     // public Properties body() { return data; } ?
-    
+
     public void build( OutputStream out ) throws IOException {
         data.store(out,null);
     }

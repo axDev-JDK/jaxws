@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.ws.developer;
 
 import com.sun.xml.internal.ws.api.message.HeaderList;
@@ -151,7 +152,7 @@ public interface JAXWSProperties {
      *
      * The propery value is available on incoming SOAP message. The type of the value
      * is {@link WSEndpointReference}.
-     * 
+     *
      * Null if the incoming SOAP message didn't have the header.
      *
      * @since 2.1.3

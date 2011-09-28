@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -69,21 +69,21 @@ public final class MonitorRootClient extends com.sun.xml.internal.ws.server.Moni
     @ManagedAttribute
     private Container getContainer() { return stub.owner.getContainer(); }
 
-    @ManagedAttribute        
+    @ManagedAttribute
     private Map<QName, PortInfo> qnameToPortInfoMap() { return stub.owner.getQNameToPortInfoMap(); }
 
     @ManagedAttribute
     private QName serviceName() { return stub.owner.getServiceName(); }
-        
+
     @ManagedAttribute
     private Class serviceClass() { return stub.owner.getServiceClass(); }
-        
+
     @ManagedAttribute
     private URL wsdlDocumentLocation() { return stub.owner.getWSDLDocumentLocation(); }
 
     @ManagedAttribute
     private WSDLServiceImpl wsdlService() { return stub.owner.getWsdlService(); }
 
-    
-        
+
+
 }

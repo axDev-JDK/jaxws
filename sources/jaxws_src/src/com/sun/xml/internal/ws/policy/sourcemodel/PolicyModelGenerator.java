@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -47,14 +47,14 @@ import java.util.Iterator;
 public abstract class PolicyModelGenerator {
 
     private static final PolicyLogger LOGGER = PolicyLogger.getLogger(PolicyModelGenerator.class);
-    
+
     /**
      * This protected constructor avoids direct instantiation from outside of the class
      */
     protected PolicyModelGenerator() {
         // nothing to initialize
     }
-    
+
     /**
      * Factory method that returns a {@link PolicyModelGenerator} instance.
      *

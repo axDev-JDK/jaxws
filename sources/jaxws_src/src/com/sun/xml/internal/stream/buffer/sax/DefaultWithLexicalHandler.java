@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.stream.buffer.sax;
 
 import org.xml.sax.SAXException;
@@ -29,19 +30,19 @@ import org.xml.sax.ext.LexicalHandler;
 import org.xml.sax.helpers.DefaultHandler;
 
 public class DefaultWithLexicalHandler extends DefaultHandler implements LexicalHandler {
-    
+
     public void comment(char[] ch, int start, int length) throws SAXException { }
-    
+
     public void startDTD(String name, String publicId, String systemId) throws SAXException { }
-    
+
     public void endDTD() throws SAXException { }
-    
+
     public void startEntity(String name) throws SAXException { }
-    
+
     public void endEntity(String name) throws SAXException { }
-    
+
     public void startCDATA() throws SAXException { }
-    
+
     public void endCDATA() throws SAXException { }
-    
+
 }

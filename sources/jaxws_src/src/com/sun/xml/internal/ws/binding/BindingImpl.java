@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -36,6 +36,7 @@ import com.sun.xml.internal.ws.client.HandlerConfiguration;
 import com.sun.xml.internal.ws.developer.MemberSubmissionAddressingFeature;
 import com.sun.xml.internal.ws.developer.BindingTypeFeature;
 
+import javax.xml.ws.Service;
 import javax.xml.ws.WebServiceFeature;
 import javax.xml.ws.soap.AddressingFeature;
 import javax.xml.ws.handler.Handler;
@@ -58,14 +59,18 @@ import java.util.List;
  * @author WS Development Team
  */
 public abstract class BindingImpl implements WSBinding {
-    private HandlerConfiguration handlerConfig;
+
+    //This is reset when ever Binding.setHandlerChain() or SOAPBinding.setRoles() is called.
+    protected HandlerConfiguration handlerConfig;
     private final BindingID bindingId;
     // Features that are set(enabled/disabled) on the binding
     protected final WebServiceFeatureList features = new WebServiceFeatureList();
 
+    protected javax.xml.ws.Service.Mode serviceMode = javax.xml.ws.Service.Mode.PAYLOAD;
+
     protected BindingImpl(BindingID bindingId) {
         this.bindingId = bindingId;
-        setHandlerConfig(createHandlerConfig(Collections.<Handler>emptyList()));
+        handlerConfig = new HandlerConfiguration(Collections.<String>emptySet(), Collections.<Handler>emptyList());
     }
 
     public
@@ -79,26 +84,9 @@ public abstract class BindingImpl implements WSBinding {
     }
 
 
-    /**
-     * Sets the handlers on the binding and then
-     * sorts the handlers in to logical and protocol handlers.
-     * Creates a new HandlerConfiguration object and sets it on the BindingImpl.
-     */
-    public void setHandlerChain(List<Handler> chain) {
-        setHandlerConfig(createHandlerConfig(chain));
+    public void setMode(@NotNull Service.Mode mode) {
+        this.serviceMode = javax.xml.ws.Service.Mode.MESSAGE;
     }
-
-    /**
-     * This is called when ever Binding.setHandlerChain() or SOAPBinding.setRoles()
-     * is called.
-     * This sorts out the Handlers into Logical and SOAP Handlers and
-     * sets the HandlerConfiguration.
-     */
-    protected void setHandlerConfig(HandlerConfiguration handlerConfig) {
-        this.handlerConfig = handlerConfig;
-    }
-
-    protected abstract HandlerConfiguration createHandlerConfig(List<Handler> handlerChain);
 
     public
     @NotNull

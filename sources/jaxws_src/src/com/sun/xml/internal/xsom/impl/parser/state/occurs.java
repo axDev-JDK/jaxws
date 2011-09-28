@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -37,7 +37,9 @@ import com.sun.xml.internal.xsom.impl.parser.NGCCRuntimeEx;
     import org.xml.sax.ContentHandler;
     import org.xml.sax.helpers.*;
     import java.util.*;
-  
+    import java.math.BigInteger;
+
+import java.math.BigInteger;
 
 
 class occurs extends NGCCHandler {
@@ -63,15 +65,15 @@ class occurs extends NGCCHandler {
     }
 
     private void action0()throws SAXException {
-        min = Integer.parseInt(v);
+        min = new BigInteger(v);
 }
 
     private void action1()throws SAXException {
-        max=-1;
+        max=BigInteger.valueOf(-1);
 }
 
     private void action2()throws SAXException {
-        max = Integer.parseInt(v);
+        max = new BigInteger(v);
 }
 
     public void enterElement(String $__uri, String $__local, String $__qname, Attributes $attrs) throws SAXException {
@@ -80,6 +82,11 @@ class occurs extends NGCCHandler {
         $localName = $__local;
         $qname = $__qname;
         switch($_ngcc_current_state) {
+        case 0:
+            {
+                revertToParentFromEnterElement(this, super._cookie, $__uri, $__local, $__qname, $attrs);
+            }
+            break;
         case 1:
             {
                 if(($ai = $runtime.getAttributeIndex("","minOccurs"))>=0) {
@@ -90,11 +97,6 @@ class occurs extends NGCCHandler {
                     $_ngcc_current_state = 0;
                     $runtime.sendEnterElement(super._cookie, $__uri, $__local, $__qname, $attrs);
                 }
-            }
-            break;
-        case 0:
-            {
-                revertToParentFromEnterElement(this, super._cookie, $__uri, $__local, $__qname, $attrs);
             }
             break;
         case 5:
@@ -123,6 +125,11 @@ class occurs extends NGCCHandler {
         $localName = $__local;
         $qname = $__qname;
         switch($_ngcc_current_state) {
+        case 0:
+            {
+                revertToParentFromLeaveElement(this, super._cookie, $__uri, $__local, $__qname);
+            }
+            break;
         case 1:
             {
                 if(($ai = $runtime.getAttributeIndex("","minOccurs"))>=0) {
@@ -133,11 +140,6 @@ class occurs extends NGCCHandler {
                     $_ngcc_current_state = 0;
                     $runtime.sendLeaveElement(super._cookie, $__uri, $__local, $__qname);
                 }
-            }
-            break;
-        case 0:
-            {
-                revertToParentFromLeaveElement(this, super._cookie, $__uri, $__local, $__qname);
             }
             break;
         case 5:
@@ -166,6 +168,11 @@ class occurs extends NGCCHandler {
         $localName = $__local;
         $qname = $__qname;
         switch($_ngcc_current_state) {
+        case 0:
+            {
+                revertToParentFromEnterAttribute(this, super._cookie, $__uri, $__local, $__qname);
+            }
+            break;
         case 1:
             {
                 if(($__uri.equals("") && $__local.equals("minOccurs"))) {
@@ -175,11 +182,6 @@ class occurs extends NGCCHandler {
                     $_ngcc_current_state = 0;
                     $runtime.sendEnterAttribute(super._cookie, $__uri, $__local, $__qname);
                 }
-            }
-            break;
-        case 0:
-            {
-                revertToParentFromEnterAttribute(this, super._cookie, $__uri, $__local, $__qname);
             }
             break;
         case 5:
@@ -207,6 +209,17 @@ class occurs extends NGCCHandler {
         $localName = $__local;
         $qname = $__qname;
         switch($_ngcc_current_state) {
+        case 0:
+            {
+                revertToParentFromLeaveAttribute(this, super._cookie, $__uri, $__local, $__qname);
+            }
+            break;
+        case 1:
+            {
+                $_ngcc_current_state = 0;
+                $runtime.sendLeaveAttribute(super._cookie, $__uri, $__local, $__qname);
+            }
+            break;
         case 2:
             {
                 if(($__uri.equals("") && $__local.equals("minOccurs"))) {
@@ -217,6 +230,12 @@ class occurs extends NGCCHandler {
                 }
             }
             break;
+        case 5:
+            {
+                $_ngcc_current_state = 1;
+                $runtime.sendLeaveAttribute(super._cookie, $__uri, $__local, $__qname);
+            }
+            break;
         case 6:
             {
                 if(($__uri.equals("") && $__local.equals("maxOccurs"))) {
@@ -225,23 +244,6 @@ class occurs extends NGCCHandler {
                 else {
                     unexpectedLeaveAttribute($__qname);
                 }
-            }
-            break;
-        case 1:
-            {
-                $_ngcc_current_state = 0;
-                $runtime.sendLeaveAttribute(super._cookie, $__uri, $__local, $__qname);
-            }
-            break;
-        case 0:
-            {
-                revertToParentFromLeaveAttribute(this, super._cookie, $__uri, $__local, $__qname);
-            }
-            break;
-        case 5:
-            {
-                $_ngcc_current_state = 1;
-                $runtime.sendLeaveAttribute(super._cookie, $__uri, $__local, $__qname);
             }
             break;
         default:
@@ -255,6 +257,11 @@ class occurs extends NGCCHandler {
     public void text(String $value) throws SAXException {
         int $ai;
         switch($_ngcc_current_state) {
+        case 0:
+            {
+                revertToParentFromText(this, super._cookie, $value);
+            }
+            break;
         case 7:
             {
                 if($value.equals("unbounded")) {
@@ -278,11 +285,6 @@ class occurs extends NGCCHandler {
                     $_ngcc_current_state = 0;
                     $runtime.sendText(super._cookie, $value);
                 }
-            }
-            break;
-        case 0:
-            {
-                revertToParentFromText(this, super._cookie, $value);
             }
             break;
         case 3:
@@ -313,12 +315,11 @@ class occurs extends NGCCHandler {
     }
 
     public boolean accepted() {
-        return((($_ngcc_current_state == 5) || (($_ngcc_current_state == 0) || ($_ngcc_current_state == 1))));
+        return((($_ngcc_current_state == 5) || (($_ngcc_current_state == 1) || ($_ngcc_current_state == 0))));
     }
 
-    
-      int max=1;
-      int min=1;
-    
-}
 
+      BigInteger max = BigInteger.valueOf(1);
+      BigInteger min = BigInteger.valueOf(1);
+
+}

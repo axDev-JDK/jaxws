@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.tools.internal.xjc.reader.xmlschema.bindinfo;
 
 import java.util.HashMap;
@@ -41,16 +42,16 @@ import com.sun.tools.internal.xjc.reader.xmlschema.SimpleTypeBuilder;
  * <p>
  * This customization binds a simple type to a type-safe enum class.
  * The actual binding process takes place in {@link SimpleTypeBuilder}.
- * 
+ *
  * <p>
  * This customization is acknowledged by {@link SimpleTypeBuilder}.
- * 
+ *
  * @author
  *  Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
 @XmlRootElement(name="typesafeEnumClass")
 public final class BIEnum extends AbstractDeclarationImpl {
-    
+
     /**
      * If false, it means not to bind to a type-safe enum.
      *
@@ -90,7 +91,7 @@ public final class BIEnum extends AbstractDeclarationImpl {
     public final Map<String,BIEnumMember> members = new HashMap<String,BIEnumMember>();
 
     public QName getName() { return NAME; }
-    
+
     public void setParent(BindInfo p) {
         super.setParent(p);
         for( BIEnumMember mem : members.values() )
@@ -101,7 +102,7 @@ public final class BIEnum extends AbstractDeclarationImpl {
         if(ref!=null)
             markAsAcknowledged();
     }
-    
+
     /** Name of this declaration. */
     public static final QName NAME = new QName(
         Const.JAXB_NSURI, "enum" );
@@ -126,4 +127,3 @@ public final class BIEnum extends AbstractDeclarationImpl {
         String value;
     }
 }
-

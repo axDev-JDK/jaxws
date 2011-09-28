@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -39,7 +39,7 @@ import com.sun.xml.internal.ws.policy.PolicyException;
  */
 public abstract class PolicyModelUnmarshaller {
     private static final PolicyModelUnmarshaller xmlUnmarshaller = new XmlPolicyModelUnmarshaller();
-    
+
     /**
      * Default constructor to ensure we have a common model unmarshaller base, but only our API classes implemented in this
      * package will be able to extend this abstract class. This is to restrict attempts of extending the class from
@@ -48,7 +48,7 @@ public abstract class PolicyModelUnmarshaller {
     PolicyModelUnmarshaller() {
         // nothing to intitialize
     }
-    
+
     /**
      * Unmarshalls single policy source model from provided storage reference. Method expects that the storage
      * cursor to be alread placed on the start of a policy expression. Inner comments and whitespaces are skipped
@@ -59,9 +59,9 @@ public abstract class PolicyModelUnmarshaller {
      * @throws PolicyException in case of the unmarshalling problems
      */
     public abstract PolicySourceModel unmarshalModel(Object storage) throws PolicyException;
-    
+
     /**
-     * Factory method that returns policy model unmarshaller able to unmarshal 
+     * Factory method that returns policy model unmarshaller able to unmarshal
      * policy expressions from XML source.
      *
      * Code that depends on JAX-WS should use com.sun.xml.internal.ws.api.policy.ModelUnmarshaller.getUnmarshaller()

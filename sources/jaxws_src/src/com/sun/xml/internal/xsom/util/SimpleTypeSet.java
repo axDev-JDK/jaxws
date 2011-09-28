@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -32,20 +32,20 @@ import com.sun.xml.internal.xsom.XSType;
 
 /**
  * A very simple TypeSet.
- * 
+ *
  * The contains method returns true iff the set explicitly contains an
  * instance of the specified XSType.
- * 
+ *
  * @author <a href="mailto:Ryan.Shoemaker@Sun.COM">Ryan Shoemaker</a>, Sun Microsystems, Inc.
  */
 public class SimpleTypeSet extends TypeSet {
 
     private final Set typeSet;
-    
+
     public SimpleTypeSet(Set s) {
         typeSet = s;
     }
-    
+
     /* (non-Javadoc)
      * @see com.sun.xml.internal.xsom.util.TypeSet#contains(com.sun.xml.internal.xsom.XSDeclaration)
      */

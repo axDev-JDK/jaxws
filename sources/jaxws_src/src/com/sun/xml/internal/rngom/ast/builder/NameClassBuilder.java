@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -32,7 +32,7 @@ import java.util.List;
 
 
 /**
- * 
+ *
  * @author
  *      Kohsuke Kawaguchi (kk@kohsuke.org)
  */
@@ -52,7 +52,7 @@ public interface NameClassBuilder<
 //    static final String INHERIT_NS = new String("#inherit");
 
 // similarly, xmlns:* attribute should be rejected by the parser -KK
-    
+
     N makeName(String ns, String localName, String prefix, L loc, A anno);
     N makeNsName(String ns, L loc, A anno);
     /**

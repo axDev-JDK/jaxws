@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -163,9 +163,9 @@ abstract class WsaTube extends AbstractFilterTubeImpl {
      *
      * Override this method if you need to additional checking of headers other than just existence of the headers.
      * For ex: On server-side, check Anonymous and Non-Anonymous semantics in addition to checking cardinality.
-     * 
+     *
      * Override checkMandatoryHeaders(Packet p) to have different validation rules for different versions
-     * 
+     *
      * @param packet
      */
     protected void checkMessageAddressingProperties(Packet packet) {
@@ -324,7 +324,7 @@ abstract class WsaTube extends AbstractFilterTubeImpl {
                 return;
             */
             checkMandatoryHeaders(packet, foundAction, foundTo, foundReplyTo,
-                    foundFaultTo, foundMessageId, foundRelatesTo);            
+                    foundFaultTo, foundMessageId, foundRelatesTo);
         }
     }
 
@@ -339,7 +339,7 @@ abstract class WsaTube extends AbstractFilterTubeImpl {
     }
 
     protected final WSDLBoundOperation getWSDLBoundOperation(Packet packet) {
-        //we can find Req/Response or Oneway only with WSDLModel        
+        //we can find Req/Response or Oneway only with WSDLModel
         if(wsdlPort == null)
             return null;
         QName opName = packet.getWSDLOperation();
@@ -365,7 +365,7 @@ abstract class WsaTube extends AbstractFilterTubeImpl {
      * Checks only for presence of wsa:Action and validates that wsa:Action
      * equals SOAPAction header when non-empty
      * Should be overridden if other wsa headers need to be checked based on version.
-     * 
+     *
      * @param packet
      * @param foundAction
      * @param foundTo

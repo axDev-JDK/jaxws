@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.tools.internal.xjc.addon.locator;
 
 import java.io.IOException;
@@ -45,7 +46,7 @@ import org.xml.sax.Locator;
 
 /**
  * Generates JAXB objects that implement {@link Locatable}.
- * 
+ *
  * @author
  *     Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
@@ -69,7 +70,7 @@ public class SourceLocationAddOn extends Plugin {
         Outline outline,
         Options opt,
         ErrorHandler errorHandler ) {
-        
+
         for( ClassOutline ci : outline.getClasses() ) {
             JDefinedClass impl = ci.implClass;
             if (ci.getSuperClass() == null) {
@@ -80,13 +81,13 @@ public class SourceLocationAddOn extends Plugin {
                 impl._implements(Locatable.class);
 
                 impl.method(JMod.PUBLIC, Locator.class, "sourceLocation").body()._return($loc);
-                
+
                 JMethod setter = impl.method(JMod.PUBLIC, Void.TYPE, "setSourceLocation");
                 JVar $newLoc = setter.param(Locator.class, "newLocator");
                 setter.body().assign($loc, $newLoc);
             }
         }
-        
+
         return true;
     }
 }

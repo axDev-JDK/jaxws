@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -38,14 +38,14 @@ import java.util.LinkedList;
  */
 public final class PolicyMerger {
     private static final PolicyMerger merger = new PolicyMerger();
-    
+
     /**
      * This private constructor is to avoid direct class instantiation from outsied of the package
      */
     private PolicyMerger() {
         // nothing to instantiate
     }
-    
+
     /**
      * Factory method for obtaining thread-safe policy merger instance.
      *
@@ -54,7 +54,7 @@ public final class PolicyMerger {
     public static PolicyMerger getMerger() {
         return merger;
     }
-    
+
     /**
      * Takes collection of policies and merges them into a single policy using algorithm described in
      * WS-PolicyAttachment specification. None of the original policies in the collection are modified in
@@ -73,7 +73,7 @@ public final class PolicyMerger {
         } else if (policies.size() == 1) {
             return policies.iterator().next();
         }
-        
+
         final Collection<Collection<AssertionSet>> alternativeSets = new LinkedList<Collection<AssertionSet>>();
         final StringBuilder id = new StringBuilder();
         NamespaceVersion mergedVersion = policies.iterator().next().getNamespaceVersion();
@@ -90,9 +90,9 @@ public final class PolicyMerger {
                 id.append(policyId);
             }
         }
-        
+
         final Collection<Collection<AssertionSet>> combinedAlternatives = PolicyUtils.Collections.combine(null, alternativeSets, false);
-        
+
         if (combinedAlternatives == null || combinedAlternatives.isEmpty()) {
             return Policy.createNullPolicy(mergedVersion, null, id.length() == 0 ? null : id.toString());
         } else {

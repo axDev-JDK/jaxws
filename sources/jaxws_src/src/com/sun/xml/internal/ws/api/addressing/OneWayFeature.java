@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -46,7 +46,7 @@ import com.sun.org.glassfish.gmbal.ManagedData;
  * this annotation. All operations are assumed to be one-way, and
  * this feature should be used for one-way
  * operations only.
- * 
+ *
  * If a non-null ReplyTo is specified, then MessageID property is also added.
  *
  * @author Arun Gupta

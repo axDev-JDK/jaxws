@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -32,13 +32,13 @@ import java.util.List;
 
 /**
  * Restriction simple type.
- * 
+ *
  * @author
  *  Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
 public interface XSRestrictionSimpleType extends XSSimpleType {
     // TODO
-    
+
     /** Iterates facets that are specified in this step of derivation. */
     public Iterator<XSFacet> iterateDeclaredFacets();
 
@@ -52,11 +52,11 @@ public interface XSRestrictionSimpleType extends XSSimpleType {
 
     /**
      * Gets the declared facet object of the given name.
-     * 
+     *
      * <p>
      * This method returns a facet object that is added in this
      * type and does not recursively check the ancestors.
-     * 
+     *
      * <p>
      * For those facets that can have multiple values
      * (pattern facets and enumeration facets), this method

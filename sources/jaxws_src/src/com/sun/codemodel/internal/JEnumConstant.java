@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -26,6 +26,8 @@ package com.sun.codemodel.internal;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Collection;
+import java.util.Collections;
 import java.lang.annotation.Annotation;
 
 /**
@@ -36,7 +38,7 @@ import java.lang.annotation.Annotation;
  * @author
  *     Bhakti Mehta (Bhakti.Mehta@sun.com)
  */
-public final class JEnumConstant extends JExpressionImpl implements JDeclaration, JAnnotatable {
+public final class JEnumConstant extends JExpressionImpl implements JDeclaration, JAnnotatable, JDocCommentable {
 
     /**
      * The constant.
@@ -88,7 +90,7 @@ public final class JEnumConstant extends JExpressionImpl implements JDeclaration
      * @return never null.
      */
     public String getName() {
-    	return this.type.fullName().concat(".").concat(this.name);
+        return this.type.fullName().concat(".").concat(this.name);
     }
 
     /**
@@ -129,6 +131,15 @@ public final class JEnumConstant extends JExpressionImpl implements JDeclaration
         return TypedAnnotationWriter.create(clazz,this);
     }
 
+    /**
+     * {@link JAnnotatable#annotations()}
+     */
+    public Collection<JAnnotationUse> annotations() {
+        if (annotations == null)
+            annotations = new ArrayList<JAnnotationUse>();
+        return Collections.unmodifiableList(annotations);
+    }
+
     public void declare(JFormatter f) {
         if( jdoc != null )
             f.nl().g( jdoc );
@@ -143,6 +154,6 @@ public final class JEnumConstant extends JExpressionImpl implements JDeclaration
     }
 
     public void generate(JFormatter f) {
-    	f.t(type).p('.').p(name);
+        f.t(type).p('.').p(name);
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -216,7 +216,7 @@ public abstract class WSEndpoint<T> {
      *
      * @see {@link Packet#transportBackChannel}
      * @see {@link Packet#webServiceContextDelegate}
-     * 
+     *
      * @param request web service request
      * @param callback callback to get response packet
      */
@@ -234,6 +234,10 @@ public abstract class WSEndpoint<T> {
      * @param interceptor caller's interceptor to impose a context of execution
      */
     public abstract void schedule(@NotNull Packet request, @NotNull CompletionCallback callback, @Nullable FiberContextSwitchInterceptor interceptor );
+
+    public void process(@NotNull Packet request, @NotNull CompletionCallback callback, @Nullable FiberContextSwitchInterceptor interceptor ) {
+       schedule(request,callback,interceptor);
+    }
 
     /**
      * Callback to notify that jax-ws runtime has finished execution of a request
@@ -489,9 +493,9 @@ public abstract class WSEndpoint<T> {
         @Nullable SDDocumentSource primaryWsdl,
         @Nullable Collection<? extends SDDocumentSource> metadata,
         @Nullable EntityResolver resolver,
-        boolean isTransportSynchronous) 
+        boolean isTransportSynchronous)
     {
-	final WSEndpoint<T> endpoint = 
+        final WSEndpoint<T> endpoint =
             EndpointFactory.createEndpoint(
                 implType,processHandlerAnnotation, invoker,serviceName,portName,container,binding,primaryWsdl,metadata,resolver,isTransportSynchronous);
         endpoint.getManagedObjectManager().resumeJMXRegistration();

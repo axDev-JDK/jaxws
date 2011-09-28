@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -58,7 +58,7 @@ import com.sun.tools.internal.ws.wsdl.framework.Entity;
 import com.sun.tools.internal.ws.wsdl.framework.ParserListener;
 import com.sun.tools.internal.ws.wsdl.framework.TWSDLParserContextImpl;
 import com.sun.xml.internal.ws.util.ServiceFinder;
-import com.sun.xml.internal.ws.policy.PolicyWSDLParserExtension;
+
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -88,18 +88,23 @@ import java.util.Map;
 public class WSDLParser {
     private final ErrorReceiverFilter errReceiver;
     private WsimportOptions options;
-    private MetadataFinder forest;
 
     //wsdl extension handlers
     private final Map extensionHandlers;
-
+    private MetadataFinder forest;
     private ArrayList<ParserListener> listeners;
 
-    public WSDLParser(WsimportOptions options, ErrorReceiverFilter errReceiver) {
+    public WSDLParser(WsimportOptions options, ErrorReceiverFilter errReceiver, MetadataFinder forest) {
         this.extensionHandlers = new HashMap();
         this.options = options;
         this.errReceiver = errReceiver;
-
+        if (forest == null) {
+            forest = new MetadataFinder(new WSDLInternalizationLogic(), options, errReceiver);
+            forest.parseWSDL();
+            if (forest.isMexMetadata)
+                errReceiver.reset();
+        }
+        this.forest = forest;
         // register handlers for default extensions
         register(new SOAPExtensionHandler(extensionHandlers));
         register(new HTTPExtensionHandler(extensionHandlers));
@@ -109,13 +114,18 @@ public class WSDLParser {
         register(new MemberSubmissionAddressingExtensionHandler(extensionHandlers, errReceiver));
         register(new W3CAddressingExtensionHandler(extensionHandlers, errReceiver));
         register(new W3CAddressingMetadataExtensionHandler(extensionHandlers, errReceiver));
-        register(new PolicyExtensionHandler());
+        register(new Policy12ExtensionHandler());
+        register(new Policy15ExtensionHandler());
         for (TWSDLExtensionHandler te : ServiceFinder.find(TWSDLExtensionHandler.class)) {
             register(te);
         }
 
     }
 
+    //TODO RK remove this after tests are fixed.
+    WSDLParser(WsimportOptions options, ErrorReceiverFilter errReceiver) {
+        this(options,errReceiver,null);
+    }
     private void register(TWSDLExtensionHandler h) {
         extensionHandlers.put(h.getNamespaceURI(), h);
     }
@@ -128,11 +138,6 @@ public class WSDLParser {
     }
 
     public WSDLDocument parse() throws SAXException, IOException {
-        forest = new MetadataFinder(new WSDLInternalizationLogic(), options, errReceiver);
-        forest.parseWSDL();
-        if(forest.isMexMetadata)
-            errReceiver.reset();
-
         // parse external binding files
         for (InputSource value : options.getWSDLBindings()) {
             errReceiver.pollAbort();
@@ -353,10 +358,12 @@ public class WSDLParser {
                 MessagePart part = parseMessagePart(context, e2);
                 message.add(part);
             } else {
-                Util.fail(
+                //Ignore any extensibility elements, WS-I BP 1.1 Profiled WSDL 1.1 schema allows extension elements here.
+                /*Util.fail(
                     "parsing.invalidElement",
                     e2.getTagName(),
                     e2.getNamespaceURI());
+                    */
             }
         }
 

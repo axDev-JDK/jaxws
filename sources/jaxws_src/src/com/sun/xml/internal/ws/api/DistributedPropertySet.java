@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -27,6 +27,7 @@ package com.sun.xml.internal.ws.api;
 
 import com.sun.istack.internal.FinalArrayList;
 import com.sun.istack.internal.NotNull;
+import com.sun.istack.internal.Nullable;
 import com.sun.xml.internal.ws.api.message.Packet;
 import com.sun.xml.internal.ws.client.RequestContext;
 import com.sun.xml.internal.ws.client.ResponseContext;
@@ -87,6 +88,23 @@ public abstract class DistributedPropertySet extends PropertySet {
 
     public void copySatelliteInto(@NotNull DistributedPropertySet r) {
         r.satellites.addAll(this.satellites);
+    }
+
+    public @Nullable <T extends PropertySet> T getSatellite(Class<T> satelliteClass) {
+        for (PropertySet child : satellites) {
+            if (satelliteClass.isInstance(child)) {
+                return satelliteClass.cast(child);
+            }
+
+            if (DistributedPropertySet.class.isInstance(child)) {
+                T satellite = DistributedPropertySet.class.cast(child).getSatellite(satelliteClass);
+                if (satellite != null) {
+                    return satellite;
+                }
+            }
+        }
+
+        return null;
     }
 
     @Override

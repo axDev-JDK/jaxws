@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -23,7 +23,6 @@
  * questions.
  */
 
-
 package com.sun.xml.internal.messaging.saaj.util;
 
 
@@ -39,7 +38,7 @@ public class ParseUtil {
 
     /**
      * Returns a new String constructed from the specified String by replacing
-     * the URL escape sequences and UTF8 encoding with the characters they 
+     * the URL escape sequences and UTF8 encoding with the characters they
      * represent.
      */
     public static String decode(String s) {

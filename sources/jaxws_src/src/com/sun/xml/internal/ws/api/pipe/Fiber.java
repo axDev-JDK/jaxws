@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -245,27 +245,35 @@ public final class Fiber implements Runnable {
         owner.addRunnable(this);
     }
 
+    public void runAsync(@NotNull Tube tubeline, @NotNull Packet request, @Nullable CompletionCallback completionCallback) {
+        next = tubeline;
+        this.packet = request;
+        this.completionCallback = completionCallback;
+        this.started = true;
+        run();
+    }
+
     /**
      * Wakes up a suspended fiber.
      *
      * <p>
      * If a fiber was suspended without specifying the next {@link Tube},
-     * then the execution will be resumed in the response processing direction, 
-     * by calling the {@link Tube#processResponse(Packet)} method on the next/first 
-     * {@link Tube} in the {@link Fiber}'s processing stack with the specified resume 
+     * then the execution will be resumed in the response processing direction,
+     * by calling the {@link Tube#processResponse(Packet)} method on the next/first
+     * {@link Tube} in the {@link Fiber}'s processing stack with the specified resume
      * packet as the parameter.
      *
      * <p>
      * If a fiber was suspended with specifying the next {@link Tube},
      * then the execution will be resumed in the request processing direction,
-     * by calling the next tube's {@link Tube#processRequest(Packet)} method with the 
+     * by calling the next tube's {@link Tube#processRequest(Packet)} method with the
      * specified resume packet as the parameter.
      *
      * <p>
      * This method is implemented in a race-free way. Another thread can invoke
      * this method even before this fiber goes into the suspension mode. So the caller
-     * need not worry about synchronizing {@link NextAction#suspend()} and this method. 
-     * 
+     * need not worry about synchronizing {@link NextAction#suspend()} and this method.
+     *
      * @param resumePacket packet used in the resumed processing
      */
     public synchronized void resume(@NotNull Packet resumePacket) {
@@ -633,7 +641,7 @@ public final class Fiber implements Runnable {
                         LOGGER.finer(getName()+' '+last+" returned with "+na);
 
                     // If resume is called before suspend, then make sure
-					// resume(Packet) is not lost
+                                        // resume(Packet) is not lost
                     if (na.kind != NextAction.SUSPEND) {
                         packet = na.packet;
                         throwable = na.throwable;
@@ -795,7 +803,7 @@ public final class Fiber implements Runnable {
 
     private static final Logger LOGGER = Logger.getLogger(Fiber.class.getName());
 
-    
+
     private static final ReentrantLock serializedExecutionLock = new ReentrantLock();
 
     /**

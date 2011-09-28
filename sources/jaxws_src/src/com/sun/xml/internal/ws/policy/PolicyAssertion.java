@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -35,13 +35,13 @@ import com.sun.xml.internal.ws.policy.sourcemodel.AssertionData;
 import com.sun.xml.internal.ws.policy.sourcemodel.ModelNode;
 
 /**
- * Base class for any policy assertion implementations. It defines the common 
- * interface and provides some default implentation for common policy assertion 
+ * Base class for any policy assertion implementations. It defines the common
+ * interface and provides some default implentation for common policy assertion
  * functionality.
  * <p/>
- * NOTE: Assertion implementers should not extend this class directly. {@link SimpleAssertion} 
+ * NOTE: Assertion implementers should not extend this class directly. {@link SimpleAssertion}
  * or {@link ComplexAssertion} should be used as a base class instead.
- * 
+ *
  * @author Marek Potociar (marek.potociar at sun.com)
  * @author Fabian Ritzmann
  */
@@ -62,8 +62,8 @@ public abstract class PolicyAssertion {
      * @param assertionData assertion creation data specifying the details of newly created assertion. May be {@code null}.
      * @param assertionParameters collection of assertions parameters of this policy assertion. May be {@code null}.
      * @param nestedAlternative assertion set specifying nested policy alternative. May be {@code null}.
-     * 
-     * @deprecated Non-abstract assertion types should derive from {@link SimpleAssertion} 
+     *
+     * @deprecated Non-abstract assertion types should derive from {@link SimpleAssertion}
      * or {@link ComplexAssertion} instead. {@link Policy} class will not provide support for
      * nested policy alternatives in the future. This responsibility is delegated to
      * {@link ComplexAssertion} class instead.

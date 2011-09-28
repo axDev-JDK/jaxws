@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -35,11 +35,11 @@ import java.util.Iterator;
  */
 public final class NestedPolicy extends Policy {
     private static final String NESTED_POLICY_TOSTRING_NAME = "nested policy";
-        
+
     private NestedPolicy(final AssertionSet set) {
         super(NESTED_POLICY_TOSTRING_NAME, Arrays.asList(new AssertionSet[] { set }));
     }
-    
+
     private NestedPolicy(final String name, final String policyId, final AssertionSet set) {
         super(NESTED_POLICY_TOSTRING_NAME, name, policyId, Arrays.asList(new AssertionSet[] { set }));
     }
@@ -51,7 +51,7 @@ public final class NestedPolicy extends Policy {
     static NestedPolicy createNestedPolicy(final String name, final String policyId, final AssertionSet set) {
         return new NestedPolicy(name, policyId, set);
     }
-    
+
     /**
      * Returns the AssertionSet instance representing a single policy alterantive held wihtin this nested policy object.
      * If the nested policy represents a policy with no alternatives (i.e. nothing is allowed) the method returns {@code null}.
@@ -67,7 +67,7 @@ public final class NestedPolicy extends Policy {
             return null;
         }
     }
-        
+
     /**
      * An {@code Object.equals(Object obj)} method override.
      */
@@ -76,21 +76,21 @@ public final class NestedPolicy extends Policy {
         if (this == obj) {
             return true;
         }
-        
+
         if (!(obj instanceof NestedPolicy)) {
             return false;
         }
-        
+
         final NestedPolicy that = (NestedPolicy) obj;
-        
+
         return super.equals(that);
-    }    
-    
+    }
+
     @Override
     public int hashCode() {
         return super.hashCode();
-    }    
-    
+    }
+
     /**
      * An {@code Object.toString()} method override.
      */
@@ -98,7 +98,7 @@ public final class NestedPolicy extends Policy {
     public String toString() {
         return toString(0, new StringBuffer()).toString();
     }
-    
+
     /**
      * A helper method that appends indented string representation of this instance to the input string buffer.
      *
@@ -109,5 +109,5 @@ public final class NestedPolicy extends Policy {
     @Override
     StringBuffer toString(final int indentLevel, final StringBuffer buffer) {
         return super.toString(indentLevel, buffer);
-    }    
+    }
 }

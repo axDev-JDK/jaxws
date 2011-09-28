@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -119,7 +119,7 @@ public abstract class DetailImpl extends FaultElementImpl implements Detail {
        return true;
    }
 
-    //overriding this method since the only two uses of this method 
+    //overriding this method since the only two uses of this method
     // are in ElementImpl and DetailImpl
     //whereas the original base impl does the correct job for calls to it inside ElementImpl
     // But it would not work for DetailImpl.
@@ -142,5 +142,5 @@ public abstract class DetailImpl extends FaultElementImpl implements Detail {
         }
         return element;
     }
-   
+
 }

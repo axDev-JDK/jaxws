@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -35,17 +35,17 @@ import com.sun.xml.internal.xsom.visitor.XSFunction;
 import com.sun.xml.internal.xsom.visitor.XSVisitor;
 
 /**
- * 
+ *
  * @author
  *     Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
 public class EmptyImpl extends ComponentImpl implements ContentTypeImpl {
     public EmptyImpl() { super(null,null,null,null); }
-    
+
     public XSSimpleType asSimpleType()  { return null; }
     public XSParticle asParticle()      { return null; }
     public XSContentType asEmpty()      { return this; }
-    
+
     public Object apply( XSContentTypeFunction function ) {
         return function.empty(this);
     }
@@ -58,6 +58,6 @@ public class EmptyImpl extends ComponentImpl implements ContentTypeImpl {
     public void visit( XSContentTypeVisitor visitor ) {
         visitor.empty(this);
     }
-    
+
     public XSContentType getContentType() { return this; }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -44,7 +44,7 @@ import java.security.PrivilegedAction;
  * <p>
  * The design also encapsulates the entire fiber execution in a single
  * opaque method invocation {@link Work#execute}, allowing the use of
- * <tt>finally</tt> block. 
+ * <tt>finally</tt> block.
  *
  *
  * @author Kohsuke Kawaguchi

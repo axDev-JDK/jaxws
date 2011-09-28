@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -149,7 +149,7 @@ public abstract class Stub implements WSBindingProvider, ResponseContextReceiver
     }
 
     /**
-     * @param portInfo               PortInfo  for this stub 
+     * @param portInfo               PortInfo  for this stub
      * @param binding                As a {@link BindingProvider}, this object will
      *                               return this binding from {@link BindingProvider#getBinding()}.
      * @param defaultEndPointAddress The destination of the message. The actual destination
@@ -175,7 +175,7 @@ public abstract class Stub implements WSBindingProvider, ResponseContextReceiver
             this.requestContext.setEndPointAddressString(epr.getAddress());
         else
             this.requestContext.setEndpointAddress(defaultEndPointAddress);
-        this.engine = new Engine(toString());
+        this.engine = new Engine(toString(), owner.getExecutor());
         this.endpointReference = epr;
         wsdlProperties = (wsdlPort==null) ? null : new WSDLProperties(wsdlPort);
 
@@ -403,7 +403,7 @@ public abstract class Stub implements WSBindingProvider, ResponseContextReceiver
             com.sun.xml.internal.ws.server.MonitorBase.closeMOM(managedObjectManager);
             managedObjectManagerClosed = true;
         }
-        
+
     }
 
     public final WSBinding getBinding() {
@@ -459,7 +459,7 @@ public abstract class Stub implements WSBindingProvider, ResponseContextReceiver
         AddressingVersion av = AddressingVersion.W3C;
         this.endpointReference =  new WSEndpointReference(
                     av, eprAddress, getServiceName(), getPortName(), portTypeName, null, wsdlAddress, null,wsdlEPRExtensions,null);
-        
+
         return this.endpointReference;
     }
 

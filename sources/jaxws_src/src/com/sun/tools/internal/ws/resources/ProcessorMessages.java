@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -23,6 +23,7 @@
  * questions.
  */
 
+
 package com.sun.tools.internal.ws.resources;
 
 import com.sun.xml.internal.ws.util.localization.Localizable;
@@ -32,7 +33,7 @@ import com.sun.xml.internal.ws.util.localization.Localizer;
 
 /**
  * Defines string formatting method for each constant in the resource file
- * 
+ *
  */
 public final class ProcessorMessages {
 
@@ -45,7 +46,7 @@ public final class ProcessorMessages {
 
     /**
      * model is missing
-     * 
+     *
      */
     public static String PROCESSOR_MISSING_MODEL() {
         return localizer.localize(localizablePROCESSOR_MISSING_MODEL());

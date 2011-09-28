@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.tools.internal.xjc;
 
 import java.io.IOException;
@@ -77,15 +78,15 @@ import org.xml.sax.helpers.XMLFilterImpl;
 
 /**
  * Builds a {@link Model} object.
- * 
+ *
  * This is an utility class that makes it easy to load a grammar object
  * from various sources.
- * 
+ *
  * @author
  *     Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
 public final class ModelLoader {
-    
+
     private final Options opt;
     private final ErrorReceiverFilter errorReceiver;
     private final JCodeModel codeModel;
@@ -94,15 +95,15 @@ public final class ModelLoader {
      */
     private SCDBasedBindingSet scdBasedBindingSet;
 
-    
+
     /**
      * A convenience method to load schemas into a {@link Model}.
      */
     public static Model load( Options opt, JCodeModel codeModel, ErrorReceiver er ) {
         return new ModelLoader(opt,codeModel,er).load();
     }
-    
-    
+
+
     public ModelLoader(Options _opt, JCodeModel _codeModel, ErrorReceiver er) {
         this.opt = _opt;
         this.codeModel = _codeModel;
@@ -114,8 +115,8 @@ public final class ModelLoader {
 
         if(!sanityCheck())
             return null;
-        
-        
+
+
         try {
             switch (opt.getSchemaLanguage()) {
             case DTD :
@@ -155,7 +156,7 @@ public final class ModelLoader {
             case XMLSCHEMA:
                 grammar = annotateXMLSchema( loadXMLSchema() );
                 break;
-            
+
             default :
                 throw new AssertionError(); // assertion failed
             }
@@ -197,7 +198,7 @@ public final class ModelLoader {
     private boolean sanityCheck() {
         if( opt.getSchemaLanguage()==Language.XMLSCHEMA ) {
             Language guess = opt.guessSchemaLanguage();
-            
+
             String[] msg = null;
             switch(guess) {
             case DTD:
@@ -225,7 +226,7 @@ public final class ModelLoader {
 
     /**
      * {@link XMLParser} implementation that adds additional processors into the chain.
-     * 
+     *
      * <p>
      * This parser will parse a DOM forest as:
      * DOMForestParser -->
@@ -235,11 +236,11 @@ public final class ModelLoader {
      */
     private class XMLSchemaParser implements XMLParser {
         private final XMLParser baseParser;
-        
+
         private XMLSchemaParser(XMLParser baseParser) {
             this.baseParser = baseParser;
         }
-        
+
         public void parse(InputSource source, ContentHandler handler,
             ErrorHandler errorHandler, EntityResolver entityResolver ) throws SAXException, IOException {
             // set up the chain of handlers.
@@ -260,19 +261,15 @@ public final class ModelLoader {
             return filter;
         }
     }
-    
-
-
-
 
     private void checkTooManySchemaErrors() {
         if( opt.getGrammars().length!=1 )
             errorReceiver.error(null,Messages.format(Messages.ERR_TOO_MANY_SCHEMA));
     }
-    
+
     /**
      * Parses a DTD file into an annotated grammar.
-     * 
+     *
      * @param   source
      *      DTD file
      * @param   bindFile
@@ -292,24 +289,24 @@ public final class ModelLoader {
      * Builds DOMForest and performs the internalization.
      *
      * @throws SAXException
-     *      when a fatal happe
+     *      when a fatal error happens
      */
-    public DOMForest buildDOMForest( InternalizationLogic logic ) 
+    public DOMForest buildDOMForest( InternalizationLogic logic )
         throws SAXException {
-    
+
         // parse into DOM forest
         DOMForest forest = new DOMForest(logic);
-        
+
         forest.setErrorHandler(errorReceiver);
         if(opt.entityResolver!=null)
         forest.setEntityResolver(opt.entityResolver);
-        
+
         // parse source grammars
         for (InputSource value : opt.getGrammars()) {
             errorReceiver.pollAbort();
             forest.parse(value, true);
         }
-        
+
         // parse external binding files
         for (InputSource value : opt.getBindFiles()) {
             errorReceiver.pollAbort();
@@ -363,23 +360,23 @@ public final class ModelLoader {
         DOMForest forest = buildDOMForest( new XMLSchemaInternalizationLogic() );
         return createXSOM(forest, scdBasedBindingSet);
     }
-    
+
     /**
      * Parses a set of schemas inside a WSDL file.
-     * 
+     *
      * A WSDL file may contain multiple &lt;xsd:schema> elements.
      */
     private XSSchemaSet loadWSDL()
         throws SAXException {
 
-        
+
         // build DOMForest just like we handle XML Schema
         DOMForest forest = buildDOMForest( new XMLSchemaInternalizationLogic() );
-        
+
         DOMForestScanner scanner = new DOMForestScanner(forest);
-        
+
         XSOMParser xsomParser = createXSOMParser( forest );
-        
+
         // find <xsd:schema>s and parse them individually
         for( InputSource grammar : opt.getGrammars() ) {
             Document wsdlDom = forest.get( grammar.getSystemId() );
@@ -390,10 +387,10 @@ public final class ModelLoader {
         }
         return xsomParser.getResult();
     }
-    
+
     /**
      * Annotates the obtained schema set.
-     * 
+     *
      * @return
      *      null if an error happens. In that case, the error messages
      *      will be properly reported to the controller by this method.
@@ -417,7 +414,7 @@ public final class ModelLoader {
         XSOMParser p = createXSOMParser(forest.createParser());
         p.setEntityResolver(new EntityResolver() {
             public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
-                // DOMForest only parses documents that are rearchable through systemIds,
+                // DOMForest only parses documents that are reachable through systemIds,
                 // and it won't pick up references like <xs:import namespace="..." /> without
                 // @schemaLocation. So we still need to use an entity resolver here to resolve
                 // these references, yet we don't want to just run them blindly, since if we do that
@@ -438,6 +435,7 @@ public final class ModelLoader {
     private static final class SpeculationFailure extends Error {}
 
     private static final class SpeculationChecker extends XMLFilterImpl {
+        @Override
         public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
             if(localName.equals("bindings") && uri.equals(Const.JAXB_NSURI))
                 throw new SpeculationFailure();
@@ -512,7 +510,7 @@ public final class ModelLoader {
 
         return result;
     }
-    
+
     /**
      * Parses a RELAX NG grammar into an annotated grammar.
      */
@@ -530,6 +528,7 @@ public final class ModelLoader {
                 // foreset parser cannot change the receivers while it's working,
                 // so we need to have one XMLFilter that works as a buffer
                 XMLFilter buffer = new XMLFilterImpl() {
+                    @Override
                     public void parse(InputSource source) throws IOException, SAXException {
                         forest.createParser().parse( source, this, this, this );
                     }

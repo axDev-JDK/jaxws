@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -26,22 +26,22 @@
 package javax.xml.ws.http;
 
 
-/** The <code>HTTPException</code> exception represents a 
+/** The <code>HTTPException</code> exception represents a
  *  XML/HTTP fault.
  *
  *  <p>Since there is no standard format for faults or exceptions
- *  in XML/HTTP messaging, only the HTTP status code is captured. 
- * 
+ *  in XML/HTTP messaging, only the HTTP status code is captured.
+ *
  *  @since JAX-WS 2.0
 **/
 public class HTTPException extends javax.xml.ws.ProtocolException  {
-  
+
   private int statusCode;
 
   /** Constructor for the HTTPException
    *  @param statusCode   <code>int</code> for the HTTP status code
   **/
-  public HTTPException(int statusCode) { 
+  public HTTPException(int statusCode) {
     super();
     this.statusCode = statusCode;
   }

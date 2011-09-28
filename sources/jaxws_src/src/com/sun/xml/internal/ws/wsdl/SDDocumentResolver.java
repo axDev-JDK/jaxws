@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -23,42 +23,23 @@
  * questions.
  */
 
-package com.sun.xml.internal.ws.developer;
+package com.sun.xml.internal.ws.wsdl;
 
-import com.sun.xml.internal.ws.api.FeatureConstructor;
-
-import javax.jws.WebService;
-import javax.xml.ws.WebServiceFeature;
-
-import com.sun.org.glassfish.gmbal.ManagedAttribute;
-import com.sun.org.glassfish.gmbal.ManagedData;
-
+import com.sun.istack.internal.Nullable;
+import com.sun.xml.internal.ws.api.server.SDDocument;
 
 /**
- * Designates a stateful {@link WebService}.
- * A service class that has this feature on will behave as a stateful web service.
+ * Resolves a systemId to {@link SDDocument}
  *
- * @since 2.1
- * @see StatefulWebServiceManager
+ * @author Jitendra Kotamraju
  */
-@ManagedData
-public class StatefulFeature extends WebServiceFeature {
+public interface SDDocumentResolver {
     /**
-     * Constant value identifying the StatefulFeature
+     * returns {@link SDDocument} for the give systemId.
+     *
+     * @param systemId document's systemId
+     * @return document for the systemId, null if it cannot resolve.
      */
-    public static final String ID = "http://jax-ws.dev.java.net/features/stateful";
+    @Nullable SDDocument resolve(String systemId);
 
-    /**
-     * Create an <code>StatefulFeature</code>.
-     * The instance created will be enabled.
-     */
-    @FeatureConstructor
-    public StatefulFeature() {
-        this.enabled = true;
-    }
-
-    @ManagedAttribute
-    public String getID() {
-        return ID;
-    }
 }

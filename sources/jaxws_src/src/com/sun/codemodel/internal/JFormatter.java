@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -114,7 +114,7 @@ public final class JFormatter {
     public JFormatter(Writer w) {
         this(new PrintWriter(w));
     }
-    
+
     /**
      * Closes this formatter.
      */
@@ -445,8 +445,8 @@ public final class JFormatter {
         final String packageName = clazz._package().name();
         if(packageName.equals("java.lang"))
             return true;    // no need to explicitly import java.lang classes
-    
-        if (clazz._package() == c._package()){ 
+
+        if (clazz._package() == c._package()){
             // inner classes require an import stmt.
             // All other pkg local classes do not need an
             // import stmt for ref.
@@ -500,12 +500,12 @@ public final class JFormatter {
             for(JClass c : classes) {
                 if(c._package()==javaLang) {
                     // make sure that there's no other class with this name within the same package
-                    Iterator itr = enclosingClass._package().classes();
+                    Iterator<JDefinedClass> itr = enclosingClass._package().classes();
                     while(itr.hasNext()) {
                         // even if this is the only "String" class we use,
                         // if the class called "String" is in the same package,
                         // we still need to import it.
-                        JDefinedClass n = (JDefinedClass)itr.next();
+                        JDefinedClass n = itr.next();
                         if(n.name().equals(c.name()))
                             return true;    //collision
                     }

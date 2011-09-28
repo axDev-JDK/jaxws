@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -37,7 +37,8 @@ import com.sun.xml.internal.xsom.impl.parser.NGCCRuntimeEx;
     import org.xml.sax.ContentHandler;
     import org.xml.sax.helpers.*;
     import java.util.*;
-  
+    import java.math.BigInteger;
+
 
 
 class complexType_complexContent_body extends NGCCHandler {
@@ -65,7 +66,7 @@ class complexType_complexContent_body extends NGCCHandler {
 
     private void action0()throws SAXException {
         if(particle==null)
- 	  particle = $runtime.parser.schemaSet.empty;
+          particle = $runtime.parser.schemaSet.empty;
 }
 
     public void enterElement(String $__uri, String $__local, String $__qname, Attributes $attrs) throws SAXException {
@@ -74,6 +75,18 @@ class complexType_complexContent_body extends NGCCHandler {
         $localName = $__local;
         $qname = $__qname;
         switch($_ngcc_current_state) {
+        case 2:
+            {
+                if((((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("all")) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("choice"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("sequence"))) || (($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("element")) || (($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("any")) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("group")))))) {
+                    NGCCHandler h = new particle(this, super._source, $runtime, 635);
+                    spawnChildFromEnterElement(h, $__uri, $__local, $__qname, $attrs);
+                }
+                else {
+                    $_ngcc_current_state = 1;
+                    $runtime.sendEnterElement(super._cookie, $__uri, $__local, $__qname, $attrs);
+                }
+            }
+            break;
         case 0:
             {
                 revertToParentFromEnterElement(particle, super._cookie, $__uri, $__local, $__qname, $attrs);
@@ -81,25 +94,13 @@ class complexType_complexContent_body extends NGCCHandler {
             break;
         case 1:
             {
-                if((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("attribute")) || (($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("attributeGroup")) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("anyAttribute"))))) {
-                    NGCCHandler h = new attributeUses(this, super._source, $runtime, 676, owner);
+                if((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("anyAttribute")) || (($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("attributeGroup")) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("attribute"))))) {
+                    NGCCHandler h = new attributeUses(this, super._source, $runtime, 633, owner);
                     spawnChildFromEnterElement(h, $__uri, $__local, $__qname, $attrs);
                 }
                 else {
-                    NGCCHandler h = new attributeUses(this, super._source, $runtime, 676, owner);
+                    NGCCHandler h = new attributeUses(this, super._source, $runtime, 633, owner);
                     spawnChildFromEnterElement(h, $__uri, $__local, $__qname, $attrs);
-                }
-            }
-            break;
-        case 2:
-            {
-                if((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("group")) || (($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("any")) || (((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("all")) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("choice"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("sequence"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("element")))))) {
-                    NGCCHandler h = new particle(this, super._source, $runtime, 678);
-                    spawnChildFromEnterElement(h, $__uri, $__local, $__qname, $attrs);
-                }
-                else {
-                    $_ngcc_current_state = 1;
-                    $runtime.sendEnterElement(super._cookie, $__uri, $__local, $__qname, $attrs);
                 }
             }
             break;
@@ -117,6 +118,12 @@ class complexType_complexContent_body extends NGCCHandler {
         $localName = $__local;
         $qname = $__qname;
         switch($_ngcc_current_state) {
+        case 2:
+            {
+                $_ngcc_current_state = 1;
+                $runtime.sendLeaveElement(super._cookie, $__uri, $__local, $__qname);
+            }
+            break;
         case 0:
             {
                 revertToParentFromLeaveElement(particle, super._cookie, $__uri, $__local, $__qname);
@@ -124,14 +131,8 @@ class complexType_complexContent_body extends NGCCHandler {
             break;
         case 1:
             {
-                NGCCHandler h = new attributeUses(this, super._source, $runtime, 676, owner);
+                NGCCHandler h = new attributeUses(this, super._source, $runtime, 633, owner);
                 spawnChildFromLeaveElement(h, $__uri, $__local, $__qname);
-            }
-            break;
-        case 2:
-            {
-                $_ngcc_current_state = 1;
-                $runtime.sendLeaveElement(super._cookie, $__uri, $__local, $__qname);
             }
             break;
         default:
@@ -148,6 +149,12 @@ class complexType_complexContent_body extends NGCCHandler {
         $localName = $__local;
         $qname = $__qname;
         switch($_ngcc_current_state) {
+        case 2:
+            {
+                $_ngcc_current_state = 1;
+                $runtime.sendEnterAttribute(super._cookie, $__uri, $__local, $__qname);
+            }
+            break;
         case 0:
             {
                 revertToParentFromEnterAttribute(particle, super._cookie, $__uri, $__local, $__qname);
@@ -155,14 +162,8 @@ class complexType_complexContent_body extends NGCCHandler {
             break;
         case 1:
             {
-                NGCCHandler h = new attributeUses(this, super._source, $runtime, 676, owner);
+                NGCCHandler h = new attributeUses(this, super._source, $runtime, 633, owner);
                 spawnChildFromEnterAttribute(h, $__uri, $__local, $__qname);
-            }
-            break;
-        case 2:
-            {
-                $_ngcc_current_state = 1;
-                $runtime.sendEnterAttribute(super._cookie, $__uri, $__local, $__qname);
             }
             break;
         default:
@@ -179,6 +180,12 @@ class complexType_complexContent_body extends NGCCHandler {
         $localName = $__local;
         $qname = $__qname;
         switch($_ngcc_current_state) {
+        case 2:
+            {
+                $_ngcc_current_state = 1;
+                $runtime.sendLeaveAttribute(super._cookie, $__uri, $__local, $__qname);
+            }
+            break;
         case 0:
             {
                 revertToParentFromLeaveAttribute(particle, super._cookie, $__uri, $__local, $__qname);
@@ -186,14 +193,8 @@ class complexType_complexContent_body extends NGCCHandler {
             break;
         case 1:
             {
-                NGCCHandler h = new attributeUses(this, super._source, $runtime, 676, owner);
+                NGCCHandler h = new attributeUses(this, super._source, $runtime, 633, owner);
                 spawnChildFromLeaveAttribute(h, $__uri, $__local, $__qname);
-            }
-            break;
-        case 2:
-            {
-                $_ngcc_current_state = 1;
-                $runtime.sendLeaveAttribute(super._cookie, $__uri, $__local, $__qname);
             }
             break;
         default:
@@ -207,6 +208,12 @@ class complexType_complexContent_body extends NGCCHandler {
     public void text(String $value) throws SAXException {
         int $ai;
         switch($_ngcc_current_state) {
+        case 2:
+            {
+                $_ngcc_current_state = 1;
+                $runtime.sendText(super._cookie, $value);
+            }
+            break;
         case 0:
             {
                 revertToParentFromText(particle, super._cookie, $value);
@@ -214,14 +221,8 @@ class complexType_complexContent_body extends NGCCHandler {
             break;
         case 1:
             {
-                NGCCHandler h = new attributeUses(this, super._source, $runtime, 676, owner);
+                NGCCHandler h = new attributeUses(this, super._source, $runtime, 633, owner);
                 spawnChildFromText(h, $value);
-            }
-            break;
-        case 2:
-            {
-                $_ngcc_current_state = 1;
-                $runtime.sendText(super._cookie, $value);
             }
             break;
         }
@@ -229,16 +230,16 @@ class complexType_complexContent_body extends NGCCHandler {
 
     public void onChildCompleted(Object $__result__, int $__cookie__, boolean $__needAttCheck__)throws SAXException {
         switch($__cookie__) {
-        case 676:
-            {
-                action0();
-                $_ngcc_current_state = 0;
-            }
-            break;
-        case 678:
+        case 635:
             {
                 particle = ((ParticleImpl)$__result__);
                 $_ngcc_current_state = 1;
+            }
+            break;
+        case 633:
+            {
+                action0();
+                $_ngcc_current_state = 0;
             }
             break;
         }
@@ -248,8 +249,7 @@ class complexType_complexContent_body extends NGCCHandler {
         return(($_ngcc_current_state == 0));
     }
 
-    
-      private ContentTypeImpl particle;
-    
-}
 
+      private ContentTypeImpl particle;
+
+}

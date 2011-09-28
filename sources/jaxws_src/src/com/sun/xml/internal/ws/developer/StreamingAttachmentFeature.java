@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -38,7 +38,7 @@ import com.sun.org.glassfish.gmbal.ManagedData;
 /**
  * Proxy needs to be created with this feature to configure StreamingAttachment
  * attachments behaviour.
- * 
+ *
  * <pre>
  * for e.g.: To configure all StreamingAttachment attachments to be kept in memory
  * <p>
@@ -117,7 +117,7 @@ public final class StreamingAttachmentFeature extends WebServiceFeature {
      * After this threshold(no of bytes), large attachments are
      * written to file system
      */
-    public void setMemoryThreshold(int memoryThreshold) {
+    public void setMemoryThreshold(long memoryThreshold) {
         this.memoryThreshold = memoryThreshold;
     }
 

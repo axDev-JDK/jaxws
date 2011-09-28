@@ -62,7 +62,7 @@ package com.sun.xml.internal.ws.org.objectweb.asm;
 /**
  * A constant pool item. Constant pool items can be created with the 'newXXX'
  * methods in the {@link ClassWriter} class.
- * 
+ *
  * @author Eric Bruneton
  */
 final class Item {
@@ -81,7 +81,7 @@ final class Item {
      * {@link ClassWriter#STR}, {@link ClassWriter#CLASS},
      * {@link ClassWriter#NAME_TYPE}, {@link ClassWriter#FIELD},
      * {@link ClassWriter#METH}, {@link ClassWriter#IMETH}.
-     * 
+     *
      * Special Item types are used for Items that are stored in the ClassWriter
      * {@link ClassWriter#typeTable}, instead of the constant pool, in order to
      * avoid clashes with normal constant pool items in the ClassWriter constant
@@ -139,7 +139,7 @@ final class Item {
     /**
      * Constructs an uninitialized {@link Item} for constant pool element at
      * given position.
-     * 
+     *
      * @param index index of the item to be constructed.
      */
     Item(final int index) {
@@ -148,7 +148,7 @@ final class Item {
 
     /**
      * Constructs a copy of the given item.
-     * 
+     *
      * @param index index of the item to be constructed.
      * @param i the item that must be copied into the item to be constructed.
      */
@@ -165,7 +165,7 @@ final class Item {
 
     /**
      * Sets this item to an integer item.
-     * 
+     *
      * @param intVal the value of this item.
      */
     void set(final int intVal) {
@@ -176,7 +176,7 @@ final class Item {
 
     /**
      * Sets this item to a long item.
-     * 
+     *
      * @param longVal the value of this item.
      */
     void set(final long longVal) {
@@ -187,7 +187,7 @@ final class Item {
 
     /**
      * Sets this item to a float item.
-     * 
+     *
      * @param floatVal the value of this item.
      */
     void set(final float floatVal) {
@@ -198,7 +198,7 @@ final class Item {
 
     /**
      * Sets this item to a double item.
-     * 
+     *
      * @param doubleVal the value of this item.
      */
     void set(final double doubleVal) {
@@ -209,7 +209,7 @@ final class Item {
 
     /**
      * Sets this item to an item that do not hold a primitive value.
-     * 
+     *
      * @param type the type of this item.
      * @param strVal1 first part of the value of this item.
      * @param strVal2 second part of the value of this item.
@@ -247,7 +247,7 @@ final class Item {
 
     /**
      * Indicates if the given item is equal to this one.
-     * 
+     *
      * @param i the item to be compared to this one.
      * @return <tt>true</tt> if the given item if equal to this one,
      *         <tt>false</tt> otherwise.

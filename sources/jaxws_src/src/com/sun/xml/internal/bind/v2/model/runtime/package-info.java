@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -29,13 +29,10 @@
  * <p>
  * This package offers stronger types and additional methods available at the runtime
  * to access objects according to the model. Most of the interfaces correspond one to one
- * with the core package, and they are simply named with {@code Runtime} prefix.    
+ * with the core package, and they are simply named with {@code Runtime} prefix.
  */
 @XmlSchema(namespace="http://jaxb.dev.java.net/xjc/model",elementFormDefault=XmlNsForm.QUALIFIED)
 package com.sun.xml.internal.bind.v2.model.runtime;
 
 import javax.xml.bind.annotation.XmlNsForm;
 import javax.xml.bind.annotation.XmlSchema;
-
-
-

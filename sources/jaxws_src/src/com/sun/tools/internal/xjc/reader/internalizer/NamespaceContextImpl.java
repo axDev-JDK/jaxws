@@ -3,7 +3,7 @@
  * DO NOT REMOVE OR ALTER!
  */
  /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -29,30 +29,11 @@
  * THIS FILE WAS MODIFIED BY SUN MICROSYSTEMS, INC.
  */
 
-/*
- * Copyright 1999-2004 The Apache Software Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.sun.tools.internal.xjc.reader.internalizer;
 
 import java.util.Iterator;
-
+import javax.xml.XMLConstants;
 import javax.xml.namespace.NamespaceContext;
-
-import com.sun.xml.internal.bind.v2.WellKnownNamespace;
-
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -76,7 +57,7 @@ final class NamespaceContextImpl implements NamespaceContext {
         final String prefixColon = prefix + ':';
 
         if (prefix.equals("xml")) {
-            namespace = WellKnownNamespace.XML_NAMESPACE_URI;
+            namespace = XMLConstants.XML_NS_URI;
         } else {
             int type;
 

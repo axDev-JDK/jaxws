@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.ws.api.message;
 
 import com.sun.istack.internal.NotNull;
@@ -66,6 +67,7 @@ import javax.xml.ws.handler.LogicalMessageContext;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.handler.soap.SOAPMessageContext;
 import javax.xml.namespace.QName;
+import javax.xml.ws.soap.AddressingFeature;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -184,13 +186,14 @@ public final class Packet extends DistributedPropertySet {
         this.proxy = that.proxy;
         this.webServiceContextDelegate = that.webServiceContextDelegate;
         this.soapAction = that.soapAction;
+        this.expectReply = that.expectReply;
         // copy other properties that need to be copied. is there any?
     }
 
     /**
      * Creates a copy of this {@link Packet}.
-     * 
-     * @param copyMessage determines whether the {@link Message} from the original {@link Packet} should be copied as 
+     *
+     * @param copyMessage determines whether the {@link Message} from the original {@link Packet} should be copied as
      *        well, or not. If the value is {@code false}, the {@link Message} in the copy of the {@link Packet} is {@code null}.
      * @return copy of the original packet
      */
@@ -200,12 +203,12 @@ public final class Packet extends DistributedPropertySet {
         // to avoid code dupliation.
         Packet copy = new Packet(this);
         if (copyMessage && this.message != null) {
-            copy.message = this.message.copy(); 
+            copy.message = this.message.copy();
         }
-       
+
         return copy;
     }
-    
+
     private Message message;
 
     /**
@@ -236,7 +239,7 @@ public final class Packet extends DistributedPropertySet {
      * Information such as Payload QName, wsa:Action header, SOAPAction HTTP header are used depending on the features
      * enabled on the particular port.
      *
-     * @return null if there is no WSDL model or  
+     * @return null if there is no WSDL model or
      *              runtime cannot uniquely identify the wsdl operation from the information in the packet.
      */
     @Property(MessageContext.WSDL_OPERATION)
@@ -255,7 +258,8 @@ public final class Packet extends DistributedPropertySet {
             try {
                 wsdlOperation = opDispatcher.getWSDLOperationQName(this);
             } catch (DispatchException e) {
-                LOGGER.info("Cannot resolve wsdl operation that this Packet is targeted for.");
+                //Ignore, this might be a protocol message which may not have a wsdl operation
+                //LOGGER.info("Cannot resolve wsdl operation that this Packet is targeted for.");
             }
         }
         return wsdlOperation;
@@ -263,14 +267,15 @@ public final class Packet extends DistributedPropertySet {
 
     /**
      * Set the wsdl operation to avoid lookup from other data.
-     * This is useful in SEI based clients, where the WSDL operation can be known from the associated JavaMethod
+     * This is useful in SEI based clients, where the WSDL operation can be known
+     * from the associated {@link JavaMethod}
      *
      * @param wsdlOp QName
      */
     public void setWSDLOperation(QName wsdlOp) {
         this.wsdlOperation = wsdlOp;
     }
-    
+
     /**
      * True if this message came from a transport (IOW inbound),
      * and in paricular from a "secure" transport. A transport
@@ -297,9 +302,14 @@ public final class Packet extends DistributedPropertySet {
      * <p>
      * Transports may choose to ignore certain headers that interfere with
      * its correct operation, such as
-     * <tt>Content-Type</tt> and <tt>Content-Length</tt>. 
+     * <tt>Content-Type</tt> and <tt>Content-Length</tt>.
      */
     public static final String OUTBOUND_TRANSPORT_HEADERS = "com.sun.xml.internal.ws.api.message.packet.outbound.transport.headers";
+
+    /**
+     *
+     */
+     public static final String HA_INFO = "com.sun.xml.internal.ws.api.message.packet.hainfo";
 
 
     /**
@@ -557,13 +567,13 @@ public final class Packet extends DistributedPropertySet {
      *
      *
      * <p>
-     * When this property is {@link Boolean#TRUE}, it means that
+     * When this property is {@link Boolean#FALSE}, it means that
      * the pipeline does not expect a reply from a server (and therefore
      * the correlator should not block for a reply message
      * -- if such a reply does arrive, it can be just ignored.)
      *
      * <p>
-     * When this property is {@link Boolean#FALSE}, it means that
+     * When this property is {@link Boolean#TRUE}, it means that
      * the pipeline expects a reply from a server (and therefore
      * the correlator should block to see if a reply message is received,
      *
@@ -693,7 +703,7 @@ public final class Packet extends DistributedPropertySet {
      */
     public Packet createClientResponse(Message msg) {
         Packet response = new Packet(this);
-        response.soapAction = null; // de-initializing 
+        response.soapAction = null; // de-initializing
         response.setMessage(msg);
         return response;
     }
@@ -763,7 +773,7 @@ public final class Packet extends DistributedPropertySet {
             return responsePacket;
         }
 
-        populateAddressingHeaders(responsePacket, addressingVersion, soapVersion, action);
+        populateAddressingHeaders(responsePacket, addressingVersion, soapVersion, action, false);
         return responsePacket;
     }
 
@@ -771,18 +781,18 @@ public final class Packet extends DistributedPropertySet {
      * Overwrites the {@link Message} of the response packet ({@code this}) by the given {@link Message}.
      * Unlike {@link #setMessage(Message)}, fill in the addressing headers correctly, and this process
      * requires the access to the request packet.
-     * 
+     *
      * <p>
      * This method is useful when the caller needs to swap a response message completely to a new one.
      *
-     * @see #createServerResponse(Message, AddressingVersion, SOAPVersion, String) 
+     * @see #createServerResponse(Message, AddressingVersion, SOAPVersion, String)
      */
     public void setResponseMessage(@NotNull Packet request, @Nullable Message responseMessage, @NotNull AddressingVersion addressingVersion, @NotNull SOAPVersion soapVersion, @NotNull String action) {
        Packet temp = request.createServerResponse(responseMessage, addressingVersion, soapVersion, action);
        setMessage(temp.getMessage());
     }
 
-    private void populateAddressingHeaders(Packet responsePacket, AddressingVersion av, SOAPVersion sv, String action) {
+    private void populateAddressingHeaders(Packet responsePacket, AddressingVersion av, SOAPVersion sv, String action, boolean mustUnderstand) {
         // populate WS-A headers only if WS-A is enabled
         if (av == null) return;
 
@@ -807,7 +817,7 @@ public final class Packet extends DistributedPropertySet {
         //           false for Provider with no wsdl, Expects User to set the coresponding header on the Message.
         if(responsePacket.getMessage().getHeaders().getAction(av,sv) == null) {
             //wsa:Action header is not set in the message, so use the wsa:Action  passed as the parameter.
-            hl.add(new StringHeader(av.actionTag, action));
+            hl.add(new StringHeader(av.actionTag, action, sv, mustUnderstand));
         }
 
         // wsa:MessageID
@@ -849,7 +859,7 @@ public final class Packet extends DistributedPropertySet {
             LOGGER.info("WSA headers are not added as value for wsa:Action cannot be resolved for this message");
             return;
         }
-        populateAddressingHeaders(responsePacket, addressingVersion, binding.getSOAPVersion(), action);
+        populateAddressingHeaders(responsePacket, addressingVersion, binding.getSOAPVersion(), action, addressingVersion.isRequired(binding));
     }
 
     // completes TypedMap

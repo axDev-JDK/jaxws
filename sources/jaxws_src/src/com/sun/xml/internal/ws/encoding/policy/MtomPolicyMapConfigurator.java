@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -52,7 +52,7 @@ import javax.xml.ws.soap.MTOMFeature;
  * @author Fabian Ritzmann
  */
 public class MtomPolicyMapConfigurator implements PolicyMapConfigurator {
-    
+
     private static final PolicyLogger LOGGER = PolicyLogger.getLogger(MtomPolicyMapConfigurator.class);
 
     static class MtomAssertion extends PolicyAssertion {
@@ -72,7 +72,7 @@ public class MtomPolicyMapConfigurator implements PolicyMapConfigurator {
 
         }
     }
-    
+
     /**
      * Generates an MTOM policy if MTOM is enabled.
      *
@@ -106,12 +106,12 @@ public class MtomPolicyMapConfigurator implements PolicyMapConfigurator {
                 }
             }
         } // endif policy map not null
-        
+
         LOGGER.exiting(subjects);
         return subjects;
     }
-    
-    
+
+
     /**
      * Create a policy with an MTOM assertion.
      *
@@ -125,5 +125,5 @@ public class MtomPolicyMapConfigurator implements PolicyMapConfigurator {
         assertionSets.add(AssertionSet.createAssertionSet(assertions));
         return Policy.createPolicy(null, bindingName.getLocalPart() + "_MTOM_Policy", assertionSets);
     }
-    
+
 }

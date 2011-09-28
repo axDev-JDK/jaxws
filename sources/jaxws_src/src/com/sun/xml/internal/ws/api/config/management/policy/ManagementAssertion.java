@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -109,7 +109,8 @@ public abstract class ManagementAssertion extends SimpleAssertion {
             }
             return assertion == null ? null : assertion.getImplementation(type);
         } catch (PolicyException ex) {
-            throw LOGGER.logSevereException(new WebServiceException(ManagementMessages.WSM_1001_FAILED_ASSERTION(name), ex));
+            throw LOGGER.logSevereException(new WebServiceException(
+                    ManagementMessages.WSM_1001_FAILED_ASSERTION(name), ex));
         }
     }
 
@@ -126,10 +127,12 @@ public abstract class ManagementAssertion extends SimpleAssertion {
             throws AssertionCreationException {
         super(data, assertionParameters);
         if (!name.equals(data.getName())) {
-            throw new AssertionCreationException(data, ManagementMessages.WSM_1002_EXPECTED_MANAGEMENT_ASSERTION(name));
+            throw LOGGER.logSevereException(new AssertionCreationException(data,
+                    ManagementMessages.WSM_1002_EXPECTED_MANAGEMENT_ASSERTION(name)));
         }
         if (isManagementEnabled() && !data.containsAttribute(ID_ATTRIBUTE_QNAME)) {
-            throw new AssertionCreationException(data, ManagementMessages.WSM_1003_MANAGEMENT_ASSERTION_MISSING_ID(name));
+            throw LOGGER.logSevereException(new AssertionCreationException(data,
+                    ManagementMessages.WSM_1003_MANAGEMENT_ASSERTION_MISSING_ID(name)));
         }
     }
 

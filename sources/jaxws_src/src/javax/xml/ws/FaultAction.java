@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -33,8 +33,8 @@ import java.lang.annotation.Target;
 
 /**
  * The <code>FaultAction</code> annotation is used inside an {@link Action}
- * annotation to allow an explicit association of a WS-Addressing 
- * <code>Action</code> message addressing property with the <code>fault</code> 
+ * annotation to allow an explicit association of a WS-Addressing
+ * <code>Action</code> message addressing property with the <code>fault</code>
  * messages of the WSDL operation mapped from the exception class.
  * <p>
  * The <code>wsam:Action</code> attribute value in the <code>fault</code>

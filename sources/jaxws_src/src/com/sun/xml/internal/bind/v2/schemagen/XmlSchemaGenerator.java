@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -289,7 +289,7 @@ public final class XmlSchemaGenerator<T,C,F,M> {
         } else {
             nillable = xmlElem.nillable();
         }
-        
+
         n.elementDecls.put(name.getLocalPart(),n.new ElementWithType(nillable, elem.getContentType()));
 
         // search for foreign namespace references
@@ -1009,10 +1009,8 @@ public final class XmlSchemaGenerator<T,C,F,M> {
 
                         QName tn = t.getTagName();
 
-                        NonElement target = t.getTarget();
-                        if (canBeDirectElementRef(t,tn) || ((!tn.getNamespaceURI().equals(uri) && tn.getNamespaceURI().length()>0) &&
-                                                            (!((target instanceof ClassInfo) && (target.getTypeName() == null))))) {     // see Issue 517
-                                e.ref(tn);
+                        if(canBeDirectElementRef(t,tn) || (!tn.getNamespaceURI().equals(uri) && tn.getNamespaceURI().length()>0)) {
+                            e.ref(tn);
                         } else {
                             e.name(tn.getLocalPart());
                             writeTypeRef(e,t, "type");
@@ -1173,7 +1171,7 @@ public final class XmlSchemaGenerator<T,C,F,M> {
                                 } else {
                                     if(!elementFormDefault.isEffectivelyQualified)
                                         eref.form("qualified");
-                                    }
+                                }
 
                                 local = true;
                                 eref.name(en.getLocalPart());

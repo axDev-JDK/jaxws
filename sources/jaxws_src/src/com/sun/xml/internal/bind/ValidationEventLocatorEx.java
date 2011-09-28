@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.bind;
 
 import javax.xml.bind.ValidationEventLocator;
@@ -35,7 +36,7 @@ import javax.xml.bind.ValidationEventLocator;
  * <em>DO NOT IMPLEMENT THIS INTERFACE BY YOUR CODE</em> because
  * we might add more methods on this interface in the future release
  * of the RI.
- * 
+ *
  * <h2>Usage</h2>
  * <p>
  * If you obtain a reference to {@link javax.xml.bind.ValidationEventLocator},
@@ -51,7 +52,7 @@ import javax.xml.bind.ValidationEventLocator;
  *     }
  * }
  * </pre>
- * 
+ *
  * @author
  *     Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
@@ -61,10 +62,10 @@ public interface ValidationEventLocatorEx extends ValidationEventLocator {
      * <p>
      * This method always returns null when you are doing
      * a validation during unmarshalling.
-     * 
+     *
      * When not null, the field name indicates the field of the object
      * designated by the {@link #getObject()} method where the error
-     * occured. 
+     * occured.
      */
     String getFieldName();
 }

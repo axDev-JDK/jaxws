@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -33,7 +33,7 @@ import com.sun.xml.internal.txw2.TypedXmlWriter;
 import static com.sun.xml.internal.ws.addressing.W3CAddressingMetadataConstants.*;
 import com.sun.xml.internal.ws.model.JavaMethodImpl;
 import com.sun.xml.internal.ws.model.CheckedExceptionImpl;
-
+import com.sun.xml.internal.ws.addressing.WsaActionUtil;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.logging.Logger;
@@ -143,17 +143,7 @@ public class W3CAddressingMetadataWSDLGeneratorExtension extends
     }
 
     protected static final String getDefaultFaultAction(JavaMethod method, CheckedException ce) {
-        String tns = method.getOwner().getTargetNamespace();
-        String delim = getDelimiter(tns);
-        if (tns.endsWith(delim))
-            tns = tns.substring(0, tns.length() - 1);
-
-        //this assumes that fromjava case there won't be a standard fault name.
-        String name = method.getOperationName() + delim + "Fault" + delim + ce.getExceptionClass();
-
-        return new StringBuilder(tns).append(delim).append(
-                method.getOwner().getPortTypeName().getLocalPart()).append(
-                delim).append(method.getOperationName()).append(delim).append("Fault").append(delim).append(ce.getExceptionClass().getSimpleName()).toString();
+        return WsaActionUtil.getDefaultFaultAction(method,ce);
     }
 
     private static final Logger LOGGER =

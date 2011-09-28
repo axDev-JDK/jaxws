@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -37,7 +37,8 @@ import com.sun.xml.internal.xsom.impl.parser.NGCCRuntimeEx;
     import org.xml.sax.ContentHandler;
     import org.xml.sax.helpers.*;
     import java.util.*;
-  
+    import java.math.BigInteger;
+
 
 
 class ersSet extends NGCCHandler {
@@ -141,15 +142,15 @@ class ersSet extends NGCCHandler {
     public void text(String $value) throws SAXException {
         int $ai;
         switch($_ngcc_current_state) {
+        case 0:
+            {
+                revertToParentFromText(makeResult(), super._cookie, $value);
+            }
+            break;
         case 1:
             {
                 v = $value;
                 $_ngcc_current_state = 0;
-            }
-            break;
-        case 0:
-            {
-                revertToParentFromText(makeResult(), super._cookie, $value);
             }
             break;
         }
@@ -164,22 +165,21 @@ class ersSet extends NGCCHandler {
         return(($_ngcc_current_state == 0));
     }
 
-    
+
       private Integer makeResult() {
         if(v==null)     return new Integer($runtime.blockDefault);
-        
+
         if(v.indexOf("#all")!=-1)
             return new Integer(
               XSType.EXTENSION|XSType.RESTRICTION|XSType.SUBSTITUTION);
-        
+
         int r = 0;
-        
+
         if(v.indexOf("extension")!=-1)      r|=XSType.EXTENSION;
         if(v.indexOf("restriction")!=-1)    r|=XSType.RESTRICTION;
         if(v.indexOf("substitution")!=-1)   r|=XSType.SUBSTITUTION;
-        
+
         return new Integer(r);
       }
-    
-}
 
+}

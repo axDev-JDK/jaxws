@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -41,6 +41,7 @@ import com.sun.xml.internal.bind.v2.runtime.reflect.TransducedAccessor;
 import com.sun.xml.internal.bind.v2.runtime.unmarshaller.ChildLoader;
 import com.sun.xml.internal.bind.v2.runtime.unmarshaller.DefaultValueLoaderDecorator;
 import com.sun.xml.internal.bind.v2.runtime.unmarshaller.LeafPropertyLoader;
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.LeafPropertyXsiLoader;
 import com.sun.xml.internal.bind.v2.runtime.unmarshaller.Loader;
 import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader;
 import com.sun.xml.internal.bind.v2.util.QNameMap;
@@ -59,47 +60,77 @@ final class SingleElementLeafProperty<BeanT> extends PropertyImpl<BeanT> {
     private final Accessor acc;
     private final String defaultValue;
     private final TransducedAccessor<BeanT> xacc;
+    private final boolean improvedXsiTypeHandling;
 
     public SingleElementLeafProperty(JAXBContextImpl context, RuntimeElementPropertyInfo prop) {
-        super(context,prop);
+        super(context, prop);
         RuntimeTypeRef ref = prop.getTypes().get(0);
         tagName = context.nameBuilder.createElementName(ref.getTagName());
-        assert tagName!=null;
+        assert tagName != null;
         nillable = ref.isNillable();
         defaultValue = ref.getDefaultValue();
         this.acc = prop.getAccessor().optimize(context);
 
-        xacc = TransducedAccessor.get(context,ref);
-        assert xacc!=null;
+        xacc = TransducedAccessor.get(context, ref);
+        assert xacc != null;
+
+        improvedXsiTypeHandling = context.improvedXsiTypeHandling;
     }
 
     public void reset(BeanT o) throws AccessorException {
-        acc.set(o,null);
+        acc.set(o, null);
     }
 
     public String getIdValue(BeanT bean) throws AccessorException, SAXException {
         return xacc.print(bean).toString();
     }
 
+    @Override
     public void serializeBody(BeanT o, XMLSerializer w, Object outerPeer) throws SAXException, AccessorException, IOException, XMLStreamException {
         boolean hasValue = xacc.hasValue(o);
-        if(hasValue) {
-            xacc.writeLeafElement(w, tagName, o, fieldName);
-        } else
-        if(nillable) {
-            w.startElement(tagName,null);
-            w.writeXsiNilTrue();
+
+        Object obj = null;
+
+        try {
+            obj = acc.getUnadapted(o);
+        } catch (AccessorException ae) {
+            ; // noop
+        }
+
+        Class valueType = acc.getValueType();
+
+        // check for different type than expected. If found, add xsi:type declaration
+        if (improvedXsiTypeHandling && !acc.isAdapted() && !valueType.isPrimitive() && acc.isValueTypeAbstractable() &&
+                ((obj != null) && !obj.getClass().equals(valueType))) {
+
+            w.startElement(tagName, outerPeer);
+            w.childAsXsiType(obj, fieldName, w.grammar.getBeanInfo(valueType), nillable);
             w.endElement();
+
+        } else {  // current type is expected
+
+            if (hasValue) {
+                xacc.writeLeafElement(w, tagName, o, fieldName);
+            } else if (nillable) {
+                w.startElement(tagName, null);
+                w.writeXsiNilTrue();
+                w.endElement();
+            }
         }
     }
 
     public void buildChildElementUnmarshallers(UnmarshallerChain chain, QNameMap<ChildLoader> handlers) {
         Loader l = new LeafPropertyLoader(xacc);
-        if(defaultValue!=null)
-            l = new DefaultValueLoaderDecorator(l,defaultValue);
-        if(nillable || chain.context.allNillable)
-            l = new XsiNilLoader.Single(l,acc);
-        handlers.put(tagName,new ChildLoader(l,null));
+        if (defaultValue != null)
+            l = new DefaultValueLoaderDecorator(l, defaultValue);
+        if (nillable || chain.context.allNillable)
+            l = new XsiNilLoader.Single(l, acc);
+
+        // LeafPropertyXsiLoader doesn't work well with nillable elements
+        if (improvedXsiTypeHandling && !nillable)
+            l = new LeafPropertyXsiLoader(l, xacc, acc);
+
+        handlers.put(tagName, new ChildLoader(l, null));
     }
 
 
@@ -109,7 +140,7 @@ final class SingleElementLeafProperty<BeanT> extends PropertyImpl<BeanT> {
 
     @Override
     public Accessor getElementPropertyAccessor(String nsUri, String localName) {
-        if(tagName.equals(nsUri,localName))
+        if (tagName.equals(nsUri, localName))
             return acc;
         else
             return null;

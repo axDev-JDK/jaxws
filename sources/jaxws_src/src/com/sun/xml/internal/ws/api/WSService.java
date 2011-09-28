@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -71,7 +71,7 @@ public abstract class WSService extends ServiceDelegate {
 
     /**
      * Works like {@link #getPort(EndpointReference, Class, WebServiceFeature...)}
-     * but takes {@link WSEndpointReference}. 
+     * but takes {@link WSEndpointReference}.
      */
     public abstract <T> T getPort(WSEndpointReference epr, Class<T> portInterface, WebServiceFeature... features);
 
@@ -161,7 +161,7 @@ public abstract class WSService extends ServiceDelegate {
     protected static final ThreadLocal<InitParams> INIT_PARAMS = new ThreadLocal<InitParams>();
 
     /**
-     * Used as a immutable constant so that we can avoid null check. 
+     * Used as a immutable constant so that we can avoid null check.
      */
     protected static final InitParams EMPTY_PARAMS = new InitParams();
 

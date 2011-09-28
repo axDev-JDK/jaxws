@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -51,7 +51,7 @@ import com.sun.xml.internal.ws.streaming.TidyXMLStreamReader;
 import com.sun.xml.internal.ws.streaming.XMLStreamReaderUtil;
 import com.sun.xml.internal.ws.util.ServiceFinder;
 import com.sun.xml.internal.ws.util.xml.XmlUtil;
-import com.sun.xml.internal.ws.policy.PolicyWSDLParserExtension;
+import com.sun.xml.internal.ws.policy.jaxws.PolicyWSDLParserExtension;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.SAXException;
 
@@ -180,7 +180,7 @@ public class RuntimeWSDLParser {
             exceptions.add(e);
             exceptions.add(e1);
         }
-        throw new InaccessibleWSDLException(exceptions);                
+        throw new InaccessibleWSDLException(exceptions);
     }
 
     private WSDLModelImpl parseUsingMex(@NotNull URL wsdlLoc, @NotNull EntityResolver resolver, boolean isClientSide, Container container, PolicyResolver policyResolver, WSDLParserExtension[] extensions) throws IOException, SAXException, XMLStreamException, URISyntaxException {
@@ -311,7 +311,7 @@ public class RuntimeWSDLParser {
 
             if(reader.getEventType() == XMLStreamConstants.START_DOCUMENT)
                 XMLStreamReaderUtil.nextElementContent(reader);
-            
+
             if (reader.getEventType()!= XMLStreamConstants.END_DOCUMENT && reader.getName().equals(WSDLConstants.QNAME_SCHEMA)) {
                 if (imported) {
                     // wsdl:import could be a schema. Relaxing BP R2001 requirement.
@@ -515,7 +515,7 @@ public class RuntimeWSDLParser {
                     bindingOp.setStyle(Style.DOCUMENT);
             } else {
                 bindingOp.setStyle(binding.getStyle());
-            }            
+            }
         }
     }
 
@@ -823,6 +823,7 @@ public class RuntimeWSDLParser {
      */
     private static XMLStreamReader createReader(URL wsdlLoc) throws IOException, XMLStreamException {
         // Reads the complete stream so that connection can be reused
+        try {
         InputStream stream = new FilterInputStream(wsdlLoc.openStream()) {
             boolean closed;
 
@@ -837,6 +838,9 @@ public class RuntimeWSDLParser {
             }
         };
         return new TidyXMLStreamReader(XMLStreamReaderFactory.create(wsdlLoc.toExternalForm(), stream, false), stream);
+        } catch (IOException e) {
+         throw (IOException) new IOException("Got "+ e.getMessage()+ " while opening stream from " + wsdlLoc).initCause(e);
+        }
     }
 
     private void register(WSDLParserExtension e) {

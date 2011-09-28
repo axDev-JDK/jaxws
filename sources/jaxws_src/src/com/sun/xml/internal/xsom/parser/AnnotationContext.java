@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -29,23 +29,23 @@ package com.sun.xml.internal.xsom.parser;
 /**
  * Enumeration used to represent the type of the schema component
  * that is being parsed when the AnnotationParser is called.
- * 
+ *
  * @author
  *     Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
 final public class AnnotationContext {
-    
+
     /** Display name of the context. */
     private final String name;
-    
+
     private AnnotationContext( String _name ) {
         this.name = _name;
     }
-    
+
     public String toString() { return name; }
-    
-    
-    
+
+
+
     public static final AnnotationContext SCHEMA
         = new AnnotationContext("schema");
     public static final AnnotationContext NOTATION

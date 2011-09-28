@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.bind.v2.runtime;
 
 import java.io.IOException;
@@ -223,6 +224,16 @@ public final class JAXBContextImpl extends JAXBRIContext {
      */
     public final boolean retainPropertyInfo;
 
+    /**
+     * Supress reflection accessor warnings.
+     */
+    public final boolean supressAccessorWarnings;
+
+    /**
+     * Improved xsi type handling.
+     */
+    public final boolean improvedXsiTypeHandling;
+
     private WeakReference<RuntimeTypeInfoSet> typeInfoSetCache;
 
     private @NotNull RuntimeAnnotationReader annotaitonReader;
@@ -259,7 +270,7 @@ public final class JAXBContextImpl extends JAXBRIContext {
      *      Use custom com.sun.xml.internal.bind.v2.runtime.reflect.Accessor implementation.
      */
     public JAXBContextImpl(JAXBContextBuilder builder) throws JAXBException {
-        
+
         this.defaultNsUri = builder.defaultNsUri;
         this.retainPropertyInfo = builder.retainPropertyInfo;
         this.annotaitonReader = builder.annotationReader;
@@ -268,6 +279,8 @@ public final class JAXBContextImpl extends JAXBRIContext {
         this.classes = builder.classes;
         this.xmlAccessorFactorySupport = builder.xmlAccessorFactorySupport;
         this.allNillable = builder.allNillable;
+        this.supressAccessorWarnings = builder.supressAccessorWarnings;
+        this.improvedXsiTypeHandling = builder.improvedXsiTypeHandling;
 
         Collection<TypeReference> typeRefs = builder.typeRefs;
 
@@ -411,7 +424,7 @@ public final class JAXBContextImpl extends JAXBRIContext {
 
         // no use for them now
         nameBuilder = null;
-        beanInfos = null;        
+        beanInfos = null;
     }
 
     /**
@@ -699,15 +712,15 @@ public final class JAXBContextImpl extends JAXBRIContext {
     public int getNumberOfLocalNames() {
         return nameList.localNames.length;
     }
-    
+
     public int getNumberOfElementNames() {
         return nameList.numberOfElementNames;
     }
-    
+
     public int getNumberOfAttributeNames() {
         return nameList.numberOfAttributeNames;
     }
-    
+
     /**
      * Creates a new identity transformer.
      */
@@ -763,8 +776,8 @@ public final class JAXBContextImpl extends JAXBRIContext {
 
     public UnmarshallerImpl createUnmarshaller() {
         return new UnmarshallerImpl(this,null);
-    }    
-        
+    }
+
     public Validator createValidator() {
         throw new UnsupportedOperationException(Messages.NOT_IMPLEMENTED_IN_2_0.format());
     }
@@ -1021,7 +1034,7 @@ public final class JAXBContextImpl extends JAXBRIContext {
         Class[] newList = new Class[classes.length+1];
         System.arraycopy(classes,0,newList,0,classes.length);
         newList[classes.length] = clazz;
-        
+
         JAXBContextBuilder builder = new JAXBContextBuilder(this);
         builder.setClasses(newList);
         return builder.build();
@@ -1039,6 +1052,7 @@ public final class JAXBContextImpl extends JAXBRIContext {
     public static class JAXBContextBuilder {
 
         private boolean retainPropertyInfo = false;
+        private boolean supressAccessorWarnings = false;
         private String defaultNsUri = "";
         private @NotNull RuntimeAnnotationReader annotationReader = new RuntimeInlineAnnotationReader();
         private @NotNull Map<Class,Class> subclassReplacements = Collections.emptyMap();
@@ -1047,10 +1061,12 @@ public final class JAXBContextImpl extends JAXBRIContext {
         private Collection<TypeReference> typeRefs;
         private boolean xmlAccessorFactorySupport = false;
         private boolean allNillable;
+        private boolean improvedXsiTypeHandling = false;
 
         public JAXBContextBuilder() {};
 
         public JAXBContextBuilder(JAXBContextImpl baseImpl) {
+            this.supressAccessorWarnings = baseImpl.supressAccessorWarnings;
             this.retainPropertyInfo = baseImpl.retainPropertyInfo;
             this.defaultNsUri = baseImpl.defaultNsUri;
             this.annotationReader = baseImpl.annotaitonReader;
@@ -1064,6 +1080,11 @@ public final class JAXBContextImpl extends JAXBRIContext {
 
         public JAXBContextBuilder setRetainPropertyInfo(boolean val) {
             this.retainPropertyInfo = val;
+            return this;
+        }
+
+        public JAXBContextBuilder setSupressAccessorWarnings(boolean val) {
+            this.supressAccessorWarnings = val;
             return this;
         }
 
@@ -1107,12 +1128,17 @@ public final class JAXBContextImpl extends JAXBRIContext {
             return this;
         }
 
+        public JAXBContextBuilder setImprovedXsiTypeHandling(boolean val) {
+            this.improvedXsiTypeHandling = val;
+            return this;
+        }
+
         public JAXBContextImpl build() throws JAXBException {
 
             // fool-proof
             if (this.defaultNsUri == null) {
                 this.defaultNsUri = "";
-            }   
+            }
 
             if (this.subclassReplacements == null) {
                 this.subclassReplacements = Collections.emptyMap();

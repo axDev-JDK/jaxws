@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.istack.internal.ws;
 
 import java.util.Collection;
@@ -81,21 +82,21 @@ public class AnnotationProcessorFactoryImpl implements AnnotationProcessorFactor
     public AnnotationProcessorFactoryImpl() {
     }
 
-    
+
     public Collection<String> supportedOptions() {
         return supportedOptions;
     }
 
-    public Collection<String> supportedAnnotationTypes() { 
+    public Collection<String> supportedAnnotationTypes() {
         return supportedAnnotations;
     }
-    
+
     /*
      * Return an instance of the {@link com.sun.istack.internal.ws.WSAP WSAP} AnnotationProcesor.
      */
     public AnnotationProcessor getProcessorFor(Set<AnnotationTypeDeclaration> atds,
-					AnnotationProcessorEnvironment apEnv) {
-                                            
+                                        AnnotationProcessorEnvironment apEnv) {
+
         if (wsAP == null) {
             AnnotationProcessorContext context = new AnnotationProcessorContext();
             wsAP = new WebServiceAP(null, context, null, null);
@@ -105,7 +106,3 @@ public class AnnotationProcessorFactoryImpl implements AnnotationProcessorFactor
         return wsAP;
     }
 }
-
-
-
-

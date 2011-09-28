@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -108,7 +108,7 @@ public class Messages
 
     static final String JAVADOC_LINE_UNKNOWN = // 0 args
         "ClassSelector.JavadocLineUnknown";
-    
+
     static final String JAVADOC_VALUEOBJECT_PROPERTY =
         "FieldBuilder.Javadoc.ValueObject"; // args:2
 
@@ -130,6 +130,8 @@ public class Messages
         "ERR_ENUM_MEMBER_NAME_COLLISION_RELATED";
     static final String ERR_CANNOT_GENERATE_ENUM_NAME =
         "ERR_CANNOT_GENERATE_ENUM_NAME";
+    static final String WARN_ENUM_MEMBER_SIZE_CAP =
+        "WARN_ENUM_MEMBER_SIZE_CAP"; // args: 3
 
 
     // they are shared from the model
@@ -149,4 +151,7 @@ public class Messages
         "ERR_REFERENCE_TO_NONEXPORTED_CLASS_MAP_FALSE";
     public static final String ERR_REFERENCE_TO_NONEXPORTED_CLASS_REFERER =
         "ERR_REFERENCE_TO_NONEXPORTED_CLASS_REFERER";
+
+    static final String WARN_DEFAULT_VALUE_PRIMITIVE_TYPE =
+        "WARN_DEFAULT_VALUE_PRIMITIVE_TYPE";
 }

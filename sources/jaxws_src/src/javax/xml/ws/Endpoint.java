@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -70,18 +70,18 @@ import org.w3c.dom.Element;
  *
  **/
 public abstract class Endpoint {
-    
+
     /** Standard property: name of WSDL service.
      *  <p>Type: javax.xml.namespace.QName
      **/
     public static final String WSDL_SERVICE = "javax.xml.ws.wsdl.service";
-    
+
     /** Standard property: name of WSDL port.
      *  <p>Type: javax.xml.namespace.QName
      **/
     public static final String WSDL_PORT = "javax.xml.ws.wsdl.port";
-    
-    
+
+
     /**
      * Creates an endpoint with the specified implementor object. If there is
      * a binding specified via a BindingType annotation then it MUST be used else
@@ -125,7 +125,7 @@ public abstract class Endpoint {
     public static Endpoint create(Object implementor, WebServiceFeature ... features) {
         return create(null, implementor, features);
     }
-    
+
     /**
      * Creates an endpoint with the specified binding type and
      * implementor object.
@@ -171,21 +171,21 @@ public abstract class Endpoint {
     public static Endpoint create(String bindingId, Object implementor, WebServiceFeature ... features) {
         return Provider.provider().createEndpoint(bindingId, implementor, features);
     }
-    
+
     /**
      * Returns the binding for this endpoint.
      *
      * @return The binding for this endpoint
      **/
     public abstract Binding getBinding();
-    
+
     /**
      * Returns the implementation object for this endpoint.
      *
      * @return The implementor for this endpoint
      **/
     public abstract Object getImplementor();
-    
+
     /**
      * Publishes this endpoint at the given address.
      * The necessary server infrastructure will be created and
@@ -197,20 +197,20 @@ public abstract class Endpoint {
      *        MUST be compatible with the binding specified at the
      *        time the endpoint was created.
      *
-     * @throws java.lang.IllegalArgumentException 
+     * @throws java.lang.IllegalArgumentException
      *          If the provided address URI is not usable
      *          in conjunction with the endpoint's binding.
      *
-     * @throws java.lang.IllegalStateException 
+     * @throws java.lang.IllegalStateException
      *          If the endpoint has been published already or it has been stopped.
      *
-     * @throws java.lang.SecurityException 
+     * @throws java.lang.SecurityException
      *          If a <code>java.lang.SecurityManger</code>
      *          is being used and the application doesn't have the
      *          <code>WebServicePermission("publishEndpoint")</code> permission.
      **/
     public abstract void publish(String address);
-    
+
     /**
      * Creates and publishes an endpoint for the specified implementor
      * object at the given address.
@@ -230,7 +230,7 @@ public abstract class Endpoint {
      *
      * @return The newly created endpoint.
      *
-     * @throws java.lang.SecurityException 
+     * @throws java.lang.SecurityException
      *          If a <code>java.lang.SecurityManger</code>
      *          is being used and the application doesn't have the
      *          <code>WebServicePermission("publishEndpoint")</code> permission.
@@ -284,16 +284,16 @@ public abstract class Endpoint {
      * @param serverContext An object representing a server
      *           context to be used for publishing the endpoint.
      *
-     * @throws java.lang.IllegalArgumentException 
+     * @throws java.lang.IllegalArgumentException
      *              If the provided server context is not
      *              supported by the implementation or turns
      *              out to be unusable in conjunction with the
      *              endpoint's binding.
      *
-     * @throws java.lang.IllegalStateException 
+     * @throws java.lang.IllegalStateException
      *         If the endpoint has been published already or it has been stopped.
      *
-     * @throws java.lang.SecurityException 
+     * @throws java.lang.SecurityException
      *          If a <code>java.lang.SecurityManger</code>
      *          is being used and the application doesn't have the
      *          <code>WebServicePermission("publishEndpoint")</code> permission.
@@ -335,7 +335,7 @@ public abstract class Endpoint {
     public void publish(HttpContext serverContext) {
         throw new UnsupportedOperationException("JAX-WS 2.2 implementation must override this default behaviour.");
     }
-    
+
     /**
      * Stops publishing this endpoint.
      *
@@ -344,21 +344,21 @@ public abstract class Endpoint {
      *
      **/
     public abstract void stop();
-    
+
     /**
      * Returns true if the endpoint is in the published state.
      *
      * @return <code>true</code> if the endpoint is in the published state.
      **/
     public abstract boolean isPublished();
-    
+
     /**
      * Returns a list of metadata documents for the service.
      *
      * @return <code>List&lt;javax.xml.transform.Source&gt;</code> A list of metadata documents for the service
      **/
     public abstract List<javax.xml.transform.Source> getMetadata();
-    
+
     /**
      * Sets the metadata for this endpoint.
      *
@@ -370,7 +370,7 @@ public abstract class Endpoint {
      *         has already been published.
      **/
     public abstract void setMetadata(List<javax.xml.transform.Source> metadata);
-    
+
     /**
      * Returns the executor for this <code>Endpoint</code>instance.
      *
@@ -383,7 +383,7 @@ public abstract class Endpoint {
      * @see java.util.concurrent.Executor
      **/
     public abstract java.util.concurrent.Executor getExecutor();
-    
+
     /**
      * Sets the executor for this <code>Endpoint</code> instance.
      *
@@ -405,8 +405,8 @@ public abstract class Endpoint {
      * @see java.util.concurrent.Executor
      **/
     public abstract void setExecutor(java.util.concurrent.Executor executor);
-    
-    
+
+
     /**
      * Returns the property bag for this <code>Endpoint</code> instance.
      *
@@ -414,7 +414,7 @@ public abstract class Endpoint {
      *         associated with this instance.
      **/
     public abstract Map<String,Object> getProperties();
-    
+
     /**
      * Sets the property bag for this <code>Endpoint</code> instance.
      *
@@ -422,7 +422,7 @@ public abstract class Endpoint {
      *        this instance.
      **/
     public abstract void setProperties(Map<String,Object> properties);
-    
+
     /**
      * Returns the <code>EndpointReference</code> associated with
      * this <code>Endpoint</code> instance.
@@ -439,7 +439,7 @@ public abstract class Endpoint {
      * the specified <code>referenceParameters</code>.
 
      * @throws WebServiceException If any error in the creation of
-     * the <code>EndpointReference</code> or if the <code>Endpoint</code> is 
+     * the <code>EndpointReference</code> or if the <code>Endpoint</code> is
      * not in the published state.
      * @throws UnsupportedOperationException If this <code>BindingProvider</code>
      * uses the XML/HTTP binding.
@@ -449,8 +449,8 @@ public abstract class Endpoint {
      * @since JAX-WS 2.1
      **/
     public abstract EndpointReference getEndpointReference(Element... referenceParameters);
-    
-    
+
+
     /**
      * Returns the <code>EndpointReference</code> associated with
      * this <code>Endpoint</code> instance.
@@ -458,14 +458,14 @@ public abstract class Endpoint {
      * @param clazz Specifies the type of EndpointReference  that MUST be returned.
      * @param referenceParameters Reference parameters to be associated with the
      * returned <code>EndpointReference</code> instance.
-     * @return EndpointReference of type <code>clazz</code> of this 
+     * @return EndpointReference of type <code>clazz</code> of this
      * <code>Endpoint<code> instance.
      * If the returned <code>EndpointReference</code> is of type
      * <code>W3CEndpointReference</code> then it MUST contain the
      * the specified <code>referenceParameters</code>.
 
      * @throws WebServiceException If any error in the creation of
-     * the <code>EndpointReference</code> or if the <code>Endpoint</code> is 
+     * the <code>EndpointReference</code> or if the <code>Endpoint</code> is
      * not in the published state or if the <code>clazz</code> is not a supported
      * <code>EndpointReference</code> type.
      * @throws UnsupportedOperationException If this <code>BindingProvider</code>

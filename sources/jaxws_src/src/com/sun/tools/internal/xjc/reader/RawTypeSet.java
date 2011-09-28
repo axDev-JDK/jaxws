@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -39,6 +39,7 @@ import com.sun.tools.internal.xjc.model.Multiplicity;
 import com.sun.tools.internal.xjc.model.nav.NType;
 import com.sun.xml.internal.bind.v2.model.core.Element;
 import com.sun.xml.internal.bind.v2.model.core.ID;
+import java.math.BigInteger;
 
 /**
  * Set of {@link Ref}.
@@ -77,7 +78,7 @@ public final class RawTypeSet {
     }
 
     public boolean isRequired() {
-        return mul.min>0;
+        return mul.min.compareTo(BigInteger.ZERO) == 1;
     }
 
 

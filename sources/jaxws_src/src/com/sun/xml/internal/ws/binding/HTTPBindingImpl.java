@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.ws.binding;
 
 import com.sun.xml.internal.ws.api.BindingID;
@@ -56,18 +57,15 @@ public class HTTPBindingImpl extends BindingImpl implements HTTPBinding {
      * Only logical handlers are allowed with HTTPBinding.
      * Setting SOAPHandlers throws WebServiceException
      */
-    protected HandlerConfiguration createHandlerConfig(List<Handler> handlerChain) {
+    public void setHandlerChain(List<Handler> chain) {
         List<LogicalHandler> logicalHandlers = new ArrayList<LogicalHandler>();
-        for (Handler handler : handlerChain) {
+        for (Handler handler : chain) {
             if (!(handler instanceof LogicalHandler)) {
                 throw new WebServiceException(ClientMessages.NON_LOGICAL_HANDLER_SET(handler.getClass()));
             } else {
                 logicalHandlers.add((LogicalHandler) handler);
             }
         }
-        return new HandlerConfiguration(
-                Collections.<String>emptySet(),
-                Collections.<QName>emptySet(),
-                handlerChain,logicalHandlers,null,null,null);
+        handlerConfig = new HandlerConfiguration(Collections.<String>emptySet(), chain);
     }
 }

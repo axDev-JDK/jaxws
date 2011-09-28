@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -28,8 +28,8 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 /**
- * 
- * 
+ *
+ *
  * @author Kohsuke Kawaguchi (kk@kohsuke.org)
  */
 public interface NGCCEventSource {
@@ -38,7 +38,7 @@ public interface NGCCEventSource {
      * ID of the EventReceiver thread.
      */
     int replace( NGCCEventReceiver _old, NGCCEventReceiver _new );
-    
+
     /** Sends an enter element event to the specified EventReceiver thread. */
     void sendEnterElement( int receiverThreadId, String uri, String local, String qname, Attributes atts ) throws SAXException;
 

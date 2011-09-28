@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -118,7 +118,6 @@ public final class JBlock implements JGenerable, JStatement {
     public boolean isEmpty() {
         return content.isEmpty();
     }
-
 
     /**
      * Adds a local variable declaration to this block
@@ -395,11 +394,11 @@ public final class JBlock implements JGenerable, JStatement {
 
     /**
      * Creates a "literal" statement directly.
-     * 
+     *
      * <p>
      * Specified string is printed as-is.
      * This is useful as a short-cut.
-     * 
+     *
      * <p>
      * For example, you can invoke this method as:
      * <code>directStatement("a=b+c;")</code>.

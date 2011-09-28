@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.stream.buffer;
 
 import com.sun.xml.internal.stream.buffer.sax.SAXBufferProcessor;
@@ -49,28 +50,28 @@ import org.w3c.dom.Node;
 
 /**
  * An immutable stream-based buffer of an XML infoset.
- * 
+ *
  * <p>
- * A XMLStreamBuffer is an abstract class. It is immutable with 
+ * A XMLStreamBuffer is an abstract class. It is immutable with
  * respect to the methods on the class, which are non-modifying in terms
  * of state.
- * 
+ *
  * <p>
- * A XMLStreamBuffer can be processed using specific SAX and StAX-based 
- * processors. Utility methods on XMLStreamBuffer are provided for 
+ * A XMLStreamBuffer can be processed using specific SAX and StAX-based
+ * processors. Utility methods on XMLStreamBuffer are provided for
  * such functionality that utilize SAX and StAX-based processors.
- * The same instance of a XMLStreamBuffer may be processed 
+ * The same instance of a XMLStreamBuffer may be processed
  * multiple times and concurrently by more than one processor.
- * 
+ *
  * <p>
  * There are two concrete implementations of XMLStreamBuffer.
  * The first, {@link MutableXMLStreamBuffer}, can be instantiated for the creation
- * of a buffer using SAX and StAX-based creators, and from which may be 
+ * of a buffer using SAX and StAX-based creators, and from which may be
  * processed as an XMLStreamBuffer. The second,
  * {@link XMLStreamBufferMark}, can be instantiated to mark into an existing
  * buffer that is being created or processed. This allows a subtree of
  * {@link XMLStreamBuffer} to be treated as its own {@link XMLStreamBuffer}.
- * 
+ *
  * <p>
  * A XMLStreamBuffer can represent a complete XML infoset or a subtree
  * of an XML infoset. It is also capable of representing a "forest",
@@ -133,7 +134,7 @@ public abstract class XMLStreamBuffer {
      * The system identifier associated with the buffer
      */
     protected String systemId;
-    
+
     /**
      * Is the buffer created by creator.
      *
@@ -184,7 +185,7 @@ public abstract class XMLStreamBuffer {
     public final String getSystemId() {
         return systemId;
     }
-    
+
     /**
      * Get the in-scope namespaces.
      *
@@ -252,7 +253,7 @@ public abstract class XMLStreamBuffer {
      * @param writeAsFragment
      *      If true, {@link XMLStreamWriter} will not receive {@link XMLStreamWriter#writeStartDocument()}
      *      nor {@link XMLStreamWriter#writeEndDocument()}. This is desirable behavior when
-     *      you are writing the contents of a buffer into a bigger document. 
+     *      you are writing the contents of a buffer into a bigger document.
      */
     public final void writeToXMLStreamWriter(XMLStreamWriter writer, boolean writeAsFragment) throws XMLStreamException {
         StreamWriterBufferProcessor p = new StreamWriterBufferProcessor(this,writeAsFragment);
@@ -273,7 +274,7 @@ public abstract class XMLStreamBuffer {
      * @return
      * A an instance of a {@link SAXBufferProcessor}.
      * @deprecated
-     *      Use {@link #readAsXMLReader(boolean)} 
+     *      Use {@link #readAsXMLReader(boolean)}
      */
     public final SAXBufferProcessor readAsXMLReader() {
         return new SAXBufferProcessor(this,isFragment());
@@ -366,7 +367,7 @@ public abstract class XMLStreamBuffer {
     }
 
     public final void writeTo(ContentHandler handler, ErrorHandler errorHandler) throws SAXException {
-        writeTo(handler, errorHandler, isFragment());        
+        writeTo(handler, errorHandler, isFragment());
     }
 
     private static final TransformerFactory trnsformerFactory = TransformerFactory.newInstance();
@@ -391,7 +392,7 @@ public abstract class XMLStreamBuffer {
 
     /**
      * Create a new buffer from a XMLStreamReader.
-     * 
+     *
      * @param reader
      * A XMLStreamReader to read from to create.
      * @return XMLStreamBuffer the created buffer
@@ -406,7 +407,7 @@ public abstract class XMLStreamBuffer {
 
     /**
      * Create a new buffer from a {@link XMLReader} and {@link InputStream}.
-     * 
+     *
      * @param reader
      * The {@link XMLReader} to use for parsing.
      * @param in

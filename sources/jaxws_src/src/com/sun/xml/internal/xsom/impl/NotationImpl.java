@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -33,24 +33,24 @@ import com.sun.xml.internal.xsom.visitor.XSVisitor;
 import org.xml.sax.Locator;
 
 /**
- * 
+ *
  * @author
  *     Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
 public class NotationImpl extends DeclarationImpl implements XSNotation {
-    
+
     public NotationImpl( SchemaDocumentImpl owner, AnnotationImpl _annon,
         Locator _loc, ForeignAttributesImpl _fa, String _name,
         String _publicId, String _systemId ) {
         super(owner,_annon,_loc,_fa,owner.getTargetNamespace(),_name,false);
-        
+
         this.publicId = _publicId;
         this.systemId = _systemId;
     }
-    
+
     private final String publicId;
     private final String systemId;
-    
+
     public String getPublicId() { return publicId; }
     public String getSystemId() { return systemId; }
 

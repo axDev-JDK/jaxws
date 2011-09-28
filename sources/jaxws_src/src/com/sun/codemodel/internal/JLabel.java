@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -26,17 +26,17 @@ package com.sun.codemodel.internal;
 
 /**
  * Label that can be used for continue and break.
- * 
+ *
  * @author
  *     Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
 public class JLabel implements JStatement {
-    
+
     final String label;
-    
+
     /**
      * JBreak constructor
-     * 
+     *
      * @param   _label
      *      break label or null.
      */

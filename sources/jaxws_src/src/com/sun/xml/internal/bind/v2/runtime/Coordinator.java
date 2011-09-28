@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -63,7 +63,7 @@ import org.xml.sax.SAXParseException;
  * @author Kohsuke Kawaguchi
  */
 public abstract class Coordinator implements ErrorHandler, ValidationEventHandler {
-    
+
     private final HashMap<Class<? extends XmlAdapter>,XmlAdapter> adapters =
             new HashMap<Class<? extends XmlAdapter>,XmlAdapter>();
 
@@ -127,7 +127,7 @@ public abstract class Coordinator implements ErrorHandler, ValidationEventHandle
      */
     protected final void resetThreadAffinity() {
         if(debugTableNPE)
-            guyWhoSetTheTableToNull = new Exception(); // remember that we set it to null 
+            guyWhoSetTheTableToNull = new Exception(); // remember that we set it to null
         table = null;
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -49,24 +49,24 @@ import com.sun.xml.internal.xsom.visitor.XSFunction;
 /**
  * Utility implementation of {@link XSFunction} that returns
  * {@link Boolean} to find something from schema objects.
- * 
+ *
  * <p>
  * This implementation returns <code>Boolean.FALSE</code> from
  * all of the methods. The derived class is expected to override
  * some of the methods to actually look for something.
- * 
+ *
  * @author
  *     Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
 public class XSFinder implements XSFunction<Boolean> {
-    
+
     /**
      * Invokes this object as a visitor with the specified component.
      */
     public final boolean find( XSComponent c ) {
         return c.apply(this);
     }
-    
+
     /**
      * @see com.sun.xml.internal.xsom.visitor.XSFunction#annotation(com.sun.xml.internal.xsom.XSAnnotation)
      */

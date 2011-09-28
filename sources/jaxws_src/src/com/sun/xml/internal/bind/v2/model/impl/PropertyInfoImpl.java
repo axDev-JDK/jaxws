@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -54,6 +54,7 @@ import com.sun.xml.internal.bind.v2.model.nav.Navigator;
 import com.sun.xml.internal.bind.v2.runtime.IllegalAnnotationException;
 import com.sun.xml.internal.bind.v2.runtime.Location;
 import com.sun.xml.internal.bind.v2.runtime.SwaRefAdapter;
+import java.util.List;
 
 /**
  * Default partial implementation for {@link PropertyInfo}.
@@ -132,10 +133,10 @@ abstract class PropertyInfoImpl<T,C,F,M>
                     // that must be an error of the user
                     xjta = seed.readAnnotation(XmlJavaTypeAdapter.class);
                     if(xjta!=null) {
-                        T adapter = reader().getClassValue(xjta,"value");
+                        T ad = reader().getClassValue(xjta,"value");
                         parent.builder.reportError(new IllegalAnnotationException(
                             Messages.UNMATCHABLE_ADAPTER.format(
-                                    nav().getTypeName(adapter), nav().getTypeName(t)),
+                                    nav().getTypeName(ad), nav().getTypeName(t)),
                             xjta
                         ));
                     }
@@ -197,9 +198,9 @@ abstract class PropertyInfoImpl<T,C,F,M>
         T type = reader().getClassValue(jta,"type");
         if(declaredType.equals(type))
             return true;    // for types explicitly marked in XmlJavaTypeAdapter.type()
-        
-        T adapter = reader().getClassValue(jta,"value");
-        T ba = nav().getBaseClass(adapter, nav().asDecl(XmlAdapter.class));
+
+        T ad = reader().getClassValue(jta,"value");
+        T ba = nav().getBaseClass(ad, nav().asDecl(XmlAdapter.class));
         if(!nav().isParameterizedType(ba))
             return true;   // can't check type applicability. assume Object, which means applicable to any.
         T inMemType = nav().getTypeArgument(ba, 1);
@@ -356,8 +357,27 @@ abstract class PropertyInfoImpl<T,C,F,M>
                     QName typeName = parent.getTypeName();
                     if(typeName!=null)
                         uri = typeName.getNamespaceURI();
-                    else
-                        uri = xs.namespace();
+                    else {
+                        if ((this.getSchemaType() == null) && ("".equals(this.getName()))) {
+                            uri = "";
+                        } else {
+                            Object upS = parent.getUpstream();
+                            if ((upS != null) && (upS instanceof ElementPropertyInfoImpl)) {
+                                ElementPropertyInfoImpl info = (ElementPropertyInfoImpl)upS;
+                                if ((info != null) && (info.getSchemaType() == null)) {
+                                    List types = info.getTypes();
+                                    if ((types != null) && (types.size() > 0)) {
+                                        uri = ((TypeRefImpl)(types.get(0))).getTagName().getNamespaceURI();
+                                    } else {
+                                        uri = "";
+                                    }
+                                    break;
+                                }
+                            }
+                            uri = xs.namespace();
+                        }
+                        break;
+                    }
                     if(uri.length()==0)
                         uri = parent.builder.defaultNsUri;
                     break;

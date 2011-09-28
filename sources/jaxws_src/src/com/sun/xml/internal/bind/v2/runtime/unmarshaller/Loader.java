@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -97,7 +97,7 @@ public abstract class Loader {
         if(canRecover && !UnmarshallingContext.getInstance().parent.hasEventHandler())
             // this error happens particurly often (when input documents contain a lot of unexpected elements to be ignored),
             // so don't bother computing all the messages and etc if we know that
-            // there's no event handler to receive the error in the end. See #286 
+            // there's no event handler to receive the error in the end. See #286
             return;
         if(ea.uri!=ea.uri.intern() || ea.local!=ea.local.intern())
             reportError(Messages.UNINTERNED_STRINGS.format(), canRecover );

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,7 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
- 
+
 package com.sun.org.glassfish.gmbal;
 
 import java.lang.annotation.Documented ;
@@ -34,7 +34,7 @@ import java.lang.annotation.RetentionPolicy ;
 
 import com.sun.org.glassfish.external.amx.AMX ;
 
-/** Annotation to contol exactly how the type value in the ObjectName 
+/** Annotation to contol exactly how the type value in the ObjectName
  * is extracted from a class when registering an instance of that class.
  * The absence of this annotation is the same as the default values.
  * Note that this is simply an application of the general @DescriptorKey
@@ -45,8 +45,8 @@ import com.sun.org.glassfish.external.amx.AMX ;
  *
  * @author ken
  */
-@Documented 
-@Target(ElementType.TYPE) 
+@Documented
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 public @interface AMXMetadata {
@@ -94,7 +94,7 @@ public @interface AMXMetadata {
     @DescriptorKey( AMX.DESC_STD_INTERFACE_NAME )
     String interfaceClassName() default "" ;
 
-    /** An explicit type to use for the MBean.  
+    /** An explicit type to use for the MBean.
      * <p>
      * Note that this is NOT part of the AMXMBeanInterface-defined metadata, but gmbal
      * needs it here to have a place to override the type.
@@ -117,4 +117,4 @@ public @interface AMXMetadata {
      */
     @DescriptorKey( "type" )
     String type() default "" ;
-} 
+}

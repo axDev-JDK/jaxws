@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.tools.internal.ws.processor.modeler.annotation;
 
 
@@ -47,16 +48,16 @@ public interface WebServiceConstants { //extends RmiConstants {
     public static final String HTTP_PREFIX                  = "http://";
     public static final String JAVA_LANG_OBJECT             = "java.lang.Object";
     public static final String EMTPY_NAMESPACE_ID           = "";
-    
+
 
     public static final char SIGC_INNERCLASS  = '$';
     public static final char SIGC_UNDERSCORE  = '_';
-    
-    public static final String DOT = ".";    
+
+    public static final String DOT = ".";
     public static final String PORT = "WSDLPort";
     public static final String BINDING = "Binding";
     public static final String RESPONSE = "Response";
-    
+
     /*
      * Identifiers potentially useful for all Generators
      */
@@ -73,10 +74,10 @@ public interface WebServiceConstants { //extends RmiConstants {
     public static final String HOLDER_CLASSNAME =
         javax.xml.ws.Holder.class.getName();
     public static final String COLLECTION_CLASSNAME =
-        java.util.Collection.class.getName();    
+        java.util.Collection.class.getName();
     public static final String MAP_CLASSNAME =
-        java.util.Map.class.getName();    
-    
+        java.util.Map.class.getName();
+
 
     // 181 constants
     public static final String WEBSERVICE_NAMESPACE         = "http://www.bea.com/xml/ns/jws";

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -37,10 +37,10 @@ public interface Element
     public Element type(QName value);
 
     @XmlAttribute
-    public Element block(String value);
+    public Element block(String[] value);
 
     @XmlAttribute
-    public Element block(String[] value);
+    public Element block(String value);
 
     @XmlAttribute
     public Element nillable(boolean value);

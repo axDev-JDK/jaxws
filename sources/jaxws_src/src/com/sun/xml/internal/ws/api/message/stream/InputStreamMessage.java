@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.ws.api.message.stream;
 
 import com.sun.xml.internal.ws.api.message.AttachmentSet;
@@ -35,14 +36,14 @@ import java.io.InputStream;
 public class InputStreamMessage extends StreamBasedMessage {
     /**
      * The MIME content-type of the encoding.
-     */    
+     */
     public final String contentType;
-    
+
     /**
      * The message represented as an {@link InputStream}.
      */
     public final InputStream msg;
-    
+
     /**
      * Create a new message.
      *
@@ -58,11 +59,11 @@ public class InputStreamMessage extends StreamBasedMessage {
      */
     public InputStreamMessage(Packet properties, String contentType, InputStream msg) {
         super(properties);
-        
+
         this.contentType = contentType;
         this.msg = msg;
     }
-    
+
     /**
      * Create a new message.
      *
@@ -82,7 +83,7 @@ public class InputStreamMessage extends StreamBasedMessage {
     public InputStreamMessage(Packet properties, AttachmentSet attachments,
             String contentType, InputStream msg) {
         super(properties, attachments);
-        
+
         this.contentType = contentType;
         this.msg = msg;
     }

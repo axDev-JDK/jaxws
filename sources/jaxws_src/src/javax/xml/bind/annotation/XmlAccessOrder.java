@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -34,9 +34,9 @@ package javax.xml.bind.annotation;
  * @see XmlAccessorOrder
  */
 
-public enum XmlAccessOrder { 
+public enum XmlAccessOrder {
     /**
-     * The ordering of fields and properties in a class is undefined. 
+     * The ordering of fields and properties in a class is undefined.
      */
     UNDEFINED,
     /**
@@ -46,4 +46,3 @@ public enum XmlAccessOrder {
      */
     ALPHABETICAL
 }
-

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -42,6 +42,7 @@ import com.sun.xml.internal.ws.message.EmptyMessageImpl;
 import com.sun.xml.internal.ws.message.MimeAttachmentSet;
 import com.sun.xml.internal.ws.message.source.PayloadSourceMessage;
 import com.sun.xml.internal.ws.util.ByteArrayBuffer;
+import com.sun.xml.internal.ws.util.StreamUtils;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
@@ -57,7 +58,6 @@ import javax.xml.stream.XMLStreamWriter;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.ws.WebServiceException;
-import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -72,42 +72,13 @@ public final class XMLMessage {
     private static final int MIME_MULTIPART_FLAG = 2;       // 00010
     private static final int FI_ENCODED_FLAG     = 16;      // 10000
 
-
-    /*
-     * Finds if the stream has some content or not
-     *
-     * @return null if there is no data
-     *         else stream to be used
-     */
-    private static InputStream hasSomeData(InputStream in) {
-        if (in != null) {
-            try {
-                if (in.available() < 1) {
-                    if (!in.markSupported()) {
-                        in = new BufferedInputStream(in);
-                    }
-                    in.mark(1);
-                    if (in.read() != -1) {
-                        in.reset();
-                    } else {
-                        in = null;          // No data
-                    }
-                }
-            } catch(IOException ioe) {
-                in = null;
-            }
-        }
-        return in;
-    }
-
-
     /*
      * Construct a message given a content type and an input stream.
      */
     public static Message create(final String ct, InputStream in, WSBinding binding) {
         Message data;
         try {
-            in = hasSomeData(in);
+            in = StreamUtils.hasSomeData(in);
             if (in == null) {
                 return Messages.createEmpty(SOAPVersion.SOAP_11);
             }
@@ -135,15 +106,15 @@ public final class XMLMessage {
 
 
     public static Message create(Source source) {
-        return (source == null) ? 
-            Messages.createEmpty(SOAPVersion.SOAP_11) : 
+        return (source == null) ?
+            Messages.createEmpty(SOAPVersion.SOAP_11) :
             Messages.createUsingPayload(source, SOAPVersion.SOAP_11);
     }
 
     public static Message create(DataSource ds, WSBinding binding) {
         try {
-            return (ds == null) ? 
-                Messages.createEmpty(SOAPVersion.SOAP_11) : 
+            return (ds == null) ?
+                Messages.createEmpty(SOAPVersion.SOAP_11) :
                 create(ds.getContentType(), ds.getInputStream(), binding);
         } catch(IOException ioe) {
             throw new WebServiceException(ioe);
@@ -157,7 +128,7 @@ public final class XMLMessage {
     /*
      * Get the content type ID from the content type.
      */
-    private static int getContentId(String ct) {    
+    private static int getContentId(String ct) {
         try {
             final ContentType contentType = new ContentType(ct);
             return identifyContentType(contentType);
@@ -165,14 +136,14 @@ public final class XMLMessage {
             throw new WebServiceException(ex);
         }
     }
-    
+
     /**
      * Return true if the content uses fast infoset.
      */
-    public static boolean isFastInfoset(String ct) {    
+    public static boolean isFastInfoset(String ct) {
         return (getContentId(ct) & FI_ENCODED_FLAG) != 0;
     }
-    
+
     /*
      * Verify a contentType.
      *
@@ -225,12 +196,12 @@ public final class XMLMessage {
     protected static boolean isFastInfosetType(String type) {
         return type.toLowerCase().startsWith("application/fastinfoset");
     }
-    
-    
+
+
     /**
      * Access a {@link Message} as a {@link DataSource}.
      * <p>
-     * A {@link Message} implementation will implement this if the 
+     * A {@link Message} implementation will implement this if the
      * messages is to be access as data source.
      * <p>
      * TODO: consider putting as part of the API.
@@ -241,7 +212,7 @@ public final class XMLMessage {
          * @return true of the data source has been consumed, otherwise false.
          */
         boolean hasUnconsumedDataSource();
-        
+
         /**
          * Get the data source.
          * @return the data source.
@@ -364,7 +335,7 @@ public final class XMLMessage {
 
 
     /**
-     * Data represented as a multi-part MIME message. 
+     * Data represented as a multi-part MIME message.
      * <p>
      * The root part may be an XML or an FI document. This class
      * parses MIME message lazily.
@@ -503,7 +474,7 @@ public final class XMLMessage {
         }
     }
 
-    
+
     /**
      * Don't know about this content. It's conent-type is NOT the XML types
      * we recognize(text/xml, application/xml, multipart/related;text/xml etc).
@@ -513,11 +484,11 @@ public final class XMLMessage {
     public static class UnknownContent extends AbstractMessageImpl implements MessageDataSource {
         private final DataSource ds;
         private final HeaderList headerList;
-        
+
         public UnknownContent(final String ct, final InputStream in) {
             this(createDataSource(ct,in));
         }
-        
+
         public UnknownContent(DataSource ds) {
             super(SOAPVersion.SOAP_11);
             this.ds = ds;
@@ -542,7 +513,7 @@ public final class XMLMessage {
             return ds;
         }
 
-        protected void writePayloadTo(ContentHandler contentHandler, 
+        protected void writePayloadTo(ContentHandler contentHandler,
                 ErrorHandler errorHandler, boolean fragment) throws SAXException {
             throw new UnsupportedOperationException();
         }
@@ -550,7 +521,7 @@ public final class XMLMessage {
         public boolean hasHeaders() {
             return false;
         }
-        
+
         public boolean isFault() {
             return false;
         }
@@ -590,6 +561,8 @@ public final class XMLMessage {
     }
 
     public static DataSource getDataSource(Message msg, WSBinding binding) {
+        if (msg == null)
+            return null;
         if (msg instanceof MessageDataSource) {
             return ((MessageDataSource)msg).getDataSource();
         } else {
@@ -604,7 +577,7 @@ public final class XMLMessage {
                 } catch(IOException ioe) {
                     throw new WebServiceException(ioe);
                 }
-                
+
             } else {
                 final ByteArrayBuffer bos = new ByteArrayBuffer();
                 XMLStreamWriter writer = XMLStreamWriterFactory.create(bos);
@@ -615,10 +588,10 @@ public final class XMLMessage {
                     throw new WebServiceException(e);
                 }
                 return XMLMessage.createDataSource("text/xml", bos.newInputStream());
-            }       
+            }
         }
     }
-    
+
     public static DataSource createDataSource(final String contentType, final InputStream is) {
         return new XmlDataSource(contentType, is);
     }

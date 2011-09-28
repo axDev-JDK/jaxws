@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.tools.internal.ws.processor.model;
 
 import com.sun.codemodel.internal.JClass;
@@ -108,7 +109,7 @@ public class AsyncOperation extends Operation {
             return new JavaSimpleType(new JAXBTypeAndAnnotation(cb));
 
         }
-        return null;        
+        return null;
     }
 
     public Operation getNormalOperation(){

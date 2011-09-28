@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.ws.spi;
 
 
@@ -131,7 +132,7 @@ public class ProviderImpl extends Provider {
             (bindingId != null) ? BindingID.parse(bindingId) : BindingID.parse(implementorClass),
             implementorClass, invoker, features);
     }
-    
+
     public EndpointReference readEndpointReference(final Source eprInfoset) {
         // EPR constructors are private, so we need privilege escalation.
         // this unmarshalling can only access instances of a fixed, known set of classes,
@@ -211,7 +212,7 @@ public class ProviderImpl extends Provider {
 
                 URL wsdlLoc = new URL(wsdlDocumentLocation);
                 WSDLModelImpl wsdlDoc = RuntimeWSDLParser.parse(wsdlLoc, new StreamSource(wsdlLoc.toExternalForm()), er,
-                        false, container, ServiceFinder.find(WSDLParserExtension.class).toArray());
+                        true, container, ServiceFinder.find(WSDLParserExtension.class).toArray());
                 if (serviceName != null) {
                     WSDLService wsdlService = wsdlDoc.getService(serviceName);
                     if (wsdlService == null)

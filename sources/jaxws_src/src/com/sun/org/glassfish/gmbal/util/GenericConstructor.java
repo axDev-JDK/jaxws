@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,7 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
- 
+
 
 package com.sun.org.glassfish.gmbal.util;
 
@@ -42,10 +42,10 @@ public class GenericConstructor<T> {
     private Class<T> resultType ;
     private Class<?> type ;
     private Class<?>[] signature ;
-    
+
     // Use the raw type of the constructor here, because
     // MethodInfo can only return a raw type for a constructor.
-    // It is not possible to have MethodInfo return a 
+    // It is not possible to have MethodInfo return a
     // Constructor<T> because T may not be known at compile time.
     private Constructor constructor ;
 
@@ -59,7 +59,7 @@ public class GenericConstructor<T> {
      * @param signature The signature of the desired constructor.
      * @throws IllegalArgumentException if cls is not a subclass of type.
      */
-    public GenericConstructor( final Class<T> type, final String className, 
+    public GenericConstructor( final Class<T> type, final String className,
         final Class<?>... signature ) {
         this.resultType = type ;
         this.typeName = className ;
@@ -93,7 +93,7 @@ public class GenericConstructor<T> {
      * matches the given arguments if possible.  The constructor
      * is cached, so an instance of GenericClass should always be
      * used for the same types of arguments.  If a call fails,
-     * a check is made to see if a different constructor could 
+     * a check is made to see if a different constructor could
      * be used.
      * @param args The constructor arguments.
      * @return A new instance of the object.

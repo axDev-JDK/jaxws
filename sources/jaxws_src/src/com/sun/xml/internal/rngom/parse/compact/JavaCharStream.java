@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -190,7 +190,7 @@ public class JavaCharStream
   }
 
   public char BeginToken() throws java.io.IOException
-  {     
+  {
      if (inBuf > 0)
      {
         --inBuf;
@@ -206,7 +206,7 @@ public class JavaCharStream
      bufpos = -1;
 
      return readChar();
-  }     
+  }
 
   protected void AdjustBuffSize()
   {
@@ -361,7 +361,7 @@ public class JavaCharStream
   }
 
   /**
-   * @deprecated 
+   * @deprecated
    * @see #getEndColumn
    */
 
@@ -370,7 +370,7 @@ public class JavaCharStream
   }
 
   /**
-   * @deprecated 
+   * @deprecated
    * @see #getEndLine
    */
 
@@ -548,7 +548,7 @@ public class JavaCharStream
         bufcolumn[j] = newCol + columnDiff;
         columnDiff = nextColDiff;
         i++;
-     } 
+     }
 
      if (i < len)
      {

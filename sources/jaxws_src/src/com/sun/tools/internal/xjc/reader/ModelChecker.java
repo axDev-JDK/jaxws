@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -72,7 +72,7 @@ public final class ModelChecker {
             QName n = p1.collectElementNames(collisionTable);
             if(n!=null) {
                 CPropertyInfo p2 = collisionTable.get(n);
-                
+
                 if (p2.getName(true).equals(n.toString()) || p2.getName(false).equals(n.toString())) {
                     errorReceiver.error(p1.locator, Messages.DUPLICATE_ELEMENT.format(n));
                     errorReceiver.error(p2.locator, Messages.ERR_RELEVANT_LOCATION.format());

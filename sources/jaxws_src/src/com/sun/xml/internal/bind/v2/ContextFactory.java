@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -84,12 +84,20 @@ public class ContextFactory {
         if(retainPropertyInfo==null)
             retainPropertyInfo = false;
 
+        Boolean supressAccessorWarnings = getPropertyValue(properties, JAXBRIContext.SUPRESS_ACCESSOR_WARNINGS, Boolean.class);
+        if(supressAccessorWarnings==null)
+            supressAccessorWarnings = false;
+
+        Boolean improvedXsiTypeHandling = getPropertyValue(properties, JAXBRIContext.IMPROVED_XSI_TYPE_HANDLING, Boolean.class);
+        if(improvedXsiTypeHandling == null)
+            improvedXsiTypeHandling = false;
+
         Boolean xmlAccessorFactorySupport = getPropertyValue(properties,
            JAXBRIContext.XMLACCESSORFACTORY_SUPPORT,Boolean.class);
         if(xmlAccessorFactorySupport==null){
             xmlAccessorFactorySupport = false;
-            Util.getClassLogger().log(Level.FINE, "Property " + 
-                JAXBRIContext.XMLACCESSORFACTORY_SUPPORT + 
+            Util.getClassLogger().log(Level.FINE, "Property " +
+                JAXBRIContext.XMLACCESSORFACTORY_SUPPORT +
                 "is not active.  Using JAXB's implementation");
         }
 
@@ -107,8 +115,19 @@ public class ContextFactory {
             throw new JAXBException(Messages.UNSUPPORTED_PROPERTY.format(properties.keySet().iterator().next()));
         }
 
-        return createContext(classes,Collections.<TypeReference>emptyList(),
-                subclassReplacements,defaultNsUri,c14nSupport,ar,xmlAccessorFactorySupport,allNillable, retainPropertyInfo);
+        JAXBContextImpl.JAXBContextBuilder builder = new JAXBContextImpl.JAXBContextBuilder();
+        builder.setClasses(classes);
+        builder.setTypeRefs(Collections.<TypeReference>emptyList());
+        builder.setSubclassReplacements(subclassReplacements);
+        builder.setDefaultNsUri(defaultNsUri);
+        builder.setC14NSupport(c14nSupport);
+        builder.setAnnotationReader(ar);
+        builder.setXmlAccessorFactorySupport(xmlAccessorFactorySupport);
+        builder.setAllNillable(allNillable);
+        builder.setRetainPropertyInfo(retainPropertyInfo);
+        builder.setSupressAccessorWarnings(supressAccessorWarnings);
+        builder.setImprovedXsiTypeHandling(improvedXsiTypeHandling);
+        return builder.build();
     }
 
     /**
@@ -125,10 +144,20 @@ public class ContextFactory {
             return type.cast(o);
     }
 
-    public static JAXBRIContext createContext( Class[] classes, 
-            Collection<TypeReference> typeRefs, Map<Class,Class> subclassReplacements, 
-            String defaultNsUri, boolean c14nSupport, RuntimeAnnotationReader ar, 
+    public static JAXBRIContext createContext( Class[] classes,
+            Collection<TypeReference> typeRefs, Map<Class,Class> subclassReplacements,
+            String defaultNsUri, boolean c14nSupport, RuntimeAnnotationReader ar,
             boolean xmlAccessorFactorySupport, boolean allNillable, boolean retainPropertyInfo) throws JAXBException {
+
+        return createContext(classes, typeRefs, subclassReplacements,
+                defaultNsUri, c14nSupport, ar, xmlAccessorFactorySupport,
+                allNillable, retainPropertyInfo, false);
+    }
+
+    public static JAXBRIContext createContext( Class[] classes,
+            Collection<TypeReference> typeRefs, Map<Class,Class> subclassReplacements,
+            String defaultNsUri, boolean c14nSupport, RuntimeAnnotationReader ar,
+            boolean xmlAccessorFactorySupport, boolean allNillable, boolean retainPropertyInfo, boolean improvedXsiTypeHandling) throws JAXBException {
 
         JAXBContextImpl.JAXBContextBuilder builder = new JAXBContextImpl.JAXBContextBuilder();
         builder.setClasses(classes);
@@ -140,6 +169,7 @@ public class ContextFactory {
         builder.setXmlAccessorFactorySupport(xmlAccessorFactorySupport);
         builder.setAllNillable(allNillable);
         builder.setRetainPropertyInfo(retainPropertyInfo);
+        builder.setImprovedXsiTypeHandling(improvedXsiTypeHandling);
         return builder.build();
     }
 

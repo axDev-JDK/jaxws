@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -51,8 +51,8 @@ import static java.lang.annotation.ElementType.PACKAGE;
  * <p> <b> Usage: </b> </p>
  *
  * <p> The <tt>@XmlJavaTypeAdapter</tt> annotation can be used with the
- * following program elements:  
- * <ul> 
+ * following program elements:
+ * <ul>
  *   <li> a JavaBean property </li>
  *   <li> field </li>
  *   <li> parameter </li>
@@ -71,7 +71,7 @@ import static java.lang.annotation.ElementType.PACKAGE;
  * <p> A <tt>@XmlJavaTypeAdapter</tt> annotation on a field, property
  * or parameter overrides the <tt>@XmlJavaTypeAdapter</tt> annotation
  * associated with the class being referenced by the field, property
- * or parameter.  
+ * or parameter.
  * <p> A <tt>@XmlJavaTypeAdapter</tt> annotation on a class overrides
  * the <tt>@XmlJavaTypeAdapter</tt> annotation specified at the
  * package level for that class.
@@ -81,8 +81,8 @@ import static java.lang.annotation.ElementType.PACKAGE;
  * {@link XmlElementRefs}, {@link XmlAnyElement}. This can also be
  * used at the package level with the following annotations:
  * {@link XmlAccessorType}, {@link XmlSchema}, {@link XmlSchemaType},
- * {@link XmlSchemaTypes}. 
- * 
+ * {@link XmlSchemaTypes}.
+ *
  * <p><b> Example: </b> See example in {@link XmlAdapter}
  *
  * @author <ul><li>Sekhar Vajjhala, Sun Microsystems Inc.</li> <li> Kohsuke Kawaguchi, Sun Microsystems Inc.</li></ul>
@@ -90,7 +90,7 @@ import static java.lang.annotation.ElementType.PACKAGE;
  * @see XmlAdapter
  */
 
-@Retention(RUNTIME) @Target({PACKAGE,FIELD,METHOD,TYPE,PARAMETER})        
+@Retention(RUNTIME) @Target({PACKAGE,FIELD,METHOD,TYPE,PARAMETER})
 public @interface XmlJavaTypeAdapter {
     /**
      * Points to the clsss that converts a value type to a bound type or vice versa.
@@ -112,5 +112,5 @@ public @interface XmlJavaTypeAdapter {
      */
 
     static final class DEFAULT {}
-    
+
 }

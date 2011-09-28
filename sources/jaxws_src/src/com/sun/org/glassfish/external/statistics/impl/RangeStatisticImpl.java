@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -29,12 +29,12 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.Map;
 import java.lang.reflect.*;
 
-/** 
+/**
  * @author Sreenivas Munnangi
  */
-public final class RangeStatisticImpl extends StatisticImpl 
+public final class RangeStatisticImpl extends StatisticImpl
     implements RangeStatistic, InvocationHandler {
-    
+
     private long currentVal = 0L;
     private long highWaterMark = Long.MIN_VALUE;
     private long lowWaterMark = Long.MAX_VALUE;
@@ -42,14 +42,14 @@ public final class RangeStatisticImpl extends StatisticImpl
     private final long initHighWaterMark;
     private final long initLowWaterMark;
 
-    private final RangeStatistic rs = 
+    private final RangeStatistic rs =
             (RangeStatistic) Proxy.newProxyInstance(
             RangeStatistic.class.getClassLoader(),
             new Class[] { RangeStatistic.class },
             this);
-    
-    public RangeStatisticImpl(long curVal, long highMark, long lowMark, 
-                              String name, String unit, String desc, 
+
+    public RangeStatisticImpl(long curVal, long highMark, long lowMark,
+                              String name, String unit, String desc,
                               long startTime, long sampleTime) {
         super(name, unit, desc, startTime, sampleTime);
         currentVal = curVal;
@@ -63,7 +63,7 @@ public final class RangeStatisticImpl extends StatisticImpl
     public synchronized RangeStatistic getStatistic() {
         return rs;
     }
-    
+
     public synchronized Map getStaticAsMap() {
         Map m = super.getStaticAsMap();
         m.put("current", getCurrent());
@@ -75,36 +75,36 @@ public final class RangeStatisticImpl extends StatisticImpl
     public synchronized long getCurrent() {
         return currentVal;
     }
-    
+
     public synchronized void setCurrent(long curVal) {
         currentVal = curVal;
         lowWaterMark = (curVal >= lowWaterMark ? lowWaterMark : curVal);
         highWaterMark = (curVal >= highWaterMark ? curVal : highWaterMark);
         sampleTime = System.currentTimeMillis();
     }
-    
+
     /**
      * Returns the highest value of this statistic, since measurement started.
      */
     public synchronized long getHighWaterMark() {
         return highWaterMark;
     }
-    
+
     public synchronized void setHighWaterMark(long hwm) {
         highWaterMark = hwm;
     }
-    
+
     /**
      * Returns the lowest value of this statistic, since measurement started.
      */
     public synchronized long getLowWaterMark() {
         return lowWaterMark;
     }
-    
+
     public synchronized void setLowWaterMark(long lwm) {
         lowWaterMark = lwm;
     }
-    
+
     @Override
     public synchronized void reset() {
         super.reset();
@@ -113,9 +113,9 @@ public final class RangeStatisticImpl extends StatisticImpl
         lowWaterMark = initLowWaterMark;
         sampleTime = -1L;
     }
-    
+
     public synchronized String toString() {
-        return super.toString() + NEWLINE + 
+        return super.toString() + NEWLINE +
             "Current: " + getCurrent() + NEWLINE +
             "LowWaterMark: " + getLowWaterMark() + NEWLINE +
             "HighWaterMark: " + getHighWaterMark();

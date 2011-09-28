@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.ws.api.message.stream;
 
 import com.sun.xml.internal.ws.api.message.AttachmentSet;
@@ -35,15 +36,15 @@ import com.sun.xml.internal.ws.message.AttachmentSetImpl;
 abstract class StreamBasedMessage {
     /**
      * The properties of the message.
-     */    
+     */
     public final Packet properties;
-    
+
     /**
      * The attachments of this message
      * (attachments live outside a message.)
      */
     public final AttachmentSet attachments;
-    
+
     /**
      * Create a new message.
      *
@@ -53,9 +54,9 @@ abstract class StreamBasedMessage {
      */
     protected StreamBasedMessage(Packet properties) {
         this.properties = properties;
-        this.attachments = new AttachmentSetImpl();        
+        this.attachments = new AttachmentSetImpl();
     }
-    
+
     /**
      * Create a new message.
      *

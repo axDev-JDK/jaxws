@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -139,7 +139,7 @@ public interface Navigator<T,C,F,M> {
      * Note that this method does not list methods declared on base classes.
      *
      * @return
-     *      can be empty but always non-null. 
+     *      can be empty but always non-null.
      */
     Collection<? extends M> getDeclaredMethods(C clazz);
 
@@ -340,7 +340,7 @@ public interface Navigator<T,C,F,M> {
      *
      * @return
      *      can be empty but never null.
-     */ 
+     */
     F[] getEnumConstants(C clazz);
 
     /**

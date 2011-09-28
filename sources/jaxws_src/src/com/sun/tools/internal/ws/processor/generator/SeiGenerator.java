@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -74,7 +74,7 @@ public class SeiGenerator extends GeneratorBase{
         if (options.target.isLaterThan(Options.Target.V2_2)) {
            register(new W3CAddressingJavaGeneratorExtension());
         }
-        
+
         for (TJavaGeneratorExtension j : extensions)
             register(j);
 
@@ -105,7 +105,7 @@ public class SeiGenerator extends GeneratorBase{
                     loc = pt.getLocator();
             }
             receiver.error(loc, GeneratorMessages.GENERATOR_SEI_CLASS_ALREADY_EXIST(intf.getName(), portTypeName));
-            return;            
+            return;
         }
         // If the class has methods it has already been defined
         // so skip it.
@@ -193,11 +193,11 @@ public class SeiGenerator extends GeneratorBase{
     private void writeXmlSeeAlso(JDefinedClass cls) {
         if (model.getJAXBModel().getS2JJAXBModel() != null) {
             List<JClass> objectFactories = model.getJAXBModel().getS2JJAXBModel().getAllObjectFactories();
-            
+
             //if there are no object facotires, dont generate @XmlSeeAlso
             if(objectFactories.size() == 0)
                 return;
-            
+
             JAnnotationUse xmlSeeAlso = cls.annotate(cm.ref(XmlSeeAlso.class));
             JAnnotationArrayMember paramArray = xmlSeeAlso.paramArray("value");
             for (JClass of : objectFactories) {

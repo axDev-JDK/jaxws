@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -25,12 +25,11 @@
 
 package com.sun.xml.internal.bind.v2.runtime.unmarshaller;
 
+import com.sun.xml.internal.bind.v2.WellKnownNamespace;
 import javax.xml.bind.annotation.DomHandler;
 import javax.xml.transform.Result;
 import javax.xml.transform.sax.TransformerHandler;
-
 import com.sun.xml.internal.bind.v2.runtime.JAXBContextImpl;
-
 import org.xml.sax.SAXException;
 
 /**
@@ -96,6 +95,7 @@ public class DomLoader<ResultT extends Result> extends Loader {
         this.dom = dom;
     }
 
+    @Override
     public void startElement(UnmarshallingContext.State state, TagName ea) throws SAXException {
         UnmarshallingContext context = state.getContext();
         if (state.target == null)
@@ -111,7 +111,7 @@ public class DomLoader<ResultT extends Result> extends Loader {
         }
     }
 
-
+    @Override
     public void childElement(UnmarshallingContext.State state, TagName ea) throws SAXException {
         state.loader = this;
         State s = (State) state.prev.target;
@@ -119,9 +119,10 @@ public class DomLoader<ResultT extends Result> extends Loader {
         state.target = s;
     }
 
+    @Override
     public void text(UnmarshallingContext.State state, CharSequence text) throws SAXException {
         if(text.length()==0)
-            return;     // there's no point in creating an empty Text node in DOM. 
+            return;     // there's no point in creating an empty Text node in DOM.
         try {
             State s = (State) state.target;
             s.handler.characters(text.toString().toCharArray(),0,text.length());
@@ -131,6 +132,7 @@ public class DomLoader<ResultT extends Result> extends Loader {
         }
     }
 
+    @Override
     public void leaveElement(UnmarshallingContext.State state, TagName ea) throws SAXException {
         State s = (State) state.target;
         UnmarshallingContext context = state.getContext();

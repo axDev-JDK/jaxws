@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.ws.api.wsdl.parser;
 
 import com.sun.istack.internal.NotNull;
@@ -31,7 +32,7 @@ import com.sun.xml.internal.ws.api.policy.PolicyResolver;
 
 /**
  * Provides contextual information for {@link WSDLParserExtension}s.
- * 
+ *
  * @author Vivek Pandey
  * @author Fabian Ritzmann
  */

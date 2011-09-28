@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,7 +22,6 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
-
 
 package com.sun.xml.internal.messaging.saaj.soap;
 
@@ -75,40 +74,40 @@ public class GifDataContentHandler extends Component implements DataContentHandl
     }
 
     public Object getContent(DataSource ds) throws IOException {
-	InputStream is = ds.getInputStream();
-	int pos = 0;
-	int count;
-	byte buf[] = new byte[1024];
+        InputStream is = ds.getInputStream();
+        int pos = 0;
+        int count;
+        byte buf[] = new byte[1024];
 
-	while ((count = is.read(buf, pos, buf.length - pos)) != -1) {
-	    pos += count;
-	    if (pos >= buf.length) {
-		int size = buf.length;
-		if (size < 256*1024)
-		    size += size;
-		else
-		    size += 256*1024;
-		byte tbuf[] = new byte[size];
-		System.arraycopy(buf, 0, tbuf, 0, pos);
-		buf = tbuf;
-	    }
-	}
-	Toolkit tk = Toolkit.getDefaultToolkit();
-	return tk.createImage(buf, 0, pos);
+        while ((count = is.read(buf, pos, buf.length - pos)) != -1) {
+            pos += count;
+            if (pos >= buf.length) {
+                int size = buf.length;
+                if (size < 256*1024)
+                    size += size;
+                else
+                    size += 256*1024;
+                byte tbuf[] = new byte[size];
+                System.arraycopy(buf, 0, tbuf, 0, pos);
+                buf = tbuf;
+            }
+        }
+        Toolkit tk = Toolkit.getDefaultToolkit();
+        return tk.createImage(buf, 0, pos);
     }
 
     /**
      * Write the object to the output stream, using the specified MIME type.
      */
     public void writeTo(Object obj, String type, OutputStream os)
-			throws IOException {
-	if (obj != null && !(obj instanceof Image))
-	    throw new IOException("\"" + getDF().getMimeType() +
-		"\" DataContentHandler requires Image object, " +
-		"was given object of type " + obj.getClass().toString());
+                        throws IOException {
+        if (obj != null && !(obj instanceof Image))
+            throw new IOException("\"" + getDF().getMimeType() +
+                "\" DataContentHandler requires Image object, " +
+                "was given object of type " + obj.getClass().toString());
 
-	throw new IOException(getDF().getMimeType() + " encoding not supported");
+        throw new IOException(getDF().getMimeType() + " encoding not supported");
     }
-    
+
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -44,7 +44,10 @@ import java.util.Iterator;
  * @author Kohsuke Kawaguchi
  */
 public class JCommentPart extends ArrayList<Object> {
-    /**
+
+        private static final long serialVersionUID = 1L;
+
+        /**
      * Appends a new value.
      *
      * If the value is {@link JType} it will be printed as a @link tag.
@@ -66,8 +69,8 @@ public class JCommentPart extends ArrayList<Object> {
             for( Object o : (Object[])value)
                 flattenAppend(o);
         } else
-        if(value instanceof Collection) {
-            for( Object o : (Collection)value)
+        if(value instanceof Collection<?>) {
+            for( Object o : (Collection<?>)value)
                 flattenAppend(o);
         } else
             super.add(value);
@@ -89,7 +92,7 @@ public class JCommentPart extends ArrayList<Object> {
         if(!isEmpty())
             f.p(indent);
 
-        Iterator itr = iterator();
+        Iterator<Object> itr = iterator();
         while(itr.hasNext()) {
             Object o = itr.next();
 

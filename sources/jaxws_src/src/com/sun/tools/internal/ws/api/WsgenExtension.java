@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.tools.internal.ws.api;
 
 /**
@@ -34,7 +35,7 @@ package com.sun.tools.internal.ws.api;
  *
  * {@link WsgenProtocol} annotation can be specified on the
  * extensions to extend -wsdl[:protocol] behaviour.
- * 
+ *
  * @author Jitendra Kotamraju
  * @since JAX-WS RI 2.1.6
  * @see WsgenProtocol

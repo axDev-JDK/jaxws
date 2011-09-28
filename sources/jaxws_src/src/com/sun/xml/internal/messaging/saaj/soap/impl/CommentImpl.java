@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -23,7 +23,6 @@
  * questions.
  */
 
-
 package com.sun.xml.internal.messaging.saaj.soap.impl;
 
 import java.util.ResourceBundle;
@@ -40,14 +39,14 @@ import com.sun.xml.internal.messaging.saaj.util.LogDomainConstants;
 
 public class CommentImpl
     extends com.sun.org.apache.xerces.internal.dom.CommentImpl
-    implements javax.xml.soap.Text, org.w3c.dom.Comment { 
+    implements javax.xml.soap.Text, org.w3c.dom.Comment {
 
     protected static final Logger log =
         Logger.getLogger(LogDomainConstants.SOAP_IMPL_DOMAIN,
                          "com.sun.xml.internal.messaging.saaj.soap.impl.LocalStrings");
     protected static ResourceBundle rb =
         log.getResourceBundle();
-    
+
     public CommentImpl(SOAPDocumentImpl ownerDoc, String text) {
         super(ownerDoc, text);
     }
@@ -56,11 +55,11 @@ public class CommentImpl
         String nodeValue = getNodeValue();
         return (nodeValue.equals("") ? null : nodeValue);
     }
-    
+
     public void setValue(String text) {
         setNodeValue(text);
     }
-    
+
 
     public void setParentElement(SOAPElement element) throws SOAPException {
         if (element == null) {

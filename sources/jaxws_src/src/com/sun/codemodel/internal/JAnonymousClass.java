@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -26,9 +26,9 @@ package com.sun.codemodel.internal;
 
 /**
  * Anonymous class quick hack.
- * 
+ *
  * @author
- * 	Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
+ *      Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
 class JAnonymousClass extends JDefinedClass {
 
@@ -36,13 +36,13 @@ class JAnonymousClass extends JDefinedClass {
      * Base interface/class from which this anonymous class is built.
      */
     private final JClass base;
-    
+
     JAnonymousClass( JClass _base) {
         super(_base.owner(), 0, null);
         this.base = _base;
     }
-    
+
     public String fullName() {
-    	return base.fullName();
+        return base.fullName();
     }
 }

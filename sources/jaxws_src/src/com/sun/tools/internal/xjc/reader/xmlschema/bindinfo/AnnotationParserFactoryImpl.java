@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.tools.internal.xjc.reader.xmlschema.bindinfo;
 
 import javax.xml.bind.JAXBException;
@@ -48,7 +49,7 @@ import org.xml.sax.helpers.XMLFilterImpl;
 /**
  * Implementation of XSOM {@link AnnotationParserFactory} that
  * parses JAXB customization declarations.
- * 
+ *
  * @author
  *     Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
@@ -149,6 +150,7 @@ public class AnnotationParserFactoryImpl implements AnnotationParserFactory {
             setContentHandler(h);
         }
 
+        @Override
         public void startPrefixMapping(String prefix, String uri) throws SAXException {
             // work around a bug in the validator implementation in Tiger
             super.startPrefixMapping(prefix.intern(),uri);

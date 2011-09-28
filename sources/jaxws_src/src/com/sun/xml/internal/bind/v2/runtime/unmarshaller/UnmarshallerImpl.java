@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.bind.v2.runtime.unmarshaller;
 
 import java.io.IOException;
@@ -257,6 +258,7 @@ public final class UnmarshallerImpl extends AbstractUnmarshallerImpl implements 
     }
 
 
+    @Override
     public final ValidationEventHandler getEventHandler() {
         try {
             return super.getEventHandler();
@@ -299,10 +301,10 @@ public final class UnmarshallerImpl extends AbstractUnmarshallerImpl implements 
             InterningXmlVisitor handler = new InterningXmlVisitor(createUnmarshallerHandler(null,false,expectedType));
             scanner.setContentHandler(new SAXConnector(handler,scanner));
 
-            if(node instanceof Element)
+            if(node.getNodeType() == Node.ELEMENT_NODE)
                 scanner.scan((Element)node);
             else
-            if(node instanceof Document)
+            if(node.getNodeType() == Node.DOCUMENT_NODE)
                 scanner.scan((Document)node);
             else
                 // no other type of input is supported
@@ -415,6 +417,7 @@ public final class UnmarshallerImpl extends AbstractUnmarshallerImpl implements 
         return new UnmarshalException(e);
     }
 
+    @Override
     public Object getProperty(String name) throws PropertyException {
         if(name.equals(IDResolver.class.getName())) {
             return idResolver;
@@ -422,6 +425,7 @@ public final class UnmarshallerImpl extends AbstractUnmarshallerImpl implements 
         return super.getProperty(name);
     }
 
+    @Override
     public void setProperty(String name, Object value) throws PropertyException {
         if(name.equals(FACTORY)) {
             coordinator.setFactories(value);
@@ -499,6 +503,7 @@ public final class UnmarshallerImpl extends AbstractUnmarshallerImpl implements 
     }
 
     // opening up for public use
+    @Override
     public UnmarshalException createUnmarshalException( SAXException e ) {
         return super.createUnmarshalException(e);
     }

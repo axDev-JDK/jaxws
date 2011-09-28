@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -30,7 +30,7 @@ import org.relaxng.datatype.ValidationContext;
 
 /**
  * Attribute use.
- * 
+ *
  * @author
  *  Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
@@ -41,7 +41,7 @@ public interface XSAttributeUse extends XSComponent
 
     /**
      * Gets the default value of this attribute use, if one is specified.
-     * 
+     *
      * Note that if a default value is specified in the attribute
      * declaration, this method returns that value.
      */
@@ -49,7 +49,7 @@ public interface XSAttributeUse extends XSComponent
 
     /**
      * Gets the fixed value of this attribute use, if one is specified.
-     * 
+     *
      * Note that if a fixed value is specified in the attribute
      * declaration, this method returns that value.
      */

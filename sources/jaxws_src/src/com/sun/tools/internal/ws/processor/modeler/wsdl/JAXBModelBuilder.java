@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.tools.internal.ws.processor.modeler.wsdl;
 
 import com.sun.tools.internal.ws.processor.model.ModelException;
@@ -76,7 +77,10 @@ public class JAXBModelBuilder {
         try {
             schemaCompiler =  options.getSchemaCompiler();
             schemaCompiler.resetSchema();
-            schemaCompiler.setEntityResolver(options.entityResolver);
+            if(options.entityResolver != null) {
+                //set if its not null so as not to override catalog option specified via xjc args
+                schemaCompiler.setEntityResolver(options.entityResolver);
+            }
             schemaCompiler.setClassNameAllocator(_classNameAllocator);
             schemaCompiler.setErrorListener(errReceiver);
             int schemaElementCount = 1;

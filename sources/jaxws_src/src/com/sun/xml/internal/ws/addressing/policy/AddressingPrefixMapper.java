@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.ws.addressing.policy;
 
 import com.sun.xml.internal.ws.api.addressing.AddressingVersion;
@@ -33,7 +34,7 @@ import java.util.Map;
 
 /**
  * This supplies the prefixes for the namespaces under Addressing domain.
- * 
+ *
  * @author Fabian Ritzmann
  * @author Rama Pulavarthi
  */
@@ -46,9 +47,9 @@ public class AddressingPrefixMapper implements PrefixMapper {
         prefixMap.put(AddressingVersion.MEMBER.nsUri, "wsa");
         prefixMap.put(W3CAddressingMetadataConstants.WSAM_NAMESPACE_NAME,W3CAddressingMetadataConstants.WSAM_PREFIX_NAME);
     }
-        
+
     public Map<String, String> getPrefixMap() {
         return prefixMap;
     }
-    
+
 }

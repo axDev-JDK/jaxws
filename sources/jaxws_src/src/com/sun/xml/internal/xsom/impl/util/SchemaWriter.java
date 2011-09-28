@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -59,6 +59,7 @@ import com.sun.xml.internal.xsom.visitor.XSWildcardFunction;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.math.BigInteger;
 import java.text.MessageFormat;
 import java.util.Iterator;
 
@@ -168,9 +169,9 @@ public class SchemaWriter implements XSVisitor, XSSimpleTypeVisitor {
 
         println(MessageFormat.format("<attGroup name=\"{0}\">", decl.getName()));
         indent++;
-        
+
         // TODO: wildcard
-        
+
         itr = decl.iterateAttGroups();
         while(itr.hasNext())
             dumpRef( (XSAttGroupDecl)itr.next() );
@@ -332,9 +333,9 @@ public class SchemaWriter implements XSVisitor, XSSimpleTypeVisitor {
         println(MessageFormat.format("<complexType{0}>",
             type.isLocal()?"":" name=\""+type.getName()+'\"'));
         indent++;
-        
+
         // TODO: wildcard
-        
+
         if(type.getContentType().asSimpleType()!=null) {
             // simple content
             println("<simpleContent>");
@@ -454,10 +455,10 @@ public class SchemaWriter implements XSVisitor, XSSimpleTypeVisitor {
     }
     private void elementDecl( XSElementDecl decl, String extraAtts ) {
         XSType type = decl.getType();
-        
-        // TODO: various other attributes 
 
-        // qualified attr; Issue 
+        // TODO: various other attributes
+
+        // qualified attr; Issue
         if(decl.getForm() != null) {
             extraAtts += " form=\"" + (decl.getForm() ? "qualified" : "unqualified" ) + "\"";
         }
@@ -506,18 +507,18 @@ public class SchemaWriter implements XSVisitor, XSSimpleTypeVisitor {
     }
 
     public void particle( XSParticle part ) {
-        int i;
+        BigInteger i;
 
         StringBuffer buf = new StringBuffer();
 
         i = part.getMaxOccurs();
-        if(i==XSParticle.UNBOUNDED)
+        if(i.equals(BigInteger.valueOf(XSParticle.UNBOUNDED)))
             buf.append(" maxOccurs=\"unbounded\"");
-        else if(i!=1)
+        else if(!i.equals(BigInteger.ONE))
             buf.append(" maxOccurs=\"").append(i).append('\"');
 
         i = part.getMinOccurs();
-        if(i!=1)
+        if(!i.equals(BigInteger.ONE))
             buf.append(" minOccurs=\"").append(i).append('\"');
 
         final String extraAtts = buf.toString();

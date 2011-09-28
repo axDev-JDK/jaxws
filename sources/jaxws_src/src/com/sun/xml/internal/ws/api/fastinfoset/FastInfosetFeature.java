@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -39,7 +39,7 @@ import com.sun.org.glassfish.gmbal.ManagedData;
  * to being enabled or disabled:
  * <ul>
  *  <li> ENABLED: In this Mode, Fast Infoset will be enabled.
- *  <li> DISABLED: In this Mode, Fast Infoset will be disabled and the 
+ *  <li> DISABLED: In this Mode, Fast Infoset will be disabled and the
  *       Web service will not process incoming messages or produce outgoing
  *       messages encoded using Fast Infoset.
  * </ul>

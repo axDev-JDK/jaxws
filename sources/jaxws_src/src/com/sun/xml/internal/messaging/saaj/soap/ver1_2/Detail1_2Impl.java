@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,8 +22,6 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
-
-
 
 /**
 *
@@ -72,7 +70,7 @@ public class Detail1_2Impl extends DetailImpl {
      * Override setEncodingStyle of ElementImpl to restrict adding encodingStyle
      * attribute to SOAP Detail (SOAP 1.2 spec, part 1, section 5.1.1)
      */
-    public void setEncodingStyle(String encodingStyle) throws SOAPException {        
+    public void setEncodingStyle(String encodingStyle) throws SOAPException {
         log.severe("SAAJ0403.ver1_2.no.encodingStyle.in.detail");
         throw new SOAPExceptionImpl("EncodingStyle attribute cannot appear in Detail");
     }
@@ -80,7 +78,7 @@ public class Detail1_2Impl extends DetailImpl {
     public SOAPElement addAttribute(Name name, String value)
         throws SOAPException {
         if (name.getLocalName().equals("encodingStyle")
-            && name.getURI().equals(NameImpl.SOAP12_NAMESPACE)) {                
+            && name.getURI().equals(NameImpl.SOAP12_NAMESPACE)) {
             setEncodingStyle(value);
         }
         return super.addAttribute(name, value);
@@ -89,7 +87,7 @@ public class Detail1_2Impl extends DetailImpl {
     public SOAPElement addAttribute(QName name, String value)
         throws SOAPException {
         if (name.getLocalPart().equals("encodingStyle")
-            && name.getNamespaceURI().equals(NameImpl.SOAP12_NAMESPACE)) {                
+            && name.getNamespaceURI().equals(NameImpl.SOAP12_NAMESPACE)) {
             setEncodingStyle(value);
         }
         return super.addAttribute(name, value);

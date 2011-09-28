@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -64,7 +64,7 @@ import javax.xml.ws.spi.Provider;
  * @see java.util.concurrent.Executor
  **/
 public class Service {
-    
+
     private ServiceDelegate delegate;
     /**
      * The orientation of a dynamic client or service. <code>MESSAGE</code> provides
@@ -72,7 +72,7 @@ public class Service {
      * payload only.
      **/
     public enum Mode { MESSAGE, PAYLOAD }
-    
+
     protected Service(java.net.URL wsdlDocumentLocation, QName serviceName) {
         delegate = Provider.provider().createServiceDelegate(wsdlDocumentLocation,
                 serviceName,
@@ -84,9 +84,9 @@ public class Service {
                 serviceName,
                 this.getClass(), features);
     }
-    
-    
-    /** 
+
+
+    /**
      * The <code>getPort</code> method returns a proxy. A service client
      * uses this proxy to invoke operations on the target
      * service endpoint. The <code>serviceEndpointInterface</code>
@@ -118,8 +118,8 @@ public class Service {
             Class<T> serviceEndpointInterface) {
         return delegate.getPort(portName, serviceEndpointInterface);
     }
-    
-    /** 
+
+    /**
      * The <code>getPort</code> method returns a proxy. A service client
      * uses this proxy to invoke operations on the target
      * service endpoint. The <code>serviceEndpointInterface</code>
@@ -130,7 +130,7 @@ public class Service {
      *                  the WSDL service description.
      * @param serviceEndpointInterface Service endpoint interface
      *                  supported by the dynamic proxy instance.
-     * @param features  A list of WebServiceFeatures to configure on the 
+     * @param features  A list of WebServiceFeatures to configure on the
      *                proxy.  Supported features not in the <code>features
      *                </code> parameter will have their default values.
      * @return Object Proxy instance that
@@ -152,16 +152,16 @@ public class Service {
      * @see java.lang.reflect.Proxy
      * @see java.lang.reflect.InvocationHandler
      * @see WebServiceFeature
-     * 
+     *
      * @since JAX-WS 2.1
      **/
     public <T> T getPort(QName portName,
             Class<T> serviceEndpointInterface, WebServiceFeature... features) {
         return delegate.getPort(portName, serviceEndpointInterface, features);
-    }       
-    
-    
-    /** 
+    }
+
+
+    /**
      * The <code>getPort</code> method returns a proxy. The parameter
      * <code>serviceEndpointInterface</code> specifies the service
      * endpoint interface that is supported by the returned proxy.
@@ -187,8 +187,8 @@ public class Service {
     public <T> T getPort(Class<T> serviceEndpointInterface) {
         return delegate.getPort(serviceEndpointInterface);
     }
-       
-    
+
+
     /**
      * The <code>getPort</code> method returns a proxy. The parameter
      * <code>serviceEndpointInterface</code> specifies the service
@@ -199,7 +199,7 @@ public class Service {
      * The returned proxy should not be reconfigured by the client.
      *
      * @param serviceEndpointInterface Service endpoint interface.
-     * @param features  A list of WebServiceFeatures to configure on the 
+     * @param features  A list of WebServiceFeatures to configure on the
      *                proxy.  Supported features not in the <code>features
      *                </code> parameter will have their default values.
      * @return Object instance that supports the
@@ -221,39 +221,39 @@ public class Service {
      *
      * @since JAX-WS 2.1
      **/
-    public <T> T getPort(Class<T> serviceEndpointInterface, 
+    public <T> T getPort(Class<T> serviceEndpointInterface,
             WebServiceFeature... features) {
         return delegate.getPort(serviceEndpointInterface, features);
     }
 
-    
-    /** 
+
+    /**
      * The <code>getPort</code> method returns a proxy.
      * The parameter <code>endpointReference</code> specifies the
      * endpoint that will be invoked by the returned proxy.  If there
-     * are any reference parameters in the 
+     * are any reference parameters in the
      * <code>endpointReference</code>, then those reference
      * parameters MUST appear as SOAP headers, indicating them to be
      * reference parameters, on all messages sent to the endpoint.
      * The <code>endpointReference's</code> address MUST be used
      * for invocations on the endpoint.
      * The parameter <code>serviceEndpointInterface</code> specifies
-     * the service endpoint interface that is supported by the 
+     * the service endpoint interface that is supported by the
      * returned proxy.
      * In the implementation of this method, the JAX-WS
      * runtime system takes the responsibility of selecting a protocol
      * binding (and a port) and configuring the proxy accordingly from
      * the WSDL associated with this <code>Service</code> instance or
      * from the metadata from the <code>endpointReference</code>.
-     * If this <code>Service</code> instance has a WSDL and 
-     * the <code>endpointReference</code> metadata 
+     * If this <code>Service</code> instance has a WSDL and
+     * the <code>endpointReference</code> metadata
      * also has a WSDL, then the WSDL from this instance MUST be used.
      * If this <code>Service</code> instance does not have a WSDL and
-     * the <code>endpointReference</code> does have a WSDL, then the 
+     * the <code>endpointReference</code> does have a WSDL, then the
      * WSDL from the <code>endpointReference</code> MAY be used.
      * The returned proxy should not be reconfigured by the client.
-     * If this <code>Service</code> instance has a known proxy 
-     * port that matches the information contained in 
+     * If this <code>Service</code> instance has a known proxy
+     * port that matches the information contained in
      * the WSDL,
      * then that proxy is returned, otherwise a WebServiceException
      * is thrown.
@@ -262,8 +262,8 @@ public class Service {
      * <pre>
      * <code>port = service.getPort(portName, serviceEndpointInterface);</code>
      * </pre>
-     * where the <code>portName</code> is retrieved from the 
-     * metadata of the <code>endpointReference</code> or from the 
+     * where the <code>portName</code> is retrieved from the
+     * metadata of the <code>endpointReference</code> or from the
      * <code>serviceEndpointInterface</code> and the WSDL
      * associated with this <code>Service</code> instance.
      *
@@ -271,7 +271,7 @@ public class Service {
      * for the target service endpoint that will be invoked by the
      * returned proxy.
      * @param serviceEndpointInterface Service endpoint interface.
-     * @param features  A list of <code>WebServiceFeatures</code> to configure on the 
+     * @param features  A list of <code>WebServiceFeatures</code> to configure on the
      *                proxy.  Supported features not in the <code>features
      *                </code> parameter will have their default values.
      * @return Object Proxy instance that supports the
@@ -302,9 +302,9 @@ public class Service {
     public <T> T getPort(EndpointReference endpointReference,
            Class<T> serviceEndpointInterface, WebServiceFeature... features) {
         return delegate.getPort(endpointReference, serviceEndpointInterface, features);
-    }      
-    
-    /** 
+    }
+
+    /**
      * Creates a new port for the service. Ports created in this way contain
      * no WSDL port type information and can only be used for creating
      * <code>Dispatch</code>instances.
@@ -322,9 +322,9 @@ public class Service {
     public void addPort(QName portName, String bindingId, String endpointAddress) {
         delegate.addPort(portName, bindingId, endpointAddress);
     }
-    
-        
-    /** 
+
+
+    /**
      * Creates a <code>Dispatch</code> instance for use with objects of
      * the client's choosing.
      *
@@ -351,9 +351,9 @@ public class Service {
     public <T> Dispatch<T> createDispatch(QName portName, Class<T> type, Mode mode) {
         return delegate.createDispatch(portName, type, mode);
     }
-    
-    
-    /** 
+
+
+    /**
      * Creates a <code>Dispatch</code> instance for use with objects of
      * the client's choosing.
      *
@@ -367,14 +367,14 @@ public class Service {
      * protocol, this parameter controls whether the client will work with
      * SOAP messages or the contents of a SOAP body. Mode MUST be <code>MESSAGE</code>
      * when type is <code>SOAPMessage</code>.
-     * @param features  A list of <code>WebServiceFeatures</code> to configure on the 
+     * @param features  A list of <code>WebServiceFeatures</code> to configure on the
      *                proxy.  Supported features not in the <code>features
      *                </code> parameter will have their default values.
      *
      * @return Dispatch instance.
      * @throws WebServiceException If any error in the creation of
-     *                  the <code>Dispatch</code> object or if a 
-     *                  feature is enabled that is not compatible with 
+     *                  the <code>Dispatch</code> object or if a
+     *                  feature is enabled that is not compatible with
      *                  this port or is unsupported.
      *
      * @see javax.xml.transform.Source
@@ -383,16 +383,16 @@ public class Service {
      *
      * @since JAX-WS 2.1
      **/
-    public <T> Dispatch<T> createDispatch(QName portName, Class<T> type, 
+    public <T> Dispatch<T> createDispatch(QName portName, Class<T> type,
             Service.Mode mode, WebServiceFeature... features) {
         return delegate.createDispatch(portName, type, mode, features);
-    }     
-    
-    
-    /** 
+    }
+
+
+    /**
      * Creates a <code>Dispatch</code> instance for use with objects of
      * the client's choosing. If there
-     * are any reference parameters in the 
+     * are any reference parameters in the
      * <code>endpointReference</code>, then those reference
      * parameters MUST appear as SOAP headers, indicating them to be
      * reference parameters, on all messages sent to the endpoint.
@@ -403,12 +403,12 @@ public class Service {
      * binding (and a port) and configuring the dispatch accordingly from
      * the WSDL associated with this <code>Service</code> instance or
      * from the metadata from the <code>endpointReference</code>.
-     * If this <code>Service</code> instance has a WSDL and 
+     * If this <code>Service</code> instance has a WSDL and
      * the <code>endpointReference</code>
      * also has a WSDL in its metadata, then the WSDL from this instance MUST be used.
      * If this <code>Service</code> instance does not have a WSDL and
-     * the <code>endpointReference</code> does have a WSDL, then the 
-     * WSDL from the <code>endpointReference</code> MAY be used.     
+     * the <code>endpointReference</code> does have a WSDL, then the
+     * WSDL from the <code>endpointReference</code> MAY be used.
      * An implementation MUST be able to retrieve the <code>portName</code> from the
      * <code>endpointReference</code> metadata.
      * <p>
@@ -416,7 +416,7 @@ public class Service {
      * <pre>
      * <code>dispatch = service.createDispatch(portName, type, mode, features);</code>
      * </pre>
-     * where the <code>portName</code> is retrieved from the 
+     * where the <code>portName</code> is retrieved from the
      * WSDL or <code>EndpointReference</code> metadata.
      *
      * @param endpointReference  The <code>EndpointReference</code>
@@ -431,12 +431,12 @@ public class Service {
      * protocol, this parameter controls whether the client will work with
      * SOAP messages or the contents of a SOAP body. Mode MUST be <code>MESSAGE</code>
      * when type is <code>SOAPMessage</code>.
-     * @param features  An array of <code>WebServiceFeatures</code> to configure on the 
+     * @param features  An array of <code>WebServiceFeatures</code> to configure on the
      *                proxy.  Supported features not in the <code>features
      *                </code> parameter will have their default values.
      *
      * @return Dispatch instance
-     * @throws WebServiceException 
+     * @throws WebServiceException
      *                  <UL>
      *                    <LI>If there is any missing WSDL metadata
      *                      as required by this method.
@@ -448,7 +448,7 @@ public class Service {
      *                    from the <code>EndpointReference</code> metadata.
      *                    <li>If any error in the creation of
      *                     the <code>Dispatch</code> object.
-     *                    <li>If a feature is enabled that is not 
+     *                    <li>If a feature is enabled that is not
      *                    compatible with this port or is unsupported.
      *                  </UL>
      *
@@ -459,12 +459,12 @@ public class Service {
      * @since JAX-WS 2.1
      **/
     public <T> Dispatch<T> createDispatch(EndpointReference endpointReference,
-            Class<T> type, Service.Mode mode, 
+            Class<T> type, Service.Mode mode,
             WebServiceFeature... features) {
         return delegate.createDispatch(endpointReference, type, mode, features);
-    }     
-    
-    /** 
+    }
+
+    /**
      * Creates a <code>Dispatch</code> instance for use with JAXB
      * generated objects.
      *
@@ -487,9 +487,9 @@ public class Service {
             Mode mode) {
         return delegate.createDispatch(portName, context,  mode);
     }
-        
-    
-    /** 
+
+
+    /**
      * Creates a <code>Dispatch</code> instance for use with JAXB
      * generated objects.
      *
@@ -501,14 +501,14 @@ public class Service {
      * protocol messages or message payloads. E.g. when using the SOAP
      * protocol, this parameter controls whether the client will work with
      * SOAP messages or the contents of a SOAP body.
-     * @param features  A list of <code>WebServiceFeatures</code> to configure on the 
+     * @param features  A list of <code>WebServiceFeatures</code> to configure on the
      *                proxy.  Supported features not in the <code>features
      *                </code> parameter will have their default values.
      *
      * @return Dispatch instance.
      * @throws WebServiceException If any error in the creation of
-     *                  the <code>Dispatch</code> object or if a 
-     *                  feature is enabled that is not compatible with 
+     *                  the <code>Dispatch</code> object or if a
+     *                  feature is enabled that is not compatible with
      *                  this port or is unsupported.
      *
      * @see javax.xml.bind.JAXBContext
@@ -519,13 +519,13 @@ public class Service {
     public Dispatch<Object> createDispatch(QName portName,
             JAXBContext context, Service.Mode mode, WebServiceFeature... features) {
         return delegate.createDispatch(portName, context, mode, features);
-    }      
-    
-    
-    /** 
+    }
+
+
+    /**
      * Creates a <code>Dispatch</code> instance for use with JAXB
      * generated objects. If there
-     * are any reference parameters in the 
+     * are any reference parameters in the
      * <code>endpointReference</code>, then those reference
      * parameters MUST appear as SOAP headers, indicating them to be
      * reference parameters, on all messages sent to the endpoint.
@@ -536,21 +536,21 @@ public class Service {
      * binding (and a port) and configuring the dispatch accordingly from
      * the WSDL associated with this <code>Service</code> instance or
      * from the metadata from the <code>endpointReference</code>.
-     * If this <code>Service</code> instance has a WSDL and 
+     * If this <code>Service</code> instance has a WSDL and
      * the <code>endpointReference</code>
      * also has a WSDL in its metadata, then the WSDL from this instance
      * MUST be used.
      * If this <code>Service</code> instance does not have a WSDL and
-     * the <code>endpointReference</code> does have a WSDL, then the 
-     * WSDL from the <code>endpointReference</code> MAY be used.      
+     * the <code>endpointReference</code> does have a WSDL, then the
+     * WSDL from the <code>endpointReference</code> MAY be used.
      * An implementation MUST be able to retrieve the <code>portName</code> from the
-     * <code>endpointReference</code> metadata. 
+     * <code>endpointReference</code> metadata.
      * <p>
      * This method behavies the same as calling
      * <pre>
      * <code>dispatch = service.createDispatch(portName, context, mode, features);</code>
      * </pre>
-     * where the <code>portName</code> is retrieved from the 
+     * where the <code>portName</code> is retrieved from the
      * WSDL or <code>endpointReference</code> metadata.
      *
      * @param endpointReference  The <code>EndpointReference</code>
@@ -563,12 +563,12 @@ public class Service {
      * protocol messages or message payloads. E.g. when using the SOAP
      * protocol, this parameter controls whether the client will work with
      * SOAP messages or the contents of a SOAP body.
-     * @param features  An array of <code>WebServiceFeatures</code> to configure on the 
+     * @param features  An array of <code>WebServiceFeatures</code> to configure on the
      *                proxy.  Supported features not in the <code>features
      *                </code> parameter will have their default values.
      *
      * @return Dispatch instance
-     * @throws WebServiceException 
+     * @throws WebServiceException
      *                  <UL>
      *                    <li>If there is any missing WSDL metadata
      *                      as required by this method.
@@ -580,7 +580,7 @@ public class Service {
      *                    from the <code>EndpointReference</code> metadata.
      *                    <li>If any error in the creation of
      *                    the <code>Dispatch</code> object.
-     *                    <li>if a feature is enabled that is not 
+     *                    <li>if a feature is enabled that is not
      *                    compatible with this port or is unsupported.
      *                  </UL>
      *
@@ -593,17 +593,17 @@ public class Service {
             JAXBContext context, Service.Mode mode,
             WebServiceFeature... features) {
         return delegate.createDispatch(endpointReference, context, mode, features);
-    }    
-    
-    /** 
+    }
+
+    /**
      * Gets the name of this service.
      * @return Qualified name of this service
      **/
     public QName getServiceName() {
         return delegate.getServiceName();
     }
-    
-    /** 
+
+    /**
      * Returns an <code>Iterator</code> for the list of
      * <code>QName</code>s of service endpoints grouped by this
      * service
@@ -616,8 +616,8 @@ public class Service {
     public Iterator<javax.xml.namespace.QName> getPorts() {
         return delegate.getPorts();
     }
-    
-    /** 
+
+    /**
      * Gets the location of the WSDL document for this Service.
      *
      * @return URL for the location of the WSDL document for
@@ -626,7 +626,7 @@ public class Service {
     public java.net.URL getWSDLDocumentLocation() {
         return delegate.getWSDLDocumentLocation();
     }
-    
+
     /**
      * Returns the configured handler resolver.
      *
@@ -637,7 +637,7 @@ public class Service {
     public HandlerResolver getHandlerResolver() {
         return delegate.getHandlerResolver();
     }
-    
+
     /**
      * Sets the <code>HandlerResolver</code> for this <code>Service</code>
      * instance.
@@ -654,7 +654,7 @@ public class Service {
     public void setHandlerResolver(HandlerResolver handlerResolver) {
         delegate.setHandlerResolver(handlerResolver);
     }
-    
+
     /**
      * Returns the executor for this <code>Service</code>instance.
      *
@@ -669,7 +669,7 @@ public class Service {
     public java.util.concurrent.Executor getExecutor() {
         return delegate.getExecutor();
     }
-    
+
     /**
      * Sets the executor for this <code>Service</code> instance.
      *
@@ -688,7 +688,7 @@ public class Service {
     public void setExecutor(java.util.concurrent.Executor executor) {
         delegate.setExecutor(executor);
     }
-    
+
     /**
      * Creates a <code>Service</code> instance.
      *
@@ -729,7 +729,7 @@ public class Service {
             QName serviceName, WebServiceFeature ... features) {
         return new Service(wsdlDocumentLocation, serviceName, features);
     }
-    
+
     /**
      * Creates a <code>Service</code> instance.
      *
@@ -758,6 +758,3 @@ public class Service {
         return new Service(null, serviceName, features);
     }
 }
-
-
-

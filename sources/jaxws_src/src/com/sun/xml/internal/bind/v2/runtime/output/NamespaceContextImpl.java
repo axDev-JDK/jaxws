@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -177,16 +177,17 @@ public final class NamespaceContextImpl implements NamespaceContext2 {
                             if(knownURIs[j].equals(oldUri)) {
                                 current.defaultPrefixIndex = i;
                                 current.oldDefaultNamespaceUriIndex = j;
-                                assert owner.knownUri2prefixIndexMap[j]==current.defaultPrefixIndex;
+                                // assert commented out; too strict/not valid any more
+                                // assert owner.knownUri2prefixIndexMap[j]==current.defaultPrefixIndex;
                                 // update the table to point to the prefix we'll declare
                                 owner.knownUri2prefixIndexMap[j] = size;
                                 break;
                             }
                         }
                         if (current.elementLocalName!=null) {
-    						current.setTagName(size, current.elementLocalName, current.getOuterPeer());
+                                                current.setTagName(size, current.elementLocalName, current.getOuterPeer());
                         }
-                        
+
                         put(nsUris[i],null);
                         return put("", "");
                     }
@@ -223,7 +224,7 @@ public final class NamespaceContextImpl implements NamespaceContext2 {
 
     public int force(@NotNull String uri, @NotNull String prefix) {
         // check for the existing binding
-        
+
         for( int i=size-1; i>=0; i-- ) {
             if(prefixes[i].equals(prefix)) {
                 if(nsUris[i].equals(uri))

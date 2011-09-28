@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,7 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
- 
+
 
 package com.sun.org.glassfish.gmbal;
 
@@ -134,7 +134,7 @@ import java.lang.annotation.*;
  *
  * <p>The Descriptor fields contributed in this way by different
  * annotations on the same program element must be consistent with
- * each other and with any fields contributed by a 
+ * each other and with any fields contributed by a
  * DescriptorFields annotation.  That is, two
  * different annotations, or two members of the same annotation, must
  * not define a different value for the same Descriptor field.  Fields

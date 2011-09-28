@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -29,7 +29,7 @@ import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.*;
 
 /**
- * The Generated annoation is used to mark source code that has been generated.
+ * The Generated annotation is used to mark source code that has been generated.
  * It can also be used to differentiate user written code from generated code
  * in a single file. When used, the value element must have the name of the
  * code generator. The recommended convention is to use the fully qualified
@@ -52,8 +52,9 @@ import static java.lang.annotation.RetentionPolicy.*;
         LOCAL_VARIABLE, PARAMETER})
 public @interface Generated {
    /**
-    * This is used by the code generator to mark the generated classes
-    * and methods.
+    * The value element MUST have the name of the code generator.
+    * The recommended convention is to use the fully qualified name of the
+    * code generator. For example: com.acme.generator.CodeGen.
     */
    String[] value();
 

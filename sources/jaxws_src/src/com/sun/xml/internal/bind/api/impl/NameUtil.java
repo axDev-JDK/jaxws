@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -70,12 +70,12 @@ class NameUtil {
     {
         return String.valueOf(c).toUpperCase(Locale.ENGLISH);
     }
-    
+
     private String toUpperCase(String s)
     {
         return s.toUpperCase(Locale.ENGLISH);
     }
-    
+
     /**
      * Capitalizes the first character of the specified string,
      * and de-capitalize the rest of characters.

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.tools.internal.xjc.reader.dtd.bindinfo;
 
 import java.io.IOException;
@@ -67,11 +68,11 @@ public class BIUserConversion implements BIConversion
         this.owner = bi;
         this.e = _e;
     }
-    
+
     private static void add( Map<String,BIConversion> m, BIConversion c ) {
         m.put( c.name(), c );
     }
-    
+
     /** Adds all built-in conversions into the given map. */
     static void addBuiltinConversions( BindInfo bi, Map<String,BIConversion> m ) {
         add( m, new BIUserConversion( bi, parse("<conversion name='boolean' type='java.lang.Boolean' parse='getBoolean' />")));
@@ -101,7 +102,7 @@ public class BIUserConversion implements BIConversion
 
     /** The owner {@link BindInfo} object to which this object belongs. */
     private final BindInfo owner;
-    
+
     /** &lt;conversion> element which this object is wrapping. */
     private final Element e;
 
@@ -111,13 +112,13 @@ public class BIUserConversion implements BIConversion
     public Locator getSourceLocation() {
         return DOMLocator.getLocationInfo(e);
     }
-    
+
     /** Gets the conversion name. */
     public String name() { return DOMUtil.getAttribute(e,"name"); }
-    
+
     /** Gets a transducer for this conversion. */
     public TypeUse getTransducer() {
-        
+
         String ws = DOMUtil.getAttribute(e,"whitespace");
         if(ws==null)    ws = "collapse";
 

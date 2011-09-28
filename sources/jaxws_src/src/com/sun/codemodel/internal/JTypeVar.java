@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -29,22 +29,22 @@ import java.util.List;
 
 /**
  * Type variable used to declare generics.
- * 
+ *
  * @see JGenerifiable
  * @author
  *     Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
 public final class JTypeVar extends JClass implements JDeclaration {
-    
+
     private final String name;
-    
+
     private JClass bound;
 
     JTypeVar(JCodeModel owner, String _name) {
         super(owner);
         this.name = _name;
     }
-    
+
     public String name() {
         return name;
     }
@@ -56,10 +56,10 @@ public final class JTypeVar extends JClass implements JDeclaration {
     public JPackage _package() {
         return null;
     }
-    
+
     /**
      * Adds a bound to this variable.
-     * 
+     *
      * @return  this
      */
     public JTypeVar bound( JClass c ) {
@@ -71,7 +71,7 @@ public final class JTypeVar extends JClass implements JDeclaration {
 
     /**
      * Returns the class bound of this variable.
-     * 
+     *
      * <p>
      * If no bound is given, this method returns {@link Object}.
      */

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -39,9 +39,9 @@ import static java.lang.annotation.RetentionPolicy.*;
  * <h3>Usage </h3>
  *
  * <p> <tt> @XmlAccessorOrder </tt> annotation can be used with the following
- * program elements:</p> 
- * 
- * <ul> 
+ * program elements:</p>
+ *
+ * <ul>
  *   <li> package</li>
  *   <li> a top level class </li>
  * </ul>
@@ -64,8 +64,8 @@ import static java.lang.annotation.RetentionPolicy.*;
  * </ul>
  *
  * <p>This annotation can be used with the following annotations:
- *    {@link XmlType}, {@link XmlRootElement}, {@link XmlAccessorType}, 
- *    {@link XmlSchema}, {@link XmlSchemaType}, {@link XmlSchemaTypes}, 
+ *    {@link XmlType}, {@link XmlRootElement}, {@link XmlAccessorType},
+ *    {@link XmlSchema}, {@link XmlSchemaType}, {@link XmlSchemaTypes},
  *    , {@link XmlJavaTypeAdapter}. It can also be used with the
  *    following annotations at the package level: {@link XmlJavaTypeAdapter}.
  *
@@ -76,5 +76,5 @@ import static java.lang.annotation.RetentionPolicy.*;
 
 @Inherited @Retention(RUNTIME) @Target({PACKAGE, TYPE})
 public @interface XmlAccessorOrder {
-	XmlAccessOrder value() default XmlAccessOrder.UNDEFINED;
+        XmlAccessOrder value() default XmlAccessOrder.UNDEFINED;
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -23,7 +23,6 @@
  * questions.
  */
 
-
 package com.sun.xml.internal.messaging.saaj.soap.impl;
 
 import javax.xml.namespace.QName;
@@ -39,7 +38,7 @@ import com.sun.xml.internal.messaging.saaj.soap.SOAPDocumentImpl;
 public abstract class BodyElementImpl
     extends ElementImpl
     implements SOAPBodyElement {
-        
+
     public BodyElementImpl(SOAPDocumentImpl ownerDoc, Name qname) {
         super(ownerDoc, qname);
     }

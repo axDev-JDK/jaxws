@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -55,11 +55,11 @@ import com.sun.xml.internal.bind.api.AccessorException;
 import com.sun.xml.internal.bind.api.ClassResolver;
 import com.sun.xml.internal.bind.unmarshaller.InfosetScanner;
 import com.sun.xml.internal.bind.v2.ClassFactory;
+import com.sun.xml.internal.bind.v2.WellKnownNamespace;
 import com.sun.xml.internal.bind.v2.runtime.AssociationMap;
 import com.sun.xml.internal.bind.v2.runtime.Coordinator;
 import com.sun.xml.internal.bind.v2.runtime.JAXBContextImpl;
 import com.sun.xml.internal.bind.v2.runtime.JaxBeanInfo;
-import com.sun.xml.internal.bind.v2.runtime.ElementBeanInfoImpl;
 
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
@@ -221,7 +221,7 @@ public final class UnmarshallingContext extends Coordinator
          * it thereby makes {@link Receiver} mechanism simpler.
          *
          * <p>
-         * Yes, I know this is a hack, and no, I'm not proud of it. 
+         * Yes, I know this is a hack, and no, I'm not proud of it.
          *
          * @see ElementBeanInfoImpl.IntercepterLoader#startElement(State, TagName)
          * @see ElementBeanInfoImpl.IntercepterLoader#intercept(State, Object)
@@ -278,6 +278,7 @@ public final class UnmarshallingContext extends Coordinator
         private void pop() {
             assert prev!=null;
             loader = null;
+            nil = false;
             receiver = null;
             intercepter = null;
             elementDefaultValue = null;
@@ -564,7 +565,7 @@ public final class UnmarshallingContext extends Coordinator
         }
         result = null;
     }
-    
+
     /**
      * Creates a new instance of the specified class.
      * In the unmarshaller, we need to check the user-specified factory class.
@@ -800,7 +801,7 @@ public final class UnmarshallingContext extends Coordinator
     }
     private String resolveNamespacePrefix( String prefix ) {
         if(prefix.equals("xml"))
-            return "http://www.w3.org/XML/1998/namespace";
+            return WellKnownNamespace.XML_NAMESPACE_URI;
 
         for( int i=nsLen-2; i>=0; i-=2 ) {
             if(prefix.equals(nsBind[i]))
@@ -850,8 +851,6 @@ public final class UnmarshallingContext extends Coordinator
         return r;
     }
 
-
-    //
     //  NamespaceContext2 implementation
     //
     public Iterator<String> getPrefixes(String uri) {
@@ -1185,7 +1184,7 @@ public final class UnmarshallingContext extends Coordinator
     /**
      * Allows to access elements which are expected in current state.
      * Useful for getting elements for current parent.
-     * 
+     *
      * @return
      */
     public Collection<QName> getCurrentExpectedElements() {
@@ -1227,5 +1226,5 @@ public final class UnmarshallingContext extends Coordinator
 
         return null;
     }
-    
+
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.ws.model;
 
 import com.sun.xml.internal.bind.api.CompositeStructure;
@@ -47,7 +48,7 @@ import java.util.List;
  * This parameter is only used for the {@link ParameterBinding#BODY} binding.
  * Other parameters that bind to other parts (such as headers or unbound)
  * will show up directly under {@link JavaMethod}.
- * 
+ *
  * @author Vivek Pandey
  */
 public class WrapperParameter extends ParameterImpl {
@@ -77,7 +78,7 @@ public class WrapperParameter extends ParameterImpl {
 
     /**
      * Adds a new child parameter.
-     * 
+     *
      * @param wrapperChild
      */
     public void addWrapperChild(ParameterImpl wrapperChild) {

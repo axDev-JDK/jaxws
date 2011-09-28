@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -27,14 +27,14 @@ package com.sun.xml.internal.rngom.parse.host;
 import com.sun.xml.internal.rngom.ast.om.ParsedPattern;
 
 /**
- * 
+ *
  * @author
  *      Kohsuke Kawaguchi (kk@kohsuke.org)
  */
 public class ParsedPatternHost implements ParsedPattern {
     public final ParsedPattern lhs;
     public final ParsedPattern rhs;
-    
+
     ParsedPatternHost( ParsedPattern lhs, ParsedPattern rhs ) {
         this.lhs = lhs;
         this.rhs = rhs;

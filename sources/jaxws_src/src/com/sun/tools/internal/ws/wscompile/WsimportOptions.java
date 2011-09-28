@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,7 +22,6 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
-
 
 package com.sun.tools.internal.ws.wscompile;
 
@@ -78,6 +77,11 @@ public class WsimportOptions extends Options {
     public String defaultPackage = null;
 
     /**
+     * The -clientjar option to package client artifacts as jar
+     */
+    public String clientjar = null;
+
+    /**
      * -XadditionalHeaders
      */
     public boolean additionalHeaders;
@@ -107,7 +111,10 @@ public class WsimportOptions extends Options {
 
     public SchemaCompiler getSchemaCompiler() {
         schemaCompiler.setTargetVersion(SpecVersion.parse(target.getVersion()));
-        schemaCompiler.setEntityResolver(entityResolver);
+        if(entityResolver != null) {
+            //set if its not null so as not to override catalog option specified via xjc args
+            schemaCompiler.setEntityResolver(entityResolver);
+        }
         return schemaCompiler;
     }
 
@@ -243,6 +250,9 @@ public class WsimportOptions extends Options {
             String authfile = requireArgument("-Xauthfile", args, ++i);
             authFile = new File(authfile);
             return 2;
+        } else if (args[i].equals("-clientjar")) {
+            clientjar = requireArgument("-clientjar", args, ++i);
+            return 2;
         }
 
         return 0; // what's this option?
@@ -253,14 +263,19 @@ public class WsimportOptions extends Options {
             throw new BadCommandLineException(WscompileMessages.WSIMPORT_MISSING_FILE());
         }
 
+        if(wsdlLocation !=null && clientjar != null) {
+           throw new BadCommandLineException(WscompileMessages.WSIMPORT_WSDLLOCATION_CLIENTJAR());
+        }
         if(wsdlLocation == null){
             wsdlLocation = wsdls.get(0).getSystemId();
         }
+
+
     }
 
     @Override
     protected void addFile(String arg) throws BadCommandLineException {
-        addFile(arg, wsdls, "*.wsdl");
+        addFile(arg, wsdls, ".wsdl");
     }
 
     private final List<InputSource> wsdls = new ArrayList<InputSource>();

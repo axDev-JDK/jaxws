@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -105,7 +105,7 @@ abstract class AbstractExtensibleImpl extends AbstractObjectImpl implements WSDL
         notUnderstoodExtensions.add(new UnknownWSDLExtension(extnEl, locator));
     }
 
-    protected class UnknownWSDLExtension implements WSDLExtension, WSDLObject {
+    protected static class UnknownWSDLExtension implements WSDLExtension, WSDLObject {
         private final QName extnEl;
         private final Locator locator;
         public UnknownWSDLExtension(QName extnEl, Locator locator) {
@@ -135,5 +135,5 @@ abstract class AbstractExtensibleImpl extends AbstractObjectImpl implements WSDL
             throw new WebServiceException(buf.toString());
         }
         return true;
-    }    
+    }
 }

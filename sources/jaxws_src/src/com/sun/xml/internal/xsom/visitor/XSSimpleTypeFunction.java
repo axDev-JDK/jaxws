@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -33,7 +33,7 @@ import com.sun.xml.internal.xsom.XSUnionSimpleType;
 /**
  * Function object that works on {@link com.sun.xml.internal.xsom.XSSimpleType}
  * and its derived interfaces.
- * 
+ *
  * @author
  *     Kohsuke Kawaguchi (kohsuke,kawaguchi@sun.com)
  */
@@ -42,4 +42,3 @@ public interface XSSimpleTypeFunction<T> {
     T unionSimpleType( XSUnionSimpleType type );
     T restrictionSimpleType( XSRestrictionSimpleType type );
 }
-

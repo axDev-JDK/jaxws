@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.ws.model;
 
 import com.sun.istack.internal.NotNull;
@@ -33,6 +34,7 @@ import com.sun.xml.internal.ws.api.model.wsdl.WSDLBoundOperation;
 import com.sun.xml.internal.ws.model.soap.SOAPBindingImpl;
 import com.sun.xml.internal.ws.model.wsdl.WSDLBoundOperationImpl;
 import com.sun.xml.internal.ws.model.wsdl.WSDLPortImpl;
+import com.sun.xml.internal.ws.api.model.wsdl.WSDLFault;
 import com.sun.istack.internal.Nullable;
 
 import javax.xml.namespace.QName;
@@ -111,7 +113,7 @@ public final class JavaMethodImpl implements JavaMethod {
     /**
      * @see {@link JavaMethod}
      *
-     * @return Returns the method. 
+     * @return Returns the method.
      */
     public Method getMethod() {
         return method;
@@ -326,7 +328,7 @@ public final class JavaMethodImpl implements JavaMethod {
 
     /**
      * Returns if the java method  is async
-     * @return if this is an Asynch 
+     * @return if this is an Asynch
      */
     public boolean isAsync(){
         return mep.isAsync;
@@ -341,7 +343,7 @@ public final class JavaMethodImpl implements JavaMethod {
         //so far, the inputAction, outputAction and fault actions are set from the @Action and @FaultAction
         //set the values from WSDLModel, if such annotations are not present or defaulted
         if(inputAction.equals("")) {
-                inputAction = wsdlOperation.getOperation().getInput().getAction();                
+                inputAction = wsdlOperation.getOperation().getInput().getAction();
         } else if(!inputAction.equals(wsdlOperation.getOperation().getInput().getAction()))
                 //TODO input action might be from @Action or WebMethod(action)
                 LOGGER.warning("Input Action on WSDL operation "+wsdlOperation.getName().getLocalPart() + " and @Action on its associated Web Method " + seiMethod.getName() +" did not match and will cause problems in dispatching the requests");
@@ -353,7 +355,16 @@ public final class JavaMethodImpl implements JavaMethod {
             for (CheckedExceptionImpl ce : exceptions) {
                 if (ce.getFaultAction().equals("")) {
                     QName detailQName = ce.getDetailType().tagName;
-                    ce.setFaultAction(wsdlOperation.getOperation().getFault(detailQName).getAction());
+                    WSDLFault wsdlfault = wsdlOperation.getOperation().getFault(detailQName);
+                    if(wsdlfault == null) {
+                        // mismatch between wsdl model and SEI model, log a warning and use  SEI model for Action determination
+                        LOGGER.warning("Mismatch between Java model and WSDL model found, For wsdl operation " +
+                                wsdlOperation.getName() + ",There is no matching wsdl fault with detail QName " +
+                                ce.getDetailType().tagName);
+                        ce.setFaultAction(ce.getDefaultFaultAction());
+                    } else {
+                        ce.setFaultAction(wsdlfault.getAction());
+                    }
                 }
             }
         }
@@ -377,4 +388,3 @@ public final class JavaMethodImpl implements JavaMethod {
     private static final Logger LOGGER = Logger.getLogger(com.sun.xml.internal.ws.model.JavaMethodImpl.class.getName());
 
 }
-

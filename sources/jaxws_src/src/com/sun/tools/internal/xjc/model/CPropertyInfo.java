@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -170,7 +170,7 @@ public abstract class CPropertyInfo implements PropertyInfo<NType,NClass>, CCust
      *
      * @deprecated
      *      marked as deprecated so that we can spot the use of this method.
-     * 
+     *
      * @see #getName(boolean)
      */
     public String getName() {

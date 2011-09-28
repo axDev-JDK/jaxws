@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.ws.policy;
 
 import com.sun.xml.internal.ws.policy.sourcemodel.AssertionData;
@@ -37,12 +38,12 @@ public abstract class SimpleAssertion extends PolicyAssertion {
     protected SimpleAssertion() {
         super();
     }
-    
+
     protected SimpleAssertion(AssertionData data, Collection<? extends PolicyAssertion> assertionParameters) {
         super(data, assertionParameters);
-    }        
-    
-    @Override 
+    }
+
+    @Override
     public final boolean hasNestedPolicy() { // TODO: make abstract
         return false;
     }
@@ -50,5 +51,5 @@ public abstract class SimpleAssertion extends PolicyAssertion {
     @Override
     public final NestedPolicy getNestedPolicy() { // TODO: make abstract
         return null;
-    }    
+    }
 }

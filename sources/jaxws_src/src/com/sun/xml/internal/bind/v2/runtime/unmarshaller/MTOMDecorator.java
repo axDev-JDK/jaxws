@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -60,7 +60,7 @@ final class MTOMDecorator implements XmlVisitor {
      *
      * This happens twice; once before &lt;/xop:Include>, another
      * after &lt;/xop:Include>. The spec guarantees that
-     * no valid pcdata can follow &lt;/xop:Include>. 
+     * no valid pcdata can follow &lt;/xop:Include>.
      */
     private boolean followXop;
 

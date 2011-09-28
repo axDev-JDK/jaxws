@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -41,7 +41,7 @@ import java.net.URL;
  *
  * <p>
  * This abstract class could be implemented by appliations, or one of the
- * {@link #create} methods can be used. 
+ * {@link #create} methods can be used.
  *
  * @author Kohsuke Kawaguchi
  */

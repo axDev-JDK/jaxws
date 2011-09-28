@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -25,8 +25,6 @@
 
 package com.sun.xml.internal.ws.api.server;
 
-import com.sun.xml.internal.ws.developer.Stateful;
-
 import java.lang.annotation.Documented;
 import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import java.lang.annotation.Retention;
@@ -46,11 +44,11 @@ import java.lang.annotation.Target;
  * takes {@link Class}, which represents the type of the service.
  *
  * <p>
- * See {@link Stateful} for a real example. This annotation is only for
- * advanced users of the JAX-WS RI. 
+ * See {@link com.sun.xml.internal.ws.developer.Stateful} for a real example. This annotation is only for
+ * advanced users of the JAX-WS RI.
  *
  * @since JAX-WS 2.1
- * @see Stateful
+ * @see com.sun.xml.internal.ws.developer.Stateful
  * @author Kohsuke Kawaguchi
  */
 @Target(ANNOTATION_TYPE)

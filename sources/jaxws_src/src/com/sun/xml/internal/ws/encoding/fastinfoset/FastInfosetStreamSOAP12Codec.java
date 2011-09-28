@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.ws.encoding.fastinfoset;
 
 import com.sun.xml.internal.ws.api.pipe.ContentType;
@@ -43,14 +44,14 @@ import javax.xml.stream.XMLStreamReader;
  */
 final class FastInfosetStreamSOAP12Codec extends FastInfosetStreamSOAPCodec {
     /*package*/ FastInfosetStreamSOAP12Codec(StreamSOAPCodec soapCodec, boolean retainState) {
-        super(soapCodec, SOAPVersion.SOAP_12, retainState, 
+        super(soapCodec, SOAPVersion.SOAP_12, retainState,
                 (retainState) ? FastInfosetMIMETypes.STATEFUL_SOAP_12 : FastInfosetMIMETypes.SOAP_12);
     }
 
     private FastInfosetStreamSOAP12Codec(FastInfosetStreamSOAPCodec that) {
         super(that);
     }
-    
+
     public Codec copy() {
         return new FastInfosetStreamSOAP12Codec(this);
     }
@@ -58,7 +59,7 @@ final class FastInfosetStreamSOAP12Codec extends FastInfosetStreamSOAPCodec {
     protected final StreamHeader createHeader(XMLStreamReader reader, XMLStreamBuffer mark) {
         return new StreamHeader12(reader, mark);
     }
-    
+
     protected ContentType getContentType(String soapAction) {
         if (soapAction == null) {
             return _defaultContentType;

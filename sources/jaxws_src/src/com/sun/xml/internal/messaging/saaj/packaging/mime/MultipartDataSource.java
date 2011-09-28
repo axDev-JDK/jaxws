@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 /*
  * @(#)MultipartDataSource.java       1.6 02/03/27
  */
@@ -47,9 +48,9 @@ import javax.activation.DataSource;
  * This interface will typically be implemented by providers that
  * preparse multipart bodies, for example an IMAP provider.
  *
- * @version	1.6, 02/03/27
- * @author	John Mani
- * @see		javax.activation.DataSource
+ * @version     1.6, 02/03/27
+ * @author      John Mani
+ * @see         javax.activation.DataSource
  */
 
 public interface MultipartDataSource extends DataSource {
@@ -67,7 +68,7 @@ public interface MultipartDataSource extends DataSource {
      * @param index     the index of the desired MimeBodyPart
      * @return          the MimeBodyPart
      * @exception       IndexOutOfBoundsException if the given index
-     *			is out of range.
+     *                  is out of range.
      * @exception       MessagingException
      */
     public MimeBodyPart getBodyPart(int index) throws MessagingException;

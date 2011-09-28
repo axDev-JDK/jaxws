@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.tools.internal.ws.processor.model.jaxb;
 
 import com.sun.tools.internal.ws.processor.model.java.JavaStructureMember;
@@ -31,7 +32,7 @@ import javax.xml.namespace.QName;
 /**
  * @author Kathy Walsh, Vivek Pandey
  *
- * 
+ *
  */
 
 public class JAXBElementMember {
@@ -56,8 +57,8 @@ public class JAXBElementMember {
         return _type;
     }
     public void setType(JAXBType t) {
-        _type = t;        
-    }    
+        _type = t;
+    }
     public boolean isRepeated() {
         return _repeated;
     }
@@ -88,7 +89,7 @@ public class JAXBElementMember {
     public void setProperty(JAXBProperty prop) {
         _prop = prop;
     }
-    
+
     private QName _name;
     private JAXBType _type;
     private JavaStructureMember _javaStructureMember;

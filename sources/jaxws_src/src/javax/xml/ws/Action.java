@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -32,10 +32,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * The <code>Action</code> annotation allows explicit association of a 
- * WS-Addressing <code>Action</code> message addressing property with 
- * <code>input</code>, <code>output</code>, and 
- * <code>fault</code> messages of the mapped WSDL operation. 
+ * The <code>Action</code> annotation allows explicit association of a
+ * WS-Addressing <code>Action</code> message addressing property with
+ * <code>input</code>, <code>output</code>, and
+ * <code>fault</code> messages of the mapped WSDL operation.
  * <p>
  * This annotation can be specified on each method of a service endpoint interface.
  * For such a method, the mapped operation in the generated WSDL's
@@ -47,7 +47,7 @@ import java.lang.annotation.Target;
  * <p>
  * <b>Example 1</b>: Specify explicit values for <code>Action</code> message addressing property
  * for <code>input</code> and <code>output</code> messages.
- * 
+ *
  * <pre>
  * &#64;WebService(targetNamespace="http://example.com/numbers")
  * public class AddNumbersImpl {
@@ -127,20 +127,20 @@ import java.lang.annotation.Target;
 public @interface Action {
     /**
      * Explicit value of the WS-Addressing <code>Action</code> message addressing property for the <code>input</code>
-     * message of the operation. 
+     * message of the operation.
      */
     String input() default "";
 
     /**
      * Explicit value of the WS-Addressing <code>Action</code> message addressing property for the <code>output</code>
-     * message of the operation. 
+     * message of the operation.
      */
     String output() default "";
-    
+
     /**
      * Explicit value of the WS-Addressing <code>Action</code> message addressing property for the <code>fault</code>
      * message(s) of the operation. Each exception that is mapped to a fault and requires an explicit WS-Addressing
-     * <code>Action</code> message addressing property, needs to be specified as a value in this property 
+     * <code>Action</code> message addressing property, needs to be specified as a value in this property
      * using {@link FaultAction} annotation.
      */
     FaultAction[] fault() default { };

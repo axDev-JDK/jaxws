@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,8 +22,6 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
-
-
 
 /**
 *
@@ -320,7 +318,7 @@ public class Fault1_1Impl extends FaultImpl {
                 if (prefix == null || "".equals(prefix)) {
                     prefix = "ns0";
                 }
-            }   
+            }
         }
 
         if (this.faultCodeElement == null)
@@ -330,7 +328,7 @@ public class Fault1_1Impl extends FaultImpl {
             this.faultCodeElement = addFaultCodeElement();
         else
             this.faultCodeElement.removeContents();
- 
+
         if (uri == null || "".equals(uri)) {
             if (prefix != null && !"".equals("prefix")) {
                 uri = this.faultCodeElement.getNamespaceURI(prefix);
@@ -349,22 +347,22 @@ public class Fault1_1Impl extends FaultImpl {
 
         checkIfStandardFaultCode(faultCode, uri);
         ((FaultElementImpl) this.faultCodeElement).ensureNamespaceIsDeclared(prefix, uri);
-        
+
         if (prefix == null || "".equals(prefix)) {
             finallySetFaultCode(faultCode);
         } else {
             finallySetFaultCode(prefix + ":" + faultCode);
         }
     }
-    
+
     private boolean standardFaultCode(String faultCode) {
         if (faultCode.equals("VersionMismatch") || faultCode.equals("MustUnderstand")
             || faultCode.equals("Client") || faultCode.equals("Server")) {
-            return true;    
+            return true;
         }
         if (faultCode.startsWith("VersionMismatch.") || faultCode.startsWith("MustUnderstand.")
             || faultCode.startsWith("Client.") || faultCode.startsWith("Server.")) {
-            return true;    
+            return true;
         }
         return false;
     }
@@ -384,6 +382,6 @@ public class Fault1_1Impl extends FaultImpl {
             return;
         }
         addNode(this.faultActorElement);
-        
+
     }
 }

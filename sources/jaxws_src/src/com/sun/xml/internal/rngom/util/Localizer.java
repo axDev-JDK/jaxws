@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -39,11 +39,11 @@ public class Localizer {
      * will be delegated to the parent.
      */
     private final Localizer parent;
-    
+
     public Localizer(Class cls) {
         this(null,cls);
     }
-    
+
     public Localizer(Localizer parent, Class cls) {
         this.parent = parent;
         this.cls = cls;
@@ -60,7 +60,7 @@ public class Localizer {
                 throw e;
         }
     }
-    
+
     public String message(String key) {
         return MessageFormat.format(getString(key), new Object[]{});
     }

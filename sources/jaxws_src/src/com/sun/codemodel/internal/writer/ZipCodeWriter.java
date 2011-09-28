@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -35,9 +35,9 @@ import com.sun.codemodel.internal.JPackage;
 
 /**
  * Writes all the files into a zip file.
- * 
+ *
  * @author
- * 	Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
+ *      Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
 public class ZipCodeWriter extends CodeWriter {
     /**
@@ -51,15 +51,15 @@ public class ZipCodeWriter extends CodeWriter {
             public void close() {}
         };
     }
-    
+
     private final ZipOutputStream zip;
-    
+
     private final OutputStream filter;
-        
+
     public OutputStream openBinary(JPackage pkg, String fileName) throws IOException {
         String name = fileName;
         if(!pkg.isUnnamed())    name = toDirName(pkg)+name;
-        
+
         zip.putNextEntry(new ZipEntry(name));
         return filter;
     }

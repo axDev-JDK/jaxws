@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.ws.policy.sourcemodel;
 
 import com.sun.xml.internal.ws.policy.PolicyConstants;
@@ -202,7 +203,7 @@ public class XmlPolicyModelUnmarshaller extends PolicyModelUnmarshaller {
         final Map<QName, String> attributeMap = new HashMap<QName, String>();
         boolean optional = false;
         boolean ignorable = false;
-        
+
         final Iterator iterator = childElement.getAttributes();
         while (iterator.hasNext()) {
             final Attribute nextAttribute = (Attribute) iterator.next();
@@ -354,7 +355,7 @@ public class XmlPolicyModelUnmarshaller extends PolicyModelUnmarshaller {
     /**
      * Return true if the value is "true" or "1". Return false if the value is
      * "false" or "0". Throw an exception otherwise. The test is case sensitive.
-     * 
+     *
      * @param value The String representation of the value. Must not be null.
      * @return True if the value is "true" or "1". False if the value is
      *   "false" or "0".

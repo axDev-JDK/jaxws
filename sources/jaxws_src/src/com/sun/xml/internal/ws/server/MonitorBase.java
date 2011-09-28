@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -92,7 +92,7 @@ public abstract class MonitorBase {
         // the endpoint address until the first request comes in,
         // which is after monitoring is setup.
 
-        String rootName = 
+        String rootName =
             endpoint.getServiceName().getLocalPart()
             + "-"
             + endpoint.getPortName().getLocalPart();
@@ -128,10 +128,10 @@ public abstract class MonitorBase {
     private String getContextPath(final WSEndpoint endpoint) {
         try {
             Container container = endpoint.getContainer();
-            Method getSPI = 
+            Method getSPI =
                 container.getClass().getDeclaredMethod("getSPI", Class.class);
             getSPI.setAccessible(true);
-            Class servletContextClass = 
+            Class servletContextClass =
                 Class.forName("javax.servlet.ServletContext");
             Object servletContext =
                 getSPI.invoke(container, servletContextClass);
@@ -163,7 +163,7 @@ public abstract class MonitorBase {
     @NotNull public ManagedObjectManager createManagedObjectManager(final Stub stub) {
         String rootName = stub.requestContext.getEndpointAddress().toString();
 
-        final ManagedClientAssertion assertion = 
+        final ManagedClientAssertion assertion =
             ManagedClientAssertion.getAssertion(stub.getPortInfo());
         if (assertion != null) {
             final String id = assertion.getId();
@@ -371,9 +371,9 @@ class RewritingMOM implements ManagedObjectManager
 {
     private final ManagedObjectManager mom;
 
-    private final String gmbalQuotingCharsRegex = "\n|\\|\"|\\*|\\?|:|=|,";
-    private final String jmxQuotingCharsRegex   = ",|=|:|\"";
-    private final String replacementChar        = "-";
+    private final static String gmbalQuotingCharsRegex = "\n|\\|\"|\\*|\\?|:|=|,";
+    private final static String jmxQuotingCharsRegex   = ",|=|:|\"";
+    private final static String replacementChar        = "-";
 
     RewritingMOM(final ManagedObjectManager mom) { this.mom = mom; }
 
@@ -392,7 +392,7 @@ class RewritingMOM implements ManagedObjectManager
     }
     public Object getRoot() { return mom.getRoot(); }
     public GmbalMBean register(Object parent, Object obj, String name) {
-        return mom.register(parent, obj, rewrite(name)); 
+        return mom.register(parent, obj, rewrite(name));
     }
     public GmbalMBean register(Object parent, Object obj) { return mom.register(parent, obj);}
     public GmbalMBean registerAtRoot(Object obj, String name) {

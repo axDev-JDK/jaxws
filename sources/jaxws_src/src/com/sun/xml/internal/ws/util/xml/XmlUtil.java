@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -26,6 +26,7 @@
 package com.sun.xml.internal.ws.util.xml;
 
 import com.sun.istack.internal.Nullable;
+import com.sun.org.apache.xml.internal.resolver.Catalog;
 import com.sun.org.apache.xml.internal.resolver.CatalogManager;
 import com.sun.org.apache.xml.internal.resolver.tools.CatalogResolver;
 import com.sun.xml.internal.ws.server.ServerRtException;
@@ -72,7 +73,7 @@ import java.util.StringTokenizer;
  */
 public class XmlUtil {
     private final static String LEXICAL_HANDLER_PROPERTY =
-	"http://xml.org/sax/properties/lexical-handler";
+        "http://xml.org/sax/properties/lexical-handler";
 
     public static String getPrefix(String s) {
         int i = s.indexOf(':');
@@ -250,18 +251,21 @@ public class XmlUtil {
     /*
     * Gets an EntityResolver using XML catalog
     */
-    public static EntityResolver createEntityResolver(@Nullable URL catalogUrl) {
+     public static EntityResolver createEntityResolver(@Nullable URL catalogUrl) {
         // set up a manager
         CatalogManager manager = new CatalogManager();
         manager.setIgnoreMissingProperties(true);
+        // Using static catalog may  result in to sharing of the catalog by multiple apps running in a container
+        manager.setUseStaticCatalog(false);
+        Catalog catalog = manager.getCatalog();
         try {
             if (catalogUrl != null) {
-                manager.getCatalog().parseCatalog(catalogUrl);
+                catalog.parseCatalog(catalogUrl);
             }
         } catch (IOException e) {
             throw new ServerRtException("server.rt.err",e);
         }
-        return new CatalogResolver(manager);
+        return workaroundCatalogResolver(catalog);
     }
 
     /**
@@ -272,10 +276,12 @@ public class XmlUtil {
         // set up a manager
         CatalogManager manager = new CatalogManager();
         manager.setIgnoreMissingProperties(true);
-
+        // Using static catalog may  result in to sharing of the catalog by multiple apps running in a container
+        manager.setUseStaticCatalog(false);
         // parse the catalog
         ClassLoader cl = Thread.currentThread().getContextClassLoader();
         Enumeration<URL> catalogEnum;
+        Catalog catalog = manager.getCatalog();
         try {
             if (cl == null) {
                 catalogEnum = ClassLoader.getSystemResources("META-INF/jax-ws-catalog.xml");
@@ -285,11 +291,33 @@ public class XmlUtil {
 
             while(catalogEnum.hasMoreElements()) {
                 URL url = catalogEnum.nextElement();
-                manager.getCatalog().parseCatalog(url);
+                catalog.parseCatalog(url);
             }
         } catch (IOException e) {
             throw new WebServiceException(e);
         }
+
+        return workaroundCatalogResolver(catalog);
+    }
+
+    /**
+     *  Default CatalogResolver implementation is broken as it depends on CatalogManager.getCatalog() which will always create a new one when
+     *  useStaticCatalog is false.
+     *  This returns a CatalogResolver that uses the catalog passed as parameter.
+     * @param catalog
+     * @return  CatalogResolver
+     */
+    private static CatalogResolver workaroundCatalogResolver(final Catalog catalog) {
+        // set up a manager
+        CatalogManager manager = new CatalogManager() {
+            @Override
+            public Catalog getCatalog() {
+                return catalog;
+            }
+        };
+        manager.setIgnoreMissingProperties(true);
+        // Using static catalog may  result in to sharing of the catalog by multiple apps running in a container
+        manager.setUseStaticCatalog(false);
 
         return new CatalogResolver(manager);
     }

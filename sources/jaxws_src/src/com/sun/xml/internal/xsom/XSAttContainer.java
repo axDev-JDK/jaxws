@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -32,28 +32,28 @@ import java.util.Collection;
 /**
  * Common aspect of {@link XSComplexType} and {@link XSAttGroupDecl}
  * as the container of attribute uses/attribute groups.
- * 
+ *
  * @author
  *     Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
 public interface XSAttContainer extends XSDeclaration {
     XSWildcard getAttributeWildcard();
-    
+
     /**
      * Looks for the attribute use with the specified name from
      * all the attribute uses that are directly/indirectly
      * referenced from this component.
-     * 
+     *
      * <p>
      * This is the exact implementation of the "attribute use"
      * schema component.
      */
     XSAttributeUse getAttributeUse( String nsURI, String localName );
-    
+
     /**
      * Lists all the attribute uses that are directly/indirectly
      * referenced from this component.
-     * 
+     *
      * <p>
      * This is the exact implementation of the "attribute use"
      * schema component.
@@ -68,13 +68,13 @@ public interface XSAttContainer extends XSDeclaration {
     /**
      * Looks for the attribute use with the specified name from
      * the attribute uses which are declared in this complex type.
-     * 
+     *
      * This does not include att uses declared in att groups that
      * are referenced from this complex type, nor does include
      * att uses declared in base types.
      */
     XSAttributeUse getDeclaredAttributeUse( String nsURI, String localName );
-    
+
     /**
      * Lists all the attribute uses that are declared in this complex type.
      */

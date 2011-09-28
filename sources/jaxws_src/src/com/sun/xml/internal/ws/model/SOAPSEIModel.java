@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.ws.model;
 
 import com.sun.xml.internal.ws.api.model.ParameterBinding;
@@ -56,7 +57,7 @@ public class SOAPSEIModel extends AbstractSEIModelImpl {
                     put(p.getName(), jm);
                     bodyFound = true;
                 }
-            }            
+            }
             if(!bodyFound){
                 put(emptyBodyName, jm);
 //                System.out.println("added empty body for: "+jm.getMethod().getName());

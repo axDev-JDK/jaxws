@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -41,22 +41,22 @@ public class EncodingPolicyValidator implements PolicyAssertionValidator {
 
     private static final ArrayList<QName> serverSideSupportedAssertions = new ArrayList<QName>(3);
     private static final ArrayList<QName> clientSideSupportedAssertions = new ArrayList<QName>(4);
-    
+
     static {
         serverSideSupportedAssertions.add(OPTIMIZED_MIME_SERIALIZATION_ASSERTION);
         serverSideSupportedAssertions.add(UTF816FFFE_CHARACTER_ENCODING_ASSERTION);
         serverSideSupportedAssertions.add(OPTIMIZED_FI_SERIALIZATION_ASSERTION);
-        
+
         clientSideSupportedAssertions.add(SELECT_OPTIMAL_ENCODING_ASSERTION);
         clientSideSupportedAssertions.addAll(serverSideSupportedAssertions);
     }
-    
+
     /**
      * Creates a new instance of EncodingPolicyValidator
      */
     public EncodingPolicyValidator() {
     }
-    
+
     public Fitness validateClientSide(PolicyAssertion assertion) {
         return clientSideSupportedAssertions.contains(assertion.getName()) ? Fitness.SUPPORTED : Fitness.UNKNOWN;
     }

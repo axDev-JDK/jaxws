@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,7 +22,6 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
-
 
 package com.sun.tools.internal.ws.wscompile;
 
@@ -63,6 +62,11 @@ public class WsgenOptions extends Options {
      * -wsdl
      */
     public boolean genWsdl;
+
+    /**
+     * -inlineSchemas
+     */
+    public boolean inlineSchemas;
 
     /**
      * protocol value
@@ -163,7 +167,11 @@ public class WsgenOptions extends Options {
         } else if (args[i].equals("-Xdonotoverwrite")) {
             doNotOverWrite = true;
             return 1;
+        } else if (args[i].equals("-inlineSchemas")) {
+            inlineSchemas = true;
+            return 1;
         }
+
         return j;
     }
 
@@ -195,9 +203,12 @@ public class WsgenOptions extends Options {
         if (protocol == null || protocol.equalsIgnoreCase(X_SOAP12) && !isExtensionMode()) {
             throw new BadCommandLineException(WscompileMessages.WSGEN_SOAP_12_WITHOUT_EXTENSION());
         }
-        
+
         if (nonstdProtocols.containsKey(protocol) && !isExtensionMode()) {
-            throw new BadCommandLineException(WscompileMessages.WSGEN_PROTOCOL_WITHOUT_EXTENSION(protocol));            
+            throw new BadCommandLineException(WscompileMessages.WSGEN_PROTOCOL_WITHOUT_EXTENSION(protocol));
+        }
+        if (inlineSchemas && !genWsdl) {
+            throw new BadCommandLineException(WscompileMessages.WSGEN_INLINE_SCHEMAS_ONLY_WITH_WSDL());
         }
 
         validateEndpointClass();

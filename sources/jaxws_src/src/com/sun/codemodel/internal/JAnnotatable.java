@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -26,6 +26,7 @@
 package com.sun.codemodel.internal;
 
 import java.lang.annotation.Annotation;
+import java.util.Collection;
 
 /**
  * Annotatable program elements.
@@ -53,4 +54,12 @@ public interface JAnnotatable {
      * and returns a type-safe writer to fill in the values of such annotations.
      */
     <W extends JAnnotationWriter> W annotate2(Class<W> clazz);
+
+    /**
+     * Read-only live view of all annotations on this {@link JAnnotatable}
+     *
+     * @return
+     *      Can be empty but never null.
+     */
+    Collection<JAnnotationUse> annotations();
 }

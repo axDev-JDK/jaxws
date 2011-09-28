@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.org.jvnet.mimepull;
 
 import java.io.File;
@@ -55,7 +56,7 @@ public class MIMEPart {
 
     MIMEPart(MIMEMessage msg, String contentId) {
         this(msg);
-        this.contentId = contentId;   
+        this.contentId = contentId;
     }
 
     /**
@@ -79,7 +80,7 @@ public class MIMEPart {
     public void close() {
         dataHead.close();
     }
-    
+
 
     /**
      * Can get the attachment part's content only once. The content
@@ -141,8 +142,8 @@ public class MIMEPart {
      * Returns <code>null</code> if no headers with the
      * specified name exist.
      *
-     * @param	name header name
-     * @return	list of header values, or null if none
+     * @param   name header name
+     * @return  list of header values, or null if none
      */
     public List<String> getHeader(String name) {
         getHeaders();

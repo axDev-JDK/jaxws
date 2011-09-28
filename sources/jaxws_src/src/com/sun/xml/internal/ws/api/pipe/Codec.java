@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.ws.api.pipe;
 
 import com.sun.xml.internal.ws.api.BindingID;
@@ -71,9 +72,9 @@ public interface Codec {
     /**
      * Get the MIME type associated with this Codec.
      * <p>
-     * If available the MIME type will represent the media that the codec 
+     * If available the MIME type will represent the media that the codec
      * encodes and decodes.
-     * 
+     *
      * The MIME type returned will be the most general representation independent
      * of an instance of this MIME type utilized as a MIME content-type.
      *
@@ -82,7 +83,7 @@ public interface Codec {
      *      implementation. Otherwise the MIME type is returned.
      */
     public String getMimeType();
-    
+
     /**
      * If the MIME content-type of the encoding is known statically
      * then this method returns it.

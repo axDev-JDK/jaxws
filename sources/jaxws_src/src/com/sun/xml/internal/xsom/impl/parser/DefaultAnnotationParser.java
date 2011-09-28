@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -35,28 +35,27 @@ import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * AnnotationParser that just ignores annotation.
- * 
+ *
  * <p>
  * This class doesn't have any state. So it should be used as a singleton.
- * 
+ *
  * @author Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
 class DefaultAnnotationParser extends AnnotationParser {
-    
+
     private DefaultAnnotationParser() {}
-    
+
     public static final AnnotationParser theInstance = new DefaultAnnotationParser();
-    
+
     public ContentHandler getContentHandler(
         AnnotationContext contest, String elementName,
         ErrorHandler errorHandler, EntityResolver entityResolver ) {
         return new DefaultHandler();
     }
-    
+
     public Object getResult( Object existing ) {
         return null;
     }
-    
-    
-}
 
+
+}

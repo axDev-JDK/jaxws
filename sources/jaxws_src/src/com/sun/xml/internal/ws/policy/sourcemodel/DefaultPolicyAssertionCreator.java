@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -40,15 +40,15 @@ import java.util.Collection;
  *
  * @author Marek Potociar (marek.potociar at sun.com)
  */
-class DefaultPolicyAssertionCreator implements PolicyAssertionCreator {    
+class DefaultPolicyAssertionCreator implements PolicyAssertionCreator {
     private static final class DefaultPolicyAssertion extends PolicyAssertion {
         DefaultPolicyAssertion(AssertionData data, Collection<PolicyAssertion> assertionParameters, AssertionSet nestedAlternative) {
             super (data, assertionParameters, nestedAlternative);
         }
     }
-    
-    /** 
-     * Creates a new instance of DefaultPolicyAssertionCreator 
+
+    /**
+     * Creates a new instance of DefaultPolicyAssertionCreator
      */
     DefaultPolicyAssertionCreator() {
         // nothing to initialize
@@ -66,5 +66,5 @@ class DefaultPolicyAssertionCreator implements PolicyAssertionCreator {
      */
     public PolicyAssertion createAssertion(final AssertionData data, final Collection<PolicyAssertion> assertionParameters, final AssertionSet nestedAlternative, final PolicyAssertionCreator defaultCreator) throws AssertionCreationException {
         return new DefaultPolicyAssertion(data, assertionParameters, nestedAlternative);
-    }    
+    }
 }

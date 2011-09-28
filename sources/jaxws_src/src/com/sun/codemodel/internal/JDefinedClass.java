@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -51,12 +51,12 @@ import java.util.TreeSet;
  */
 public class JDefinedClass
     extends JClass
-    implements JDeclaration, JClassContainer, JGenerifiable, JAnnotatable {
+    implements JDeclaration, JClassContainer, JGenerifiable, JAnnotatable, JDocCommentable {
 
     /** Name of this class. Null if anonymous. */
     private String name = null;
 
-    
+
     /** Modifiers for the class declaration */
     private JMods mods;
 
@@ -95,7 +95,7 @@ public class JDefinedClass
 
     /**
      * Flag that controls whether this class should be really generated or not.
-     * 
+     *
      * Sometimes it is useful to generate code that refers to class X,
      * without actually generating the code of X.
      * This flag is used to surpress X.java file in the output.
@@ -120,19 +120,19 @@ public class JDefinedClass
      */
     private JClassContainer outer = null;
 
-    
+
     /** Default value is class or interface
      *  or annotationTypeDeclaration
      *  or enum
-     * 
+     *
      */
     private final ClassType classType;
-    
+
     /** List containing the enum value declarations
-     *  
+     *
      */
 //    private List enumValues = new ArrayList();
-    
+
     /**
      * Set of enum constants that are keyed by names.
      * In Java, enum constant order is actually significant,
@@ -168,13 +168,13 @@ public class JDefinedClass
         String name) {
         this(mods, name, null, owner);
     }
-    
+
     private JDefinedClass(
             int mods,
             String name,
             JClassContainer parent,
             JCodeModel owner) {
-    	this (mods,name,parent,owner,ClassType.CLASS);
+        this (mods,name,parent,owner,ClassType.CLASS);
     }
 
     /**
@@ -191,13 +191,13 @@ public class JDefinedClass
         String name,
         JClassContainer parent,
         JCodeModel owner,
-		ClassType classTypeVal) {
+                ClassType classTypeVal) {
         super(owner);
 
         if(name!=null) {
             if (name.trim().length() == 0)
                 throw new IllegalArgumentException("JClass name empty");
-    
+
             if (!Character.isJavaIdentifierStart(name.charAt(0))) {
                 String msg =
                     "JClass name "
@@ -247,22 +247,24 @@ public class JDefinedClass
      */
     public JDefinedClass _extends(JClass superClass) {
         if (this.classType==ClassType.INTERFACE)
-            throw new IllegalArgumentException("unable to set the super class for an interface");
+                if(superClass.isInterface()){
+                        return this._implements(superClass);
+                } else throw new IllegalArgumentException("unable to set the super class for an interface");
         if (superClass == null)
             throw new NullPointerException();
-        
+
         for( JClass o=superClass.outer(); o!=null; o=o.outer() ){
             if(this==o){
                 throw new IllegalArgumentException("Illegal class inheritance loop." +
                 "  Outer class " + this.name + " may not subclass from inner class: " + o.name());
             }
         }
-        
+
         this.superClass = superClass;
         return this;
     }
 
-    public JDefinedClass _extends(Class superClass) {
+    public JDefinedClass _extends(Class<?> superClass) {
         return _extends(owner().ref(superClass));
     }
 
@@ -288,7 +290,7 @@ public class JDefinedClass
         return this;
     }
 
-    public JDefinedClass _implements(Class iface) {
+    public JDefinedClass _implements(Class<?> iface) {
         return _implements(owner().ref(iface));
     }
 
@@ -302,7 +304,7 @@ public class JDefinedClass
 
     /**
      * JClass name accessor.
-     * 
+     *
      * <p>
      * For example, for <code>java.util.List</code>, this method
      * returns <code>"List"</code>"
@@ -312,14 +314,14 @@ public class JDefinedClass
     public String name() {
         return name;
     }
-    
+
     /**
      * If the named enum already exists, the reference to it is returned.
      * Otherwise this method generates a new enum reference with the given
      * name and returns it.
      *
      * @param name
-     *  	The name of the constant.
+     *          The name of the constant.
      * @return
      *      The generated type-safe enum constant.
      */
@@ -379,7 +381,7 @@ public class JDefinedClass
         return field(mods, type, name, null);
     }
 
-    public JFieldVar field(int mods, Class type, String name) {
+    public JFieldVar field(int mods, Class<?> type, String name) {
         return field(mods, owner()._ref(type), name);
     }
 
@@ -416,7 +418,7 @@ public class JDefinedClass
      */
     public boolean isAnnotationTypeDeclaration() {
         return this.classType==ClassType.ANNOTATION_TYPE_DECL;
-        
+
 
     }
 
@@ -428,12 +430,12 @@ public class JDefinedClass
      *      newly created Annotation Type Declaration
      * @exception JClassAlreadyExistsException
      *      When the specified class/interface was already created.
-     
+
      */
     public JDefinedClass _annotationTypeDeclaration(String name) throws JClassAlreadyExistsException {
-    	return _class (JMod.PUBLIC,name,ClassType.ANNOTATION_TYPE_DECL);
+        return _class (JMod.PUBLIC,name,ClassType.ANNOTATION_TYPE_DECL);
     }
-   
+
     /**
      * Add a public enum to this package
      * @param name
@@ -442,39 +444,39 @@ public class JDefinedClass
      *      newly created Enum
      * @exception JClassAlreadyExistsException
      *      When the specified class/interface was already created.
-     
+
      */
     public JDefinedClass _enum (String name) throws JClassAlreadyExistsException {
-    	return _class (JMod.PUBLIC,name,ClassType.ENUM);
+        return _class (JMod.PUBLIC,name,ClassType.ENUM);
     }
-    
+
     /**
      * Add a public enum to this package
      * @param name
      *      Name of the enum to be added to this package
      * @param mods
-     * 		Modifiers for this enum declaration
+     *          Modifiers for this enum declaration
      * @return
      *      newly created Enum
      * @exception JClassAlreadyExistsException
      *      When the specified class/interface was already created.
-     
+
      */
     public JDefinedClass _enum (int mods,String name) throws JClassAlreadyExistsException {
-    	return _class (mods,name,ClassType.ENUM);
+        return _class (mods,name,ClassType.ENUM);
     }
-    
-    
 
-    
+
+
+
 
     public ClassType getClassType(){
         return this.classType;
     }
-    
+
     public JFieldVar field(
         int mods,
-        Class type,
+        Class<?> type,
         String name,
         JExpression init) {
         return field(mods, owner()._ref(type), name, init);
@@ -494,7 +496,7 @@ public class JDefinedClass
      * Removes a {@link JFieldVar} from this class.
      *
      * @throws IllegalArgumentException
-     *      if the given field is not a field on this class. 
+     *      if the given field is not a field on this class.
      */
     public void removeField(JFieldVar field) {
         if(fields.remove(field.name())!=field)
@@ -528,14 +530,14 @@ public class JDefinedClass
     /**
      * Returns an iterator that walks the constructors defined in this class.
      */
-    public Iterator constructors() {
+    public Iterator<JMethod> constructors() {
         return constructors.iterator();
     }
 
     /**
      * Looks for a method that has the specified method signature
      * and return it.
-     * 
+     *
      * @return
      *      null if not found.
      */
@@ -568,7 +570,7 @@ public class JDefinedClass
         return m;
     }
 
-    public JMethod method(int mods, Class type, String name) {
+    public JMethod method(int mods, Class<?> type, String name) {
         return method(mods, owner()._ref(type), name);
     }
 
@@ -582,7 +584,7 @@ public class JDefinedClass
     /**
      * Looks for a method that has the specified method signature
      * and return it.
-     * 
+     *
      * @return
      *      null if not found.
      */
@@ -627,7 +629,7 @@ public class JDefinedClass
      * @deprecated
      */
     public JDefinedClass _class(int mods, String name, boolean isInterface) throws JClassAlreadyExistsException {
-    	return _class(mods,name,isInterface?ClassType.INTERFACE:ClassType.CLASS);
+        return _class(mods,name,isInterface?ClassType.INTERFACE:ClassType.CLASS);
     }
 
     public JDefinedClass _class(int mods, String name, ClassType classTypeVal)
@@ -696,7 +698,7 @@ public class JDefinedClass
     /**
      * Mark this file as hidden, so that this file won't be
      * generated.
-     * 
+     *
      * <p>
      * This feature could be used to generate code that refers
      * to class X, without actually generating X.java.
@@ -782,7 +784,7 @@ public class JDefinedClass
                 f.d(c);
                 first = false;
             }
-        	f.p(';').nl();
+                f.p(';').nl();
         }
 
         for( JFieldVar field : fields.values() )
@@ -799,7 +801,7 @@ public class JDefinedClass
             for (JDefinedClass dc : classes.values())
                 f.nl().d(dc);
 
-        
+
         if (directBlock != null)
             f.p(directBlock);
         f.nl().o().p('}').nl();
@@ -807,7 +809,7 @@ public class JDefinedClass
 
     /**
      * Places the given string directly inside the generated class.
-     * 
+     *
      * This method can be used to add methods/fields that are not
      * generated by CodeModel.
      * This method should be used only as the last resort.
@@ -833,7 +835,7 @@ public class JDefinedClass
     public JTypeVar generify(String name) {
         return generifiable.generify(name);
     }
-    public JTypeVar generify(String name, Class bound) {
+    public JTypeVar generify(String name, Class<?> bound) {
         return generifiable.generify(name, bound);
     }
     public JTypeVar generify(String name, JClass bound) {
@@ -872,5 +874,14 @@ public class JDefinedClass
 
     public <W extends JAnnotationWriter> W annotate2(Class<W> clazz) {
         return TypedAnnotationWriter.create(clazz,this);
+    }
+
+    /**
+     * {@link JAnnotatable#annotations()}
+     */
+    public Collection<JAnnotationUse> annotations() {
+        if (annotations == null)
+            annotations = new ArrayList<JAnnotationUse>();
+        return Collections.unmodifiableCollection(annotations);
     }
 }

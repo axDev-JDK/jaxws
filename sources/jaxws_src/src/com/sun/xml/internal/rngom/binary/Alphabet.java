@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -47,8 +47,8 @@ class Alphabet {
 
   void checkOverlap(Alphabet a) throws RestrictionViolationException {
     if (nameClass != null
-	&& a.nameClass != null
-	&& nameClass.hasOverlapWith(a.nameClass))
+        && a.nameClass != null
+        && nameClass.hasOverlapWith(a.nameClass))
       throw new RestrictionViolationException("interleave_element_overlap");
   }
 }

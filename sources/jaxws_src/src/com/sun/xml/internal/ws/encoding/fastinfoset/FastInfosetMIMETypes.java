@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.ws.encoding.fastinfoset;
 
 /**
@@ -41,8 +42,8 @@ public final class FastInfosetMIMETypes {
     /**
      * MIME type for a SOAP 1.2 Infoset encoded as a fast infoset document.
      */
-    static public final String SOAP_12 = "application/soap+fastinfoset";    
-    
+    static public final String SOAP_12 = "application/soap+fastinfoset";
+
     /**
      * MIME type for a generic Infoset encoded as a stateful fast infoset document.
      */
@@ -54,5 +55,5 @@ public final class FastInfosetMIMETypes {
     /**
      * MIME type for a SOAP 1.2 Infoset encoded as a stateful fast infoset document.
      */
-    static public final String STATEFUL_SOAP_12 = "application/vnd.sun.stateful.soap+fastinfoset";    
+    static public final String STATEFUL_SOAP_12 = "application/vnd.sun.stateful.soap+fastinfoset";
 }

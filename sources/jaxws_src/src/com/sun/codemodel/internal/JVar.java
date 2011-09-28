@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -28,6 +28,8 @@ package com.sun.codemodel.internal;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Collection;
+import java.util.Collections;
 
 
 /**
@@ -175,6 +177,12 @@ public class JVar extends JExpressionImpl implements JDeclaration, JAssignmentTa
         return TypedAnnotationWriter.create(clazz,this);
     }
 
+    public Collection<JAnnotationUse> annotations() {
+        if (annotations == null)
+            annotations = new ArrayList<JAnnotationUse>();
+        return Collections.unmodifiableList(annotations);
+    }
+
     protected boolean isAnnotated() {
         return annotations!=null;
     }
@@ -197,12 +205,12 @@ public class JVar extends JExpressionImpl implements JDeclaration, JAssignmentTa
         f.id(name);
     }
 
-	
+
     public JExpression assign(JExpression rhs) {
-		return JExpr.assign(this,rhs);
+                return JExpr.assign(this,rhs);
     }
     public JExpression assignPlus(JExpression rhs) {
-		return JExpr.assignPlus(this,rhs);
+                return JExpr.assignPlus(this,rhs);
     }
-	
+
 }

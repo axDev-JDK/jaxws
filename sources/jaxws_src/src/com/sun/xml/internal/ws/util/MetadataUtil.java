@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -27,8 +27,7 @@ package com.sun.xml.internal.ws.util;
 
 import com.sun.istack.internal.NotNull;
 import com.sun.xml.internal.ws.api.server.SDDocument;
-import com.sun.xml.internal.ws.server.SDDocumentImpl;
-import org.xml.sax.EntityResolver;
+import com.sun.xml.internal.ws.wsdl.SDDocumentResolver;
 
 import java.util.*;
 
@@ -50,7 +49,7 @@ public class MetadataUtil {
      * @return all the documents
      */
     public static Map<String, SDDocument> getMetadataClosure(@NotNull String systemId,
-            @NotNull MetadataResolver resolver, boolean onlyTopLevelSchemas) {
+            @NotNull SDDocumentResolver resolver, boolean onlyTopLevelSchemas) {
         Map <String, SDDocument> closureDocs = new HashMap<String, SDDocument>();
         Set<String> remaining = new HashSet<String>();
         remaining.add(systemId);
@@ -60,7 +59,7 @@ public class MetadataUtil {
             String current = it.next();
             remaining.remove(current);
 
-            SDDocument currentDoc = resolver.resolveEntity(current);
+            SDDocument currentDoc = resolver.resolve(current);
             SDDocument old = closureDocs.put(currentDoc.getURL().toExternalForm(), currentDoc);
             assert old == null;
 
@@ -75,19 +74,6 @@ public class MetadataUtil {
         }
 
         return closureDocs;
-    }
-
-    public interface MetadataResolver {
-        /**
-         * returns {@link SDDocumentImpl} for the give systemId. It
-         * parses the document and categorises as WSDL, schema etc.
-         * The implementation could use a catlog resolver or an entity
-         * resolver {@link EntityResolver} before parsing.
-         *
-         * @param systemId document's systemId
-         * @return document for the systemId
-         */
-        @NotNull SDDocument resolveEntity(String systemId);
     }
 
 }

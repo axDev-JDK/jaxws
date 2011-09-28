@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -23,6 +23,7 @@
  * questions.
  */
 
+
 package com.sun.tools.internal.ws.resources;
 
 import com.sun.xml.internal.ws.util.localization.Localizable;
@@ -32,12 +33,26 @@ import com.sun.xml.internal.ws.util.localization.Localizer;
 
 /**
  * Defines string formatting method for each constant in the resource file
- * 
+ *
  */
 public final class WscompileMessages {
 
     private final static LocalizableMessageFactory messageFactory = new LocalizableMessageFactory("com.sun.tools.internal.ws.resources.wscompile");
     private final static Localizer localizer = new Localizer();
+
+    public static Localizable localizableWSIMPORT_ARCHIVING_ARTIFACTS(Object arg0) {
+        return messageFactory.getMessage("wsimport.archivingArtifacts", arg0);
+    }
+
+    /**
+     *
+     * Archiving the generated artifacts in to {0}.
+     *
+     *
+     */
+    public static String WSIMPORT_ARCHIVING_ARTIFACTS(Object arg0) {
+        return localizer.localize(localizableWSIMPORT_ARCHIVING_ARTIFACTS(arg0));
+    }
 
     public static Localizable localizableWSGEN_CLASS_MUST_BE_IMPLEMENTATION_CLASS(Object arg0) {
         return messageFactory.getMessage("wsgen.class.must.be.implementation.class", arg0);
@@ -45,7 +60,7 @@ public final class WscompileMessages {
 
     /**
      * The class "{0}" is not an endpoint implementation class.
-     * 
+     *
      */
     public static String WSGEN_CLASS_MUST_BE_IMPLEMENTATION_CLASS(Object arg0) {
         return localizer.localize(localizableWSGEN_CLASS_MUST_BE_IMPLEMENTATION_CLASS(arg0));
@@ -57,10 +72,22 @@ public final class WscompileMessages {
 
     /**
      * You are loading JAX-WS {0} API from {1} but this tool requires JAX-WS {2} API.
-     * 
+     *
      */
     public static String WRAPPER_TASK_LOADING_INCORRECT_API(Object arg0, Object arg1, Object arg2) {
         return localizer.localize(localizableWRAPPER_TASK_LOADING_INCORRECT_API(arg0, arg1, arg2));
+    }
+
+    public static Localizable localizableWSIMPORT_WSDLLOCATION_CLIENTJAR() {
+        return messageFactory.getMessage("wsimport.wsdllocation.clientjar");
+    }
+
+    /**
+     * wsdlLocation cannot be specified when using clientJar option
+     *
+     */
+    public static String WSIMPORT_WSDLLOCATION_CLIENTJAR() {
+        return localizer.localize(localizableWSIMPORT_WSDLLOCATION_CLIENTJAR());
     }
 
     public static Localizable localizableWSGEN_CLASS_NOT_FOUND(Object arg0) {
@@ -69,7 +96,7 @@ public final class WscompileMessages {
 
     /**
      * Class not found: "{0}"
-     * 
+     *
      */
     public static String WSGEN_CLASS_NOT_FOUND(Object arg0) {
         return localizer.localize(localizableWSGEN_CLASS_NOT_FOUND(arg0));
@@ -81,7 +108,7 @@ public final class WscompileMessages {
 
     /**
      * Server returned HTTP Status code: "{0}", retrying with "{1}"
-     * 
+     *
      */
     public static String WSIMPORT_HTTP_REDIRECT(Object arg0, Object arg1) {
         return localizer.localize(localizableWSIMPORT_HTTP_REDIRECT(arg0, arg1));
@@ -93,7 +120,7 @@ public final class WscompileMessages {
 
     /**
      * {0},  "{1}" needs authorization, please provide authorization file with read access at {2} or use -Xauthfile to give the authorization file and on each line provide authorization information using this format : http[s]://user:password@host:port//<url-path>
-     * 
+     *
      */
     public static String WSIMPORT_AUTH_INFO_NEEDED(Object arg0, Object arg1, Object arg2) {
         return localizer.localize(localizableWSIMPORT_AUTH_INFO_NEEDED(arg0, arg1, arg2));
@@ -104,15 +131,29 @@ public final class WscompileMessages {
     }
 
     /**
-     * 
+     *
      * Examples:
      *   wsgen -cp . example.Stock
      *   wsgen -cp . example.Stock -wsdl -servicename '{http://mynamespace}MyService'
-     * 
-     * 
+     *
+     *
      */
     public static String WSGEN_USAGE_EXAMPLES() {
         return localizer.localize(localizableWSGEN_USAGE_EXAMPLES());
+    }
+
+    public static Localizable localizableWSIMPORT_FETCHING_METADATA() {
+        return messageFactory.getMessage("wsimport.fetchingMetadata");
+    }
+
+    /**
+     *
+     * Downloading the WSDL and associated metadata
+     *
+     *
+     */
+    public static String WSIMPORT_FETCHING_METADATA() {
+        return localizer.localize(localizableWSIMPORT_FETCHING_METADATA());
     }
 
     public static Localizable localizableWSGEN_INVALID_PROTOCOL(Object arg0, Object arg1) {
@@ -121,7 +162,7 @@ public final class WscompileMessages {
 
     /**
      * "{0}" is not a supported protocol.  Supported protocols include: {1}.
-     * 
+     *
      */
     public static String WSGEN_INVALID_PROTOCOL(Object arg0, Object arg1) {
         return localizer.localize(localizableWSGEN_INVALID_PROTOCOL(arg0, arg1));
@@ -132,12 +173,12 @@ public final class WscompileMessages {
     }
 
     /**
-     * 
+     *
      * Examples:
      *   wsimport stock.wsdl -b stock.xml -b stock.xjb
      *   wsimport -d generated http://example.org/stock?wsdl
-     * 
-     * 
+     *
+     *
      */
     public static String WSIMPORT_USAGE_EXAMPLES() {
         return localizer.localize(localizableWSIMPORT_USAGE_EXAMPLES());
@@ -149,7 +190,7 @@ public final class WscompileMessages {
 
     /**
      * You are running on JDK6 which comes with JAX-WS {0} API, but this tool requires JAX-WS {1} API. Use the endorsed standards override mechanism (http://java.sun.com/javase/6/docs/technotes/guides/standards/), or use -Xendorsed option.
-     * 
+     *
      */
     public static String INVOKER_NEED_ENDORSED(Object arg0, Object arg1) {
         return localizer.localize(localizableINVOKER_NEED_ENDORSED(arg0, arg1));
@@ -161,7 +202,7 @@ public final class WscompileMessages {
 
     /**
      * Missing WSDL_URI
-     * 
+     *
      */
     public static String WSIMPORT_MISSING_FILE() {
         return localizer.localize(localizableWSIMPORT_MISSING_FILE());
@@ -172,17 +213,18 @@ public final class WscompileMessages {
     }
 
     /**
-     * 
+     *
      * Extensions:
-     *   -XadditionalHeaders         map headers not bound to request or response message to 
-     *                               Java method parameters
-     *   -Xauthfile                  file to carry authorization information in the format 
-     *                               http://username:password@example.org/stock?wsdl
-     *   -Xdebug                     print debug information
-     *   -Xno-addressing-databinding enable binding of W3C EndpointReferenceType to Java
-     *   -Xnocompile                 do not compile generated Java files
-     * 
-     * 
+     *   -XadditionalHeaders              map headers not bound to request or response message to
+     *                                    Java method parameters
+     *   -Xauthfile                       file to carry authorization information in the format
+     *                                    http://username:password@example.org/stock?wsdl
+     *   -Xdebug                          print debug information
+     *   -Xno-addressing-databinding      enable binding of W3C EndpointReferenceType to Java
+     *   -Xnocompile                      do not compile generated Java files
+     *   -XdisableSSLHostnameVerification disable the SSL Hostname verification while fetching
+     *                                    wsdls
+     *
      */
     public static String WSIMPORT_USAGE_EXTENSIONS() {
         return localizer.localize(localizableWSIMPORT_USAGE_EXTENSIONS());
@@ -194,9 +236,9 @@ public final class WscompileMessages {
 
     /**
      * Usage: {0} [options] <WSDL_URI>
-     * 
+     *
      * Use "wsimport -help" for a detailed description of options.
-     * 
+     *
      */
     public static String WSIMPORT_USAGE(Object arg0) {
         return localizer.localize(localizableWSIMPORT_USAGE(arg0));
@@ -208,9 +250,9 @@ public final class WscompileMessages {
 
     /**
      * specify "-extension" and "-wsdl:protocol XSoap1.2" switches. For example:
-     * 
-     * 
-     * 
+     *
+     *
+     *
      */
     public static String PLEASE() {
         return localizer.localize(localizablePLEASE());
@@ -222,9 +264,9 @@ public final class WscompileMessages {
 
     /**
      * parsing WSDL...
-     * 
-     * 
-     * 
+     *
+     *
+     *
      */
     public static String WSIMPORT_PARSING_WSDL() {
         return localizer.localize(localizableWSIMPORT_PARSING_WSDL());
@@ -236,7 +278,7 @@ public final class WscompileMessages {
 
     /**
      * Missing SEI
-     * 
+     *
      */
     public static String WSGEN_MISSING_FILE() {
         return localizer.localize(localizableWSGEN_MISSING_FILE());
@@ -247,9 +289,9 @@ public final class WscompileMessages {
     }
 
     /**
-     * 
+     *
      * Usage: {0} [options] <WSDL_URI>
-     * 
+     *
      * where [options] include:
      *   -b <path>                 specify jaxws/jaxb binding files or additional schemas
      *                             (Each <path> must have its own -b)
@@ -273,8 +315,9 @@ public final class WscompileMessages {
      *   -verbose                  output messages about what the compiler is doing
      *   -version                  print version information
      *   -wsdllocation <location>  @WebServiceClient.wsdlLocation value
-     * 
-     * 
+     *   -clientjar <jarfile>      Creates the jar file of the generated artifacts along with the
+     *                             WSDL metadata required for invoking the web service.
+     *
      */
     public static String WSIMPORT_HELP(Object arg0) {
         return localizer.localize(localizableWSIMPORT_HELP(arg0));
@@ -286,7 +329,7 @@ public final class WscompileMessages {
 
     /**
      * error: {0}
-     * 
+     *
      */
     public static String WSCOMPILE_ERROR(Object arg0) {
         return localizer.localize(localizableWSCOMPILE_ERROR(arg0));
@@ -298,7 +341,7 @@ public final class WscompileMessages {
 
     /**
      * The optional protocol "{0}" must be used in conjunction with the "-extension" option.
-     * 
+     *
      */
     public static String WSGEN_PROTOCOL_WITHOUT_EXTENSION(Object arg0) {
         return localizer.localize(localizableWSGEN_PROTOCOL_WITHOUT_EXTENSION(arg0));
@@ -309,10 +352,10 @@ public final class WscompileMessages {
     }
 
     /**
-     * 
-     * compiling code...
-     * 
-     * 
+     *
+     * Compiling code...
+     *
+     *
      */
     public static String WSIMPORT_COMPILING_CODE() {
         return localizer.localize(localizableWSIMPORT_COMPILING_CODE());
@@ -324,7 +367,7 @@ public final class WscompileMessages {
 
     /**
      * Trying to read authorization file : "{0}"...
-     * 
+     *
      */
     public static String WSIMPORT_READING_AUTH_FILE(Object arg0) {
         return localizer.localize(localizableWSIMPORT_READING_AUTH_FILE(arg0));
@@ -336,10 +379,22 @@ public final class WscompileMessages {
 
     /**
      * wsgen did not find any class with @WebService annotation. Please specify @WebService annotation on {0}.
-     * 
+     *
      */
     public static String WSGEN_NO_WEBSERVICES_CLASS(Object arg0) {
         return localizer.localize(localizableWSGEN_NO_WEBSERVICES_CLASS(arg0));
+    }
+
+    public static Localizable localizableWSIMPORT_ARCHIVE_ARTIFACT(Object arg0, Object arg1) {
+        return messageFactory.getMessage("wsimport.archiveArtifact", arg0, arg1);
+    }
+
+    /**
+     * Adding {0} to the archive {1}
+     *
+     */
+    public static String WSIMPORT_ARCHIVE_ARTIFACT(Object arg0, Object arg1) {
+        return localizer.localize(localizableWSIMPORT_ARCHIVE_ARTIFACT(arg0, arg1));
     }
 
     public static Localizable localizableWSCOMPILE_NO_SUCH_DIRECTORY(Object arg0) {
@@ -348,7 +403,7 @@ public final class WscompileMessages {
 
     /**
      * directory not found: {0}
-     * 
+     *
      */
     public static String WSCOMPILE_NO_SUCH_DIRECTORY(Object arg0) {
         return localizer.localize(localizableWSCOMPILE_NO_SUCH_DIRECTORY(arg0));
@@ -360,7 +415,7 @@ public final class WscompileMessages {
 
     /**
      * info: {0}
-     * 
+     *
      */
     public static String WSCOMPILE_INFO(Object arg0) {
         return localizer.localize(localizableWSCOMPILE_INFO(arg0));
@@ -372,7 +427,7 @@ public final class WscompileMessages {
 
     /**
      * Can not get a WSDL maximum number of redirects(5) reached
-     * 
+     *
      */
     public static String WSIMPORT_MAX_REDIRECT_ATTEMPT() {
         return localizer.localize(localizableWSIMPORT_MAX_REDIRECT_ATTEMPT());
@@ -384,7 +439,7 @@ public final class WscompileMessages {
 
     /**
      * [WARNING] {0}
-     * 
+     *
      */
     public static String WSIMPORT_WARNING_MESSAGE(Object arg0) {
         return localizer.localize(localizableWSIMPORT_WARNING_MESSAGE(arg0));
@@ -396,7 +451,7 @@ public final class WscompileMessages {
 
     /**
      * unrecognized parameter {0}
-     * 
+     *
      */
     public static String WSCOMPILE_INVALID_OPTION(Object arg0) {
         return localizer.localize(localizableWSCOMPILE_INVALID_OPTION(arg0));
@@ -408,7 +463,7 @@ public final class WscompileMessages {
 
     /**
      * [ERROR] {0}
-     * 
+     *
      */
     public static String WSIMPORT_ERROR_MESSAGE(Object arg0) {
         return localizer.localize(localizableWSIMPORT_ERROR_MESSAGE(arg0));
@@ -419,9 +474,10 @@ public final class WscompileMessages {
     }
 
     /**
-     * generating code...
-     * 
-     * 
+     *
+     * Generating code...
+     *
+     *
      */
     public static String WSIMPORT_GENERATING_CODE() {
         return localizer.localize(localizableWSIMPORT_GENERATING_CODE());
@@ -433,7 +489,7 @@ public final class WscompileMessages {
 
     /**
      * -wsdl:protocol XSoap1.2 -extenson {1}
-     * 
+     *
      */
     public static String WSGEN() {
         return localizer.localize(localizableWSGEN());
@@ -445,7 +501,7 @@ public final class WscompileMessages {
 
     /**
      * "{0}" is neither a file name nor an URL
-     * 
+     *
      */
     public static String WSIMPORT_NOT_A_FILE_NOR_URL(Object arg0) {
         return localizer.localize(localizableWSIMPORT_NOT_A_FILE_NOR_URL(arg0));
@@ -457,7 +513,7 @@ public final class WscompileMessages {
 
     /**
      * warning: {0}
-     * 
+     *
      */
     public static String WSCOMPILE_WARNING(Object arg0) {
         return localizer.localize(localizableWSCOMPILE_WARNING(arg0));
@@ -468,8 +524,8 @@ public final class WscompileMessages {
     }
 
     /**
-     * You are running on JDK6 which comes with JAX-WS {0} API, but this tool requires JAX-WS {1} API. Use the endorsed standards override mechanism (http://java.sun.com/javase/6/docs/technotes/guides/standards/), or set xendorsed="true" on <{2}>. 
-     * 
+     * You are running on JDK6 which comes with JAX-WS {0} API, but this tool requires JAX-WS {1} API. Use the endorsed standards override mechanism (http://java.sun.com/javase/6/docs/technotes/guides/standards/), or set xendorsed="true" on <{2}>.
+     *
      */
     public static String WRAPPER_TASK_NEED_ENDORSED(Object arg0, Object arg1, Object arg2) {
         return localizer.localize(localizableWRAPPER_TASK_NEED_ENDORSED(arg0, arg1, arg2));
@@ -481,7 +537,7 @@ public final class WscompileMessages {
 
     /**
      * no such JAXB option: {0}
-     * 
+     *
      */
     public static String WSIMPORT_NO_SUCH_JAXB_OPTION(Object arg0) {
         return localizer.localize(localizableWSIMPORT_NO_SUCH_JAXB_OPTION(arg0));
@@ -493,7 +549,7 @@ public final class WscompileMessages {
 
     /**
      * Authorization file "{0}" not found. If the WSDL access needs Basic Authentication, please provide authorization file with read access at {1} or use -Xauthfile to give the authorization file and on each line provide authorization information using this format : http[s]://user:password@host:port//<url-path>
-     * 
+     *
      */
     public static String WSIMPORT_AUTH_FILE_NOT_FOUND(Object arg0, Object arg1) {
         return localizer.localize(localizableWSIMPORT_AUTH_FILE_NOT_FOUND(arg0, arg1));
@@ -505,7 +561,7 @@ public final class WscompileMessages {
 
     /**
      * [DEBUG] {0}
-     * 
+     *
      */
     public static String WSIMPORT_DEBUG_MESSAGE(Object arg0) {
         return localizer.localize(localizableWSIMPORT_DEBUG_MESSAGE(arg0));
@@ -517,7 +573,7 @@ public final class WscompileMessages {
 
     /**
      * "Could not create file: "{0}"
-     * 
+     *
      */
     public static String WSGEN_COULD_NOT_CREATE_FILE(Object arg0) {
         return localizer.localize(localizableWSGEN_COULD_NOT_CREATE_FILE(arg0));
@@ -528,8 +584,8 @@ public final class WscompileMessages {
     }
 
     /**
-     * The "{0}" option can only be in conjunction with the "-wsdl" option. 
-     * 
+     * The "{0}" option can only be in conjunction with the "-wsdl" option.
+     *
      */
     public static String WSGEN_WSDL_ARG_NO_GENWSDL(Object arg0) {
         return localizer.localize(localizableWSGEN_WSDL_ARG_NO_GENWSDL(arg0));
@@ -540,9 +596,9 @@ public final class WscompileMessages {
     }
 
     /**
-     * 
+     *
      * Usage: {0} [options] <SEI>
-     * 
+     *
      * where [options] include:
      *   -classpath <path>          specify where to find input class files
      *   -cp <path>                 same as -classpath <path>
@@ -564,11 +620,13 @@ public final class WscompileMessages {
      *                              The non stanadard protocols {2}
      *                              can only be used in conjunction with the
      *                              -extension option.
+     *   -inlineSchemas             inline schemas in the generated wsdl. Must be
+     *                              used in conjunction with the -wsdl option.
      *   -servicename <name>        specify the Service name to use in the generated WSDL
      *                              Used in conjunction with the -wsdl option.
      *   -portname <name>           specify the Port name to use in the generated WSDL
      *                              Used in conjunction with the -wsdl option.
-     * 
+     *
      */
     public static String WSGEN_HELP(Object arg0, Object arg1, Object arg2) {
         return localizer.localize(localizableWSGEN_HELP(arg0, arg1, arg2));
@@ -580,10 +638,22 @@ public final class WscompileMessages {
 
     /**
      * [INFO] {0}
-     * 
+     *
      */
     public static String WSIMPORT_INFO_MESSAGE(Object arg0) {
         return localizer.localize(localizableWSIMPORT_INFO_MESSAGE(arg0));
+    }
+
+    public static Localizable localizableWSGEN_INLINE_SCHEMAS_ONLY_WITH_WSDL() {
+        return messageFactory.getMessage("wsgen.inlineSchemas.only.with.wsdl");
+    }
+
+    /**
+     * "-inlineSchemas" must be used in conjunction with the "-wsdl" option
+     *
+     */
+    public static String WSGEN_INLINE_SCHEMAS_ONLY_WITH_WSDL() {
+        return localizer.localize(localizableWSGEN_INLINE_SCHEMAS_ONLY_WITH_WSDL());
     }
 
     public static Localizable localizableWSGEN_SOAP_12_WITHOUT_EXTENSION() {
@@ -592,7 +662,7 @@ public final class WscompileMessages {
 
     /**
      * The optional protocol "Xsoap1.2" must be used in conjunction with the "-extension" option.
-     * 
+     *
      */
     public static String WSGEN_SOAP_12_WITHOUT_EXTENSION() {
         return localizer.localize(localizableWSGEN_SOAP_12_WITHOUT_EXTENSION());
@@ -604,7 +674,7 @@ public final class WscompileMessages {
 
     /**
      * "{0}" is not a valid authorization information format. The format is http[s]://user:password@host:port//<url-path>.
-     * 
+     *
      */
     public static String WSIMPORT_ILLEGAL_AUTH_INFO(Object arg0) {
         return localizer.localize(localizableWSIMPORT_ILLEGAL_AUTH_INFO(arg0));
@@ -616,7 +686,7 @@ public final class WscompileMessages {
 
     /**
      * compilation failed, errors should have been reported
-     * 
+     *
      */
     public static String WSCOMPILE_COMPILATION_FAILED() {
         return localizer.localize(localizableWSCOMPILE_COMPILATION_FAILED());
@@ -628,10 +698,23 @@ public final class WscompileMessages {
 
     /**
      * option "{0}" requires an argument
-     * 
+     *
      */
     public static String WSCOMPILE_MISSING_OPTION_ARGUMENT(Object arg0) {
         return localizer.localize(localizableWSCOMPILE_MISSING_OPTION_ARGUMENT(arg0));
+    }
+
+    public static Localizable localizableWSIMPORT_DOCUMENT_DOWNLOAD(Object arg0, Object arg1) {
+        return messageFactory.getMessage("wsimport.document.download", arg0, arg1);
+    }
+
+    /**
+     *
+     * Downloading metadata document from {0} to {1}
+     *
+     */
+    public static String WSIMPORT_DOCUMENT_DOWNLOAD(Object arg0, Object arg1) {
+        return localizer.localize(localizableWSIMPORT_DOCUMENT_DOWNLOAD(arg0, arg1));
     }
 
     public static Localizable localizableWSGEN_CANNOT_GEN_WSDL_FOR_NON_SOAP_BINDING(Object arg0, Object arg1) {
@@ -640,7 +723,7 @@ public final class WscompileMessages {
 
     /**
      * wsgen can not generate WSDL for non-SOAP binding: {0} on Class {1}
-     * 
+     *
      */
     public static String WSGEN_CANNOT_GEN_WSDL_FOR_NON_SOAP_BINDING(Object arg0, Object arg1) {
         return localizer.localize(localizableWSGEN_CANNOT_GEN_WSDL_FOR_NON_SOAP_BINDING(arg0, arg1));
@@ -652,7 +735,7 @@ public final class WscompileMessages {
 
     /**
      * duplicate option: {0}
-     * 
+     *
      */
     public static String WSCOMPILE_DUPLICATE_OPTION(Object arg0) {
         return localizer.localize(localizableWSCOMPILE_DUPLICATE_OPTION(arg0));
@@ -664,7 +747,7 @@ public final class WscompileMessages {
 
     /**
      * Failed to parse "{0}": {1}
-     * 
+     *
      */
     public static String WSIMPORT_FAILED_TO_PARSE(Object arg0, Object arg1) {
         return localizer.localize(localizableWSIMPORT_FAILED_TO_PARSE(arg0, arg1));
@@ -676,7 +759,7 @@ public final class WscompileMessages {
 
     /**
      * Failed to read the WSDL document: {0}, because 1) could not find the document; /2) the document could not be read; 3) the root element of the document is not <wsdl:definitions>.
-     * 
+     *
      */
     public static String WSIMPORT_NO_WSDL(Object arg0) {
         return localizer.localize(localizableWSIMPORT_NO_WSDL(arg0));
@@ -688,7 +771,7 @@ public final class WscompileMessages {
 
     /**
      * "line {0} of {1}
-     * 
+     *
      */
     public static String WSIMPORT_AUTH_INFO_LINENO(Object arg0, Object arg1) {
         return localizer.localize(localizableWSIMPORT_AUTH_INFO_LINENO(arg0, arg1));
@@ -700,9 +783,9 @@ public final class WscompileMessages {
 
     /**
      * Usage: {0} [options] <SEI>
-     * 
+     *
      * Use "wsgen -help" for a detailed description of options.
-     * 
+     *
      */
     public static String WSGEN_USAGE(Object arg0) {
         return localizer.localize(localizableWSGEN_USAGE(arg0));
@@ -714,7 +797,7 @@ public final class WscompileMessages {
 
     /**
      * The service name "{0}" is missing a localname.
-     * 
+     *
      */
     public static String WSGEN_SERVICENAME_MISSING_LOCALNAME(Object arg0) {
         return localizer.localize(localizableWSGEN_SERVICENAME_MISSING_LOCALNAME(arg0));
@@ -726,7 +809,7 @@ public final class WscompileMessages {
 
     /**
      * The service name "{0}" is missing a namespace.
-     * 
+     *
      */
     public static String WSGEN_SERVICENAME_MISSING_NAMESPACE(Object arg0) {
         return localizer.localize(localizableWSGEN_SERVICENAME_MISSING_NAMESPACE(arg0));
@@ -738,7 +821,7 @@ public final class WscompileMessages {
 
     /**
      * "{0}" is not a supported transport.  Supported transport include: {1}.
-     * 
+     *
      */
     public static String WSGEN_INVALID_TRANSPORT(Object arg0, Object arg1) {
         return localizer.localize(localizableWSGEN_INVALID_TRANSPORT(arg0, arg1));
@@ -750,8 +833,8 @@ public final class WscompileMessages {
 
     /**
      * wsgen can not generate WSDL for SOAP 1.2 binding: {0} on class: {1}.
-     * 
-     * 
+     *
+     *
      */
     public static String WSGEN_CANNOT_GEN_WSDL_FOR_SOAP_12_BINDING(Object arg0, Object arg1) {
         return localizer.localize(localizableWSGEN_CANNOT_GEN_WSDL_FOR_SOAP_12_BINDING(arg0, arg1));
@@ -763,7 +846,7 @@ public final class WscompileMessages {
 
     /**
      * "{0}" is not a valid target version. "2.0" and "2.1" are supported.
-     * 
+     *
      */
     public static String WSIMPORT_ILLEGAL_TARGET_VERSION(Object arg0) {
         return localizer.localize(localizableWSIMPORT_ILLEGAL_TARGET_VERSION(arg0));
@@ -775,7 +858,7 @@ public final class WscompileMessages {
 
     /**
      * The port name "{0}" is missing a localname.
-     * 
+     *
      */
     public static String WSGEN_PORTNAME_MISSING_LOCALNAME(Object arg0) {
         return localizer.localize(localizableWSGEN_PORTNAME_MISSING_LOCALNAME(arg0));
@@ -787,7 +870,7 @@ public final class WscompileMessages {
 
     /**
      * The port name "{0}" is missing a namespace.
-     * 
+     *
      */
     public static String WSGEN_PORTNAME_MISSING_NAMESPACE(Object arg0) {
         return localizer.localize(localizableWSGEN_PORTNAME_MISSING_NAMESPACE(arg0));

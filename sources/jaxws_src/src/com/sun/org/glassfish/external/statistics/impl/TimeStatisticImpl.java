@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -29,12 +29,12 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.Map;
 import java.lang.reflect.*;
 
-/** 
+/**
  * @author Sreenivas Munnangi
  */
-public final class TimeStatisticImpl extends StatisticImpl 
+public final class TimeStatisticImpl extends StatisticImpl
     implements TimeStatistic, InvocationHandler {
-    
+
     private long count = 0L;
     private long maxTime = 0L;
     private long minTime = 0L;
@@ -44,14 +44,14 @@ public final class TimeStatisticImpl extends StatisticImpl
     private final long initMinTime;
     private final long initTotTime;
 
-    private final TimeStatistic ts = 
+    private final TimeStatistic ts =
             (TimeStatistic) Proxy.newProxyInstance(
             TimeStatistic.class.getClassLoader(),
             new Class[] { TimeStatistic.class },
             this);
 
     public synchronized final String toString() {
-        return super.toString() + NEWLINE + 
+        return super.toString() + NEWLINE +
             "Count: " + getCount() + NEWLINE +
             "MinTime: " + getMinTime() + NEWLINE +
             "MaxTime: " + getMaxTime() + NEWLINE +
@@ -59,7 +59,7 @@ public final class TimeStatisticImpl extends StatisticImpl
     }
 
     public TimeStatisticImpl(long counter, long maximumTime, long minimumTime,
-                             long totalTime, String name, String unit, 
+                             long totalTime, String name, String unit,
                              String desc, long startTime, long sampleTime) {
         super(name, unit, desc, startTime, sampleTime);
         count = counter;
@@ -75,7 +75,7 @@ public final class TimeStatisticImpl extends StatisticImpl
     public synchronized TimeStatistic getStatistic() {
         return ts;
     }
-    
+
     public synchronized Map getStaticAsMap() {
         Map m = super.getStaticAsMap();
         m.put("count", getCount());
@@ -100,12 +100,12 @@ public final class TimeStatisticImpl extends StatisticImpl
      }
 
     /**
-     * Returns the number of times an operation was invoked 
+     * Returns the number of times an operation was invoked
      */
     public synchronized long getCount() {
         return count;
     }
-    
+
     /**
      * Returns the maximum amount of time that it took for one invocation of an
      * operation, since measurement started.
@@ -113,17 +113,17 @@ public final class TimeStatisticImpl extends StatisticImpl
     public synchronized long getMaxTime() {
         return maxTime;
     }
-    
+
     /**
      * Returns the minimum amount of time that it took for one invocation of an
      * operation, since measurement started.
      */
     public synchronized long getMinTime() {
         return minTime;
-    }    
+    }
 
     /**
-     * Returns the amount of time that it took for all invocations, 
+     * Returns the amount of time that it took for all invocations,
      * since measurement started.
      */
     public synchronized long getTotalTime() {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -33,7 +33,6 @@ import com.sun.xml.internal.ws.client.ClientTransportException;
 import com.sun.xml.internal.ws.resources.ClientMessages;
 import com.sun.xml.internal.ws.transport.Headers;
 import com.sun.xml.internal.ws.developer.JAXWSProperties;
-import com.sun.xml.internal.ws.util.RuntimeVersion;
 import com.sun.istack.internal.Nullable;
 import com.sun.istack.internal.NotNull;
 
@@ -41,11 +40,8 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSession;
-import static javax.xml.bind.DatatypeConverter.printBase64Binary;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.ws.BindingProvider;
-import static javax.xml.ws.BindingProvider.SESSION_MAINTAIN_PROPERTY;
 import javax.xml.ws.WebServiceException;
 import javax.xml.ws.handler.MessageContext;
 import java.io.FilterInputStream;
@@ -54,7 +50,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
@@ -66,7 +61,9 @@ import java.util.zip.GZIPInputStream;
  * @author WS Development Team
  */
 final class HttpClientTransport {
-    
+
+    private static final byte[] THROW_AWAY_BUFFER = new byte[8192];
+
     // Need to use JAXB first to register DatatypeConverter
     static {
         try {
@@ -87,7 +84,6 @@ final class HttpClientTransport {
     private HttpURLConnection httpConnection = null;
     private final EndpointAddress endpoint;
     private final Packet context;
-    private CookieJar cookieJar = null;
     private final Integer chunkSize;
 
 
@@ -101,10 +97,9 @@ final class HttpClientTransport {
     /*
      * Prepare the stream for HTTP request
      */
-    public OutputStream getOutput() {
+    OutputStream getOutput() {
         try {
             createHttpConnection();
-            sendCookieAsNeeded();
             // for "GET" request no need to get outputStream
             if (requiresOutputStream()) {
                 outputStream = httpConnection.getOutputStream();
@@ -126,7 +121,7 @@ final class HttpClientTransport {
         return outputStream;
     }
 
-    public void closeOutput() throws IOException {
+    void closeOutput() throws IOException {
         if (outputStream != null) {
             outputStream.close();
             outputStream = null;
@@ -136,12 +131,11 @@ final class HttpClientTransport {
     /*
      * Get the response from HTTP connection and prepare the input stream for response
      */
-    public @Nullable InputStream getInput() {
+    @Nullable InputStream getInput() {
         // response processing
 
         InputStream in;
         try {
-            saveCookieAsNeeded();
             in = readResponse();
             if (in != null) {
                 String contentEncoding = httpConnection.getContentEncoding();
@@ -183,11 +177,10 @@ final class HttpClientTransport {
             // So it doesn't read from the closed stream
             boolean closed;
             @Override
-            public void close() throws IOException {                
+            public void close() throws IOException {
                 if (!closed) {
                     closed = true;
-                    byte[] buf = new byte[8192];
-                    while(temp.read(buf) != -1);
+                    while(temp.read(THROW_AWAY_BUFFER) != -1);
                     super.close();
                 }
             }
@@ -201,27 +194,6 @@ final class HttpClientTransport {
             contentLength = httpConnection.getContentLength();
         } catch(IOException ioe) {
             throw new WebServiceException(ioe);
-        }
-    }
-
-    protected void sendCookieAsNeeded() {
-        Boolean shouldMaintainSessionProperty =
-            (Boolean) context.invocationProperties.get(SESSION_MAINTAIN_PROPERTY);
-        if (shouldMaintainSessionProperty != null && shouldMaintainSessionProperty) {
-            cookieJar = (CookieJar) context.invocationProperties.get(HTTP_COOKIE_JAR);
-            if (cookieJar == null) {
-                cookieJar = new CookieJar();
-
-                // need to store in binding's context so it is not lost
-                context.proxy.getRequestContext().put(HTTP_COOKIE_JAR, cookieJar);
-            }
-            cookieJar.applyRelevantCookies(httpConnection);
-        }
-    }
-
-    private void saveCookieAsNeeded() {
-        if (cookieJar != null) {
-            cookieJar.recordAnyCookies(httpConnection);
         }
     }
 
@@ -267,9 +239,6 @@ final class HttpClientTransport {
 
         }
 
-
-        writeBasicAuthAsNeeded(context, reqHeaders);
-
         // allow interaction with the web page - user may have to supply
         // username, password id web page is accessed from web browser
         httpConnection.setAllowUserInteraction(true);
@@ -284,12 +253,12 @@ final class HttpClientTransport {
 
         //this code or something similiar needs t be moved elsewhere for error checking
         /*if (context.invocationProperties.get(BindingProviderProperties.BINDING_ID_PROPERTY).equals(HTTPBinding.HTTP_BINDING)){
-            method = (requestMethod != null)?requestMethod:method;            
+            method = (requestMethod != null)?requestMethod:method;
         } else if
             (context.invocationProperties.get(BindingProviderProperties.BINDING_ID_PROPERTY).equals(SOAPBinding.SOAP12HTTP_BINDING) &&
             "GET".equalsIgnoreCase(requestMethod)) {
         }
-       */     
+       */
 
         Integer reqTimeout = (Integer)context.invocationProperties.get(BindingProviderProperties.REQUEST_TIMEOUT);
         if (reqTimeout != null) {
@@ -310,25 +279,10 @@ final class HttpClientTransport {
         for (Map.Entry<String, List<String>> entry : reqHeaders.entrySet()) {
             httpConnection.addRequestProperty(entry.getKey(), entry.getValue().get(0));
         }
-        httpConnection.addRequestProperty("User-Agent", RuntimeVersion.VERSION.toString());
     }
 
-    public boolean isSecure() {
+    boolean isSecure() {
         return https;
-    }
-
-    private void writeBasicAuthAsNeeded(Packet context, Map<String, List<String>> reqHeaders) {
-        String user = (String) context.invocationProperties.get(BindingProvider.USERNAME_PROPERTY);
-        if (user != null) {
-            String pw = (String) context.invocationProperties.get(BindingProvider.PASSWORD_PROPERTY);
-            if (pw != null) {
-                StringBuffer buf = new StringBuffer(user);
-                buf.append(":");
-                buf.append(pw);
-                String creds = printBase64Binary(buf.toString().getBytes());
-                reqHeaders.put("Authorization", Collections.singletonList("Basic "+creds));
-            }
-        }
     }
 
     private boolean requiresOutputStream() {
@@ -337,7 +291,7 @@ final class HttpClientTransport {
                 httpConnection.getRequestMethod().equalsIgnoreCase("DELETE"));
     }
 
-    public @Nullable String getContentType() {
+    @Nullable String getContentType() {
         return httpConnection.getContentType();
     }
 
@@ -376,4 +330,3 @@ final class HttpClientTransport {
     }
 
 }
-

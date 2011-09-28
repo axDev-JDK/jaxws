@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.tools.internal.xjc.reader.xmlschema.bindinfo;
 
 import java.util.Collections;
@@ -56,18 +57,18 @@ import com.sun.xml.internal.xsom.XSSimpleType;
 
 /**
  * Global binding customization. The code is highly temporary.
- * 
+ *
  * <p>
  * One of the information contained in a global customization
  * is the default binding for properties. This object contains a
  * BIProperty object to keep this information.
- * 
+ *
  * @author
  *  Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
 @XmlRootElement(name="globalBindings")
 public final class BIGlobalBinding extends AbstractDeclarationImpl {
-    
+
 
     /**
      * Gets the name converter that will govern the XML->Java
@@ -203,7 +204,7 @@ public final class BIGlobalBinding extends AbstractDeclarationImpl {
     /*package*/ boolean isJavaNamingConventionEnabled = true;
 
     /**
-     * True to generate classes for every simple type. 
+     * True to generate classes for every simple type.
      */
     @XmlAttribute(name="mapSimpleTypeDef")
     boolean simpleTypeSubstitution = false;
@@ -391,7 +392,7 @@ public final class BIGlobalBinding extends AbstractDeclarationImpl {
      */
     public BIGlobalBinding() {
     }
-    
+
     public void setParent(BindInfo parent) {
         super.setParent(parent);
         // fill in the remaining default values
@@ -412,7 +413,7 @@ public final class BIGlobalBinding extends AbstractDeclarationImpl {
 
             QName name = e.getKey();
             BIConversion conv = e.getValue();
-            
+
             XSSimpleType st = schema.getSimpleType(name.getNamespaceURI(),name.getLocalPart());
             if(st==null) {
                 Ring.get(ErrorReceiver.class).error(
@@ -421,16 +422,16 @@ public final class BIGlobalBinding extends AbstractDeclarationImpl {
                 );
                 continue; // abort
             }
-            
+
             getBuilder().getOrCreateBindInfo(st).addDecl(conv);
         }
     }
-    
-    
+
+
     /**
      * Checks if the given XML Schema built-in type can be mapped to
      * a type-safe enum class.
-     * 
+     *
      * @param typeName
      */
     public boolean canBeMappedToTypeSafeEnum( QName typeName ) {
@@ -536,7 +537,7 @@ public final class BIGlobalBinding extends AbstractDeclarationImpl {
 
     /* don't want to override equals to avoid overriding hashcode for this complex object, too */
     public boolean isEqual(BIGlobalBinding b) {
-        boolean equal = 
+        boolean equal =
             this.isJavaNamingConventionEnabled == b.isJavaNamingConventionEnabled &&
             this.simpleTypeSubstitution == b.simpleTypeSubstitution &&
             this.fixedAttributeAsConstantProperty == b.fixedAttributeAsConstantProperty &&

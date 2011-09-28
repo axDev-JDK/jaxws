@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -23,8 +23,6 @@
  * questions.
  */
 
-
-
 /**
 *
 * @author SAAJ RI Development Team
@@ -46,11 +44,11 @@ import com.sun.xml.internal.messaging.saaj.soap.name.NameImpl;
 import com.sun.xml.internal.messaging.saaj.util.LogDomainConstants;
 
 public class Header1_1Impl extends HeaderImpl {
-    
+
     protected static final Logger log =
         Logger.getLogger(LogDomainConstants.SOAP_VER1_1_DOMAIN,
                          "com.sun.xml.internal.messaging.saaj.soap.ver1_1.LocalStrings");
-        
+
     public Header1_1Impl(SOAPDocumentImpl ownerDocument, String prefix) {
             super(ownerDocument, NameImpl.createHeader1_1Name(prefix));
     }
@@ -78,7 +76,7 @@ public class Header1_1Impl extends HeaderImpl {
     }
 
     public SOAPHeaderElement addNotUnderstoodHeaderElement(QName name)
-        throws SOAPException {            
+        throws SOAPException {
         log.log(
             Level.SEVERE,
             "SAAJ0301.ver1_1.hdr.op.unsupported.in.SOAP1.1",

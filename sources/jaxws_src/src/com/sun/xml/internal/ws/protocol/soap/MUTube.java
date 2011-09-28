@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.ws.protocol.soap;
 
 import com.sun.xml.internal.ws.api.SOAPVersion;
@@ -32,10 +33,11 @@ import com.sun.xml.internal.ws.api.addressing.AddressingVersion;
 import com.sun.xml.internal.ws.api.message.Header;
 import com.sun.xml.internal.ws.api.message.HeaderList;
 import com.sun.xml.internal.ws.api.message.Message;
-import com.sun.xml.internal.ws.api.message.Messages;
 import com.sun.xml.internal.ws.api.pipe.Tube;
 import com.sun.xml.internal.ws.api.pipe.TubeCloner;
 import com.sun.xml.internal.ws.api.pipe.helper.AbstractFilterTubeImpl;
+import com.sun.xml.internal.ws.binding.BindingImpl;
+import com.sun.xml.internal.ws.binding.SOAPBindingImpl;
 import com.sun.xml.internal.ws.message.DOMHeader;
 import com.sun.xml.internal.ws.fault.SOAPFaultBuilder;
 import org.w3c.dom.Element;
@@ -66,8 +68,8 @@ abstract class MUTube extends AbstractFilterTubeImpl {
             "One or more mandatory SOAP header blocks not understood";
 
     protected final SOAPVersion soapVersion;
-    private final AddressingVersion addressingVersion;
-    
+    protected SOAPBindingImpl binding;
+
     protected MUTube(WSBinding binding, Tube next) {
         super(next);
         // MUPipe should n't be used for bindings other than SOAP.
@@ -75,61 +77,45 @@ abstract class MUTube extends AbstractFilterTubeImpl {
             throw new WebServiceException(
                     "MUPipe should n't be used for bindings other than SOAP.");
         }
+        this.binding = (SOAPBindingImpl) binding;
         this.soapVersion = binding.getSOAPVersion();
-        this.addressingVersion = binding.getAddressingVersion();
     }
 
     protected MUTube(MUTube that, TubeCloner cloner) {
         super(that, cloner);
+        binding = that.binding;
         soapVersion = that.soapVersion;
-        addressingVersion = that.addressingVersion;
     }
 
     /**
-     * @param headers      HeaderList that needs MU processing
+     * @param headers HeaderList that needs MU processing
      * @param roles        Roles configured on the Binding. Required Roles supposed to be assumbed a by a
      *                     SOAP Binding implementation are added.
-     * @param knownHeaders Set of headers that this binding understands
+     * @param handlerKnownHeaders Set of headers that the handlerchain associated with the binding understands
      * @return returns the headers that have mustUnderstand attribute and are not understood
      *         by the binding.
      */
-    protected final Set<QName> getMisUnderstoodHeaders(HeaderList headers, Set<String> roles, Set<QName> knownHeaders) {
+    public final Set<QName> getMisUnderstoodHeaders(HeaderList headers, Set<String> roles,
+                                                    Set<QName> handlerKnownHeaders) {
         Set<QName> notUnderstoodHeaders = null;
-
-        understandAddressingHeaders(knownHeaders);
-
         for (int i = 0; i < headers.size(); i++) {
             if (!headers.isUnderstood(i)) {
                 Header header = headers.get(i);
                 if (!header.isIgnorable(soapVersion, roles)) {
                     QName qName = new QName(header.getNamespaceURI(), header.getLocalPart());
-                    if (! knownHeaders.contains(qName)) {
-                        logger.info("Element not understood=" + qName);
-                        if (notUnderstoodHeaders == null)
-                            notUnderstoodHeaders = new HashSet<QName>();
-                        notUnderstoodHeaders.add(qName);
+                    // see if the binding can understand it
+                    if (!binding.understandsHeader(qName)) {
+                        if (!handlerKnownHeaders.contains(qName)) {
+                            logger.info("Element not understood=" + qName);
+                            if (notUnderstoodHeaders == null)
+                                notUnderstoodHeaders = new HashSet<QName>();
+                            notUnderstoodHeaders.add(qName);
+                        }
                     }
                 }
             }
         }
         return notUnderstoodHeaders;
-    }
-
-    /**
-     * Understand WS-Addressing headers if WS-Addressing is enabled
-     *
-     * @param knownHeaders Set of headers that this binding understands
-     */
-    private void understandAddressingHeaders(Set<QName> knownHeaders) {
-        if (addressingVersion != null) {
-            knownHeaders.add(addressingVersion.actionTag);
-            knownHeaders.add(addressingVersion.faultToTag);
-            knownHeaders.add(addressingVersion.fromTag);
-            knownHeaders.add(addressingVersion.messageIDTag);
-            knownHeaders.add(addressingVersion.relatesToTag);
-            knownHeaders.add(addressingVersion.replyToTag);
-            knownHeaders.add(addressingVersion.toTag);
-        }
     }
 
     /**

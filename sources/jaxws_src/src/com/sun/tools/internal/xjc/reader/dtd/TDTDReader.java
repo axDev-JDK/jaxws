@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.tools.internal.xjc.reader.dtd;
 
 import java.io.IOException;
@@ -71,7 +72,7 @@ import org.xml.sax.helpers.LocatorImpl;
 
 /**
  * Parses DTD grammar along with binding information into BGM.
- * 
+ *
  * @author
  *    <a href="mailto:kohsuke.kawaguchi@sun.com">Kohsuke KAWAGUCHI</a>
  */
@@ -79,11 +80,11 @@ public class TDTDReader extends DTDHandlerBase
 {
     /**
      * Parses DTD grammar and a binding information into BGM.
-     * 
+     *
      * <p>
      * This method is just a utility method that covers 80% of the use
      * cases.
-     * 
+     *
      * @param    bindingInfo
      *        binding information file, if any. Can be null.
      */
@@ -149,7 +150,7 @@ public class TDTDReader extends DTDHandlerBase
 
     /**
      * binding information.
-     * 
+     *
      * <p>
      * This is always non-null even if no binding information was specified.
      * (In that case, a dummy object will be provided.)
@@ -159,7 +160,7 @@ public class TDTDReader extends DTDHandlerBase
     final Model model = Ring.get(Model.class);
 
     private final CodeModelClassFactory classFactory;
-    
+
     private final ErrorReceiverFilter errorReceiver;
 
     /**
@@ -170,7 +171,7 @@ public class TDTDReader extends DTDHandlerBase
 
     public void startDTD(InputEntity entity) throws SAXException {
     }
-    
+
     public void endDTD() throws SAXException {
 
         // bind them all.
@@ -196,8 +197,8 @@ public class TDTDReader extends DTDHandlerBase
 //        // performs annotation
 //        Annotator.annotate(model, this);
 //        FieldCollisionChecker.check( model, this );
-        
-        
+
+
         processConstructorDeclarations();
     }
 
@@ -249,7 +250,7 @@ public class TDTDReader extends DTDHandlerBase
                 acc.implement(c);
             }
         }
-        
+
         // TODO: check the cyclic interface definition
     }
 
@@ -261,12 +262,12 @@ public class TDTDReader extends DTDHandlerBase
     JPackage getTargetPackage() {
         return bindInfo.getTargetPackage();
     }
-    
-    
+
+
     /**
      * Creates constructor declarations as specified in the
      * binding information.
-     * 
+     *
      * <p>
      * Also checks that the binding file does not contain
      * declarations for non-existent elements.
@@ -279,11 +280,11 @@ public class TDTDReader extends DTDHandlerBase
                     Messages.ERR_BINDINFO_NON_EXISTENT_ELEMENT_DECLARATION,decl.name());
                 continue;   // continue to process next declaration
             }
-            
+
             if(!decl.isClass())
                 // only element-class declaration has constructor definitions
                 continue;
-            
+
             decl.declareConstructors(e.getClassInfo());
         }
     }
@@ -458,5 +459,5 @@ public class TDTDReader extends DTDHandlerBase
         errorReceiver.error(loc,Messages.format(prop,args));
     }
 
-    
+
 }

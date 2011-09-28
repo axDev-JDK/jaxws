@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -48,7 +48,7 @@ public final class PolicyIntersector {
     private static final PolicyIntersector STRICT_INTERSECTOR = new PolicyIntersector(CompatibilityMode.STRICT);
     private static final PolicyIntersector LAX_INTERSECTOR = new PolicyIntersector(CompatibilityMode.LAX);
     private static final PolicyLogger LOGGER = PolicyLogger.getLogger(PolicyIntersector.class);
-    
+
     private CompatibilityMode mode;
 
     /**
@@ -58,7 +58,7 @@ public final class PolicyIntersector {
     private PolicyIntersector(CompatibilityMode intersectionMode) {
         this.mode = intersectionMode;
     }
-    
+
     /**
      * Returns a strict policy intersector that can be used to intersect group of policies.
      *
@@ -67,7 +67,7 @@ public final class PolicyIntersector {
     public static PolicyIntersector createStrictPolicyIntersector() {
         return PolicyIntersector.STRICT_INTERSECTOR;
     }
-    
+
     /**
      * Returns a strict policy intersector that can be used to intersect group of policies.
      *
@@ -76,7 +76,7 @@ public final class PolicyIntersector {
     public static PolicyIntersector createLaxPolicyIntersector() {
         return PolicyIntersector.LAX_INTERSECTOR;
     }
-    
+
     /**
      * Performs intersection on the input collection of policies and returns the resulting (intersected) policy. If input policy
      * collection contains only a single policy instance, no intersection is performed and the instance is directly returned
@@ -93,8 +93,8 @@ public final class PolicyIntersector {
         } else if (policies.length == 1) {
             return policies[0];
         }
-        
-        // check for "null" and "empty" policy: if such policy is found return "null" policy, 
+
+        // check for "null" and "empty" policy: if such policy is found return "null" policy,
         // or if all policies are "empty", return "empty" policy
         boolean found = false;
         boolean allPoliciesEmpty = true;
@@ -113,7 +113,7 @@ public final class PolicyIntersector {
             } else if (latestVersion.compareTo(tested.getNamespaceVersion()) < 0) {
                 latestVersion = tested.getNamespaceVersion();
             }
-            
+
             if (found && !allPoliciesEmpty) {
                 return Policy.createNullPolicy(latestVersion, null, null);
             }
@@ -122,8 +122,8 @@ public final class PolicyIntersector {
         if (allPoliciesEmpty) {
             return Policy.createEmptyPolicy(latestVersion, null, null);
         }
-        
-        // simple tests didn't lead to final answer => let's performe some intersecting ;)       
+
+        // simple tests didn't lead to final answer => let's performe some intersecting ;)
         final List<AssertionSet> finalAlternatives = new LinkedList<AssertionSet>(policies[0].getContent());
         final Queue<AssertionSet> testedAlternatives = new LinkedList<AssertionSet>();
         final List<AssertionSet> alternativesToMerge = new ArrayList<AssertionSet>(2);
@@ -133,20 +133,20 @@ public final class PolicyIntersector {
             testedAlternatives.clear();
             testedAlternatives.addAll(finalAlternatives);
             finalAlternatives.clear();
-            
+
             AssertionSet testedAlternative;
             while ((testedAlternative = testedAlternatives.poll()) != null) {
                 for (AssertionSet currentAlternative : currentAlternatives) {
                     if (testedAlternative.isCompatibleWith(currentAlternative, this.mode)) {
                         alternativesToMerge.add(testedAlternative);
-                        alternativesToMerge.add(currentAlternative);                        
+                        alternativesToMerge.add(currentAlternative);
                         finalAlternatives.add(AssertionSet.createMergedAssertionSet(alternativesToMerge));
                         alternativesToMerge.clear();
                     }
                 }
             }
         }
-        
+
         return Policy.createPolicy(latestVersion, null, null, finalAlternatives);
-    }    
+    }
 }

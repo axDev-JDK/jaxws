@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.tools.internal.xjc.reader.xmlschema;
 
 import java.util.HashSet;
@@ -91,7 +92,7 @@ class UnusedCustomizationChecker extends BindingComponent implements XSVisitor, 
             run( s.getSimpleTypes() );
         }
     }
-    
+
     private void run( Map<String,? extends XSComponent> col ) {
         for( XSComponent c : col.values() )
             c.visit(this);
@@ -148,7 +149,7 @@ class UnusedCustomizationChecker extends BindingComponent implements XSVisitor, 
 
 
     public void annotation(XSAnnotation ann) {}
-    
+
     public void attGroupDecl(XSAttGroupDecl decl) {
         if(check(decl))
             attContainer(decl);
@@ -172,14 +173,14 @@ class UnusedCustomizationChecker extends BindingComponent implements XSVisitor, 
             attContainer(type);
         }
     }
-    
+
     private void attContainer( XSAttContainer cont ) {
         for( Iterator itr = cont.iterateAttGroups(); itr.hasNext(); )
             ((XSAttGroupDecl)itr.next()).visit(this);
-            
+
         for( Iterator itr = cont.iterateDeclaredAttributeUses(); itr.hasNext(); )
             ((XSAttributeUse)itr.next()).visit(this);
-        
+
         XSWildcard wc = cont.getAttributeWildcard();
         if(wc!=null)        wc.visit(this);
     }

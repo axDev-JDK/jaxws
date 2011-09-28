@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.ws.message.jaxb;
 
 import com.sun.istack.internal.FragmentContentHandler;
@@ -75,7 +76,7 @@ public final class JAXBMessage extends AbstractMessageImpl {
      * The JAXB object that represents the payload.
      */
     private final Object jaxbObject;
-    
+
     private final Bridge bridge;
 
     /**
@@ -195,7 +196,7 @@ public final class JAXBMessage extends AbstractMessageImpl {
         this.jaxbObject = that.jaxbObject;
         this.bridge = that.bridge;
     }
-    
+
     public boolean hasHeaders() {
         return headers!=null && !headers.isEmpty();
     }
@@ -305,7 +306,7 @@ public final class JAXBMessage extends AbstractMessageImpl {
             if (os != null) {
                 bridge.marshal(jaxbObject, os, sw.getNamespaceContext(),am);
             } else {
-                bridge.marshal(jaxbObject,sw,am);   
+                bridge.marshal(jaxbObject,sw,am);
             }
             //cleanup() is not needed since JAXB doesn't keep ref to AttachmentMarshaller
             //am.cleanup();

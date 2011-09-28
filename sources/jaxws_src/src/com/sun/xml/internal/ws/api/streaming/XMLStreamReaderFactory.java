@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -51,7 +51,7 @@ import java.security.AccessController;
  * <p>
  * This wraps {@link XMLInputFactory} and allows us to reuse {@link XMLStreamReader} instances
  * when appropriate.
- * 
+ *
  * @author Kohsuke Kawaguchi
  */
 public abstract class XMLStreamReaderFactory {
@@ -428,7 +428,7 @@ public abstract class XMLStreamReaderFactory {
     }
 
     private static Boolean getProperty(final String prop) {
-        Boolean b = AccessController.doPrivileged(
+        return AccessController.doPrivileged(
             new java.security.PrivilegedAction<Boolean>() {
                 public Boolean run() {
                     String value = System.getProperty(prop);
@@ -436,6 +436,5 @@ public abstract class XMLStreamReaderFactory {
                 }
             }
         );
-        return Boolean.FALSE;
     }
 }

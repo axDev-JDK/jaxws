@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -38,10 +38,10 @@ public final class AttributePattern extends Pattern {
 
   AttributePattern(NameClass nameClass, Pattern value, Locator loc) {
     super(false,
-	  EMPTY_CONTENT_TYPE,
-	  combineHashCode(ATTRIBUTE_HASH_CODE,
-			  nameClass.hashCode(),
-			  value.hashCode()));
+          EMPTY_CONTENT_TYPE,
+          combineHashCode(ATTRIBUTE_HASH_CODE,
+                          nameClass.hashCode(),
+                          value.hashCode()));
     this.nameClass = nameClass;
     this.p = value;
     this.loc = loc;
@@ -62,7 +62,7 @@ public final class AttributePattern extends Pattern {
       throw new RestrictionViolationException("start_contains_attribute");
     case ELEMENT_CONTEXT:
       if (nameClass.isOpen())
-	throw new RestrictionViolationException("open_name_class_not_repeated");
+        throw new RestrictionViolationException("open_name_class_not_repeated");
       break;
     case ELEMENT_REPEAT_GROUP_CONTEXT:
       throw new RestrictionViolationException("one_or_more_contains_group_contains_attribute");

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,11 +22,13 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.org.jvnet.staxex;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import java.io.BufferedInputStream;
+import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,7 +50,7 @@ import java.net.URL;
  *
  * @author Jitendra Kotamraju
  */
-public abstract class StreamingDataHandler extends DataHandler {
+public abstract class StreamingDataHandler extends DataHandler implements Closeable {
 
     public StreamingDataHandler(Object o, String s) {
         super(o, s);
@@ -128,7 +130,7 @@ public abstract class StreamingDataHandler extends DataHandler {
      * move the file or delete this file, those methods will
      * behave in undefined fashion. For a simliar reason,
      * calling this method multiple times will cause
-     * undefined behavior.  
+     * undefined behavior.
      */
     public abstract void moveTo(File dst) throws IOException;
 
@@ -141,4 +143,3 @@ public abstract class StreamingDataHandler extends DataHandler {
     public abstract void close() throws IOException;
 
 }
-

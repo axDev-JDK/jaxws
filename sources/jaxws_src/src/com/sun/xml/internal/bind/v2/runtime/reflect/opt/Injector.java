@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -30,6 +30,8 @@ import java.lang.reflect.Method;
 import java.lang.ref.WeakReference;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
@@ -56,10 +58,11 @@ final class Injector {
      *
      * We only need one injector per one user class loader.
      */
-    private static final Map<ClassLoader,WeakReference<Injector>> injectors =
-//        Collections.synchronizedMap(new WeakHashMap<ClassLoader,WeakReference<Injector>>());
-        new WeakHashMap<ClassLoader,WeakReference<Injector>>();
-
+    private static final ReentrantReadWriteLock irwl = new ReentrantReadWriteLock();
+    private static final Lock ir = irwl.readLock();
+    private static final Lock iw = irwl.writeLock();
+    private static final Map<ClassLoader, WeakReference<Injector>> injectors =
+            new WeakHashMap<ClassLoader, WeakReference<Injector>>();
     private static final Logger logger = Util.getClassLogger();
 
     /**
@@ -68,23 +71,25 @@ final class Injector {
      * @return null
      *      if it fails to inject.
      */
-    static Class inject( ClassLoader cl, String className, byte[] image ) {
+    static Class inject(ClassLoader cl, String className, byte[] image) {
         Injector injector = get(cl);
-        if(injector!=null)
-            return injector.inject(className,image);
-        else
+        if (injector != null) {
+            return injector.inject(className, image);
+        } else {
             return null;
+        }
     }
 
     /**
      * Returns the already injected class, or null.
      */
-    static Class find( ClassLoader cl, String className ) {
+    static Class find(ClassLoader cl, String className) {
         Injector injector = get(cl);
-        if(injector!=null)
+        if (injector != null) {
             return injector.find(className);
-        else
+        } else {
             return null;
+        }
     }
 
     /**
@@ -95,48 +100,62 @@ final class Injector {
      */
     private static Injector get(ClassLoader cl) {
         Injector injector = null;
-        synchronized(injectors){
-            WeakReference<Injector> wr = injectors.get(cl);
-            if(wr!=null)
-                injector = wr.get();
-            if(injector==null)
-                try {
-                    injectors.put(cl,new WeakReference<Injector>(injector = new Injector(cl)));
-                } catch (SecurityException e) {
-                    logger.log(Level.FINE,"Unable to set up a back-door for the injector",e);
-                    return null;
-                }
-            return injector;
+        WeakReference<Injector> wr;
+        ir.lock();
+        try {
+            wr = injectors.get(cl);
+        } finally {
+            ir.unlock();
         }
+        if (wr != null) {
+            injector = wr.get();
+        }
+        if (injector == null) {
+            try {
+                wr = new WeakReference<Injector>(injector = new Injector(cl));
+                iw.lock();
+                try {
+                    if (!injectors.containsKey(cl)) {
+                        injectors.put(cl, wr);
+                    }
+                } finally {
+                    iw.unlock();
+                }
+            } catch (SecurityException e) {
+                logger.log(Level.FINE, "Unable to set up a back-door for the injector", e);
+                return null;
+            }
+        }
+        return injector;
     }
-
     /**
      * Injected classes keyed by their names.
      */
-    private final Map<String,Class> classes = new HashMap<String,Class>();
-
+    private final Map<String, Class> classes = new HashMap<String, Class>();
+    private final ReentrantReadWriteLock rwl = new ReentrantReadWriteLock();
+    private final Lock r = rwl.readLock();
+    private final Lock w = rwl.writeLock();
     private final ClassLoader parent;
-
     /**
      * True if this injector is capable of injecting accessors.
      * False otherwise, which happens if this classloader can't see {@link Accessor}.
      */
     private final boolean loadable;
-
     private static final Method defineClass;
     private static final Method resolveClass;
     private static final Method findLoadedClass;
 
     static {
         try {
-            defineClass = ClassLoader.class.getDeclaredMethod("defineClass",String.class,byte[].class,Integer.TYPE,Integer.TYPE);
-            resolveClass = ClassLoader.class.getDeclaredMethod("resolveClass",Class.class);
-            findLoadedClass= ClassLoader.class.getDeclaredMethod("findLoadedClass",String.class);
+            defineClass = ClassLoader.class.getDeclaredMethod("defineClass", String.class, byte[].class, Integer.TYPE, Integer.TYPE);
+            resolveClass = ClassLoader.class.getDeclaredMethod("resolveClass", Class.class);
+            findLoadedClass = ClassLoader.class.getDeclaredMethod("findLoadedClass", String.class);
         } catch (NoSuchMethodException e) {
             // impossible
             throw new NoSuchMethodError(e.getMessage());
         }
         AccessController.doPrivileged(new PrivilegedAction<Void>() {
+
             public Void run() {
                 // TODO: check security implication
                 // do these setAccessible allow anyone to call these methods freely?s
@@ -150,73 +169,136 @@ final class Injector {
 
     private Injector(ClassLoader parent) {
         this.parent = parent;
-        assert parent!=null;
+        assert parent != null;
 
-        boolean loadable = false;
+        boolean loadableCheck = false;
 
         try {
-            loadable = parent.loadClass(Accessor.class.getName())==Accessor.class;
+            loadableCheck = parent.loadClass(Accessor.class.getName()) == Accessor.class;
         } catch (ClassNotFoundException e) {
-            ; // not loadable
+            // not loadable
         }
 
-        this.loadable = loadable;
+        this.loadable = loadableCheck;
     }
 
-
-    private synchronized Class inject(String className, byte[] image) {
-        if(!loadable)   // this injector cannot inject anything
+    @SuppressWarnings("LockAcquiredButNotSafelyReleased")
+    private Class inject(String className, byte[] image) {
+        if (!loadable) // this injector cannot inject anything
+        {
             return null;
+        }
 
-        Class c = classes.get(className);
-        //find loaded class from classloader
-        if(c==null) {
+        boolean wlocked = false;
+        boolean rlocked = false;
+        try {
+
+            r.lock();
+            rlocked = true;
+
+            Class c = classes.get(className);
+
+            // Unlock now during the findLoadedClass process to avoid
+            // deadlocks
+            r.unlock();
+            rlocked = false;
+
+            //find loaded class from classloader
+            if (c == null) {
+
                 try {
-                    c = (Class)findLoadedClass.invoke(parent,className.replace('/','.'));
+                    c = (Class) findLoadedClass.invoke(parent, className.replace('/', '.'));
                 } catch (IllegalArgumentException e) {
-                    logger.log(Level.FINE,"Unable to find "+className,e);
+                    logger.log(Level.FINE, "Unable to find " + className, e);
                 } catch (IllegalAccessException e) {
-                    logger.log(Level.FINE,"Unable to find "+className,e);
+                    logger.log(Level.FINE, "Unable to find " + className, e);
                 } catch (InvocationTargetException e) {
                     Throwable t = e.getTargetException();
-                    logger.log(Level.FINE,"Unable to find "+className,t);
+                    logger.log(Level.FINE, "Unable to find " + className, t);
                 }
 
-                if(c!=null) {
-                    classes.put(className,c);
+                if (c != null) {
+
+                    w.lock();
+                    wlocked = true;
+
+                    classes.put(className, c);
+
+                    w.unlock();
+                    wlocked = false;
+
                     return c;
                 }
-        }
-
-        if(c==null) {
-            // we need to inject a class into the
-            try {
-                c = (Class)defineClass.invoke(parent,className.replace('/','.'),image,0,image.length);
-                resolveClass.invoke(parent,c);
-            } catch (IllegalAccessException e) {
-                logger.log(Level.FINE,"Unable to inject "+className,e);
-                return null;
-            } catch (InvocationTargetException e) {
-                Throwable t = e.getTargetException();
-                if (t instanceof LinkageError){
-                    logger.log(Level.WARNING,"duplicate class definition bug occured? Please report this : "+className,t);
-                } else {
-                    logger.log(Level.FINE,"Unable to inject "+className,t);
-                }
-                return null;
-            } catch (SecurityException e) {
-                logger.log(Level.FINE,"Unable to inject "+className,e);
-                return null;
-            } catch (LinkageError e) {
-                logger.log(Level.FINE,"Unable to inject "+className,e);
-                return null;
             }
-            classes.put(className,c);
+
+            if (c == null) {
+
+                r.lock();
+                rlocked = true;
+
+                c = classes.get(className);
+
+                // Unlock now during the define/resolve process to avoid
+                // deadlocks
+                r.unlock();
+                rlocked = false;
+
+                if (c == null) {
+
+                    // we need to inject a class into the
+                    try {
+                        c = (Class) defineClass.invoke(parent, className.replace('/', '.'), image, 0, image.length);
+                        resolveClass.invoke(parent, c);
+                    } catch (IllegalAccessException e) {
+                        logger.log(Level.FINE, "Unable to inject " + className, e);
+                        return null;
+                    } catch (InvocationTargetException e) {
+                        Throwable t = e.getTargetException();
+                        if (t instanceof LinkageError) {
+                            logger.log(Level.FINE, "duplicate class definition bug occured? Please report this : " + className, t);
+                        } else {
+                            logger.log(Level.FINE, "Unable to inject " + className, t);
+                        }
+                        return null;
+                    } catch (SecurityException e) {
+                        logger.log(Level.FINE, "Unable to inject " + className, e);
+                        return null;
+                    } catch (LinkageError e) {
+                        logger.log(Level.FINE, "Unable to inject " + className, e);
+                        return null;
+                    }
+
+                    w.lock();
+                    wlocked = true;
+
+                    // During the time we were unlocked, we could have tried to
+                    // load the class from more than one thread. Check now to see
+                    // if someone else beat us to registering this class
+                    if (!classes.containsKey(className)) {
+                        classes.put(className, c);
+                    }
+
+                    w.unlock();
+                    wlocked = false;
+                }
+            }
+            return c;
+        } finally {
+            if (rlocked) {
+                r.unlock();
+            }
+            if (wlocked) {
+                w.unlock();
+            }
         }
-        return c;
     }
 
-    private synchronized Class find(String className) {
-        return classes.get(className);
+    private Class find(String className) {
+        r.lock();
+        try {
+            return classes.get(className);
+        } finally {
+            r.unlock();
+        }
     }
 }

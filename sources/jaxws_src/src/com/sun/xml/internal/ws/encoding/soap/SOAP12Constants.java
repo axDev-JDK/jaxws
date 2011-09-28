@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.ws.encoding.soap;
 
 import com.sun.xml.internal.ws.encoding.soap.streaming.SOAP12NamespaceConstants;
@@ -39,10 +40,10 @@ public class SOAP12Constants {
     public static final String URI_HTTP = SOAP12NamespaceConstants.TRANSPORT_HTTP;
     public static final String URI_SOAP_RPC = SOAP12NamespaceConstants.SOAP_RPC;
 
-    
+
     public static final QName QNAME_SOAP_RPC = new QName(URI_SOAP_RPC, "rpc");
     public static final QName QNAME_SOAP_RESULT = new QName(URI_SOAP_RPC, "result");
-    
+
     public static final QName QNAME_SOAP_ENVELOPE    = new QName(URI_ENVELOPE, "Envelope");
     public static final QName QNAME_SOAP_BODY    = new QName(URI_ENVELOPE, "Body");
     public static final QName QNAME_SOAP_HEADER    = new QName(URI_ENVELOPE, "Header");
@@ -52,7 +53,7 @@ public class SOAP12Constants {
     public static final QName QNAME_ROLE                   = new QName(URI_ENVELOPE, "role");
 
     public static final QName QNAME_NOT_UNDERSTOOD         = new QName(URI_ENVELOPE, "NotUnderstood");
-    
+
     //fault
     public static final QName QNAME_FAULT_CODE             = new QName(URI_ENVELOPE, "Code");
     public static final QName QNAME_FAULT_SUBCODE          = new QName(URI_ENVELOPE, "Subcode");
@@ -64,8 +65,8 @@ public class SOAP12Constants {
     public static final QName QNAME_FAULT_REASON_TEXT             = new QName(URI_ENVELOPE, "Text");
     public final static QName QNAME_UPGRADE                = new QName(URI_ENVELOPE, "Upgrade");
     public final static QName QNAME_UPGRADE_SUPPORTED_ENVELOPE           = new QName(URI_ENVELOPE, "SupportedEnvelope");
-    
-    
+
+
     //fault codes
     public final static QName FAULT_CODE_MUST_UNDERSTAND   = new QName(URI_ENVELOPE, "MustUnderstand");
     public final static QName FAULT_CODE_MISUNDERSTOOD   = new QName(URI_ENVELOPE, "Misunderstood");

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -81,7 +81,7 @@ public abstract class OptimizedTransducedAccessorFactory {
         TypeInfo<Type,Class> parent = prop.parent();
         if(!(parent instanceof RuntimeClassInfo))
             return null;
-        
+
         Class dc = ((RuntimeClassInfo)parent).getClazz();
         String newClassName = toVMClassName(dc)+"_JaxbXducedAccessor_"+prop.getName();
 

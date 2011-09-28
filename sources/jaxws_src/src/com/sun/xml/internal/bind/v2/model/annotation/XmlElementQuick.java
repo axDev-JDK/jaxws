@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -51,20 +51,8 @@ final class XmlElementQuick
         return XmlElement.class;
     }
 
-    public String name() {
-        return core.name();
-    }
-
-    public Class type() {
-        return core.type();
-    }
-
     public String namespace() {
         return core.namespace();
-    }
-
-    public String defaultValue() {
-        return core.defaultValue();
     }
 
     public boolean required() {
@@ -73,6 +61,18 @@ final class XmlElementQuick
 
     public boolean nillable() {
         return core.nillable();
+    }
+
+    public String name() {
+        return core.name();
+    }
+
+    public Class type() {
+        return core.type();
+    }
+
+    public String defaultValue() {
+        return core.defaultValue();
     }
 
 }

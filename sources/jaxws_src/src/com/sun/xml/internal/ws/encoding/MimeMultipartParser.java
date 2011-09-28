@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -62,7 +62,7 @@ public final class MimeMultipartParser {
     private final String start;
     private final MIMEMessage message;
     private Attachment root;
-    
+
     // Attachments without root part
     private final Map<String, Attachment> attachments = new HashMap<String, Attachment>();
 

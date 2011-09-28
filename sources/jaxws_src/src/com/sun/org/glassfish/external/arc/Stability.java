@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -41,21 +41,21 @@ package com.sun.org.glassfish.external.arc;
         Interfaces are defined as APIs, files and directory structures, file formats, protocols,
         (sometimes) even performance and reliability behaviors, and any other attribute upon
         which another component might reasonably depend.</li>
-        
+
         <li>An ARC must review, approve and archive the specification for all interfaces
         other than Project Private and Internal. Unreviewed, unapproved interfaces are assumed
         to be Internal. An adequate specification, suitable for archiving must exist for all
         interfaces submitted for review. Often Project Private interfaces are also reviewed if
         the presentation of them aids the understanding of the entire project or it is expected
         they will be promoted to a broader classification in the future.</li>
-        
+
         <li>Adequate customer documentation must exist for all Public interfaces.
         It is strongly preferred that manual pages exist for all Public interfaces
         (supported on Solaris), even if only significant content of those pages are SYNOPSIS
         and ATTRIBUTES sections and a textual pointer to other documentation.
         Independent of the form of documentation delivery, the interface taxonomy commitment
         level must be presented to the consumer.</li>
-        
+
         <li>In cases where the organization delivering the interface implementation does not
         control the interface specification, the controlling body must be be clearly cited
         in the documentation. In the case where a well-defined, versioned document is the
@@ -67,18 +67,18 @@ package com.sun.org.glassfish.external.arc;
 public enum Stability  {
     /**
     <pre>
-    +----------------------------------------------------------------------------+                         
-    | Committed (formerly Stable, Public; encompasses Standard, Evolving)        |                         
-    |----------------------------------------------------------------------------|                         
-    |   | Specification       | Open                                             |                         
-    |   |---------------------+--------------------------------------------------|                         
-    |   | Incompatible Change | major release (X.0)                              |                         
-    |   |---------------------+--------------------------------------------------|                         
-    |   | ARC review of Specs | Yes                                              |                         
-    |   |---------------------+--------------------------------------------------|                         
+    +----------------------------------------------------------------------------+
+    | Committed (formerly Stable, Public; encompasses Standard, Evolving)        |
+    |----------------------------------------------------------------------------|
+    |   | Specification       | Open                                             |
+    |   |---------------------+--------------------------------------------------|
+    |   | Incompatible Change | major release (X.0)                              |
+    |   |---------------------+--------------------------------------------------|
+    |   | ARC review of Specs | Yes                                              |
+    |   |---------------------+--------------------------------------------------|
     |   | Examples            | Compiler command line options,                   |
-    |   |                     | hardware  (SBus, PCI, USB), RPC, POSIX utilities |                         
-    +----------------------------------------------------------------------------+                         
+    |   |                     | hardware  (SBus, PCI, USB), RPC, POSIX utilities |
+    +----------------------------------------------------------------------------+
     </pre>
         We publish the specification of these interfaces, typically as manual pages or other product documentation.
         We also tell customers we will remain compatible with them. (Scott McNealy's principle that "Compatibility is a
@@ -106,20 +106,20 @@ public enum Stability  {
         in a Minor release by following the End of Feature process.
      */
     COMMITTED( "Committed" ),
-    
+
 /**
  <pre>
-    +--------------------------------------------------------------------------+                           
+    +--------------------------------------------------------------------------+
     | Uncommitted (formerly Unstable)                                          |
-    |--------------------------------------------------------------------------|                           
-    |   | Specification       | Open                                           |                           
-    |   |---------------------+------------------------------------------------|                           
-    |   | Incompatible Change | minor release (x.Y) with impact assessment     |                           
-    |   |---------------------+------------------------------------------------|                           
-    |   | ARC review of Specs | Yes                                            |                           
-    |   |---------------------+------------------------------------------------|                           
-    |   | Examples            | SUNW* package abbreviations, some config utils |                           
-    +--------------------------------------------------------------------------+                           
+    |--------------------------------------------------------------------------|
+    |   | Specification       | Open                                           |
+    |   |---------------------+------------------------------------------------|
+    |   | Incompatible Change | minor release (x.Y) with impact assessment     |
+    |   |---------------------+------------------------------------------------|
+    |   | ARC review of Specs | Yes                                            |
+    |   |---------------------+------------------------------------------------|
+    |   | Examples            | SUNW* package abbreviations, some config utils |
+    +--------------------------------------------------------------------------+
     </pre>
     No guarantees are made about either source or binary compatibility of these interfaces
     from one Minor release to the next. The most drastic incompatible change of removal of
@@ -141,7 +141,7 @@ public enum Stability  {
             rapidly-changing technology, or to provide an interim solution to a problem where a
             more general solution is anticipated.
         </li>
-    
+
         <li>
             Interfaces whose specification is controlled by an outside body and the
             implementation provider is only willing to commit to forking until the next minor
@@ -149,7 +149,7 @@ public enum Stability  {
             Note that this "middle of the road" approach is often the best business decision
             when the controlling body hasn't established a history of respecting compatibility.
         </li>
-        
+
         <li>
             Interfaces whose target audience values innovation (and possibly ease of use) over
             stability. This attribute is often asserted for administrative interfaces for higher
@@ -177,21 +177,21 @@ public enum Stability  {
 </pre>
  */
     UNCOMMITTED( "Uncommitted" ),
-    
-    
+
+
 /**
 <pre>
-    +--------------------------------------------------------------------+                                 
-    | Volatile (encompasses External)                                    |                                 
-    |--------------------------------------------------------------------|                                 
-    |   | Specification       | Open                                     |                                 
-    |   |---------------------+------------------------------------------|                                 
-    |   | Incompatible Change | micro release (x.y.z) or patch release   |                                 
-    |   |---------------------+------------------------------------------|                                 
-    |   | Arc review of Specs | A precise reference is normally recorded |                                 
-    |   |---------------------+------------------------------------------|                                 
-    |   | Examples            | Gimp user interface, IETF internet-draft |                                 
-    +--------------------------------------------------------------------+                                 
+    +--------------------------------------------------------------------+
+    | Volatile (encompasses External)                                    |
+    |--------------------------------------------------------------------|
+    |   | Specification       | Open                                     |
+    |   |---------------------+------------------------------------------|
+    |   | Incompatible Change | micro release (x.y.z) or patch release   |
+    |   |---------------------+------------------------------------------|
+    |   | Arc review of Specs | A precise reference is normally recorded |
+    |   |---------------------+------------------------------------------|
+    |   | Examples            | Gimp user interface, IETF internet-draft |
+    +--------------------------------------------------------------------+
 </pre>
         Volatile interfaces may change at any time and for any reason.
         <p>
@@ -275,20 +275,20 @@ public enum Stability  {
         plan to manage such a dependency.
  */
     VOLATILE( "Volatile" ),
-    
+
 /**
 <pre>
-    +--------------------------------------------------------------------+                                 
+    +--------------------------------------------------------------------+
     | Not-an-interface                                                   |
-    |--------------------------------------------------------------------|                                 
+    |--------------------------------------------------------------------|
     |   | Specification       | None                                     |
-    |   |---------------------+------------------------------------------|                                 
-    |   | Incompatible Change | micro release (x.y.z) or patch release   |                                 
-    |   |---------------------+------------------------------------------|                                 
+    |   |---------------------+------------------------------------------|
+    |   | Incompatible Change | micro release (x.y.z) or patch release   |
+    |   |---------------------+------------------------------------------|
     |   | Arc review of Specs | None                                     |
-    |   |---------------------+------------------------------------------|                                 
+    |   |---------------------+------------------------------------------|
     |   | Examples            | CLI output, error text                   |
-    +--------------------------------------------------------------------+                                 
+    +--------------------------------------------------------------------+
 </pre>
         In the course of reviewing or documenting interfaces, the situation often occurs
         that an attribute will be present which may be inferred to be an interface, but
@@ -302,54 +302,28 @@ public enum Stability  {
         identified.
  */
     NOT_AN_INTERFACE( "Not-An-Interface" ),
-    
+
     /**
         See: http://opensolaris.org/os/community/arc/policies/interface-taxonomy/
         <p>
         Javadoc or other means should establish the nature of the private interface.
      */
     PRIVATE( "Private" ),
-    
-     
+
+
     /**
         Not a formal term. Indicates that the interface, while visible, is experimental,
         and can be removed at any time.
      */
     EXPERIMENTAL( "Experimental" ),
-    
+
     /**
         Interrim classification; a real one should be chosen asap.
      */
     UNSPECIFIED( "Unspecified" );
-    
+
     private final String mName;
     private Stability( final String name ) { mName = name; }
-    
+
     public String toString() { return mName; }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -76,7 +76,7 @@ final class StAXEventConnector extends StAXConnector {
     /**
      * Construct a new StAX to SAX adapter that will convert a StAX event
      * stream into a SAX event stream.
-     * 
+     *
      * @param staxCore
      *                StAX event source
      * @param visitor
@@ -277,7 +277,7 @@ final class StAXEventConnector extends StAXConnector {
                 qName = prefix + ':' + localName;
             String type = staxAttr.getDTDType();
             String value = staxAttr.getValue();
-            
+
             attrs.addAttribute(uri, localName, qName, type, value);
         }
 

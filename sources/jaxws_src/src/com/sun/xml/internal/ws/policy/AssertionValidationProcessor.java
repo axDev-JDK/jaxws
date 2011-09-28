@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.ws.policy;
 
 import com.sun.xml.internal.ws.policy.privateutil.PolicyLogger;
@@ -40,9 +41,9 @@ import java.util.LinkedList;
  */
 public class AssertionValidationProcessor {
     private static final PolicyLogger LOGGER = PolicyLogger.getLogger(AssertionValidationProcessor.class);
-    
+
     private final Collection<PolicyAssertionValidator> validators = new LinkedList<PolicyAssertionValidator>();
-    
+
     /**
      * This constructor instantiates the object with a set of dynamically
      * discovered PolicyAssertionValidators.
@@ -81,7 +82,7 @@ public class AssertionValidationProcessor {
 
     /**
      * Factory method that returns singleton instance of the class.
-     * 
+     *
      * This method is only intended to be used by code that has no dependencies on
      * JAX-WS. Otherwise use com.sun.xml.internal.ws.api.policy.ValidationProcessor.
      *
@@ -91,11 +92,11 @@ public class AssertionValidationProcessor {
     public static AssertionValidationProcessor getInstance() throws PolicyException {
         return new AssertionValidationProcessor();
     }
-    
+
     /**
      * Validates fitness of the {@code assertion} on the client side.
      *
-     * return client side {@code assertion} fitness 
+     * return client side {@code assertion} fitness
      * @param assertion The assertion to be validated.
      * @return The fitness of the assertion on the client side.
      * @throws PolicyException If validation failed.
@@ -108,14 +109,14 @@ public class AssertionValidationProcessor {
                 break;
             }
         }
-        
+
         return assertionFitness;
     }
 
     /**
      * Validates fitness of the {@code assertion} on the server side.
      *
-     * return server side {@code assertion} fitness 
+     * return server side {@code assertion} fitness
      * @param assertion The assertion to be validated.
      * @return The fitness of the assertion on the server side.
      * @throws PolicyException If validation failed.
@@ -128,7 +129,7 @@ public class AssertionValidationProcessor {
                 break;
             }
         }
-        
+
         return assertionFitness;
     }
 }

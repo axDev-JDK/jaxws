@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -61,6 +61,15 @@ public @interface Resource {
      * and this must be specified.
      */
     String name() default "";
+
+    /**
+     * The name of the resource that the reference points to. It can
+     * link to any compatible resource using the global JNDI names.
+     *
+     * @since Common Annotations 1.1
+     */
+
+    String lookup() default "";
 
     /**
      * The Java type of the resource.  For field annotations,

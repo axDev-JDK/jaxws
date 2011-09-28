@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -33,7 +33,7 @@ import javax.xml.stream.XMLStreamReader;
 
 /**
  * Delegate to another {@link WSDLParserExtension}
- * useful for the base class for filtering. 
+ * useful for the base class for filtering.
  *
  * @author Kohsuke Kawaguchi
  */

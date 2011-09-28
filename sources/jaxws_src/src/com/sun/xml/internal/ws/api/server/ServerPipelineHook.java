@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -70,7 +70,7 @@ public abstract class ServerPipelineHook {
     public @NotNull Pipe createMonitoringPipe(ServerPipeAssemblerContext ctxt, @NotNull Pipe tail) {
         return tail;
     }
-    
+
     /**
      * Called during the pipeline construction process once to allow a container
      * to register a pipe for security.

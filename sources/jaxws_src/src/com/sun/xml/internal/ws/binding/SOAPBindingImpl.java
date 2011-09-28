@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -28,6 +28,7 @@ package com.sun.xml.internal.ws.binding;
 import com.sun.istack.internal.NotNull;
 import com.sun.xml.internal.ws.api.BindingID;
 import com.sun.xml.internal.ws.api.SOAPVersion;
+import com.sun.xml.internal.ws.api.addressing.AddressingVersion;
 import com.sun.xml.internal.ws.api.handler.MessageHandler;
 import com.sun.xml.internal.ws.client.HandlerConfiguration;
 import com.sun.xml.internal.ws.encoding.soap.streaming.SOAP12NamespaceConstants;
@@ -37,6 +38,7 @@ import com.sun.xml.internal.ws.resources.ClientMessages;
 import javax.xml.namespace.QName;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPFactory;
+import javax.xml.ws.ServiceMode;
 import javax.xml.ws.WebServiceException;
 import javax.xml.ws.WebServiceFeature;
 import javax.xml.ws.handler.Handler;
@@ -56,11 +58,11 @@ public final class SOAPBindingImpl extends BindingImpl implements SOAPBinding {
         "http://java.sun.com/xml/ns/jaxws/2003/05/soap/bindings/HTTP/";
 
     private static final String ROLE_NONE = SOAP12NamespaceConstants.ROLE_NONE;
-    private Set<String> roles;
     //protected boolean enableMtom;
     protected final SOAPVersion soapVersion;
 
     private Set<QName> portKnownHeaders = Collections.emptySet();
+    private Set<QName> bindingUnderstoodHeaders = new HashSet<QName>();
 
     /**
      * Use {@link BindingImpl#create(BindingID)} to create this.
@@ -75,18 +77,19 @@ public final class SOAPBindingImpl extends BindingImpl implements SOAPBinding {
      * @param features
      *      These features have a precedence over
      *      {@link BindingID#createBuiltinFeatureList() the implicit features}
-     *      associated with the {@link BindingID}. 
+     *      associated with the {@link BindingID}.
      */
     SOAPBindingImpl(BindingID bindingId, WebServiceFeature... features) {
         super(bindingId);
         this.soapVersion = bindingId.getSOAPVersion();
-        roles = new HashSet<String>();
-        addRequiredRoles();
+        //populates with required roles and updates handlerConfig
+        setRoles(new HashSet<String>());
         //Is this still required? comment out for now
         //setupSystemHandlerDelegate(serviceName);
 
         setFeatures(features);
         this.features.addAll(bindingId.createBuiltinFeatureList());
+        populateBindingUnderstoodHeaders();
     }
 
     /**
@@ -98,51 +101,51 @@ public final class SOAPBindingImpl extends BindingImpl implements SOAPBinding {
      */
     public void setPortKnownHeaders(@NotNull Set<QName> headers) {
         this.portKnownHeaders = headers;
-        // apply this change to HandlerConfiguration
-        setHandlerConfig(createHandlerConfig(getHandlerChain()));
+    }
+
+    public boolean understandsHeader(QName header) {
+        if(serviceMode == javax.xml.ws.Service.Mode.MESSAGE)
+            return true;
+        if(portKnownHeaders.contains(header))
+            return true;
+        if(bindingUnderstoodHeaders.contains(header))
+            return true;
+
+        return false;
     }
 
     /**
-     * This method separates the logical and protocol handlers. 
-     * Also parses Headers understood by SOAPHandlers and
-     * sets the HandlerConfiguration.
+     * Understand WS-Addressing headers if WS-Addressing is enabled
+     *
      */
-    protected HandlerConfiguration createHandlerConfig(List<Handler> handlerChain) {
-        List<LogicalHandler> logicalHandlers = new ArrayList<LogicalHandler>();
-        List<SOAPHandler> soapHandlers = new ArrayList<SOAPHandler>();
-        List<MessageHandler> messageHandlers = new ArrayList<MessageHandler>();
-        Set<QName> handlerKnownHeaders = new HashSet<QName>();
-
-        for (Handler handler : handlerChain) {
-            if (handler instanceof LogicalHandler) {
-                logicalHandlers.add((LogicalHandler) handler);
-            } else if (handler instanceof SOAPHandler) {
-                soapHandlers.add((SOAPHandler) handler);
-                Set<QName> headers = ((SOAPHandler<?>) handler).getHeaders();
-                if (headers != null) {
-                    handlerKnownHeaders.addAll(headers);
-                }
-            } else if (handler instanceof MessageHandler) {
-                messageHandlers.add((MessageHandler) handler);
-                Set<QName> headers = ((MessageHandler<?>) handler).getHeaders();
-                if (headers != null) {
-                    handlerKnownHeaders.addAll(headers);
-                }
-            }else {
-                throw new HandlerException("handler.not.valid.type",
-                    handler.getClass());
-            }
+    private void populateBindingUnderstoodHeaders() {
+        AddressingVersion addressingVersion = getAddressingVersion();
+        if (addressingVersion != null) {
+            bindingUnderstoodHeaders.add(addressingVersion.actionTag);
+            bindingUnderstoodHeaders.add(addressingVersion.faultToTag);
+            bindingUnderstoodHeaders.add(addressingVersion.fromTag);
+            bindingUnderstoodHeaders.add(addressingVersion.messageIDTag);
+            bindingUnderstoodHeaders.add(addressingVersion.relatesToTag);
+            bindingUnderstoodHeaders.add(addressingVersion.replyToTag);
+            bindingUnderstoodHeaders.add(addressingVersion.toTag);
         }
-        return new HandlerConfiguration(roles,portKnownHeaders,handlerChain,
-                logicalHandlers,soapHandlers,messageHandlers,handlerKnownHeaders);
     }
 
-    protected void addRequiredRoles() {
+    /**
+     * Sets the handlers on the binding and then sorts the handlers in to logical and protocol handlers.
+     * Creates a new HandlerConfiguration object and sets it on the BindingImpl. Also parses Headers understood by
+     * Protocol Handlers and sets the HandlerConfiguration.
+     */
+    public void setHandlerChain(List<Handler> chain) {
+        handlerConfig = new HandlerConfiguration(handlerConfig.getRoles(), chain);
+    }
+
+    protected void addRequiredRoles(Set<String> roles) {
         roles.addAll(soapVersion.requiredRoles);
     }
 
     public Set<String> getRoles() {
-        return roles;
+        return handlerConfig.getRoles();
     }
 
     /**
@@ -157,12 +160,8 @@ public final class SOAPBindingImpl extends BindingImpl implements SOAPBinding {
         if (roles.contains(ROLE_NONE)) {
             throw new WebServiceException(ClientMessages.INVALID_SOAP_ROLE_NONE());
         }
-        this.roles = roles;
-        addRequiredRoles();
-        HandlerConfiguration oldConfig = getHandlerConfig();
-        setHandlerConfig(new HandlerConfiguration(this.roles, portKnownHeaders, oldConfig.getHandlerChain(),
-                oldConfig.getLogicalHandlers(),oldConfig.getSoapHandlers(), oldConfig.getMessageHandlers(),
-                oldConfig.getHandlerKnownHeaders()));
+        addRequiredRoles(roles);
+        handlerConfig = new HandlerConfiguration(roles, getHandlerConfig());
     }
 
 

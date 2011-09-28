@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -61,7 +61,7 @@ import java.security.BasicPermission;
  *     VM-wide singleton semantics,  before a genuine JAXB implementation sets one.
  *     This allows malicious code to gain access to objects that it may otherwise
  *     not have access to, such as {@link Frame#getFrames()} that belongs to
- *     another application running in the same JVM. 
+ *     another application running in the same JVM.
  *   </td>
  * </tr>
  * </table>

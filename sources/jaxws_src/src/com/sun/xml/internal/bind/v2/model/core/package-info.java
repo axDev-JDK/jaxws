@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -55,7 +55,7 @@
  *      Corresponds to {@link Method}.
  *
  * <dt>
- */ 
+ */
 @XmlSchema(namespace="http://jaxb.dev.java.net/xjc/model",elementFormDefault=QUALIFIED)
 package com.sun.xml.internal.bind.v2.model.core;
 
@@ -66,6 +66,3 @@ import java.lang.reflect.Field;
 import javax.xml.bind.annotation.XmlSchema;
 
 import static javax.xml.bind.annotation.XmlNsForm.QUALIFIED;
-
-
-

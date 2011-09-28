@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -45,7 +45,7 @@ public abstract class HttpHandler {
      * involved in handling an exchange. Container invokes this method
      * when it receives an incoming request.
      *
-     * @param exchange the exchange containing the request from the 
+     * @param exchange the exchange containing the request from the
      *      client and used to send the response
      * @throws IOException when an I/O error happens during request
      *      handling

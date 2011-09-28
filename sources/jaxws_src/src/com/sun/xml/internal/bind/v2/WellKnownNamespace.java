@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,39 +22,50 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.bind.v2;
+
+import javax.xml.XMLConstants;
 
 /**
  * Well-known namespace URIs.
- * 
  * @author
- *     Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
+ *     Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com), Martin Grebac (martin.grebac@oracle.com)
  * @since 2.0
  */
 public abstract class WellKnownNamespace {
     private WellKnownNamespace() {} // no instanciation please
 
-    public static final String XML_SCHEMA =
-        "http://www.w3.org/2001/XMLSchema";
+    /**
+     * @deprecated Use javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI instead;
+     * @return
+     * @throws CloneNotSupportedException
+     */
+    @Deprecated()
+    public static final String XML_SCHEMA = XMLConstants.W3C_XML_SCHEMA_NS_URI;
 
-    public static final String XML_SCHEMA_INSTANCE =
-        "http://www.w3.org/2001/XMLSchema-instance";
+    /**
+     * @deprecated Use javax.xml.XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI instead
+     * @return
+     * @throws CloneNotSupportedException
+     */
+    @Deprecated()
+    public static final String XML_SCHEMA_INSTANCE = XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI;
 
-    public static final Object XML_SCHEMA_DATATYPES =
-        "http://www.w3.org/2001/XMLSchema-datatypes";
+    /**
+     * @deprecated Use javax.xml.XMLConstants.XML_NS_URI instead;
+     * @return
+     * @throws CloneNotSupportedException
+     */
+    @Deprecated()
+    public static final String XML_NAMESPACE_URI = XMLConstants.XML_NS_URI;
 
-    public static final String XML_NAMESPACE_URI =
-        "http://www.w3.org/XML/1998/namespace";
+    public static final String XOP = "http://www.w3.org/2004/08/xop/include";
 
-    public static final String XOP =
-        "http://www.w3.org/2004/08/xop/include";
-    
-    public static final String SWA_URI =
-        "http://ws-i.org/profiles/basic/1.1/xsd";
-    
+    public static final String SWA_URI = "http://ws-i.org/profiles/basic/1.1/xsd";
+
     public static final String XML_MIME_URI = "http://www.w3.org/2005/05/xmlmime";
 
     public static final String JAXB = "http://java.sun.com/xml/ns/jaxb";
 
-//    public static final QName XSI_NIL = new QName(XML_SCHEMA_INSTANCE,"nil");
 }

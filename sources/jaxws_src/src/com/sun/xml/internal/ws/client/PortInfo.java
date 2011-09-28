@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.ws.client;
 
 import com.sun.istack.internal.NotNull;
@@ -38,7 +39,7 @@ import com.sun.xml.internal.ws.binding.WebServiceFeatureList;
 import com.sun.xml.internal.ws.model.wsdl.WSDLPortImpl;
 import com.sun.xml.internal.ws.model.wsdl.WSDLModelImpl;
 import com.sun.xml.internal.ws.policy.PolicyMap;
-import com.sun.xml.internal.ws.policy.PolicyUtil;
+import com.sun.xml.internal.ws.policy.jaxws.PolicyUtil;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.WebServiceFeature;
@@ -151,7 +152,7 @@ public class PortInfo implements WSPortInfo {
             Iterable<WSDLPortImpl> ports = owner.getWsdlService().getPorts();
             for (WSDLPortImpl port : ports){
                 if (port.getName().equals(portName))
-                    return port;                
+                    return port;
             }
         }
         return null;
@@ -208,4 +209,3 @@ public class PortInfo implements WSPortInfo {
         return bindingId.toString();
     }
 }
-

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -42,7 +42,7 @@ import java.security.Principal;
  * When the user application calls a method on {@link WebServiceContext},
  * the JAX-WS RI goes to the {@link Packet} that represents the request,
  * then check {@link Packet#webServiceContextDelegate}, and forwards
- * the method calls to {@link WebServiceContextDelegate}. 
+ * the method calls to {@link WebServiceContextDelegate}.
  *
  * <p>
  * All the methods defined on this interface takes {@link Packet}
@@ -125,7 +125,7 @@ public interface WebServiceContextDelegate {
      * other transports that support WSDL publishing (such as SOAP/TCP used
      * with Servlet transport), then such transport may
      * choose to find the corresponding servlet endpoint by {@link Module#getBoundEndpoints()}
-     * and try to obtain the address from there. 
+     * and try to obtain the address from there.
      *
      * <p>
      * This information is used to put a metadata reference inside an EPR,

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 /*
  * @(#)Header.java    1.3 02/03/27
  */
@@ -42,14 +43,14 @@ public interface Header {
     /**
      * Returns the name of this header.
      *
-     * @return 		name of the header
+     * @return          name of the header
      */
     String getName();
 
     /**
      * Returns the value of this header.
      *
-     * @return 		value of the header
+     * @return          value of the header
      */
     String getValue();
 }

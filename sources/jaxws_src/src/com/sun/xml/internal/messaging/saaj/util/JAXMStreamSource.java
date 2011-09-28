@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,7 +22,6 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
-
 
 package com.sun.xml.internal.messaging.saaj.util;
 
@@ -63,25 +62,25 @@ public class JAXMStreamSource extends StreamSource {
         CharWriter cout = new CharWriter();
         char[] temp = new char[1024];
         int len;
-                                                                                
+
         while (-1 != (len = rdr.read(temp)))
             cout.write(temp, 0, len);
-                                                                                
+
         this.reader = new CharReader(cout.getChars(), cout.getCount());
     }
 
     public InputStream getInputStream() {
-	return in;
+        return in;
     }
-    
+
     public Reader getReader() {
-	return reader;
+        return reader;
     }
 
     public void reset() throws IOException {
-	    if (in != null)
-		in.reset();
-	    if (reader != null)
-		reader.reset();
+            if (in != null)
+                in.reset();
+            if (reader != null)
+                reader.reset();
     }
 }

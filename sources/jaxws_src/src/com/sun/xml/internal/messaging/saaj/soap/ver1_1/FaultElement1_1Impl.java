@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,8 +22,6 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
-
-
 
 /**
 *
@@ -53,7 +51,7 @@ public class FaultElement1_1Impl extends FaultElementImpl {
                                String localName) {
         super(ownerDoc, NameImpl.createFaultElement1_1Name(localName));
     }
-    
+
     public FaultElement1_1Impl(SOAPDocumentImpl ownerDoc,
                                String localName,
                                String prefix) {
@@ -62,7 +60,7 @@ public class FaultElement1_1Impl extends FaultElementImpl {
     }
 
     protected boolean isStandardFaultElement() {
-        String localName = elementQName.getLocalPart(); 
+        String localName = elementQName.getLocalPart();
         if (localName.equalsIgnoreCase("faultcode") ||
             localName.equalsIgnoreCase("faultstring") ||
             localName.equalsIgnoreCase("faultactor")) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -79,7 +79,7 @@ import java.util.UUID;
  */
 public class MtomCodec extends MimeCodec {
     public static final String XOP_XML_MIME_TYPE = "application/xop+xml";
-    
+
     private final StreamSOAPCodec codec;
 
     // encoding related parameters
@@ -107,11 +107,11 @@ public class MtomCodec extends MimeCodec {
         String boundaryParameter = "boundary=\"" + boundary +"\"";
         messageContentType = MULTIPART_RELATED_MIME_TYPE +
                 ";start=\""+rootId +"\"" +
-                ";type=\"" + XOP_XML_MIME_TYPE + "\";" + 
-                boundaryParameter + 
+                ";type=\"" + XOP_XML_MIME_TYPE + "\";" +
+                boundaryParameter +
                 ";start-info=\"" + version.contentType + "\"";
     }
-    
+
     /**
      * Return the soap 1.1 and soap 1.2 specific XOP packaged ContentType
      *

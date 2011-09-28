@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.bind.marshaller;
 
 import java.io.IOException;
@@ -30,16 +31,16 @@ import java.io.Writer;
 /**
  * Performs no character escaping. Usable only when the output encoding
  * is UTF, but this handler gives the maximum performance.
- * 
+ *
  * @author
  *     Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
 public class MinimumEscapeHandler implements CharacterEscapeHandler {
-    
+
     private MinimumEscapeHandler() {}  // no instanciation please
-    
-    public static final CharacterEscapeHandler theInstance = new MinimumEscapeHandler(); 
-    
+
+    public static final CharacterEscapeHandler theInstance = new MinimumEscapeHandler();
+
     public void escape(char[] ch, int start, int length, boolean isAttVal, Writer out) throws IOException {
         // avoid calling the Writerwrite method too much by assuming
         // that the escaping occurs rarely.
@@ -67,7 +68,7 @@ public class MinimumEscapeHandler implements CharacterEscapeHandler {
                 }
             }
         }
-        
+
         if( start!=limit )
             out.write(ch,start,limit-start);
     }

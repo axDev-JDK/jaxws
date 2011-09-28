@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -34,7 +34,7 @@ import java.util.List;
 /**
  * Represents a Java reference type, such as a class, an interface,
  * an enum, an array type, a parameterized type.
- * 
+ *
  * <p>
  * To be exact, this object represents an "use" of a reference type,
  * not necessarily a declaration of it, which is modeled as {@link JDefinedClass}.
@@ -49,13 +49,13 @@ public abstract class JClass extends JType
      * Gets the name of this class.
      *
      * @return
-     *	name of this class, without any qualification.
-     *	For example, this method returns "String" for
+     *  name of this class, without any qualification.
+     *  For example, this method returns "String" for
      *  <code>java.lang.String</code>.
      */
     abstract public String name();
-	
-	/**
+
+        /**
      * Gets the package to which this class belongs.
      * TODO: shall we move move this down?
      */
@@ -68,14 +68,14 @@ public abstract class JClass extends JType
     public JClass outer() {
         return null;
     }
-	
+
     private final JCodeModel _owner;
     /** Gets the JCodeModel object to which this object belongs. */
     public final JCodeModel owner() { return _owner; }
-    
+
     /**
      * Gets the super class of this class.
-     * 
+     *
      * @return
      *      Returns the JClass representing the superclass of the
      *      entity (class or interface) represented by this {@link JClass}.
@@ -85,23 +85,23 @@ public abstract class JClass extends JType
      *      If this JClass represents {@link Object}, return null.
      */
     abstract public JClass _extends();
-    
+
     /**
      * Iterates all super interfaces directly implemented by
      * this class/interface.
-     * 
+     *
      * @return
-     *		A non-null valid iterator that iterates all
-     *		{@link JClass} objects that represents those interfaces
-     *		implemented by this object.
+     *          A non-null valid iterator that iterates all
+     *          {@link JClass} objects that represents those interfaces
+     *          implemented by this object.
      */
     abstract public Iterator<JClass> _implements();
-    
+
     /**
      * Iterates all the type parameters of this class/interface.
-     * 
+     *
      * <p>
-     * For example, if this {@link JClass} represents 
+     * For example, if this {@link JClass} represents
      * <code>Set&lt;T></code>, this method returns an array
      * that contains single {@link JTypeVar} for 'T'.
      */
@@ -155,27 +155,27 @@ public abstract class JClass extends JType
      */
     public final boolean isAssignableFrom( JClass derived ) {
         // to avoid the confusion, always use "this" explicitly in this method.
-        
+
         // null can be assigned to any type.
         if( derived instanceof JNullType )  return true;
-        
+
         if( this==derived )     return true;
-        
+
         // the only class that is assignable from an interface is
         // java.lang.Object
         if( this==_package().owner().ref(Object.class) )  return true;
-        
+
         JClass b = derived._extends();
         if( b!=null && this.isAssignableFrom(b) )
             return true;
-        
+
         if( this.isInterface() ) {
-            Iterator itfs = derived._implements();
+            Iterator<JClass> itfs = derived._implements();
             while( itfs.hasNext() )
-                if( this.isAssignableFrom((JClass)itfs.next()) )
+                if( this.isAssignableFrom(itfs.next()) )
                     return true;
         }
-        
+
         return false;
     }
 
@@ -224,7 +224,7 @@ public abstract class JClass extends JType
         return null;
     }
 
-    public final JClass getBaseClass( Class baseType ) {
+    public final JClass getBaseClass( Class<?> baseType ) {
         return getBaseClass(owner().ref(baseType));
     }
 
@@ -239,15 +239,15 @@ public abstract class JClass extends JType
     /**
      * "Narrows" a generic class to a concrete class by specifying
      * a type argument.
-     * 
+     *
      * <p>
      * <code>.narrow(X)</code> builds <code>Set&lt;X></code> from <code>Set</code>.
      */
-    public JClass narrow( Class clazz ) {
+    public JClass narrow( Class<?> clazz ) {
         return narrow(owner().ref(clazz));
     }
 
-    public JClass narrow( Class... clazz ) {
+    public JClass narrow( Class<?>... clazz ) {
         JClass[] r = new JClass[clazz.length];
         for( int i=0; i<clazz.length; i++ )
             r[i] = owner().ref(clazz[i]);
@@ -257,7 +257,7 @@ public abstract class JClass extends JType
     /**
      * "Narrows" a generic class to a concrete class by specifying
      * a type argument.
-     * 
+     *
      * <p>
      * <code>.narrow(X)</code> builds <code>Set&lt;X></code> from <code>Set</code>.
      */
@@ -265,12 +265,16 @@ public abstract class JClass extends JType
         return new JNarrowedClass(this,clazz);
     }
 
+    public JClass narrow( JType type ) {
+        return narrow(type.boxify());
+    }
+
     public JClass narrow( JClass... clazz ) {
         return new JNarrowedClass(this,Arrays.asList(clazz.clone()));
     }
 
     public JClass narrow( List<? extends JClass> clazz ) {
-        return new JNarrowedClass(this,new ArrayList(clazz));
+        return new JNarrowedClass(this,new ArrayList<JClass>(clazz));
     }
 
     /**
@@ -298,18 +302,18 @@ public abstract class JClass extends JType
 
     /**
      * Substitutes the type variables with their actual arguments.
-     * 
+     *
      * <p>
      * For example, when this class is Map&lt;String,Map&lt;V>>,
      * (where V then doing
      * substituteParams( V, Integer ) returns a {@link JClass}
      * for <code>Map&lt;String,Map&lt;Integer>></code>.
-     * 
+     *
      * <p>
      * This method needs to work recursively.
      */
     protected abstract JClass substituteParams( JTypeVar[] variables, List<JClass> bindings );
-    
+
     public String toString() {
         return this.getClass().getName() + '(' + name() + ')';
     }
@@ -323,12 +327,12 @@ public abstract class JClass extends JType
     public final JInvocation staticInvoke(JMethod method) {
         return new JInvocation(this,method);
     }
-    
+
     /** Generates a static method invocation. */
     public final JInvocation staticInvoke(String method) {
         return new JInvocation(this,method);
     }
-    
+
     /** Static field reference. */
     public final JFieldRef staticRef(String field) {
         return new JFieldRef(this, field);

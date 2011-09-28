@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -44,38 +44,49 @@ import com.sun.xml.internal.bind.v2.runtime.Location;
  * {@link Navigator} implementation for {@code java.lang.reflect}.
  *
  */
-public final class ReflectionNavigator implements Navigator<Type,Class,Field,Method> {
+public final class ReflectionNavigator implements Navigator<Type, Class, Field, Method> {
+
     /**
      * Singleton.
      *
      * Use {@link Navigator#REFLECTION}
      */
-    ReflectionNavigator() {}
-
-    public Class getSuperClass(Class clazz) {
-        if(clazz==Object.class) return null;
-        Class sc = clazz.getSuperclass();
-        if(sc==null)    sc=Object.class;        // error recovery
-        return sc;
+    ReflectionNavigator() {
     }
 
-    private static final TypeVisitor<Type,Class> baseClassFinder = new TypeVisitor<Type,Class>() {
+    public Class getSuperClass(Class clazz) {
+        if (clazz == Object.class) {
+            return null;
+        }
+        Class sc = clazz.getSuperclass();
+        if (sc == null) {
+            sc = Object.class;        // error recovery
+        }
+        return sc;
+    }
+    private static final TypeVisitor<Type, Class> baseClassFinder = new TypeVisitor<Type, Class>() {
+
         public Type onClass(Class c, Class sup) {
             // t is a raw type
-            if(sup==c)
+            if (sup == c) {
                 return sup;
+            }
 
             Type r;
 
             Type sc = c.getGenericSuperclass();
-            if(sc!=null) {
-                r = visit(sc,sup);
-                if(r!=null)     return r;
+            if (sc != null) {
+                r = visit(sc, sup);
+                if (r != null) {
+                    return r;
+                }
             }
 
-            for( Type i : c.getGenericInterfaces() ) {
-                r = visit(i,sup);
-                if(r!=null)  return r;
+            for (Type i : c.getGenericInterfaces()) {
+                r = visit(i, sup);
+                if (r != null) {
+                    return r;
+                }
             }
 
             return null;
@@ -83,19 +94,23 @@ public final class ReflectionNavigator implements Navigator<Type,Class,Field,Met
 
         public Type onParameterizdType(ParameterizedType p, Class sup) {
             Class raw = (Class) p.getRawType();
-            if(raw==sup) {
+            if (raw == sup) {
                 // p is of the form sup<...>
                 return p;
             } else {
                 // recursively visit super class/interfaces
                 Type r = raw.getGenericSuperclass();
-                if(r!=null)
-                    r = visit(bind(r,raw,p),sup);
-                if(r!=null)
+                if (r != null) {
+                    r = visit(bind(r, raw, p), sup);
+                }
+                if (r != null) {
                     return r;
-                for( Type i : raw.getGenericInterfaces() ) {
-                    r = visit(bind(i,raw,p),sup);
-                    if(r!=null)  return r;
+                }
+                for (Type i : raw.getGenericInterfaces()) {
+                    r = visit(bind(i, raw, p), sup);
+                    if (r != null) {
+                        return r;
+                    }
                 }
                 return null;
             }
@@ -107,7 +122,7 @@ public final class ReflectionNavigator implements Navigator<Type,Class,Field,Met
         }
 
         public Type onVariable(TypeVariable v, Class sup) {
-            return visit(v.getBounds()[0],sup);
+            return visit(v.getBounds()[0], sup);
         }
 
         public Type onWildcard(WildcardType w, Class sup) {
@@ -123,33 +138,37 @@ public final class ReflectionNavigator implements Navigator<Type,Class,Field,Met
          * @param args
          *      actual arguments. See {@link ParameterizedType#getActualTypeArguments()}
          */
-        private Type bind( Type t, GenericDeclaration decl, ParameterizedType args ) {
-            return binder.visit(t,new BinderArg(decl,args.getActualTypeArguments()));
+        private Type bind(Type t, GenericDeclaration decl, ParameterizedType args) {
+            return binder.visit(t, new BinderArg(decl, args.getActualTypeArguments()));
         }
     };
 
     private static class BinderArg {
+
         final TypeVariable[] params;
         final Type[] args;
 
         BinderArg(TypeVariable[] params, Type[] args) {
             this.params = params;
             this.args = args;
-            assert params.length==args.length;
+            assert params.length == args.length;
         }
 
-        public BinderArg( GenericDeclaration decl, Type[] args ) {
-            this(decl.getTypeParameters(),args);
+        public BinderArg(GenericDeclaration decl, Type[] args) {
+            this(decl.getTypeParameters(), args);
         }
 
-        Type replace( TypeVariable v ) {
-            for(int i=0; i<params.length; i++)
-                if(params[i].equals(v))
+        Type replace(TypeVariable v) {
+            for (int i = 0; i < params.length; i++) {
+                if (params[i].equals(v)) {
                     return args[i];
+                }
+            }
             return v;   // this is a free variable
         }
     }
-    private static final TypeVisitor<Type,BinderArg> binder = new TypeVisitor<Type,BinderArg>() {
+    private static final TypeVisitor<Type, BinderArg> binder = new TypeVisitor<Type, BinderArg>() {
+
         public Type onClass(Class c, BinderArg args) {
             return c;
         }
@@ -158,25 +177,30 @@ public final class ReflectionNavigator implements Navigator<Type,Class,Field,Met
             Type[] params = p.getActualTypeArguments();
 
             boolean different = false;
-            for( int i=0; i<params.length; i++ ) {
+            for (int i = 0; i < params.length; i++) {
                 Type t = params[i];
-                params[i] = visit(t,args);
-                different |= t!=params[i];
+                params[i] = visit(t, args);
+                different |= t != params[i];
             }
 
             Type newOwner = p.getOwnerType();
-            if(newOwner!=null)
-                newOwner = visit(newOwner,args);
-            different |= p.getOwnerType()!=newOwner;
+            if (newOwner != null) {
+                newOwner = visit(newOwner, args);
+            }
+            different |= p.getOwnerType() != newOwner;
 
-            if(!different)  return p;
+            if (!different) {
+                return p;
+            }
 
-            return new ParameterizedTypeImpl( (Class<?>)p.getRawType(), params, newOwner );
+            return new ParameterizedTypeImpl((Class<?>) p.getRawType(), params, newOwner);
         }
 
         public Type onGenericArray(GenericArrayType g, BinderArg types) {
-            Type c = visit(g.getGenericComponentType(),types);
-            if(c==g.getGenericComponentType())  return g;
+            Type c = visit(g.getGenericComponentType(), types);
+            if (c == g.getGenericComponentType()) {
+                return g;
+            }
 
             return new GenericArrayTypeImpl(c);
         }
@@ -193,27 +217,28 @@ public final class ReflectionNavigator implements Navigator<Type,Class,Field,Met
             Type[] ub = w.getUpperBounds();
             boolean diff = false;
 
-            for( int i=0; i<lb.length; i++ ) {
+            for (int i = 0; i < lb.length; i++) {
                 Type t = lb[i];
-                lb[i] = visit(t,types);
-                diff |= (t!=lb[i]);
+                lb[i] = visit(t, types);
+                diff |= (t != lb[i]);
             }
 
-            for( int i=0; i<ub.length; i++ ) {
+            for (int i = 0; i < ub.length; i++) {
                 Type t = ub[i];
-                ub[i] = visit(t,types);
-                diff |= (t!=ub[i]);
+                ub[i] = visit(t, types);
+                diff |= (t != ub[i]);
             }
 
-            if(!diff)       return w;
+            if (!diff) {
+                return w;
+            }
 
-            return new WildcardTypeImpl(lb,ub);
+            return new WildcardTypeImpl(lb, ub);
         }
     };
 
-
     public Type getBaseClass(Type t, Class sup) {
-        return baseClassFinder.visit(t,sup);
+        return baseClassFinder.visit(t, sup);
     }
 
     public String getClassName(Class clazz) {
@@ -223,8 +248,9 @@ public final class ReflectionNavigator implements Navigator<Type,Class,Field,Met
     public String getTypeName(Type type) {
         if (type instanceof Class) {
             Class c = (Class) type;
-            if(c.isArray())
-                return getTypeName(c.getComponentType())+"[]";
+            if (c.isArray()) {
+                return getTypeName(c.getComponentType()) + "[]";
+            }
             return c.getName();
         }
         return type.toString();
@@ -259,6 +285,12 @@ public final class ReflectionNavigator implements Navigator<Type,Class,Field,Met
     }
 
     public Type getFieldType(Field field) {
+        if (field.getType().isArray()) {
+            Class c = field.getType().getComponentType();
+            if (c.isPrimitive()) {
+                return Array.newInstance(c, 0).getClass();
+            }
+        }
         return fix(field.getGenericType());
     }
 
@@ -305,33 +337,32 @@ public final class ReflectionNavigator implements Navigator<Type,Class,Field,Met
     public Class asDecl(Class c) {
         return c;
     }
-
-
     /**
      * Implements the logic for {@link #erasure(Type)}.
      */
-    private static final TypeVisitor<Class,Void> eraser = new TypeVisitor<Class,Void>() {
-        public Class onClass(Class c,Void _) {
+    private static final TypeVisitor<Class, Void> eraser = new TypeVisitor<Class, Void>() {
+
+        public Class onClass(Class c, Void _) {
             return c;
         }
 
-        public Class onParameterizdType(ParameterizedType p,Void _) {
+        public Class onParameterizdType(ParameterizedType p, Void _) {
             // TODO: why getRawType returns Type? not Class?
-            return visit(p.getRawType(),null);
+            return visit(p.getRawType(), null);
         }
 
-        public Class onGenericArray(GenericArrayType g,Void _) {
+        public Class onGenericArray(GenericArrayType g, Void _) {
             return Array.newInstance(
-                visit(g.getGenericComponentType(),null),
-                0 ).getClass();
+                    visit(g.getGenericComponentType(), null),
+                    0).getClass();
         }
 
-        public Class onVariable(TypeVariable v,Void _) {
-            return visit(v.getBounds()[0],null);
+        public Class onVariable(TypeVariable v, Void _) {
+            return visit(v.getBounds()[0], null);
         }
 
-        public Class onWildcard(WildcardType w,Void _) {
-            return visit(w.getUpperBounds()[0],null);
+        public Class onWildcard(WildcardType w, Void _) {
+            return visit(w.getUpperBounds()[0], null);
         }
     };
 
@@ -351,7 +382,7 @@ public final class ReflectionNavigator implements Navigator<Type,Class,Field,Met
      * is to throw away the entire parameterization and go to the wrapper approach.
      */
     public <T> Class<T> erasure(Type t) {
-        return eraser.visit(t,null);
+        return eraser.visit(t, null);
     }
 
     public boolean isAbstract(Class clazz) {
@@ -365,8 +396,8 @@ public final class ReflectionNavigator implements Navigator<Type,Class,Field,Met
     /**
      * Returns the {@link Type} object that represents {@code clazz&lt;T1,T2,T3>}.
      */
-    public Type createParameterizedType( Class rawType, Type... arguments ) {
-        return new ParameterizedTypeImpl(rawType,arguments,null);
+    public Type createParameterizedType(Class rawType, Type... arguments) {
+        return new ParameterizedTypeImpl(rawType, arguments, null);
     }
 
     public boolean isArray(Type t) {
@@ -374,31 +405,32 @@ public final class ReflectionNavigator implements Navigator<Type,Class,Field,Met
             Class c = (Class) t;
             return c.isArray();
         }
-        if(t instanceof GenericArrayType)
+        if (t instanceof GenericArrayType) {
             return true;
+        }
         return false;
     }
 
     public boolean isArrayButNotByteArray(Type t) {
         if (t instanceof Class) {
             Class c = (Class) t;
-            return c.isArray() && c!=byte[].class;
+            return c.isArray() && c != byte[].class;
         }
-        if(t instanceof GenericArrayType) {
-            t = ((GenericArrayType)t).getGenericComponentType();
-            return t!=Byte.TYPE;
+        if (t instanceof GenericArrayType) {
+            t = ((GenericArrayType) t).getGenericComponentType();
+            return t != Byte.TYPE;
         }
         return false;
     }
-
 
     public Type getComponentType(Type t) {
         if (t instanceof Class) {
             Class c = (Class) t;
             return c.getComponentType();
         }
-        if(t instanceof GenericArrayType)
-            return ((GenericArrayType)t).getGenericComponentType();
+        if (t instanceof GenericArrayType) {
+            return ((GenericArrayType) t).getGenericComponentType();
+        }
 
         throw new IllegalArgumentException();
     }
@@ -407,8 +439,9 @@ public final class ReflectionNavigator implements Navigator<Type,Class,Field,Met
         if (type instanceof ParameterizedType) {
             ParameterizedType p = (ParameterizedType) type;
             return fix(p.getActualTypeArguments()[i]);
-        } else
+        } else {
             throw new IllegalArgumentException();
+        }
     }
 
     public boolean isParameterizedType(Type type) {
@@ -430,6 +463,8 @@ public final class ReflectionNavigator implements Navigator<Type,Class,Field,Met
 
     public Location getClassLocation(final Class clazz) {
         return new Location() {
+
+            @Override
             public String toString() {
                 return clazz.getName();
             }
@@ -438,6 +473,8 @@ public final class ReflectionNavigator implements Navigator<Type,Class,Field,Met
 
     public Location getFieldLocation(final Field field) {
         return new Location() {
+
+            @Override
             public String toString() {
                 return field.toString();
             }
@@ -446,6 +483,8 @@ public final class ReflectionNavigator implements Navigator<Type,Class,Field,Met
 
     public Location getMethodLocation(final Method method) {
         return new Location() {
+
+            @Override
             public String toString() {
                 return method.toString();
             }
@@ -481,8 +520,8 @@ public final class ReflectionNavigator implements Navigator<Type,Class,Field,Met
         try {
             Object[] values = clazz.getEnumConstants();
             Field[] fields = new Field[values.length];
-            for( int i=0; i<values.length; i++ ) {
-                fields[i] = clazz.getField(((Enum)values[i]).name());
+            for (int i = 0; i < values.length; i++) {
+                fields[i] = clazz.getField(((Enum) values[i]).name());
             }
             return fields;
         } catch (NoSuchFieldException e) {
@@ -498,14 +537,19 @@ public final class ReflectionNavigator implements Navigator<Type,Class,Field,Met
     public String getPackageName(Class clazz) {
         String name = clazz.getName();
         int idx = name.lastIndexOf('.');
-        if(idx<0)   return "";
-        else        return name.substring(0,idx);
+        if (idx < 0) {
+            return "";
+        } else {
+            return name.substring(0, idx);
+        }
     }
 
     public Class findClass(String className, Class referencePoint) {
         try {
-        ClassLoader cl = referencePoint.getClassLoader();
-        if(cl==null)  cl = ClassLoader.getSystemClassLoader();
+            ClassLoader cl = referencePoint.getClassLoader();
+            if (cl == null) {
+                cl = ClassLoader.getSystemClassLoader();
+            }
             return cl.loadClass(className);
         } catch (ClassNotFoundException e) {
             return null;
@@ -530,10 +574,11 @@ public final class ReflectionNavigator implements Navigator<Type,Class,Field,Met
         String name = method.getName();
         Class[] params = method.getParameterTypes();
 
-        while(base!=null) {
+        while (base != null) {
             try {
-                if(base.getDeclaredMethod(name,params)!=null)
+                if (base.getDeclaredMethod(name, params) != null) {
                     return true;
+                }
             } catch (NoSuchMethodException e) {
                 // recursively go into the base class
             }
@@ -553,24 +598,24 @@ public final class ReflectionNavigator implements Navigator<Type,Class,Field,Met
     }
 
     public boolean isInnerClass(Class clazz) {
-        return clazz.getEnclosingClass()!=null && !Modifier.isStatic(clazz.getModifiers());
+        return clazz.getEnclosingClass() != null && !Modifier.isStatic(clazz.getModifiers());
     }
 
-
     /**
-     * JDK 5.0 has a bug of createing {@link GenericArrayType} where it shouldn't.
+     * JDK 5.0 has a bug of creating {@link GenericArrayType} where it shouldn't.
      * fix that manually to work around the problem.
      *
      * See bug 6202725.
      */
     private Type fix(Type t) {
-        if(!(t instanceof GenericArrayType))
+        if (!(t instanceof GenericArrayType)) {
             return t;
+        }
 
         GenericArrayType gat = (GenericArrayType) t;
-        if(gat.getGenericComponentType() instanceof Class) {
+        if (gat.getGenericComponentType() instanceof Class) {
             Class c = (Class) gat.getGenericComponentType();
-            return Array.newInstance(c,0).getClass();
+            return Array.newInstance(c, 0).getClass();
         }
 
         return t;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -129,7 +129,7 @@ public final class WSEndpointImpl<T> extends WSEndpoint<T> {
         this.seiModel = seiModel;
         this.endpointPolicy = endpointPolicy;
 
-        this.managedObjectManager = 
+        this.managedObjectManager =
             new MonitorRootService(this).createManagedObjectManager(this);
 
         if (serviceDef != null) {
@@ -147,7 +147,7 @@ public final class WSEndpointImpl<T> extends WSEndpoint<T> {
 
         Codec c = context.getCodec();
         if(c instanceof EndpointAwareCodec) {
-            // create a copy to avoid sharing the codec between multiple endpoints 
+            // create a copy to avoid sharing the codec between multiple endpoints
             c = c.copy();
             ((EndpointAwareCodec)c).setEndpoint(this);
         }
@@ -232,6 +232,10 @@ public final class WSEndpointImpl<T> extends WSEndpoint<T> {
     }
 
     public void schedule(final Packet request, final CompletionCallback callback, FiberContextSwitchInterceptor interceptor) {
+        processAsync(request, callback, interceptor, true);
+    }
+
+    private void processAsync(final Packet request, final CompletionCallback callback, FiberContextSwitchInterceptor interceptor, boolean schedule) {
         request.endpoint = WSEndpointImpl.this;
         if (wsdlProperties != null) {
             request.addSatellite(wsdlProperties);
@@ -241,7 +245,8 @@ public final class WSEndpointImpl<T> extends WSEndpoint<T> {
             fiber.addInterceptor(interceptor);
         }
         final Tube tube = tubePool.take();
-        fiber.start(tube, request, new Fiber.CompletionCallback() {
+
+        Fiber.CompletionCallback cbak = new Fiber.CompletionCallback() {
             public void onCompletion(@NotNull Packet response) {
                 tubePool.recycle(tube);
                 if (callback!=null) {
@@ -264,7 +269,17 @@ public final class WSEndpointImpl<T> extends WSEndpoint<T> {
                     callback.onCompletion(response);
                 }
             }
-        });
+        };
+        if (schedule) {
+            fiber.start(tube, request, cbak);
+        } else {
+            fiber.runAsync(tube, request, cbak);
+        }
+    }
+
+    @Override
+    public void process(final Packet request, final CompletionCallback callback, FiberContextSwitchInterceptor interceptor) {
+        processAsync(request, callback, interceptor, false);
     }
 
     public @NotNull PipeHead createPipeHead() {
@@ -383,4 +398,3 @@ public final class WSEndpointImpl<T> extends WSEndpoint<T> {
         return context;
     }
 }
-

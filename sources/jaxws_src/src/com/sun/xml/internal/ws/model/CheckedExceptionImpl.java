@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -31,15 +31,20 @@ import com.sun.xml.internal.ws.api.model.CheckedException;
 import com.sun.xml.internal.ws.api.model.ExceptionType;
 import com.sun.xml.internal.ws.api.model.SEIModel;
 import com.sun.xml.internal.ws.api.model.JavaMethod;
+import com.sun.xml.internal.ws.addressing.WsaActionUtil;
+import javax.xml.ws.WebServiceException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.logging.Logger;
 
 /**
  * CheckedException class. Holds the exception class - class that has public
  * constructor
- * 
+ *
  * <code>public WrapperException()String message, FaultBean){}</code>
- * 
+ *
  * and method
- * 
+ *
  * <code>public FaultBean getFaultInfo();</code>
  *
  * @author Vivek Pandey
@@ -79,7 +84,7 @@ public final class CheckedExceptionImpl implements CheckedException {
 
     /**
      * @return the <code>Class</clode> for this object
-     * 
+     *
      */
     public Class getExceptionClass() {
         return exceptionClass;
@@ -100,11 +105,11 @@ public final class CheckedExceptionImpl implements CheckedException {
     public ExceptionType getExceptionType() {
         return exceptionType;
     }
-    
+
     public String getMessageName() {
         return messageName;
     }
-    
+
     public void setMessageName(String messageName) {
         this.messageName = messageName;
     }
@@ -116,4 +121,10 @@ public final class CheckedExceptionImpl implements CheckedException {
     public void setFaultAction(String faultAction) {
         this.faultAction = faultAction;
     }
+
+    public String getDefaultFaultAction() {
+        return WsaActionUtil.getDefaultFaultAction(javaMethod,this);
+    }
+
+
 }

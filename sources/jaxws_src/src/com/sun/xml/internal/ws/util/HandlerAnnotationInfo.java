@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.ws.util;
 
 import java.util.List;
@@ -40,10 +41,10 @@ import javax.xml.ws.handler.Handler;
  * @author JAX-WS Development Team
  */
 public class HandlerAnnotationInfo {
-    
+
     private List<Handler> handlers;
     private Set<String> roles;
-    
+
     /**
      * Return the handlers specified by the handler chain descriptor.
      *
@@ -52,7 +53,7 @@ public class HandlerAnnotationInfo {
     public List<Handler> getHandlers() {
         return handlers;
     }
-    
+
     /**
      * This method should only be called by HandlerAnnotationProcessor.
      *
@@ -61,7 +62,7 @@ public class HandlerAnnotationInfo {
     public void setHandlers(List<Handler> handlers) {
         this.handlers = handlers;
     }
-    
+
     /**
      * Return the roles contained in the handler chain descriptor.
      *
@@ -70,7 +71,7 @@ public class HandlerAnnotationInfo {
     public Set<String> getRoles() {
         return roles;
     }
-    
+
     /**
      * This method should only be called by HandlerAnnotationProcessor.
      *
@@ -79,5 +80,5 @@ public class HandlerAnnotationInfo {
     public void setRoles(Set<String> roles) {
         this.roles = roles;
     }
-    
+
 }

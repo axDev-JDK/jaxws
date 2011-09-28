@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -66,7 +66,7 @@ import java.lang.annotation.Target;
  * <p>
  * This would allow you to do <tt>JAXBContext.newInstance(Animal.class)</tt>.
  * By the help of this annotation, JAXB implementations will be able to
- * correctly bind <tt>Dog</tt> and <tt>Cat</tt>. 
+ * correctly bind <tt>Dog</tt> and <tt>Cat</tt>.
  *
  * @author Kohsuke Kawaguchi
  * @since JAXB2.1

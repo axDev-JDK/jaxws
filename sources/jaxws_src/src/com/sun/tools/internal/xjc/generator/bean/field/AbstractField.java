@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.tools.internal.xjc.generator.bean.field;
 
 import java.util.ArrayList;
@@ -75,7 +76,7 @@ import com.sun.xml.internal.bind.v2.TODO;
 
 /**
  * Useful base class for implementing {@link FieldOutline}.
- * 
+ *
  * <p>
  * This class just provides a few utility methods and keep some
  * important variables so that they can be readily accessed any time.
@@ -84,11 +85,11 @@ import com.sun.xml.internal.bind.v2.TODO;
  *     Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
 abstract class AbstractField implements FieldOutline {
-    
+
     protected final ClassOutlineImpl outline;
-    
+
     protected final CPropertyInfo prop;
-    
+
     protected final JCodeModel codeModel;
 
     /**
@@ -380,7 +381,7 @@ abstract class AbstractField implements FieldOutline {
          * Evaluates to the target object this accessor should access.
          */
         protected final JExpression $target;
-        
+
         protected Accessor( JExpression $target ) {
             this.$target = $target;
         }
@@ -393,8 +394,8 @@ abstract class AbstractField implements FieldOutline {
             return prop;
         }
     }
-    
-    
+
+
 //
 //
 //     utility methods

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -168,22 +168,22 @@ public abstract class WSDLParserExtension {
     public boolean portTypeOperationFault(WSDLOperation op, XMLStreamReader reader) {
         return false;
     }
-    
+
     public boolean definitionsElements(XMLStreamReader reader) {
         return false;
     }
-    
+
     public boolean bindingElements(WSDLBoundPortType binding, XMLStreamReader reader) {
         return false;
     }
-    
+
     public void bindingAttributes(WSDLBoundPortType binding, XMLStreamReader reader) {
     }
-    
+
     public boolean portTypeElements(WSDLPortType portType, XMLStreamReader reader) {
         return false;
     }
-    
+
     public void portTypeAttributes(WSDLPortType portType, XMLStreamReader reader) {
     }
 

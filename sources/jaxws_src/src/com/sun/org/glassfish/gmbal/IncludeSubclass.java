@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,7 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
- 
+
 package com.sun.org.glassfish.gmbal ;
 
 import java.lang.annotation.Documented ;
@@ -32,14 +32,14 @@ import java.lang.annotation.Retention ;
 import java.lang.annotation.RetentionPolicy ;
 
 /** This annotation is applied to a class or interface representing ManagedData
- * to indicate that the 
- * listed subclasses should have their attributes included in the corresponding 
+ * to indicate that the
+ * listed subclasses should have their attributes included in the corresponding
  * CompositeData of the superclass.  Any given instance of this class will have
  * values for those attributes that are defined in the parent class
  * or the subclass for the particular type of the instance.
  */
-@Documented 
-@Target(ElementType.TYPE) 
+@Documented
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface IncludeSubclass {
     /** List of subclasses that should be analyzed for attributes and operations.
@@ -48,4 +48,3 @@ public @interface IncludeSubclass {
      */
     Class[] value() ;
 }
-

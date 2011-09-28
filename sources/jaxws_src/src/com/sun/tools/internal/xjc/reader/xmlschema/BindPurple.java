@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -75,8 +75,9 @@ public class BindPurple extends ColorBinder {
             prop.defaultValue = CDefaultValue.create(attType,use.getFixedValue());
             prop.realization = builder.fieldRendererFactory.getConst(prop.realization);
         } else
-        if(!attType.isCollection()) {
+        if(!attType.isCollection() && (prop.baseType == null ? true : !prop.baseType.isPrimitive())) {
             // don't support a collection default value. That's difficult to do.
+            // primitive types default value is problematic too - we can't check whether it has been set or no ( ==null) isn't possible TODO: emit a waring in these cases
 
             if(use.getDefaultValue()!=null) {
                 // this attribute use has a default value.
@@ -87,6 +88,10 @@ public class BindPurple extends ColorBinder {
             if(use.getFixedValue()!=null) {
                 prop.defaultValue = CDefaultValue.create(attType,use.getFixedValue());
             }
+        } else if(prop.baseType != null && prop.baseType.isPrimitive()) {
+            ErrorReporter errorReporter = Ring.get(ErrorReporter.class);
+
+            errorReporter.warning(prop.getLocator(), Messages.WARN_DEFAULT_VALUE_PRIMITIVE_TYPE, prop.baseType.name());
         }
 
         getCurrentBean().addProperty(prop);

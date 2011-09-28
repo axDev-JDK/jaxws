@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -139,7 +139,7 @@ public abstract class SOAPFaultBuilder {
      *
      * @param soapVersion {@link SOAPVersion#SOAP_11} or {@link SOAPVersion#SOAP_12}
      * @param ex a ProtocolException
-     * @param faultcode soap faultcode. Its ignored if the {@link ProtocolException} instance is {@link SOAPFaultException} and it has a 
+     * @param faultcode soap faultcode. Its ignored if the {@link ProtocolException} instance is {@link SOAPFaultException} and it has a
      * faultcode present in the underlying {@link SOAPFault}.
      * @return {@link Message} representing SOAP fault
      */
@@ -400,7 +400,7 @@ public abstract class SOAPFaultBuilder {
             }
         }
         SOAP11Fault soap11Fault = new SOAP11Fault(faultCode, faultString, faultActor, detailNode);
-        
+
         //Don't fill the stacktrace for Service specific exceptions.
         if(ce == null) {
             soap11Fault.captureStackTrace(e);
@@ -466,7 +466,7 @@ public abstract class SOAPFaultBuilder {
             faultCode = getDefaultFaultCode(soapVersion);
             code = new CodeType(faultCode);
         }else if(code == null){
-            code = new CodeType(faultCode);            
+            code = new CodeType(faultCode);
         }
 
         if (faultString == null) {

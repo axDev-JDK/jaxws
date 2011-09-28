@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -51,7 +51,7 @@ import javax.xml.namespace.QName;
  */
 public final class PolicyMap implements Iterable<Policy> {
    private static final PolicyLogger LOGGER = PolicyLogger.getLogger(PolicyMap.class);
-    
+
     private static final PolicyMapKeyHandler serviceKeyHandler = new PolicyMapKeyHandler() {
         public boolean areEqual(final PolicyMapKey key1, final PolicyMapKey key2) {
             return key1.getService().equals(key2.getService());
@@ -133,7 +133,7 @@ public final class PolicyMap implements Iterable<Policy> {
             return result;
         }
     };
-    
+
 
     static enum ScopeType {
         SERVICE,
@@ -148,17 +148,17 @@ public final class PolicyMap implements Iterable<Policy> {
         private final Map<PolicyMapKey, PolicyScope> internalMap = new HashMap<PolicyMapKey, PolicyScope>();
         private final PolicyMapKeyHandler scopeKeyHandler;
         private final PolicyMerger merger;
-        
+
         ScopeMap(final PolicyMerger merger, final PolicyMapKeyHandler scopeKeyHandler) {
             this.merger = merger;
             this.scopeKeyHandler = scopeKeyHandler;
         }
-        
+
         Policy getEffectivePolicy(final PolicyMapKey key) throws PolicyException {
             final PolicyScope scope = internalMap.get(createLocalCopy(key));
             return (scope == null) ? null : scope.getEffectivePolicy(merger);
         }
-        
+
         void putSubject(final PolicyMapKey key, final PolicySubject subject) {
             final PolicyMapKey localKey = createLocalCopy(key);
             final PolicyScope scope = internalMap.get(localKey);
@@ -170,12 +170,12 @@ public final class PolicyMap implements Iterable<Policy> {
                 scope.attach(subject);
             }
         }
-        
+
         void setNewEffectivePolicy(final PolicyMapKey key, final Policy newEffectivePolicy) {
             // we add this policy map as a subject, because there is nothing reasonable we could add there, since
             // this is an artificial policy subject
             final PolicySubject subject = new PolicySubject(key, newEffectivePolicy);
-            
+
             final PolicyMapKey localKey = createLocalCopy(key);
             final PolicyScope scope = internalMap.get(localKey);
             if (scope == null) {
@@ -187,34 +187,34 @@ public final class PolicyMap implements Iterable<Policy> {
                 scope.attach(subject);
             }
         }
-        
+
         Collection<PolicyScope> getStoredScopes() {
             return internalMap.values();
         }
-        
+
         Set<PolicyMapKey> getAllKeys() {
             return internalMap.keySet();
         }
-        
+
         private PolicyMapKey createLocalCopy(final PolicyMapKey key) {
             if (key == null) {
                 throw LOGGER.logSevereException(new IllegalArgumentException(LocalizationMessages.WSP_0045_POLICY_MAP_KEY_MUST_NOT_BE_NULL()));
             }
-            
+
             final PolicyMapKey localKeyCopy = new PolicyMapKey(key);
             localKeyCopy.setHandler(scopeKeyHandler);
-                    
+
             return localKeyCopy;
         }
-        
+
         public Iterator<Policy> iterator() {
             return new Iterator<Policy> () {
                 private final Iterator<PolicyMapKey> keysIterator = internalMap.keySet().iterator();
-                
+
                 public boolean hasNext() {
                     return keysIterator.hasNext();
                 }
-                
+
                 public Policy next() {
                     final PolicyMapKey key = keysIterator.next();
                     try {
@@ -223,39 +223,39 @@ public final class PolicyMap implements Iterable<Policy> {
                         throw LOGGER.logSevereException(new IllegalStateException(LocalizationMessages.WSP_0069_EXCEPTION_WHILE_RETRIEVING_EFFECTIVE_POLICY_FOR_KEY(key), e));
                     }
                 }
-                
+
                 public void remove() {
                     throw LOGGER.logSevereException(new UnsupportedOperationException(LocalizationMessages.WSP_0034_REMOVE_OPERATION_NOT_SUPPORTED()));
                 }
             };
         }
-        
+
         public boolean isEmpty() {
             return internalMap.isEmpty();
         }
-        
+
         @Override
         public String toString() {
             return internalMap.toString();
         }
     }
-    
+
     private static final PolicyMerger merger = PolicyMerger.getMerger();
-    
+
     private final ScopeMap serviceMap = new ScopeMap(merger, serviceKeyHandler);
     private final ScopeMap endpointMap = new ScopeMap(merger, endpointKeyHandler);
     private final ScopeMap operationMap = new ScopeMap(merger, operationAndInputOutputMessageKeyHandler);
     private final ScopeMap inputMessageMap = new ScopeMap(merger, operationAndInputOutputMessageKeyHandler);
     private final ScopeMap outputMessageMap = new ScopeMap(merger, operationAndInputOutputMessageKeyHandler);
     private final ScopeMap faultMessageMap = new ScopeMap(merger, faultMessageHandler);
-    
+
     /**
      * This constructor is private to prevent direct instantiation from outside of the class
      */
     private PolicyMap() {
         // nothing to initialize
     }
-    
+
     /**
      * Creates new policy map instance and connects provided collection of policy map mutators to the created policy map.
      *
@@ -264,40 +264,40 @@ public final class PolicyMap implements Iterable<Policy> {
      */
     public static PolicyMap createPolicyMap(final Collection<? extends PolicyMapMutator> mutators) {
         final PolicyMap result = new PolicyMap();
-        
+
         if (mutators != null && !mutators.isEmpty()) {
             for (PolicyMapMutator mutator : mutators) {
                 mutator.connect(result);
             }
         }
-        
+
         return result;
     }
-    
+
     public Policy getServiceEffectivePolicy(final PolicyMapKey key) throws PolicyException {
         return serviceMap.getEffectivePolicy(key);
     }
-    
+
     public Policy getEndpointEffectivePolicy(final PolicyMapKey key) throws PolicyException {
         return endpointMap.getEffectivePolicy(key);
     }
-    
+
     public Policy getOperationEffectivePolicy(final PolicyMapKey key) throws PolicyException {
         return operationMap.getEffectivePolicy(key);
     }
-    
+
     public Policy getInputMessageEffectivePolicy(final PolicyMapKey key) throws PolicyException {
         return inputMessageMap.getEffectivePolicy(key);
     }
-    
+
     public Policy getOutputMessageEffectivePolicy(final PolicyMapKey key) throws PolicyException {
         return outputMessageMap.getEffectivePolicy(key);
     }
-    
+
     public Policy getFaultMessageEffectivePolicy(final PolicyMapKey key) throws PolicyException {
         return faultMessageMap.getEffectivePolicy(key);
     }
-    
+
     /**
      * Returns all service scope keys stored in this policy map
      *
@@ -306,7 +306,7 @@ public final class PolicyMap implements Iterable<Policy> {
     public Collection<PolicyMapKey> getAllServiceScopeKeys() {
         return serviceMap.getAllKeys();
     }
-    
+
     /**
      * Returns all endpoint scope keys stored in this policy map
      *
@@ -315,7 +315,7 @@ public final class PolicyMap implements Iterable<Policy> {
     public Collection<PolicyMapKey> getAllEndpointScopeKeys() {
         return endpointMap.getAllKeys();
     }
-    
+
     /**
      * Returns all operation scope keys stored in this policy map
      *
@@ -324,7 +324,7 @@ public final class PolicyMap implements Iterable<Policy> {
     public Collection<PolicyMapKey> getAllOperationScopeKeys() {
         return operationMap.getAllKeys();
     }
-    
+
     /**
      * Returns all input message scope keys stored in this policy map
      *
@@ -333,7 +333,7 @@ public final class PolicyMap implements Iterable<Policy> {
     public Collection<PolicyMapKey> getAllInputMessageScopeKeys() {
         return inputMessageMap.getAllKeys();
     }
-    
+
     /**
      * Returns all output message scope keys stored in this policy map
      *
@@ -342,7 +342,7 @@ public final class PolicyMap implements Iterable<Policy> {
     public Collection<PolicyMapKey> getAllOutputMessageScopeKeys() {
         return outputMessageMap.getAllKeys();
     }
-    
+
     /**
      * Returns all fault message scope keys stored in this policy map
      *
@@ -351,7 +351,7 @@ public final class PolicyMap implements Iterable<Policy> {
     public Collection<PolicyMapKey> getAllFaultMessageScopeKeys() {
         return faultMessageMap.getAllKeys();
     }
-    
+
     /**
      * Places new subject into policy map under the scope identified by it's type and policy map key.
      *
@@ -385,7 +385,7 @@ public final class PolicyMap implements Iterable<Policy> {
                 throw LOGGER.logSevereException(new IllegalArgumentException(LocalizationMessages.WSP_0002_UNRECOGNIZED_SCOPE_TYPE(scopeType)));
         }
     }
-    
+
     /**
      * Replaces current effective policy on given scope (identified by a {@code key} parameter) with the new efective
      * policy provided as a second input parameter. If no policy was defined for the presented key, the new policy is simply
@@ -395,14 +395,14 @@ public final class PolicyMap implements Iterable<Policy> {
      * @param key identifier of the scope the effective policy should be replaced with the new one. Must not be {@code null}.
      * @param newEffectivePolicy the new policy to replace the old effective policy of the scope. Must not be {@code null}.
      *
-     * @throw IllegalArgumentException in case any of the input parameters is {@code null} 
+     * @throw IllegalArgumentException in case any of the input parameters is {@code null}
      *        or in case the scope type is not recognized.
      */
     void setNewEffectivePolicyForScope(final ScopeType scopeType, final PolicyMapKey key, final Policy newEffectivePolicy) throws IllegalArgumentException {
         if (scopeType == null || key == null || newEffectivePolicy == null) {
             throw LOGGER.logSevereException(new IllegalArgumentException(LocalizationMessages.WSP_0062_INPUT_PARAMS_MUST_NOT_BE_NULL()));
         }
-        
+
         switch (scopeType) {
             case SERVICE :
                 serviceMap.setNewEffectivePolicy(key, newEffectivePolicy);
@@ -426,7 +426,7 @@ public final class PolicyMap implements Iterable<Policy> {
                 throw LOGGER.logSevereException(new IllegalArgumentException(LocalizationMessages.WSP_0002_UNRECOGNIZED_SCOPE_TYPE(scopeType)));
         }
     }
-    
+
     /**
      * Returns all policy subjects contained by this map.
      *
@@ -442,7 +442,7 @@ public final class PolicyMap implements Iterable<Policy> {
         addSubjects(subjects, faultMessageMap);
         return subjects;
     }
-    
+
     /*
      * TODO: reconsider this QUICK HACK
      */
@@ -454,7 +454,7 @@ public final class PolicyMap implements Iterable<Policy> {
         }
         return false;
     }
-    
+
     /*
      * TODO: reconsider this QUICK HACK
      */
@@ -466,8 +466,8 @@ public final class PolicyMap implements Iterable<Policy> {
         }
         return false;
     }
-    
-    
+
+
     /*
      * TODO: reconsider this QUICK HACK
      */
@@ -479,8 +479,8 @@ public final class PolicyMap implements Iterable<Policy> {
         }
         return false;
     }
-    
-    
+
+
     /**
      * Returns true if this map contains no key - policy pairs
      *
@@ -493,8 +493,8 @@ public final class PolicyMap implements Iterable<Policy> {
                 operationMap.isEmpty() && inputMessageMap.isEmpty() &&
                 outputMessageMap.isEmpty() && faultMessageMap.isEmpty();
     }
-    
-    
+
+
     /**
      * Add all subjects in the given map to the collection
      *
@@ -507,7 +507,7 @@ public final class PolicyMap implements Iterable<Policy> {
             subjects.addAll(scopedSubjects);
         }
     }
-    
+
     /**
      * Creates a service policy scope <emph>locator</emph> object, that serves as a access key into
      * a {@code PolicyMap} where actual service policy scope for given service can be retrieved.
@@ -521,7 +521,7 @@ public final class PolicyMap implements Iterable<Policy> {
         }
         return new PolicyMapKey(service, null, null, serviceKeyHandler);
     }
-    
+
     /**
      * Creates an endpoint policy scope <emph>locator</emph> object, that serves as a access key into
      * a {@code PolicyMap} where actual endpoint policy scope for given endpoint can be retrieved.
@@ -536,7 +536,7 @@ public final class PolicyMap implements Iterable<Policy> {
         }
         return new PolicyMapKey(service, port, null, endpointKeyHandler);
     }
-    
+
     /**
      * Creates an operation policy scope <emph>locator</emph> object, that serves as a access key into
      * a {@code PolicyMap} where actual operation policy scope for given bound operation can be retrieved.
@@ -549,7 +549,7 @@ public final class PolicyMap implements Iterable<Policy> {
     public static PolicyMapKey createWsdlOperationScopeKey(final QName service, final QName port, final QName operation) throws IllegalArgumentException {
         return createOperationOrInputOutputMessageKey(service, port, operation);
     }
-    
+
     /**
      * Creates an input/output message policy scope <emph>locator</emph> object identified by a bound operation, that serves as a
      * access key into {@code PolicyMap} where actual input/output message policy scope for given input message of a bound operation
@@ -567,7 +567,7 @@ public final class PolicyMap implements Iterable<Policy> {
     public static PolicyMapKey createWsdlMessageScopeKey(final QName service, final QName port, final QName operation) throws IllegalArgumentException {
         return createOperationOrInputOutputMessageKey(service, port, operation);
     }
-    
+
     /**
      * Creates a fault message policy scope <emph>locator</emph> object identified by a bound operation, that serves as a
      * access key into {@code PolicyMap} where the actual fault message policy scope for one of the faults of a bound operation
@@ -588,18 +588,18 @@ public final class PolicyMap implements Iterable<Policy> {
         if (service == null || port == null || operation == null || fault == null) {
             throw LOGGER.logSevereException(new IllegalArgumentException(LocalizationMessages.WSP_0030_SERVICE_PORT_OPERATION_FAULT_MSG_PARAM_MUST_NOT_BE_NULL(service, port, operation, fault)));
         }
-        
+
         return new PolicyMapKey(service, port, operation, fault, faultMessageHandler);
     }
-    
+
     private static PolicyMapKey createOperationOrInputOutputMessageKey(final QName service, final QName port, final QName operation) {
         if (service == null || port == null || operation == null) {
             throw LOGGER.logSevereException(new IllegalArgumentException(LocalizationMessages.WSP_0029_SERVICE_PORT_OPERATION_PARAM_MUST_NOT_BE_NULL(service, port, operation)));
         }
-        
+
         return new PolicyMapKey(service, port, operation, operationAndInputOutputMessageKeyHandler);
     }
-    
+
     @Override
     public String toString(){
         // TODO
@@ -624,12 +624,12 @@ public final class PolicyMap implements Iterable<Policy> {
         }
         return result.toString();
     }
-    
+
     public Iterator<Policy> iterator() {
         return new Iterator<Policy> () {
             private final Iterator<Iterator<Policy>> mainIterator;
             private Iterator<Policy> currentScopeIterator;
-            
+
             { // instance initialization
                 final Collection<Iterator<Policy>> scopeIterators = new ArrayList<Iterator<Policy>>(6);
                 scopeIterators.add(serviceMap.iterator());
@@ -638,11 +638,11 @@ public final class PolicyMap implements Iterable<Policy> {
                 scopeIterators.add(inputMessageMap.iterator());
                 scopeIterators.add(outputMessageMap.iterator());
                 scopeIterators.add(faultMessageMap.iterator());
-                
+
                 mainIterator = scopeIterators.iterator();
                 currentScopeIterator = mainIterator.next();
             }
-            
+
             public boolean hasNext() {
                 while (!currentScopeIterator.hasNext()) {
                     if (mainIterator.hasNext()) {
@@ -651,21 +651,21 @@ public final class PolicyMap implements Iterable<Policy> {
                         return false;
                     }
                 }
-                
+
                 return true;
             }
-            
+
             public Policy next() {
                 if (hasNext()) {
                     return currentScopeIterator.next();
                 }
                 throw LOGGER.logSevereException(new NoSuchElementException(LocalizationMessages.WSP_0054_NO_MORE_ELEMS_IN_POLICY_MAP()));
             }
-            
+
             public void remove() {
                 throw LOGGER.logSevereException(new UnsupportedOperationException(LocalizationMessages.WSP_0034_REMOVE_OPERATION_NOT_SUPPORTED()));
             }
         };
     }
-    
+
 }

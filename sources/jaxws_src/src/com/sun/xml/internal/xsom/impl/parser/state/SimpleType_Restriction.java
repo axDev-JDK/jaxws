@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -37,7 +37,8 @@ import com.sun.xml.internal.xsom.impl.parser.NGCCRuntimeEx;
     import org.xml.sax.ContentHandler;
     import org.xml.sax.helpers.*;
     import java.util.*;
-  
+    import java.math.BigInteger;
+
 
 
 class SimpleType_Restriction extends NGCCHandler {
@@ -74,23 +75,23 @@ class SimpleType_Restriction extends NGCCHandler {
     }
 
     private void action0()throws SAXException {
-        
-        	result.addFacet(facet);
-        
+
+                result.addFacet(facet);
+
 }
 
     private void action1()throws SAXException {
-        
-      	result = new RestrictionSimpleTypeImpl(
-					$runtime.document, annotation, locator, fa, name, name==null, finalSet, baseType );
-      
+
+        result = new RestrictionSimpleTypeImpl(
+                                        $runtime.document, annotation, locator, fa, name, name==null, finalSet, baseType );
+
 }
 
     private void action2()throws SAXException {
-        
+
             baseType = new DelayedRef.SimpleType(
               $runtime, rloc, $runtime.currentSchema, baseTypeName );
-           
+
 }
 
     private void action3()throws SAXException {
@@ -103,67 +104,10 @@ class SimpleType_Restriction extends NGCCHandler {
         $localName = $__local;
         $qname = $__qname;
         switch($_ngcc_current_state) {
-        case 1:
-            {
-                if((((((((((((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("minExclusive")) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("maxExclusive"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("minInclusive"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("maxInclusive"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("totalDigits"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("fractionDigits"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("length"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("maxLength"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("minLength"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("enumeration"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("whiteSpace"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("pattern")))) {
-                    NGCCHandler h = new facet(this, super._source, $runtime, 40);
-                    spawnChildFromEnterElement(h, $__uri, $__local, $__qname, $attrs);
-                }
-                else {
-                    unexpectedEnterElement($__qname);
-                }
-            }
-            break;
-        case 0:
-            {
-                revertToParentFromEnterElement(result, super._cookie, $__uri, $__local, $__qname, $attrs);
-            }
-            break;
-        case 13:
-            {
-                if(($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("restriction"))) {
-                    $runtime.onEnterElementConsumed($__uri, $__local, $__qname, $attrs);
-                    action3();
-                    $_ngcc_current_state = 12;
-                }
-                else {
-                    unexpectedEnterElement($__qname);
-                }
-            }
-            break;
-        case 10:
-            {
-                if(($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation"))) {
-                    NGCCHandler h = new annotation(this, super._source, $runtime, 51, annotation,AnnotationContext.SIMPLETYPE_DECL);
-                    spawnChildFromEnterElement(h, $__uri, $__local, $__qname, $attrs);
-                }
-                else {
-                    $_ngcc_current_state = 5;
-                    $runtime.sendEnterElement(super._cookie, $__uri, $__local, $__qname, $attrs);
-                }
-            }
-            break;
-        case 5:
-            {
-                if(($ai = $runtime.getAttributeIndex("","base"))>=0) {
-                    $runtime.consumeAttribute($ai);
-                    $runtime.sendEnterElement(super._cookie, $__uri, $__local, $__qname, $attrs);
-                }
-                else {
-                    if(($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("simpleType"))) {
-                        NGCCHandler h = new simpleType(this, super._source, $runtime, 45);
-                        spawnChildFromEnterElement(h, $__uri, $__local, $__qname, $attrs);
-                    }
-                    else {
-                        unexpectedEnterElement($__qname);
-                    }
-                }
-            }
-            break;
         case 12:
             {
                 if((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation")) || ((($ai = $runtime.getAttributeIndex("","base"))>=0 && ((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("simpleType")) || (((((((((((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("minExclusive")) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("maxExclusive"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("minInclusive"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("maxInclusive"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("totalDigits"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("fractionDigits"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("length"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("maxLength"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("minLength"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("enumeration"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("whiteSpace"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("pattern")))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation")))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("simpleType"))))) {
-                    NGCCHandler h = new foreignAttributes(this, super._source, $runtime, 53, fa);
+                    NGCCHandler h = new foreignAttributes(this, super._source, $runtime, 126, fa);
                     spawnChildFromEnterElement(h, $__uri, $__local, $__qname, $attrs);
                 }
                 else {
@@ -178,16 +122,73 @@ class SimpleType_Restriction extends NGCCHandler {
                 $runtime.sendEnterElement(super._cookie, $__uri, $__local, $__qname, $attrs);
             }
             break;
+        case 1:
+            {
+                if((((((((((((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("minExclusive")) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("maxExclusive"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("minInclusive"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("maxInclusive"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("totalDigits"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("fractionDigits"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("length"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("maxLength"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("minLength"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("enumeration"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("whiteSpace"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("pattern")))) {
+                    NGCCHandler h = new facet(this, super._source, $runtime, 113);
+                    spawnChildFromEnterElement(h, $__uri, $__local, $__qname, $attrs);
+                }
+                else {
+                    unexpectedEnterElement($__qname);
+                }
+            }
+            break;
+        case 13:
+            {
+                if(($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("restriction"))) {
+                    $runtime.onEnterElementConsumed($__uri, $__local, $__qname, $attrs);
+                    action3();
+                    $_ngcc_current_state = 12;
+                }
+                else {
+                    unexpectedEnterElement($__qname);
+                }
+            }
+            break;
+        case 5:
+            {
+                if(($ai = $runtime.getAttributeIndex("","base"))>=0) {
+                    $runtime.consumeAttribute($ai);
+                    $runtime.sendEnterElement(super._cookie, $__uri, $__local, $__qname, $attrs);
+                }
+                else {
+                    if(($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("simpleType"))) {
+                        NGCCHandler h = new simpleType(this, super._source, $runtime, 118);
+                        spawnChildFromEnterElement(h, $__uri, $__local, $__qname, $attrs);
+                    }
+                    else {
+                        unexpectedEnterElement($__qname);
+                    }
+                }
+            }
+            break;
+        case 10:
+            {
+                if(($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation"))) {
+                    NGCCHandler h = new annotation(this, super._source, $runtime, 124, annotation,AnnotationContext.SIMPLETYPE_DECL);
+                    spawnChildFromEnterElement(h, $__uri, $__local, $__qname, $attrs);
+                }
+                else {
+                    $_ngcc_current_state = 5;
+                    $runtime.sendEnterElement(super._cookie, $__uri, $__local, $__qname, $attrs);
+                }
+            }
+            break;
         case 2:
             {
                 if((((((((((((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("minExclusive")) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("maxExclusive"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("minInclusive"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("maxInclusive"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("totalDigits"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("fractionDigits"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("length"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("maxLength"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("minLength"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("enumeration"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("whiteSpace"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("pattern")))) {
-                    NGCCHandler h = new facet(this, super._source, $runtime, 41);
+                    NGCCHandler h = new facet(this, super._source, $runtime, 114);
                     spawnChildFromEnterElement(h, $__uri, $__local, $__qname, $attrs);
                 }
                 else {
                     $_ngcc_current_state = 1;
                     $runtime.sendEnterElement(super._cookie, $__uri, $__local, $__qname, $attrs);
                 }
+            }
+            break;
+        case 0:
+            {
+                revertToParentFromEnterElement(result, super._cookie, $__uri, $__local, $__qname, $attrs);
             }
             break;
         default:
@@ -204,43 +205,10 @@ class SimpleType_Restriction extends NGCCHandler {
         $localName = $__local;
         $qname = $__qname;
         switch($_ngcc_current_state) {
-        case 1:
-            {
-                if(($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("restriction"))) {
-                    $runtime.onLeaveElementConsumed($__uri, $__local, $__qname);
-                    $_ngcc_current_state = 0;
-                }
-                else {
-                    unexpectedLeaveElement($__qname);
-                }
-            }
-            break;
-        case 0:
-            {
-                revertToParentFromLeaveElement(result, super._cookie, $__uri, $__local, $__qname);
-            }
-            break;
-        case 10:
-            {
-                $_ngcc_current_state = 5;
-                $runtime.sendLeaveElement(super._cookie, $__uri, $__local, $__qname);
-            }
-            break;
-        case 5:
-            {
-                if(($ai = $runtime.getAttributeIndex("","base"))>=0) {
-                    $runtime.consumeAttribute($ai);
-                    $runtime.sendLeaveElement(super._cookie, $__uri, $__local, $__qname);
-                }
-                else {
-                    unexpectedLeaveElement($__qname);
-                }
-            }
-            break;
         case 12:
             {
                 if((($ai = $runtime.getAttributeIndex("","base"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("restriction")))) {
-                    NGCCHandler h = new foreignAttributes(this, super._source, $runtime, 53, fa);
+                    NGCCHandler h = new foreignAttributes(this, super._source, $runtime, 126, fa);
                     spawnChildFromLeaveElement(h, $__uri, $__local, $__qname);
                 }
                 else {
@@ -255,10 +223,43 @@ class SimpleType_Restriction extends NGCCHandler {
                 $runtime.sendLeaveElement(super._cookie, $__uri, $__local, $__qname);
             }
             break;
+        case 1:
+            {
+                if(($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("restriction"))) {
+                    $runtime.onLeaveElementConsumed($__uri, $__local, $__qname);
+                    $_ngcc_current_state = 0;
+                }
+                else {
+                    unexpectedLeaveElement($__qname);
+                }
+            }
+            break;
+        case 5:
+            {
+                if(($ai = $runtime.getAttributeIndex("","base"))>=0) {
+                    $runtime.consumeAttribute($ai);
+                    $runtime.sendLeaveElement(super._cookie, $__uri, $__local, $__qname);
+                }
+                else {
+                    unexpectedLeaveElement($__qname);
+                }
+            }
+            break;
+        case 10:
+            {
+                $_ngcc_current_state = 5;
+                $runtime.sendLeaveElement(super._cookie, $__uri, $__local, $__qname);
+            }
+            break;
         case 2:
             {
                 $_ngcc_current_state = 1;
                 $runtime.sendLeaveElement(super._cookie, $__uri, $__local, $__qname);
+            }
+            break;
+        case 0:
+            {
+                revertToParentFromLeaveElement(result, super._cookie, $__uri, $__local, $__qname);
             }
             break;
         default:
@@ -275,31 +276,10 @@ class SimpleType_Restriction extends NGCCHandler {
         $localName = $__local;
         $qname = $__qname;
         switch($_ngcc_current_state) {
-        case 0:
-            {
-                revertToParentFromEnterAttribute(result, super._cookie, $__uri, $__local, $__qname);
-            }
-            break;
-        case 10:
-            {
-                $_ngcc_current_state = 5;
-                $runtime.sendEnterAttribute(super._cookie, $__uri, $__local, $__qname);
-            }
-            break;
-        case 5:
-            {
-                if(($__uri.equals("") && $__local.equals("base"))) {
-                    $_ngcc_current_state = 8;
-                }
-                else {
-                    unexpectedEnterAttribute($__qname);
-                }
-            }
-            break;
         case 12:
             {
                 if(($__uri.equals("") && $__local.equals("base"))) {
-                    NGCCHandler h = new foreignAttributes(this, super._source, $runtime, 53, fa);
+                    NGCCHandler h = new foreignAttributes(this, super._source, $runtime, 126, fa);
                     spawnChildFromEnterAttribute(h, $__uri, $__local, $__qname);
                 }
                 else {
@@ -314,10 +294,31 @@ class SimpleType_Restriction extends NGCCHandler {
                 $runtime.sendEnterAttribute(super._cookie, $__uri, $__local, $__qname);
             }
             break;
+        case 5:
+            {
+                if(($__uri.equals("") && $__local.equals("base"))) {
+                    $_ngcc_current_state = 8;
+                }
+                else {
+                    unexpectedEnterAttribute($__qname);
+                }
+            }
+            break;
+        case 10:
+            {
+                $_ngcc_current_state = 5;
+                $runtime.sendEnterAttribute(super._cookie, $__uri, $__local, $__qname);
+            }
+            break;
         case 2:
             {
                 $_ngcc_current_state = 1;
                 $runtime.sendEnterAttribute(super._cookie, $__uri, $__local, $__qname);
+            }
+            break;
+        case 0:
+            {
+                revertToParentFromEnterAttribute(result, super._cookie, $__uri, $__local, $__qname);
             }
             break;
         default:
@@ -334,17 +335,6 @@ class SimpleType_Restriction extends NGCCHandler {
         $localName = $__local;
         $qname = $__qname;
         switch($_ngcc_current_state) {
-        case 0:
-            {
-                revertToParentFromLeaveAttribute(result, super._cookie, $__uri, $__local, $__qname);
-            }
-            break;
-        case 10:
-            {
-                $_ngcc_current_state = 5;
-                $runtime.sendLeaveAttribute(super._cookie, $__uri, $__local, $__qname);
-            }
-            break;
         case 7:
             {
                 if(($__uri.equals("") && $__local.equals("base"))) {
@@ -362,10 +352,21 @@ class SimpleType_Restriction extends NGCCHandler {
                 $runtime.sendLeaveAttribute(super._cookie, $__uri, $__local, $__qname);
             }
             break;
+        case 10:
+            {
+                $_ngcc_current_state = 5;
+                $runtime.sendLeaveAttribute(super._cookie, $__uri, $__local, $__qname);
+            }
+            break;
         case 2:
             {
                 $_ngcc_current_state = 1;
                 $runtime.sendLeaveAttribute(super._cookie, $__uri, $__local, $__qname);
+            }
+            break;
+        case 0:
+            {
+                revertToParentFromLeaveAttribute(result, super._cookie, $__uri, $__local, $__qname);
             }
             break;
         default:
@@ -379,14 +380,24 @@ class SimpleType_Restriction extends NGCCHandler {
     public void text(String $value) throws SAXException {
         int $ai;
         switch($_ngcc_current_state) {
-        case 0:
+        case 8:
             {
-                revertToParentFromText(result, super._cookie, $value);
+                NGCCHandler h = new qname(this, super._source, $runtime, 120);
+                spawnChildFromText(h, $value);
             }
             break;
-        case 10:
+        case 12:
             {
-                $_ngcc_current_state = 5;
+                if(($ai = $runtime.getAttributeIndex("","base"))>=0) {
+                    NGCCHandler h = new foreignAttributes(this, super._source, $runtime, 126, fa);
+                    spawnChildFromText(h, $value);
+                }
+            }
+            break;
+        case 4:
+            {
+                action1();
+                $_ngcc_current_state = 2;
                 $runtime.sendText(super._cookie, $value);
             }
             break;
@@ -398,24 +409,9 @@ class SimpleType_Restriction extends NGCCHandler {
                 }
             }
             break;
-        case 12:
+        case 10:
             {
-                if(($ai = $runtime.getAttributeIndex("","base"))>=0) {
-                    NGCCHandler h = new foreignAttributes(this, super._source, $runtime, 53, fa);
-                    spawnChildFromText(h, $value);
-                }
-            }
-            break;
-        case 8:
-            {
-                NGCCHandler h = new qname(this, super._source, $runtime, 47);
-                spawnChildFromText(h, $value);
-            }
-            break;
-        case 4:
-            {
-                action1();
-                $_ngcc_current_state = 2;
+                $_ngcc_current_state = 5;
                 $runtime.sendText(super._cookie, $value);
             }
             break;
@@ -425,48 +421,53 @@ class SimpleType_Restriction extends NGCCHandler {
                 $runtime.sendText(super._cookie, $value);
             }
             break;
+        case 0:
+            {
+                revertToParentFromText(result, super._cookie, $value);
+            }
+            break;
         }
     }
 
     public void onChildCompleted(Object $__result__, int $__cookie__, boolean $__needAttCheck__)throws SAXException {
         switch($__cookie__) {
-        case 40:
+        case 113:
             {
                 facet = ((XSFacet)$__result__);
                 action0();
                 $_ngcc_current_state = 1;
             }
             break;
-        case 51:
+        case 124:
             {
                 annotation = ((AnnotationImpl)$__result__);
                 $_ngcc_current_state = 5;
             }
             break;
-        case 47:
+        case 114:
+            {
+                facet = ((XSFacet)$__result__);
+                action0();
+                $_ngcc_current_state = 1;
+            }
+            break;
+        case 120:
             {
                 baseTypeName = ((UName)$__result__);
                 action2();
                 $_ngcc_current_state = 7;
             }
             break;
-        case 53:
+        case 126:
             {
                 fa = ((ForeignAttributesImpl)$__result__);
                 $_ngcc_current_state = 10;
             }
             break;
-        case 45:
+        case 118:
             {
                 baseType = ((SimpleTypeImpl)$__result__);
                 $_ngcc_current_state = 4;
-            }
-            break;
-        case 41:
-            {
-                facet = ((XSFacet)$__result__);
-                action0();
-                $_ngcc_current_state = 1;
             }
             break;
         }
@@ -476,15 +477,14 @@ class SimpleType_Restriction extends NGCCHandler {
         return(($_ngcc_current_state == 0));
     }
 
-    
-  		/** computed simple type object */
-  		private RestrictionSimpleTypeImpl result;
-  		
-  		// reference to the base type
-  		private Ref.SimpleType baseType;
-  		
-  		// location of restriction
-  		private Locator rloc;
-  	
-}
 
+                /** computed simple type object */
+                private RestrictionSimpleTypeImpl result;
+
+                // reference to the base type
+                private Ref.SimpleType baseType;
+
+                // location of restriction
+                private Locator rloc;
+
+}

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,11 +22,13 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.ws.model;
 
 import javax.xml.ws.WebServiceException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URL;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.logging.Level;
@@ -44,11 +46,17 @@ final class Injector {
 
     private static final Method defineClass;
     private static final Method resolveClass;
+    private static final Method getPackage;
+    private static final Method definePackage;
 
     static {
         try {
             defineClass = ClassLoader.class.getDeclaredMethod("defineClass",String.class,byte[].class,Integer.TYPE,Integer.TYPE);
             resolveClass = ClassLoader.class.getDeclaredMethod("resolveClass",Class.class);
+            getPackage = ClassLoader.class.getDeclaredMethod("getPackage", String.class);
+            definePackage = ClassLoader.class.getDeclaredMethod("definePackage",
+                    String.class, String.class, String.class, String.class,
+                    String.class, String.class, String.class, URL.class);
         } catch (NoSuchMethodException e) {
             // impossible
             throw new NoSuchMethodError(e.getMessage());
@@ -59,6 +67,8 @@ final class Injector {
                 // do these setAccessible allow anyone to call these methods freely?s
                 defineClass.setAccessible(true);
                 resolveClass.setAccessible(true);
+                getPackage.setAccessible(true);
+                definePackage.setAccessible(true);
                 return null;
             }
         });
@@ -73,6 +83,16 @@ final class Injector {
             // nothing to do
         }
         try {
+            int packIndex = className.lastIndexOf('.');
+            if (packIndex != -1) {
+                String pkgname = className.substring(0, packIndex);
+                // Check if package already loaded.
+                Package pkg = (Package)getPackage.invoke(cl, pkgname);
+                if (pkg == null) {
+                    definePackage.invoke(cl, pkgname, null, null, null, null, null, null, null);
+                }
+            }
+
             Class c = (Class)defineClass.invoke(cl,className.replace('/','.'),image,0,image.length);
             resolveClass.invoke(cl, c);
             return c;
@@ -86,4 +106,3 @@ final class Injector {
     }
 
 }
-

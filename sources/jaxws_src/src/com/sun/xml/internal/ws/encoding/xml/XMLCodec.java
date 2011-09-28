@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -50,7 +50,7 @@ public final class XMLCodec implements Codec {
     private static final ContentType contentType = new ContentTypeImpl(XML_TEXT_MIME_TYPE);
 
     private final WSBinding binding;
-    
+
     public XMLCodec(WSBinding binding) {
         this.binding = binding;
     }
@@ -93,5 +93,5 @@ public final class XMLCodec implements Codec {
     public void decode(ReadableByteChannel in, String contentType, Packet packet) {
         // TODO
         throw new UnsupportedOperationException();
-    }    
+    }
 }

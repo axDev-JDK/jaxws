@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -52,7 +52,7 @@ import java.lang.annotation.RetentionPolicy;
  * feature.
  *
  * <p>
- * For example, in the code below, the injected 
+ * For example, in the code below, the injected
  * <code>StockQuoteProvider</code> proxy MUST
  * have WS-Addressing enabled as specifed by the
  * {@link Addressing}
@@ -73,7 +73,7 @@ import java.lang.annotation.RetentionPolicy;
  * If a JAX-WS implementation encounters an unsupported or unrecognized
  * annotation annotated with the <code>WebServiceFeatureAnnotation</code>
  * that is specified with <code>WebServiceRef</code>, an ERROR MUST be given.
- * 
+ *
  * @see javax.annotation.Resource
  * @see WebServiceFeatureAnnotation
  *
@@ -125,7 +125,7 @@ public @interface WebServiceRef {
     String mappedName() default "";
 
     /**
-     * The service class, always a type extending
+     * The service class, alwiays a type extending
      * <code>javax.xml.ws.Service</code>. This element MUST be specified
      * whenever the type of the reference is a service endpoint interface.
      */

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -28,32 +28,32 @@ import com.sun.org.glassfish.external.statistics.StringStatistic;
 import java.util.Map;
 import java.lang.reflect.*;
 
-/** 
+/**
  * @author Sreenivas Munnangi
  */
 public final class StringStatisticImpl extends StatisticImpl
     implements StringStatistic, InvocationHandler {
-    
+
     private volatile String str = null;
     private final String initStr;
 
-    private final StringStatistic ss = 
+    private final StringStatistic ss =
             (StringStatistic) Proxy.newProxyInstance(
             StringStatistic.class.getClassLoader(),
             new Class[] { StringStatistic.class },
             this);
 
-    public StringStatisticImpl(String str, String name, String unit, 
+    public StringStatisticImpl(String str, String name, String unit,
                               String desc, long sampleTime, long startTime) {
         super(name, unit, desc, startTime, sampleTime);
         this.str = str;
         initStr = str;
     }
-    
+
     public StringStatisticImpl(String name, String unit, String desc) {
         this("", name, unit, desc, System.currentTimeMillis(), System.currentTimeMillis());
     }
-    
+
     public synchronized StringStatistic getStatistic() {
         return ss;
     }

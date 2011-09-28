@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -34,39 +34,39 @@ import java.util.Map;
  * @author Marek Potociar, Jakub Podlesak
  */
 public final class PolicySourceModelContext {
-    
+
     Map<URI,PolicySourceModel> policyModels;
-    
-    /** 
+
+    /**
      * Private constructor prevents instantiation of the instance from outside of the class
      */
     private PolicySourceModelContext() {
         // nothing to initialize
     }
-    
+
     private Map<URI,PolicySourceModel> getModels() {
         if (null==policyModels) {
             policyModels = new HashMap<URI,PolicySourceModel>();
         }
         return policyModels;
     }
-    
+
     public void addModel(final URI modelUri, final PolicySourceModel model) {
         getModels().put(modelUri,model);
     }
-    
+
     public static PolicySourceModelContext createContext() {
         return new PolicySourceModelContext();
     }
-    
+
     public boolean containsModel(final URI modelUri) {
         return getModels().containsKey(modelUri);
     }
-    
+
     PolicySourceModel retrieveModel(final URI modelUri) {
         return getModels().get(modelUri);
     }
-    
+
     PolicySourceModel retrieveModel(final URI modelUri, final URI digestAlgorithm, final String digest) {
         // TODO: implement
         throw new UnsupportedOperationException();
@@ -74,6 +74,6 @@ public final class PolicySourceModelContext {
 
     @Override
     public String toString() {
-        return policyModels.toString();
+        return "PolicySourceModelContext: policyModels = " + this.policyModels;
     }
 }

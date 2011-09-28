@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -59,7 +59,7 @@ public class CustomExceptionGenerator extends GeneratorBase {
         WsimportOptions options,
         ErrorReceiver receiver){
         CustomExceptionGenerator exceptionGen = new CustomExceptionGenerator(model, options, receiver);
-        exceptionGen.doGeneration();        
+        exceptionGen.doGeneration();
     }
     private CustomExceptionGenerator(
         Model model,
@@ -90,7 +90,7 @@ public class CustomExceptionGenerator extends GeneratorBase {
     private void registerFault(Fault fault) {
          try {
             write(fault);
-            faults.put(fault.getJavaException().getName(), fault.getExceptionClass()); 
+            faults.put(fault.getJavaException().getName(), fault.getExceptionClass());
         } catch (JClassAlreadyExistsException e) {
             throw new GeneratorException("generator.nestedGeneratorError",e);
         }
@@ -109,7 +109,7 @@ public class CustomExceptionGenerator extends GeneratorBase {
         for (String doc : getJAXWSClassComment()) {
             comment.add(doc);
         }
-        
+
         cls._extends(java.lang.Exception.class);
 
         //@WebFault

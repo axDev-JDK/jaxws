@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,7 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
- 
+
 package com.sun.org.glassfish.gmbal ;
 
 import java.lang.annotation.Documented ;
@@ -32,11 +32,11 @@ import java.lang.annotation.Retention ;
 import java.lang.annotation.RetentionPolicy ;
 
 /** This annotation is applied to a method that represents an MBean operation.
- * It defines the names of the parameters of the operation.  It must contain 
+ * It defines the names of the parameters of the operation.  It must contain
  * as many arguments as there are parameters in the annotated method.
  */
-@Documented 
-@Target(ElementType.METHOD) 
+@Documented
+@Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 /**
  *

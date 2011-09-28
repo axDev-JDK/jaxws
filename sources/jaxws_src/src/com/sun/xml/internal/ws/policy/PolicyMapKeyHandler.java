@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -29,15 +29,15 @@ package com.sun.xml.internal.ws.policy;
 /**
  * This interface defines method that is used to handle actual equality comparison and hash code generation for PolicyMapKey object.
  * <p/>
- * The different implementations of this interface may allow different strategies to be applied for operations mentioned above. This feature 
+ * The different implementations of this interface may allow different strategies to be applied for operations mentioned above. This feature
  * is used within {@link WSPolicyMap} to restrict set of fields to be compared when searching different policy scope maps.
- * 
- * 
- * 
+ *
+ *
+ *
  * @author Marek Potociar
  */
 interface PolicyMapKeyHandler {
     boolean areEqual(PolicyMapKey locator1, PolicyMapKey locator2);
-    
-    int generateHashCode(PolicyMapKey locator);    
+
+    int generateHashCode(PolicyMapKey locator);
 }

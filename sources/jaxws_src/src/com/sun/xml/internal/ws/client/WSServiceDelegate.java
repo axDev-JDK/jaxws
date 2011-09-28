@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -145,7 +145,11 @@ public class WSServiceDelegate extends WSService {
      */
    // private final Map<Class,SEIPortInfo> seiContext = new HashMap<Class,SEIPortInfo>();
    private final Map<QName,SEIPortInfo> seiContext = new HashMap<QName,SEIPortInfo>();
-    private Executor executor;
+
+    // This executor is used for all the async invocations for all proxies
+    // created from this service. But once the proxy is created, then changing
+    // this executor doesn't affect the already created proxies.
+    private volatile Executor executor;
 
     /**
      * The WSDL service that this {@link Service} object represents.
@@ -270,10 +274,6 @@ public class WSServiceDelegate extends WSService {
 
 
     public Executor getExecutor() {
-        if (executor != null) {
-            return executor;
-        } else
-            executor = Executors.newCachedThreadPool(new DaemonThreadFactory());
         return executor;
     }
 
@@ -376,6 +376,7 @@ public class WSServiceDelegate extends WSService {
     public <T> Dispatch<T> createDispatch(QName portName, WSEndpointReference wsepr, Class<T> aClass, Service.Mode mode, WebServiceFeature... features) {
         PortInfo port = safeGetPort(portName);
         BindingImpl binding = port.createBinding(features,null);
+        binding.setMode(mode);
         Dispatch<T> dispatch = Stubs.createDispatch(port, this, binding, aClass, mode, wsepr);
         serviceInterceptor.postCreateDispatch((WSBindingProvider) dispatch);
         return dispatch;
@@ -430,6 +431,7 @@ public class WSServiceDelegate extends WSService {
     public Dispatch<Object> createDispatch(QName portName, WSEndpointReference wsepr, JAXBContext jaxbContext, Service.Mode mode, WebServiceFeature... features) {
         PortInfo port = safeGetPort(portName);
         BindingImpl binding = port.createBinding(features,null);
+        binding.setMode(mode);
         Dispatch<Object> dispatch = Stubs.createJAXBDispatch(
                 port, binding, jaxbContext, mode,wsepr);
          serviceInterceptor.postCreateDispatch((WSBindingProvider)dispatch);
@@ -669,5 +671,3 @@ public class WSServiceDelegate extends WSService {
 
     private static final WebServiceFeature[] EMPTY_FEATURES = new WebServiceFeature[0];
 }
-
-

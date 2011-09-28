@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -34,7 +34,7 @@ import java.lang.annotation.Target;
  * Associates a namespace prefix with a XML namespace URI.
  *
  * <p><b>Usage</b></p>
- * <p><tt>@XmlNs</tt> annotation is intended for use from other 
+ * <p><tt>@XmlNs</tt> annotation is intended for use from other
  * program annotations.
  *
  * <p>See "Package Specification" in javax.xml.bind.package javadoc for
@@ -55,7 +55,5 @@ public @interface XmlNs {
     /**
      * Namespace URI
      */
-    String namespaceURI(); 
+    String namespaceURI();
 }
-
-

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -58,7 +58,7 @@ final class SOAPHandlerProcessor<C extends MessageUpdatableContext> extends Hand
         super(owner, binding, chain);
         this.isClient = isClient;
     }
-    
+
     /**
      * Replace the message in the given message context with a
      * fault message. If the context already contains a fault
@@ -88,7 +88,7 @@ final class SOAPHandlerProcessor<C extends MessageUpdatableContext> extends Hand
             throw new RuntimeException(e);
         }
     }
-    
+
     /**
      * <p>Figure out if the fault code local part is client,
      * server, sender, receiver, etc. This is called by

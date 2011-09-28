@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,7 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
- 
+
 
 package com.sun.org.glassfish.gmbal ;
 
@@ -41,17 +41,17 @@ import javax.management.ObjectName;
  */
 public final class ManagedObjectManagerFactory {
     private ManagedObjectManagerFactory() {}
-  
+
     private static GenericConstructor<ManagedObjectManager> objectNameCons =
-        new GenericConstructor<ManagedObjectManager>( 
-            ManagedObjectManager.class, 
+        new GenericConstructor<ManagedObjectManager>(
+            ManagedObjectManager.class,
             "com.sun.org.glassfish.gmbal.impl.ManagedObjectManagerImpl",
                 ObjectName.class ) ;
 
-    
+
     private static GenericConstructor<ManagedObjectManager> stringCons =
-        new GenericConstructor<ManagedObjectManager>( 
-            ManagedObjectManager.class, 
+        new GenericConstructor<ManagedObjectManager>(
+            ManagedObjectManager.class,
             "com.sun.org.glassfish.gmbal.impl.ManagedObjectManagerImpl",
                 String.class ) ;
 
@@ -63,9 +63,9 @@ public final class ManagedObjectManagerFactory {
      * @return The Method if found.
      * @throws GmbalException if no such method is found.
      */
-    public static Method getMethod( final Class<?> cls, final String name, 
-        final Class<?>... types ) {        
-        
+    public static Method getMethod( final Class<?> cls, final String name,
+        final Class<?>... types ) {
+
         try {
             return AccessController.doPrivileged(
                 new PrivilegedExceptionAction<Method>() {
@@ -79,7 +79,7 @@ public final class ManagedObjectManagerFactory {
             throw new GmbalException( "Unexpected exception", exc ) ;
         }
     }
-    
+
     /** Create a new ManagedObjectManager.  All objectnames created will share
      * the domain value passed on this call.  This ManagedObjectManager is
      * at the top of the containment hierarchy: the parent of the root is null.
@@ -89,39 +89,39 @@ public final class ManagedObjectManagerFactory {
      */
     public static ManagedObjectManager createStandalone(
         final String domain ) {
-	
+
         ManagedObjectManager result = stringCons.create( domain ) ;
-	if (result == null) {
-	    return ManagedObjectManagerNOPImpl.self ;
-	} else {
-	    return result ;
-	}
+        if (result == null) {
+            return ManagedObjectManagerNOPImpl.self ;
+        } else {
+            return result ;
+        }
     }
-    
+
     /** Alternative form of the create method to be used when the
      * rootName is not needed explicitly.  If the root name is available
      * from an @ObjectNameKey annotation, it is used; otherwise the
      * type is used as the name, since the root is a singleton.
-     * 
+     *
      * @param rootParentName The JMX ObjectName of the parent of the root.
-     * The parent is outside of the control of this ManagedObjectManager.  
+     * The parent is outside of the control of this ManagedObjectManager.
      * The ManagedObjectManager root is a child of the MBean identified
      * by the rootParentName.
      * @return The ManagedObjectManager.
      */
     public static ManagedObjectManager createFederated(
         final ObjectName rootParentName ) {
-	
+
         ManagedObjectManager result = objectNameCons.create( rootParentName ) ;
-	if (result == null) {
-	    return ManagedObjectManagerNOPImpl.self ;
-	} else {
-	    return result ;
-	}
+        if (result == null) {
+            return ManagedObjectManagerNOPImpl.self ;
+        } else {
+            return result ;
+        }
     }
 
     /** Return a ManagedObjectManager that performs no operations.  Useful to
-     * allow the same code to run with or without creating MBeans through 
+     * allow the same code to run with or without creating MBeans through
      * gmbal.
      * @return ManagedObjectManager that performs no operations.
      */
@@ -129,4 +129,3 @@ public final class ManagedObjectManagerFactory {
         return ManagedObjectManagerNOPImpl.self ;
     }
 }
-

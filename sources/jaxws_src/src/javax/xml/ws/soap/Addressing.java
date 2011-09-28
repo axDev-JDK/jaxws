@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -56,7 +56,7 @@ import javax.xml.ws.spi.WebServiceFeatureAnnotation;
  * <p>
  * This annotation's behaviour is defined by the corresponding feature
  * {@link AddressingFeature}.
- * 
+ *
  * @since JAX-WS 2.1
  */
 @Target({ElementType.TYPE, ElementType.METHOD, ElementType.FIELD})
@@ -72,7 +72,7 @@ public @interface Addressing {
      * 3.1.1 Addressing Assertion</a> must be generated in the generated WSDL.
      */
     boolean enabled() default true;
-    
+
     /**
      * If addressing is enabled, this property determines whether the endpoint
      * requires WS-Addressing. If required is true, the endpoint requires

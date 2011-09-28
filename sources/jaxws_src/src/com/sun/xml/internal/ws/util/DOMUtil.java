@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -137,7 +137,7 @@ public class DOMUtil {
         String nodeNS = fixNull(node.getNamespaceURI());
         //fix to work with DOM level 1 nodes.
         String nodeLocalName = node.getLocalName()== null?node.getNodeName():node.getLocalName();
-        
+
         // See if nodePrefix:nodeNS is declared in writer's NamespaceContext before writing start element
         // Writing start element puts nodeNS in NamespaceContext even though namespace declaration not written
         boolean prefixDecl = isPrefixDeclared(writer, nodeNS, nodePrefix);

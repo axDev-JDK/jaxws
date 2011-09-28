@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,13 +22,14 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.ws.policy.spi;
 
 import java.util.Map;
 
 /**
  * Maps an XML prefix to a namespace.
- * 
+ *
  * This class allows policy domains to configure to which XML prefix an XML
  * namespace is mapped.
  *
@@ -38,11 +39,11 @@ public interface PrefixMapper {
 
     /**
      * Returns a map of XML prefixes to namespaces for the domain.
-     * 
+     *
      * The keys of the map must be a name for an XML prefix, e.g. "wsrmp". The
      * values must be the name of an XML namespace, e.g.
      * "http://docs.oasis-open.org/ws-rx/wsrmp/200702".
-     * 
+     *
      * @return A map of XML prefixes to namespaces for the domain.
      */
     Map<String, String> getPrefixMap();

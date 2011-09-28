@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.ws.model;
 
 import com.sun.istack.internal.NotNull;
@@ -261,98 +262,6 @@ public abstract class AbstractSEIModelImpl implements SEIModel {
     void addJavaMethod(JavaMethodImpl jm) {
         if (jm != null)
             javaMethods.add(jm);
-    }
-
-    /**
-     * Used from {@link WSServiceDelegate}
-     * to apply the binding information from WSDL after the model is created frm SEI class on the client side. On the server
-     * side all the binding information is available before modeling and this method is not used.
-     *
-     * @deprecated To be removed once client side new architecture is implemented
-     */
-    public void applyParameterBinding(WSDLBoundPortTypeImpl wsdlBinding){
-        if(wsdlBinding == null)
-            return;
-
-        for(JavaMethodImpl method : javaMethods){
-            if(method.isAsync())
-                continue;
-            QName opName = new QName(wsdlBinding.getPortTypeName().getNamespaceURI(), method.getOperationName());
-
-            //patch the soapaction correctly from the WSDL
-            WSDLBoundOperationImpl bo = wsdlBinding.get(opName);
-            String action = bo.getSOAPAction();
-            method.getBinding().setSOAPAction(action);
-
-            boolean isRpclit = method.getBinding().isRpcLit();
-            List<ParameterImpl> reqParams = method.requestParams;
-            List<ParameterImpl> reqAttachParams = null;
-            for(ParameterImpl param:reqParams){
-                if(param.isWrapperStyle()){
-                    if(isRpclit){
-                        WrapperParameter reqParam = (WrapperParameter)param;
-                        if(bo.getRequestNamespace() != null){
-                            patchRpclitNamespace(bo.getRequestNamespace(), reqParam);
-                        }
-                        reqAttachParams = applyRpcLitParamBinding(method, (WrapperParameter)param, wsdlBinding, Mode.IN);
-                    }
-                    continue;
-                }
-                String partName = param.getPartName();
-                if(partName == null)
-                    continue;
-                ParameterBinding paramBinding = wsdlBinding.getBinding(opName, partName, Mode.IN);
-                if(paramBinding != null)
-                    param.setInBinding(paramBinding);
-            }
-
-            List<ParameterImpl> resAttachParams = null;
-            List<ParameterImpl> resParams = method.responseParams;
-            for(ParameterImpl param:resParams){
-                if(param.isWrapperStyle()){
-                    if(isRpclit){
-                        WrapperParameter respParam = (WrapperParameter)param;
-                        if(bo.getResponseNamespace() != null){
-                            patchRpclitNamespace(bo.getResponseNamespace(), respParam);
-                        }
-                        resAttachParams = applyRpcLitParamBinding(method, (WrapperParameter)param, wsdlBinding, Mode.OUT);
-                    }
-                    continue;
-                }
-                //if the parameter is not inout and its header=true then dont get binding from WSDL
-//                if(!param.isINOUT() && param.getBinding().isHeader())
-//                    continue;
-                String partName = param.getPartName();
-                if(partName == null)
-                    continue;
-                ParameterBinding paramBinding = wsdlBinding.getBinding(opName,
-                        partName, Mode.OUT);
-                if(paramBinding != null)
-                    param.setOutBinding(paramBinding);
-            }
-            if(reqAttachParams != null){
-                for(ParameterImpl p : reqAttachParams){
-                    method.addRequestParameter(p);
-                }
-            }
-            if(resAttachParams != null){
-                for(ParameterImpl p : resAttachParams){
-                    method.addResponseParameter(p);
-                }
-            }
-
-        }
-    }
-
-    /**
-     * For rpclit wrapper element inside <soapenv:Body>, the targetNamespace should be taked from
-     * the soapbind:body@namespace value. Since no annotations on SEI/impl class captures it so we
-     * need to get it from WSDL and patch it.     *
-     */
-    private void patchRpclitNamespace(String namespace, WrapperParameter param){
-        TypeReference type = param.getTypeReference();
-        TypeReference newType = new TypeReference(new QName(namespace, type.tagName.getLocalPart()), type.type, type.annotations);
-        param.setTypeReference(newType);
     }
 
     /**

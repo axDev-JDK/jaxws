@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -45,7 +45,7 @@ import org.xml.sax.SAXException;
 
 /**
  * Reference by name.
- * 
+ *
  * UName will be later resolved to a target object,
  * after all the schemas are parsed.
  */
@@ -56,12 +56,12 @@ public abstract class DelayedRef implements Patch {
         this.manager = _manager;
         this.name = _name;
         this.source = _source;
-        
+
         if(name==null)  throw new InternalError();
-        
+
         manager.addPatcher(this);
     }
-    
+
     /**
      * Patch implementation. Makes sure that the name resolves
      * to a schema component.
@@ -89,7 +89,7 @@ public abstract class DelayedRef implements Patch {
         if(ref==null)   throw new InternalError("unresolved reference");
         return ref;
     }
-    
+
     private void resolve() throws SAXException {
         ref = resolveReference(name);
         if(ref==null)
@@ -100,13 +100,13 @@ public abstract class DelayedRef implements Patch {
 
     /**
      * If this reference refers to the given declaration,
-     * resolve the reference now. This is used to implement redefinition. 
+     * resolve the reference now. This is used to implement redefinition.
      */
     public void redefine(XSDeclaration d) {
         if( !d.getTargetNamespace().equals(name.getNamespaceURI())
         ||  !d.getName().equals(name.getName()) )
             return;
-        
+
         ref = d;
         manager = null;
         name = null;
@@ -122,7 +122,7 @@ public abstract class DelayedRef implements Patch {
             Object o = super.schema.getSimpleType(
                 name.getNamespaceURI(), name.getName() );
             if(o!=null)     return o;
-            
+
             return super.schema.getComplexType(
                 name.getNamespaceURI(),
                 name.getName());
@@ -130,7 +130,7 @@ public abstract class DelayedRef implements Patch {
         protected String getErrorProperty() {
             return Messages.ERR_UNDEFINED_TYPE;
         }
-    
+
         public XSType getType() { return (XSType)super._get(); }
     }
 
@@ -145,7 +145,7 @@ public abstract class DelayedRef implements Patch {
                 name.getNamespaceURI(),
                 name.getName());
         }
-        
+
         protected String getErrorProperty() {
             return Messages.ERR_UNDEFINED_SIMPLETYPE;
         }
@@ -160,11 +160,11 @@ public abstract class DelayedRef implements Patch {
                 name.getNamespaceURI(),
                 name.getName());
         }
-        
+
         protected String getErrorProperty() {
             return Messages.ERR_UNDEFINED_COMPLEXTYPE;
         }
-    
+
         public XSComplexType getType() { return (XSComplexType)super._get(); }
     }
 
@@ -177,15 +177,15 @@ public abstract class DelayedRef implements Patch {
                 name.getNamespaceURI(),
                 name.getName());
         }
-        
+
         protected String getErrorProperty() {
             return Messages.ERR_UNDEFINED_ELEMENT;
         }
-    
+
         public XSElementDecl get() { return (XSElementDecl)super._get(); }
         public XSTerm getTerm() { return get(); }
     }
-    
+
     public static class ModelGroup extends DelayedRef implements Ref.Term {
         public ModelGroup( PatcherManager manager, Locator loc, SchemaImpl schema, UName name ) {
             super(manager,loc,schema,name);
@@ -195,15 +195,15 @@ public abstract class DelayedRef implements Patch {
                 name.getNamespaceURI(),
                 name.getName());
         }
-        
+
         protected String getErrorProperty() {
             return Messages.ERR_UNDEFINED_MODELGROUP;
         }
-    
+
         public XSModelGroupDecl get() { return (XSModelGroupDecl)super._get(); }
         public XSTerm getTerm() { return get(); }
     }
-    
+
     public static class AttGroup extends DelayedRef implements Ref.AttGroup {
         public AttGroup( PatcherManager manager, Locator loc, SchemaImpl schema, UName name ) {
             super(manager,loc,schema,name);
@@ -213,11 +213,11 @@ public abstract class DelayedRef implements Patch {
                 name.getNamespaceURI(),
                 name.getName());
         }
-        
+
         protected String getErrorProperty() {
             return Messages.ERR_UNDEFINED_ATTRIBUTEGROUP;
         }
-    
+
         public XSAttGroupDecl get() { return (XSAttGroupDecl)super._get(); }
     }
 
@@ -230,11 +230,11 @@ public abstract class DelayedRef implements Patch {
                 name.getNamespaceURI(),
                 name.getName());
         }
-        
+
         protected String getErrorProperty() {
             return Messages.ERR_UNDEFINED_ATTRIBUTE;
         }
-    
+
         public XSAttributeDecl getAttribute() { return (XSAttributeDecl)super._get(); }
     }
 
@@ -255,4 +255,3 @@ public abstract class DelayedRef implements Patch {
         public XSIdentityConstraint get() { return (XSIdentityConstraint)super._get(); }
     }
 }
-

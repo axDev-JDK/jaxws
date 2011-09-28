@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -27,6 +27,6 @@
  *
  * <P>This document describes the SPI for the JAX-WS 2.0.1 tools.
  *  The WSToolsObjectFactory is used to create instances of WsGen
- *  and WsImport that other applications can use. 
+ *  and WsImport that other applications can use.
 */
 package com.sun.tools.internal.ws.spi;

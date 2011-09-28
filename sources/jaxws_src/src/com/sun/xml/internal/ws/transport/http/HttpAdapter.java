@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -29,6 +29,8 @@ package com.sun.xml.internal.ws.transport.http;
 import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
 import com.sun.xml.internal.ws.api.PropertySet;
+import com.sun.xml.internal.ws.api.ha.HaInfo;
+import com.sun.xml.internal.ws.api.ha.StickyFeature;
 import com.sun.xml.internal.ws.api.message.ExceptionHasMessage;
 import com.sun.xml.internal.ws.api.message.Message;
 import com.sun.xml.internal.ws.api.message.Packet;
@@ -49,9 +51,11 @@ import com.sun.xml.internal.ws.api.server.WebServiceContextDelegate;
 import com.sun.xml.internal.ws.resources.WsservletMessages;
 import com.sun.xml.internal.ws.server.UnsupportedMediaException;
 import com.sun.xml.internal.ws.util.ByteArrayBuffer;
+import com.sun.xml.internal.ws.util.Pool;
 
 import javax.xml.ws.Binding;
 import javax.xml.ws.WebServiceException;
+import javax.xml.ws.WebServiceFeature;
 import javax.xml.ws.http.HTTPBinding;
 import java.io.IOException;
 import java.io.InputStream;
@@ -59,12 +63,8 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -108,6 +108,8 @@ public class HttpAdapter extends Adapter<HttpAdapter.HttpToolkit> {
      */
     public final String urlPattern;
 
+    protected boolean stickyCookie;
+
 
     /**
      * Creates a lone {@link HttpAdapter} that does not know of any other
@@ -126,6 +128,8 @@ public class HttpAdapter extends Adapter<HttpAdapter.HttpToolkit> {
     /**
      * @deprecated
      *      remove as soon as we can update the test util.
+     * @param endpoint web service endpoint
+     * @param owner list of related adapters
      */
     protected HttpAdapter(WSEndpoint endpoint, HttpAdapterList<? extends HttpAdapter> owner) {
         this(endpoint,owner,null);
@@ -147,11 +151,11 @@ public class HttpAdapter extends Adapter<HttpAdapter.HttpToolkit> {
     public ServiceDefinition getServiceDefinition() {
         return this.serviceDefinition;
     }
-    
+
     /**
      * Fill in WSDL map.
      *
-     * @param sdef
+     * @param sdef service definition
      */
     public void initWSDLMap(ServiceDefinition sdef) {
         this.serviceDefinition = sdef;
@@ -165,13 +169,13 @@ public class HttpAdapter extends Adapter<HttpAdapter.HttpToolkit> {
             Map<String, SDDocument> systemIds = new TreeMap<String, SDDocument>();
             for (SDDocument sdd : sdef) {
                 if (sdd == sdef.getPrimary()) { // No sorting for Primary WSDL
-                    wsdls.put("wsdl", sdd);     
+                    wsdls.put("wsdl", sdd);
                     wsdls.put("WSDL", sdd);
                 } else {
                     systemIds.put(sdd.getURL().toString(), sdd);
                 }
             }
-            
+
             int wsdlnum = 1;
             int xsdnum = 1;
             for (Map.Entry<String, SDDocument> e : systemIds.entrySet()) {
@@ -204,7 +208,7 @@ public class HttpAdapter extends Adapter<HttpAdapter.HttpToolkit> {
             return urlPattern;
         }
     }
-    
+
     protected HttpToolkit createToolkit() {
         return new HttpToolkit();
     }
@@ -228,56 +232,66 @@ public class HttpAdapter extends Adapter<HttpAdapter.HttpToolkit> {
      * @throws IOException when I/O errors happen
      */
     public void handle(@NotNull WSHTTPConnection connection) throws IOException {
-        if(connection.getRequestMethod().equals("GET")) {
+        if (handleGet(connection)) {
+            return;
+        }
+
+        // Make sure the Toolkit is recycled by the same pool instance from which it was taken
+        final Pool<HttpToolkit> currentPool = getPool();
+        // normal request handling
+        final HttpToolkit tk = currentPool.take();
+        try {
+            tk.handle(connection);
+        } finally {
+            currentPool.recycle(tk);
+        }
+    }
+
+    public boolean handleGet(@NotNull WSHTTPConnection connection) throws IOException {
+        if (connection.getRequestMethod().equals("GET")) {
             // metadata query. let the interceptor run
-            for( EndpointComponent c : endpoint.getComponentRegistry() ) {
+            for (EndpointComponent c : endpoint.getComponentRegistry()) {
                 HttpMetadataPublisher spi = c.getSPI(HttpMetadataPublisher.class);
-                if(spi!=null && spi.handleMetadataRequest(this,connection))
-                    return; // handled
+                if (spi != null && spi.handleMetadataRequest(this, connection))
+                    return true; // handled
             }
 
             if (isMetadataQuery(connection.getQueryString())) {
                 // Sends published WSDL and schema documents as the default action.
                 publishWSDL(connection);
-                return;
+                return true;
             }
 
             Binding binding = getEndpoint().getBinding();
             if (!(binding instanceof HTTPBinding)) {
                 // Writes HTML page with all the endpoint descriptions
                 writeWebServicesHtmlPage(connection);
-                return;
+                return true;
             }
         } else if (connection.getRequestMethod().equals("HEAD")) {
             connection.getInput().close();
             Binding binding = getEndpoint().getBinding();
             if (isMetadataQuery(connection.getQueryString())) {
                 SDDocument doc = wsdls.get(connection.getQueryString());
-                connection.setStatus(doc!=null
+                connection.setStatus(doc != null
                         ? HttpURLConnection.HTTP_OK
                         : HttpURLConnection.HTTP_NOT_FOUND);
                 connection.getOutput().close();
                 connection.close();
-                return;
+                return true;
             } else if (!(binding instanceof HTTPBinding)) {
                 connection.setStatus(HttpURLConnection.HTTP_NOT_FOUND);
                 connection.getOutput().close();
                 connection.close();
-                return;
+                return true;
             }
             // Let the endpoint handle for HTTPBinding
         }
 
-        // normal request handling
-        HttpToolkit tk = pool.take();
-        try {
-            tk.handle(connection);
-        } finally {
-            pool.recycle(tk);
-        }
-    }
+        return false;
 
-    /**
+    }
+    /*
      *
      * @param con
      * @param codec
@@ -311,9 +325,9 @@ public class HttpAdapter extends Adapter<HttpAdapter.HttpToolkit> {
     /**
      * Some stacks may send non WS-I BP 1.2 conformant SoapAction.
      * Make sure SOAPAction is quoted as {@link Packet#soapAction} expectsa quoted soapAction value.
-     *  
+     *
      * @param soapAction SoapAction HTTP Header
-     * @return
+     * @return quoted SOAPAction value
      */
     private String fixQuotesAroundSoapAction(String soapAction) {
         if(soapAction != null && (!soapAction.startsWith("\"") || !soapAction.endsWith("\"")) ) {
@@ -334,6 +348,8 @@ public class HttpAdapter extends Adapter<HttpAdapter.HttpToolkit> {
             return;                 // Connection is already closed
         }
         Message responseMessage = packet.getMessage();
+        addStickyCookie(con);
+        addReplicaCookie(con, packet);
         if (responseMessage == null) {
             if (!con.isClosed()) {
                 // set the response code if not already set
@@ -370,6 +386,7 @@ public class HttpAdapter extends Adapter<HttpAdapter.HttpToolkit> {
                 }
                 os.close();
             } else {
+
                 ByteArrayBuffer buf = new ByteArrayBuffer();
                 contentType = codec.encode(packet, buf);
                 con.setContentTypeResponseHeader(contentType.getContentType());
@@ -383,43 +400,112 @@ public class HttpAdapter extends Adapter<HttpAdapter.HttpToolkit> {
         }
     }
 
-    public void invokeAsync(final WSHTTPConnection con) throws IOException {
-        final HttpToolkit tk = pool.take();
-        final Packet request;
-        try {
-            request = decodePacket(con, tk.codec);
-        } catch(ExceptionHasMessage e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
-            Packet response = new Packet();
-            response.setMessage(e.getFaultMessage());
-            encodePacket(response, con, tk.codec);
-            pool.recycle(tk);
-            con.close();
-            return;
-        } catch(UnsupportedMediaException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
-            Packet response = new Packet();
-            con.setStatus(WSHTTPConnection.UNSUPPORTED_MEDIA);
-            encodePacket(response, con, tk.codec);
-            pool.recycle(tk);
-            con.close();
-            return;
-        }
-
-        endpoint.schedule(request, new WSEndpoint.CompletionCallback() {
-            public void onCompletion(@NotNull Packet response) {
-                try {
-                    try {
-                        encodePacket(response, con, tk.codec);
-                    } catch(IOException ioe) {
-                        LOGGER.log(Level.SEVERE, ioe.getMessage(), ioe);
-                    }
-                    pool.recycle(tk);
-                } finally{
-                    con.close();
-                }
+    /*
+     * GlassFish Load-balancer plugin always add a header proxy-jroute on
+     * request being send from load-balancer plugin to server
+     *
+     * JROUTE cookie need to be stamped in two cases
+     * 1 : At the time of session creation. In this case, request will not have
+     * any JROUTE cookie.
+     * 2 : At the time of fail-over. In this case, value of proxy-jroute
+     * header(will point to current instance) and JROUTE cookie(will point to
+     * previous failed instance) will be different. This logic can be used
+     * to determine fail-over scenario.
+     */
+    private void addStickyCookie(WSHTTPConnection con) {
+        if (stickyCookie) {
+            String proxyJroute = con.getRequestHeader("proxy-jroute");
+            if (proxyJroute == null) {
+                // Load-balancer plugin is not front-ending this instance
+                return;
             }
-        });
+
+            String jrouteId = con.getCookie("JROUTE");
+            if (jrouteId == null || !jrouteId.equals(proxyJroute)) {
+                // Initial request or failover
+                con.setCookie("JROUTE", proxyJroute);
+            }
+        }
+    }
+
+    private void addReplicaCookie(WSHTTPConnection con, Packet packet) {
+        if (stickyCookie) {
+            HaInfo haInfo = null;
+            if (packet.supports(Packet.HA_INFO)) {
+                haInfo = (HaInfo)packet.get(Packet.HA_INFO);
+            }
+            if (haInfo != null) {
+                con.setCookie("METRO_KEY", haInfo.getKey());
+                con.setCookie("JREPLICA", haInfo.getReplicaInstance());
+            }
+        }
+    }
+
+    public void invokeAsync(final WSHTTPConnection con) throws IOException {
+        invokeAsync(con, NO_OP_COMPLETION_CALLBACK);
+    }
+
+    public void invokeAsync(final WSHTTPConnection con, final CompletionCallback callback) throws IOException {
+
+            if (handleGet(con)) {
+                callback.onCompletion();
+                return;
+            }
+            final Pool<HttpToolkit> currentPool = getPool();
+            final HttpToolkit tk = currentPool.take();
+            final Packet request;
+
+            try {
+
+                request = decodePacket(con, tk.codec);
+            } catch (ExceptionHasMessage e) {
+                LOGGER.log(Level.SEVERE, e.getMessage(), e);
+                Packet response = new Packet();
+                response.setMessage(e.getFaultMessage());
+                encodePacket(response, con, tk.codec);
+                currentPool.recycle(tk);
+                con.close();
+                callback.onCompletion();
+                return;
+            } catch (UnsupportedMediaException e) {
+                LOGGER.log(Level.SEVERE, e.getMessage(), e);
+                Packet response = new Packet();
+                con.setStatus(WSHTTPConnection.UNSUPPORTED_MEDIA);
+                encodePacket(response, con, tk.codec);
+                currentPool.recycle(tk);
+                con.close();
+                callback.onCompletion();
+                return;
+            }
+
+            endpoint.process(request, new WSEndpoint.CompletionCallback() {
+                public void onCompletion(@NotNull Packet response) {
+                    try {
+                        try {
+                            encodePacket(response, con, tk.codec);
+                        } catch (IOException ioe) {
+                            LOGGER.log(Level.SEVERE, ioe.getMessage(), ioe);
+                        }
+                        currentPool.recycle(tk);
+                    } finally {
+                        con.close();
+                        callback.onCompletion();
+
+                    }
+                }
+            },null);
+
+    }
+
+    public static  final CompletionCallback NO_OP_COMPLETION_CALLBACK = new CompletionCallback() {
+
+        public void onCompletion() {
+            //NO-OP
+        }
+    };
+
+    public interface CompletionCallback{
+        void onCompletion();
     }
 
     final class AsyncTransport extends AbstractServerAsyncTransport<WSHTTPConnection> {
@@ -483,21 +569,24 @@ public class HttpAdapter extends Adapter<HttpAdapter.HttpToolkit> {
 
     final class HttpToolkit extends Adapter.Toolkit {
         public void handle(WSHTTPConnection con) throws IOException {
-            boolean invoke = false;
             try {
-                Packet packet = new Packet();
+                boolean invoke = false;
+                Packet packet;
                 try {
                     packet = decodePacket(con, codec);
                     invoke = true;
-                } catch(ExceptionHasMessage e) {
-                    LOGGER.log(Level.SEVERE, e.getMessage(), e);
-                    packet.setMessage(e.getFaultMessage());
-                } catch(UnsupportedMediaException e) {
-                    LOGGER.log(Level.SEVERE, e.getMessage(), e);
-                    con.setStatus(WSHTTPConnection.UNSUPPORTED_MEDIA);
                 } catch(Exception e) {
-                    LOGGER.log(Level.SEVERE, e.getMessage(), e);
-                    con.setStatus(HttpURLConnection.HTTP_INTERNAL_ERROR);
+                    packet = new Packet();
+                    if (e instanceof ExceptionHasMessage) {
+                        LOGGER.log(Level.SEVERE, e.getMessage(), e);
+                        packet.setMessage(((ExceptionHasMessage)e).getFaultMessage());
+                    } else if (e instanceof UnsupportedMediaException) {
+                        LOGGER.log(Level.SEVERE, e.getMessage(), e);
+                        con.setStatus(WSHTTPConnection.UNSUPPORTED_MEDIA);
+                    } else {
+                        LOGGER.log(Level.SEVERE, e.getMessage(), e);
+                        con.setStatus(HttpURLConnection.HTTP_INTERNAL_ERROR);
+                    }
                 }
                 if (invoke) {
                     try {
@@ -511,7 +600,7 @@ public class HttpAdapter extends Adapter<HttpAdapter.HttpToolkit> {
                         return;
                     }
                 }
-               encodePacket(packet, con, codec);
+                encodePacket(packet, con, codec);
             } finally {
                 if (!con.isClosed()) {
                     con.close();
@@ -546,7 +635,7 @@ public class HttpAdapter extends Adapter<HttpAdapter.HttpToolkit> {
      */
     public void publishWSDL(@NotNull WSHTTPConnection con) throws IOException {
         con.getInput().close();
-        
+
         SDDocument doc = wsdls.get(con.getQueryString());
         if (doc == null) {
             writeNotFoundErrorPage(con,"Invalid Request");
@@ -641,7 +730,7 @@ public class HttpAdapter extends Adapter<HttpAdapter.HttpToolkit> {
         System.out.println("--------------------");
     }
 
-    /**
+    /*
      * Generates the listing of all services.
      */
     private void writeWebServicesHtmlPage(WSHTTPConnection con) throws IOException {
@@ -689,7 +778,7 @@ public class HttpAdapter extends Adapter<HttpAdapter.HttpToolkit> {
             out.println("</td>");
             out.println("</tr>");
 
-            for (BoundEndpoint a : endpoints) {               
+            for (BoundEndpoint a : endpoints) {
                 String endpointAddress = a.getAddress(con.getBaseAddress()).toString();
                 out.println("<tr>");
 
@@ -706,7 +795,7 @@ public class HttpAdapter extends Adapter<HttpAdapter.HttpToolkit> {
                     a.getEndpoint().getImplementationClass().getName()
                 ));
                 out.println("</td>");
-                
+
                 out.println("</tr>");
             }
             out.println("</table>");
@@ -727,10 +816,12 @@ public class HttpAdapter extends Adapter<HttpAdapter.HttpToolkit> {
         try {
             dump = Boolean.getBoolean(HttpAdapter.class.getName()+".dump");
         } catch( Throwable t ) {
+            // OK to ignore this
         }
         try {
             publishStatusPage = System.getProperty(HttpAdapter.class.getName()+".publishStatusPage").equals("true");
         } catch( Throwable t ) {
+            // OK to ignore this
         }
     }
 

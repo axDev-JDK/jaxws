@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -28,6 +28,8 @@ package com.sun.codemodel.internal;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * Represents an arrays as annotation members
@@ -60,7 +62,79 @@ public final class JAnnotationArrayMember extends JAnnotationValue implements JA
         return this;
     }
 
+    /**
+     * Adds an array member to this annotation
+     *
+     * @param value Adds a boolean value to the array member
+     * @return The JAnnotationArrayMember. More elements can be added by calling
+     *         the same method multiple times
+     */
     public JAnnotationArrayMember param(boolean value) {
+        JAnnotationValue annotationValue = new JAnnotationStringValue(JExpr.lit(value));
+        values.add(annotationValue);
+        return this;
+    }
+
+    /**
+     * Adds an array member to this annotation
+     *
+     * @param value Adds a byte value to the array member
+     * @return The JAnnotationArrayMember. More elements can be added by calling
+     *         the same method multiple times
+     */
+    public JAnnotationArrayMember param(byte value) {
+        JAnnotationValue annotationValue = new JAnnotationStringValue(JExpr.lit(value));
+        values.add(annotationValue);
+        return this;
+    }
+
+    /**
+     * Adds an array member to this annotation
+     *
+     * @param value Adds a char value to the array member
+     * @return The JAnnotationArrayMember. More elements can be added by calling
+     *         the same method multiple times
+     */
+    public JAnnotationArrayMember param(char value) {
+        JAnnotationValue annotationValue = new JAnnotationStringValue(JExpr.lit(value));
+        values.add(annotationValue);
+        return this;
+    }
+
+    /**
+     * Adds an array member to this annotation
+     *
+     * @param value Adds a double value to the array member
+     * @return The JAnnotationArrayMember. More elements can be added by calling
+     *         the same method multiple times
+     */
+    public JAnnotationArrayMember param(double value) {
+        JAnnotationValue annotationValue = new JAnnotationStringValue(JExpr.lit(value));
+        values.add(annotationValue);
+        return this;
+    }
+
+    /**
+     * Adds an array member to this annotation
+     *
+     * @param value Adds a long value to the array member
+     * @return The JAnnotationArrayMember. More elements can be added by calling
+     *         the same method multiple times
+     */
+    public JAnnotationArrayMember param(long value) {
+        JAnnotationValue annotationValue = new JAnnotationStringValue(JExpr.lit(value));
+        values.add(annotationValue);
+        return this;
+    }
+
+    /**
+     * Adds an array member to this annotation
+     *
+     * @param value Adds a short value to the array member
+     * @return The JAnnotationArrayMember. More elements can be added by calling
+     *         the same method multiple times
+     */
+    public JAnnotationArrayMember param(short value) {
         JAnnotationValue annotationValue = new JAnnotationStringValue(JExpr.lit(value));
         values.add(annotationValue);
         return this;
@@ -92,8 +166,52 @@ public final class JAnnotationArrayMember extends JAnnotationValue implements JA
         return this;
     }
 
-    public JAnnotationArrayMember param(Class value){
-       JAnnotationValue annotationValue = new JAnnotationStringValue(JExpr.lit(value.getName()));
+    /**
+     * Adds a enum array member to this annotation
+     *
+     * @param value Adds a enum value to the array member
+     * @return The JAnnotationArrayMember. More elements can be added by calling
+     *         the same method multiple times
+     */
+    public JAnnotationArrayMember param(final Enum<?> value) {
+        JAnnotationValue annotationValue = new JAnnotationValue() {
+            public void generate(JFormatter f) {
+                f.t(owner.ref(value.getDeclaringClass())).p('.').p(value.name());
+            }
+        };
+        values.add(annotationValue);
+        return this;
+    }
+
+    /**
+     * Adds a enum array member to this annotation
+     *
+     * @param value Adds a enum value to the array member
+     * @return The JAnnotationArrayMember. More elements can be added by calling
+     *         the same method multiple times
+     */
+    public JAnnotationArrayMember param(final JEnumConstant value) {
+        JAnnotationValue annotationValue = new JAnnotationStringValue(value);
+        values.add(annotationValue);
+        return this;
+    }
+
+
+    /**
+     * Adds a class array member to this annotation
+     *
+     * @param value Adds a class value to the array member
+     * @return The JAnnotationArrayMember. More elements can be added by calling
+     *         the same method multiple times
+     */
+    public JAnnotationArrayMember param(final Class<?> value){
+       JAnnotationValue annotationValue = new JAnnotationStringValue(
+                   new JExpressionImpl() {
+                         public void generate(JFormatter f) {
+                                 f.p(value.getName().replace('$', '.'));
+                                 f.p(".class");
+                        }
+                 });
        values.add(annotationValue);
        return this;
    }
@@ -126,6 +244,16 @@ public final class JAnnotationArrayMember extends JAnnotationValue implements JA
     }
 
     /**
+     * {@link JAnnotatable#annotations()}
+     */
+    @SuppressWarnings("unchecked")
+        public Collection<JAnnotationUse> annotations() {
+        // this invocation is invalid if the caller isn't adding annotations into an array
+        // so this potentially type-unsafe conversion would be justified.
+        return Collections.<JAnnotationUse>unmodifiableList((List)values);
+    }
+
+    /**
      * Adds an annotation member to this annotation  array
      * This can be used for e.g &#64;XmlCollection(values= &#64;XmlCollectionItem(type=Foo.class))
      * @param value
@@ -155,4 +283,3 @@ public final class JAnnotationArrayMember extends JAnnotationValue implements JA
         f.nl().o().p('}');
     }
 }
-

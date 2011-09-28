@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -26,7 +26,7 @@
 package com.sun.xml.internal.ws.api.policy;
 
 import com.sun.xml.internal.ws.util.ServiceFinder;
-import com.sun.xml.internal.ws.policy.DefaultPolicyResolver;
+import com.sun.xml.internal.ws.policy.jaxws.DefaultPolicyResolver;
 
 /**
  * PolicyResolverFactory provides a way to override Effective Policy Resolution for a Service or Client.
@@ -35,7 +35,7 @@ import com.sun.xml.internal.ws.policy.DefaultPolicyResolver;
  *      on client-side updates with the effective policy by doing alternative selection.
  *
  * Extensions can override this to consult other forms of configuration to give the effective PolicyMap.
- * 
+ *
  * @author Rama Pulavarthi
  */
 public abstract class PolicyResolverFactory {
@@ -60,5 +60,5 @@ public abstract class PolicyResolverFactory {
      */
     public static final PolicyResolver DEFAULT_POLICY_RESOLVER =  new DefaultPolicyResolver();
 
-    
+
 }

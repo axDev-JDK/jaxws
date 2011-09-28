@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -25,6 +25,7 @@
 
 package com.sun.xml.internal.ws.api.message;
 
+import com.sun.istack.internal.NotNull;
 import com.sun.xml.internal.bind.api.Bridge;
 import com.sun.xml.internal.bind.api.JAXBRIContext;
 import com.sun.xml.internal.bind.v2.runtime.MarshallerImpl;
@@ -155,5 +156,16 @@ public abstract class Headers {
      */
     public static Header create(QName name, String value) {
         return new StringHeader(name, value);
-    }    
+    }
+
+    /**
+     * Creates a new {@link Header} that that has a single text value in it
+     * (IOW, of the form &lt;foo>text&lt;/foo>.)
+     *
+     * @param name QName of the header element
+     * @param value text value of the header
+     */
+    public static Header createMustUnderstand(@NotNull SOAPVersion soapVersion, @NotNull QName name,@NotNull String value) {
+        return new StringHeader(name, value,soapVersion,true);
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -37,20 +37,20 @@ import java.io.IOException;
 public final class AMXGlassfish
 {
     public static final String DEFAULT_JMX_DOMAIN = "amx";
-    
+
     /** Default domain support */
     public static final AMXGlassfish DEFAULT = new AMXGlassfish(DEFAULT_JMX_DOMAIN);
-    
+
     private final String     mJMXDomain;
     private final ObjectName mDomainRoot;
-    
+
     /** Anything other than {@link #DEFAULT} is not supported in Glassfish V3 */
     public AMXGlassfish(final String jmxDomain)
     {
         mJMXDomain = jmxDomain;
         mDomainRoot = newObjectName("", "domain-root", null);
     }
-    
+
     /** Return a version string, or null if not running in Glassfish */
     public static String getGlassfishVersion()
     {
@@ -69,7 +69,7 @@ public final class AMXGlassfish
     {
         return mJMXDomain;
     }
-    
+
     /** JMX domain used by AMX support MBeans.  Private use only */
     public String amxSupportDomain()
     {
@@ -81,7 +81,7 @@ public final class AMXGlassfish
     {
         return "server";
     }
-    
+
     /** name of the Domain Admin Server (DAS) &lt;config> */
     public String dasConfig()
     {
@@ -105,7 +105,7 @@ public final class AMXGlassfish
     {
         return newObjectName("/mon", "server-mon", serverName);
     }
-    
+
     /** ObjectName for top-level monitoring MBean for the DAS. */
     public ObjectName serverMonForDAS() {
         return serverMon( "server" ) ;
@@ -139,15 +139,15 @@ public final class AMXGlassfish
         if ( ! name.startsWith( amxJMXDomain() ) ) {
             name = amxJMXDomain() + ":" + name;
         }
-        
+
         return AMXUtil.newObjectName( name );
     }
-    
+
     private static String prop(final String key, final String value)
     {
         return key + "=" + value;
     }
-    
+
     /**
         ObjectName for {@link BootAMXMBean}
      */
@@ -155,7 +155,7 @@ public final class AMXGlassfish
     {
         return AMXUtil.newObjectName( amxSupportDomain() + ":type=boot-amx" );
     }
-    
+
     /**
     Invoke the bootAMX() method on {@link BootAMXMBean}.  Upon return,
     AMX continues to load.
@@ -174,7 +174,7 @@ public final class AMXGlassfish
             throw new RuntimeException(e);
         }
     }
-    
+
     /**
         Invoke the waitAMXReady() method on the DomainRoot MBean, which must already be loaded.
      */
@@ -189,9 +189,9 @@ public final class AMXGlassfish
             throw new RuntimeException(e);
         }
     }
-    
+
       /**
-        Listen for the registration of AMX DomainRoot 
+        Listen for the registration of AMX DomainRoot
         Listening starts automatically.
      */
     public <T extends MBeanListener.Callback> MBeanListener<T> listenForDomainRoot(
@@ -209,7 +209,7 @@ public final class AMXGlassfish
         public WaitForDomainRootListenerCallback( final MBeanServerConnection conn ) {
             mConn = conn;
         }
-        
+
         @Override
         public void mbeanRegistered(final ObjectName objectName, final MBeanListener listener) {
             super.mbeanRegistered(objectName,listener);
@@ -231,7 +231,7 @@ public final class AMXGlassfish
         callback.await();
         return callback.getRegistered();
     }
-    
+
     /**
         Listen for the registration of the {@link BootAMXMBean}.
         Listening starts automatically.  See {@link AMXBooter#BootAMXCallback}.
@@ -279,7 +279,7 @@ public final class AMXGlassfish
         throws IOException
     {
         final ObjectName domainRoot = domainRoot();
-        
+
         if ( !conn.isRegistered( domainRoot ) )
         {
             // wait for the BootAMXMBean to be available (loads at startup)
@@ -288,11 +288,11 @@ public final class AMXGlassfish
             callback.await(); // block until the MBean appears
 
             invokeBootAMX(conn);
-            
+
             final WaitForDomainRootListenerCallback drCallback = new WaitForDomainRootListenerCallback(conn);
             listenForDomainRoot(conn, drCallback);
             drCallback.await();
-            
+
             invokeWaitAMXReady(conn, domainRoot);
         }
         else
@@ -301,7 +301,7 @@ public final class AMXGlassfish
         }
         return domainRoot;
     }
-    
+
     public ObjectName bootAMX(final MBeanServer server)
     {
         try
@@ -314,12 +314,3 @@ public final class AMXGlassfish
         }
     }
 }
-
-
-
-
-
-
-
-
-

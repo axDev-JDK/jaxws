@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -37,14 +37,14 @@ import java.io.PrintWriter;
  * @since JAXB1.0
  */
 public class JAXBException extends Exception {
-  
-    /** 
+
+    /**
      * Vendor specific error code
      *
      */
     private String errorCode;
 
-    /** 
+    /**
      * Exception reference
      *
      */
@@ -52,8 +52,8 @@ public class JAXBException extends Exception {
 
     static final long serialVersionUID = -5621384651494307979L;
 
-    /** 
-     * Construct a JAXBException with the specified detail message.  The 
+    /**
+     * Construct a JAXBException with the specified detail message.  The
      * errorCode and linkedException will default to null.
      *
      * @param message a description of the exception
@@ -62,8 +62,8 @@ public class JAXBException extends Exception {
         this( message, null, null );
     }
 
-    /** 
-     * Construct a JAXBException with the specified detail message and vendor 
+    /**
+     * Construct a JAXBException with the specified detail message and vendor
      * specific errorCode.  The linkedException will default to null.
      *
      * @param message a description of the exception
@@ -73,7 +73,7 @@ public class JAXBException extends Exception {
         this( message, errorCode, null );
     }
 
-    /** 
+    /**
      * Construct a JAXBException with a linkedException.  The detail message and
      * vendor specific errorCode will default to null.
      *
@@ -82,9 +82,9 @@ public class JAXBException extends Exception {
     public JAXBException(Throwable exception) {
         this( null, null, exception );
     }
-    
-    /** 
-     * Construct a JAXBException with the specified detail message and 
+
+    /**
+     * Construct a JAXBException with the specified detail message and
      * linkedException.  The errorCode will default to null.
      *
      * @param message a description of the exception
@@ -93,9 +93,9 @@ public class JAXBException extends Exception {
     public JAXBException(String message, Throwable exception) {
         this( message, null, exception );
     }
-    
-    /** 
-     * Construct a JAXBException with the specified detail message, vendor 
+
+    /**
+     * Construct a JAXBException with the specified detail message, vendor
      * specific errorCode, and linkedException.
      *
      * @param message a description of the exception
@@ -107,8 +107,8 @@ public class JAXBException extends Exception {
         this.errorCode = errorCode;
         this.linkedException = exception;
     }
-    
-    /** 
+
+    /**
      * Get the vendor specific error code
      *
      * @return a string specifying the vendor specific error code
@@ -118,7 +118,7 @@ public class JAXBException extends Exception {
     }
 
     /**
-     * Get the linked exception 
+     * Get the linked exception
      *
      * @return the linked Exception, null if none exists
      */
@@ -129,20 +129,20 @@ public class JAXBException extends Exception {
     /**
      * Add a linked Exception.
      *
-     * @param exception the linked Exception (A null value is permitted and 
+     * @param exception the linked Exception (A null value is permitted and
      *                  indicates that the linked exception does not exist or
      *                  is unknown).
      */
     public synchronized void setLinkedException( Throwable exception ) {
         this.linkedException = exception;
     }
-    
+
     /**
      * Returns a short description of this JAXBException.
      *
      */
     public String toString() {
-        return linkedException == null ? 
+        return linkedException == null ?
             super.toString() :
             super.toString() + "\n - with linked exception:\n[" +
                                 linkedException.toString()+ "]";

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -58,7 +58,7 @@ public abstract class Codecs {
      *
      * @see ServerTubeAssemblerContext#setCodec(Codec)
      * @see ClientTubeAssemblerContext#setCodec(Codec)
-     * 
+     *
      * @param binding binding of the webservice
      * @param xmlEnvelopeCodec SOAP envelope codec
      * @return non null codec to parse entire SOAP message(including MIME parts)

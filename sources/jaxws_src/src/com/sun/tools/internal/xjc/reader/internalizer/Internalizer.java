@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.tools.internal.xjc.reader.internalizer;
 
 import java.net.MalformedURLException;
@@ -47,6 +48,10 @@ import com.sun.tools.internal.xjc.reader.Const;
 import com.sun.tools.internal.xjc.util.DOMUtils;
 import com.sun.xml.internal.bind.v2.util.EditDistance;
 import com.sun.xml.internal.xsom.SCD;
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -55,8 +60,6 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXParseException;
-
-
 
 /**
  * Internalizes external binding declarations.
@@ -220,14 +223,19 @@ class Internalizer {
                 return;
             } else {
                 try {
-                    // absolutize this URI.
                     // TODO: use the URI class
                     // TODO: honor xml:base
-                    schemaLocation = new URL(
-                        new URL( forest.getSystemId(bindings.getOwnerDocument()) ),
-                        schemaLocation ).toExternalForm();
+                    URL loc = new URL(
+                                new URL(forest.getSystemId(bindings.getOwnerDocument())), schemaLocation
+                              );
+                    schemaLocation = loc.toExternalForm();
+                    if (loc.getProtocol().startsWith("file")) {
+                        File f = new File(loc.getFile());
+                        schemaLocation = new File(f.getCanonicalPath()).toURI().toString();
+                    }
                 } catch( MalformedURLException e ) {
-                    // continue with the original schemaLocation value
+                } catch( IOException e ) {
+                    Logger.getLogger(Internalizer.class.getName()).log(Level.FINEST, e.getLocalizedMessage());
                 }
 
                 target = forest.get(schemaLocation);

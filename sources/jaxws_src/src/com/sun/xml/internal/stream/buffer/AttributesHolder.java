@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.stream.buffer;
 
 import org.xml.sax.Attributes;
@@ -136,7 +137,7 @@ public final class AttributesHolder implements Attributes {
 
 
     /**
-     * Add an attribute using a qualified name that contains the 
+     * Add an attribute using a qualified name that contains the
      * prefix and local name.
      *
      * @param uri

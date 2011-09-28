@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -25,21 +25,27 @@
 
 package com.sun.xml.internal.ws.server;
 
+import com.sun.istack.internal.Nullable;
 import com.sun.xml.internal.ws.api.server.*;
 import com.sun.xml.internal.ws.api.streaming.XMLStreamWriterFactory;
 import com.sun.xml.internal.ws.streaming.XMLStreamReaderUtil;
+import com.sun.xml.internal.ws.wsdl.SDDocumentResolver;
 import com.sun.xml.internal.ws.util.RuntimeVersion;
 import com.sun.xml.internal.ws.util.xml.XMLStreamReaderToXMLStreamWriter;
 import com.sun.xml.internal.ws.wsdl.parser.ParserUtil;
 import com.sun.xml.internal.ws.wsdl.parser.WSDLConstants;
+import com.sun.xml.internal.ws.wsdl.writer.DocumentLocationResolver;
+import com.sun.xml.internal.ws.wsdl.writer.WSDLPatcher;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.*;
 import javax.xml.ws.WebServiceException;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -61,6 +67,27 @@ public class SDDocumentImpl extends SDDocumentSource implements SDDocument {
     private static final QName SCHEMA_REDEFINE_QNAME = new QName(NS_XSD, "redefine");
     private static final String VERSION_COMMENT =
         " Published by JAX-WS RI at http://jax-ws.dev.java.net. RI's version is "+RuntimeVersion.VERSION+". ";
+
+    private final QName rootName;
+    private final SDDocumentSource source;
+
+    /**
+     * Set when {@link ServiceDefinitionImpl} is constructed.
+     */
+    @Nullable List<SDDocumentFilter> filters;
+    @Nullable SDDocumentResolver sddocResolver;
+
+
+    /**
+     * The original system ID of this document.
+     *
+     * When this document contains relative references to other resources,
+     * this field is used to find which {@link com.sun.xml.internal.ws.server.SDDocumentImpl} it refers to.
+     *
+     * Must not be null.
+     */
+    private final URL url;
+    private final Set<String> imports;
 
     /**
      * Creates {@link SDDocument} from {@link SDDocumentSource}.
@@ -158,26 +185,6 @@ public class SDDocumentImpl extends SDDocumentSource implements SDDocument {
         }
     }
 
-
-    private final QName rootName;
-    private final SDDocumentSource source;
-
-    /**
-     * Set when {@link ServiceDefinitionImpl} is constructed.
-     */
-    /*package*/ ServiceDefinitionImpl owner;
-
-    /**
-     * The original system ID of this document.
-     *
-     * When this document contains relative references to other resources,
-     * this field is used to find which {@link com.sun.xml.internal.ws.server.SDDocumentImpl} it refers to.
-     *
-     * Must not be null.
-     */
-    private final URL url;
-    private final Set<String> imports;
-
     protected SDDocumentImpl(QName rootName, URL url, SDDocumentSource source) {
         this(rootName, url, source, new HashSet<String>());
     }
@@ -190,6 +197,14 @@ public class SDDocumentImpl extends SDDocumentSource implements SDDocument {
         this.source = source;
         this.url = url;
         this.imports = imports;
+    }
+
+    void setFilters(List<SDDocumentFilter> filters) {
+        this.filters = filters;
+    }
+
+    void setResolver(SDDocumentResolver sddocResolver) {
+        this.sddocResolver = sddocResolver;
     }
 
     public QName getRootName() {
@@ -274,14 +289,16 @@ public class SDDocumentImpl extends SDDocumentSource implements SDDocument {
     }
 
     public void writeTo(PortAddressResolver portAddressResolver, DocumentAddressResolver resolver, XMLStreamWriter out) throws XMLStreamException, IOException {
-        for (SDDocumentFilter f : owner.filters) {
-            out = f.filter(this,out);
+        if (filters != null) {
+            for (SDDocumentFilter f : filters) {
+                out = f.filter(this,out);
+            }
         }
 
         XMLStreamReader xsr = source.read();
         try {
             out.writeComment(VERSION_COMMENT);
-            new WSDLPatcher(owner.owner,this,portAddressResolver,resolver).bridge(xsr,out);
+            new WSDLPatcher(portAddressResolver, new DocumentLocationResolverImpl(resolver)).bridge(xsr,out);
         } finally {
             xsr.close();
         }
@@ -348,5 +365,28 @@ public class SDDocumentImpl extends SDDocumentSource implements SDDocument {
         }
     }
 
+    private class DocumentLocationResolverImpl implements DocumentLocationResolver {
+        private DocumentAddressResolver delegate;
+
+        DocumentLocationResolverImpl(DocumentAddressResolver delegate) {
+            this.delegate = delegate;
+        }
+
+        public String getLocationFor(String namespaceURI, String systemId) {
+            if (sddocResolver == null) {
+                return systemId;
+            }
+            try {
+                URL ref = new URL(getURL(), systemId);
+                SDDocument refDoc = sddocResolver.resolve(ref.toExternalForm());
+                if (refDoc == null)
+                    return systemId;  // not something we know. just leave it as is.
+
+                return delegate.getRelativeAddressFor(SDDocumentImpl.this, refDoc);
+            } catch (MalformedURLException mue) {
+                return null;
+            }
+        }
+    }
 
 }

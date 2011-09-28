@@ -117,7 +117,7 @@ public class Uri {
   private static boolean isDigit(char c) {
     return '0' <= c && c <= '9';
   }
-  
+
   private static boolean isSchemeChar(char c) {
     return isAlpha(c) || isDigit(c) || c == '+' || c == '-' || c =='.';
   }

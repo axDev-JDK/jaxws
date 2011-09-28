@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.ws.wsdl.parser;
 
 import com.sun.xml.internal.ws.encoding.soap.streaming.SOAPNamespaceConstants;
@@ -64,7 +65,7 @@ public interface SOAPConstants {
     public static final QName QNAME_OPERATION =
         new QName(NS_WSDL_SOAP, "operation");
     public static final QName QNAME_SOAP12OPERATION =
-        new QName(NS_WSDL_SOAP12, "operation"); 
+        new QName(NS_WSDL_SOAP12, "operation");
     public static final QName QNAME_MUSTUNDERSTAND =
         new QName(URI_ENVELOPE, "mustUnderstand");
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -41,6 +41,7 @@ import javax.xml.stream.XMLStreamException;
 import com.sun.istack.internal.NotNull;
 import com.sun.xml.internal.bind.AccessorFactory;
 import com.sun.xml.internal.bind.AccessorFactoryImpl;
+import com.sun.xml.internal.bind.InternalAccessorFactory;
 import com.sun.xml.internal.bind.XmlAccessorFactory;
 import com.sun.xml.internal.bind.annotation.XmlLocation;
 import com.sun.xml.internal.bind.api.AccessorException;
@@ -80,6 +81,8 @@ class RuntimeClassInfoImpl extends ClassInfoImpl<Type,Class,Field,Method>
 
     private AccessorFactory accessorFactory;
 
+    private boolean supressAccessorWarnings = false;
+
     public RuntimeClassInfoImpl(RuntimeModelBuilder modelBuilder, Locatable upstream, Class clazz) {
         super(modelBuilder, upstream, clazz);
         accessorFactory = createAccessorFactory(clazz);
@@ -91,23 +94,26 @@ class RuntimeClassInfoImpl extends ClassInfoImpl<Type,Class,Field,Method>
 
         // user providing class to be used.
         JAXBContextImpl context = ((RuntimeModelBuilder) builder).context;
-        if (context!=null && context.xmlAccessorFactorySupport){
-            factoryAnn = findXmlAccessorFactoryAnnotation(clazz);
-
-            if (factoryAnn != null) {
-                try {
-                    accFactory = factoryAnn.value().newInstance();
-                } catch (InstantiationException e) {
-                    builder.reportError(new IllegalAnnotationException(
-                            Messages.ACCESSORFACTORY_INSTANTIATION_EXCEPTION.format(
-                            factoryAnn.getClass().getName(), nav().getClassName(clazz)), this));
-                } catch (IllegalAccessException e) {
-                    builder.reportError(new IllegalAnnotationException(
-                            Messages.ACCESSORFACTORY_ACCESS_EXCEPTION.format(
-                            factoryAnn.getClass().getName(), nav().getClassName(clazz)),this));
+        if (context!=null) {
+            this.supressAccessorWarnings = context.supressAccessorWarnings;
+            if (context.xmlAccessorFactorySupport) {
+                factoryAnn = findXmlAccessorFactoryAnnotation(clazz);
+                if (factoryAnn != null) {
+                    try {
+                        accFactory = factoryAnn.value().newInstance();
+                    } catch (InstantiationException e) {
+                        builder.reportError(new IllegalAnnotationException(
+                                Messages.ACCESSORFACTORY_INSTANTIATION_EXCEPTION.format(
+                                factoryAnn.getClass().getName(), nav().getClassName(clazz)), this));
+                    } catch (IllegalAccessException e) {
+                        builder.reportError(new IllegalAnnotationException(
+                                Messages.ACCESSORFACTORY_ACCESS_EXCEPTION.format(
+                                factoryAnn.getClass().getName(), nav().getClassName(clazz)),this));
+                    }
                 }
             }
         }
+
 
         // Fall back to local AccessorFactory when no
         // user not providing one or as error recovery.
@@ -129,7 +135,7 @@ class RuntimeClassInfoImpl extends ClassInfoImpl<Type,Class,Field,Method>
     public Method getFactoryMethod(){
         return super.getFactoryMethod();
     }
-    
+
     public final RuntimeClassInfoImpl getBaseClass() {
         return (RuntimeClassInfoImpl)super.getBaseClass();
     }
@@ -220,7 +226,7 @@ class RuntimeClassInfoImpl extends ClassInfoImpl<Type,Class,Field,Method>
             return null;
         if( !valuep.getTarget().isSimpleType() )
             return null;    // if there's an error, recover from it by returning null.
-        
+
         return new TransducerImpl(getClazz(),TransducedAccessor.get(
                 ((RuntimeModelBuilder)builder).context,valuep));
     }
@@ -238,7 +244,11 @@ class RuntimeClassInfoImpl extends ClassInfoImpl<Type,Class,Field,Method>
        final boolean readOnly = Modifier.isStatic(field.getModifiers());
         Accessor acc;
         try {
-            acc = accessorFactory.createFieldAccessor(clazz, field, readOnly);
+            if (supressAccessorWarnings) {
+                acc = ((InternalAccessorFactory)accessorFactory).createFieldAccessor(clazz, field, readOnly, supressAccessorWarnings);
+            } else {
+                acc = accessorFactory.createFieldAccessor(clazz, field, readOnly);
+            }
         } catch(JAXBException e) {
             builder.reportError(new IllegalAnnotationException(
                     Messages.CUSTOM_ACCESSORFACTORY_FIELD_ERROR.format(
@@ -318,7 +328,7 @@ class RuntimeClassInfoImpl extends ClassInfoImpl<Type,Class,Field,Method>
     }
 
 
-    
+
     /**
      * {@link Transducer} implementation used when this class maps to PCDATA in XML.
      *

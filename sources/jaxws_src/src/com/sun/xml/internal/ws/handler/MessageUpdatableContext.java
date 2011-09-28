@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.ws.handler;
 
 import com.sun.xml.internal.ws.api.message.Message;
@@ -45,7 +46,7 @@ public abstract class MessageUpdatableContext implements MessageContext {
         ctxt = new MessageContextImpl(packet);
         this.packet = packet;
     }
-    
+
     /**
      * Fill a {@link Packet} with values of this {@link MessageContext}.
      */
@@ -55,8 +56,8 @@ public abstract class MessageUpdatableContext implements MessageContext {
     /**
      * Updates Message in the packet with user modifications
      */
-    abstract void updateMessage(); 
-    
+    abstract void updateMessage();
+
     /**
      * Updates Message in the packet with user modifications
      * returns the new packet's message
@@ -65,26 +66,26 @@ public abstract class MessageUpdatableContext implements MessageContext {
         updateMessage();
         return packet.getMessage();
     }
-    
+
     /**
      * Sets Message in the packet
-     * Any user modifications done on previous Message are lost. 
+     * Any user modifications done on previous Message are lost.
      */
     abstract void setPacketMessage(Message newMessage);
-    
+
     /**
-     * Updates the complete packet with user modfications to the message and 
+     * Updates the complete packet with user modfications to the message and
      * properties cahnges in MessageContext
      */
     final void updatePacket() {
         updateMessage();
         fill(packet);
     }
-    
+
     MessageContextImpl getMessageContext() {
         return ctxt;
     }
-    
+
     public void setScope(String name, Scope scope) {
         ctxt.setScope(name, scope);
     }
@@ -142,5 +143,5 @@ public abstract class MessageUpdatableContext implements MessageContext {
     public Collection<Object> values() {
         return ctxt.values();
     }
-    
+
 }

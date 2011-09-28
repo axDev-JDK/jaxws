@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -36,33 +36,33 @@ import javax.xml.stream.XMLStreamReader;
  */
 public final class FastInfosetStreamReaderFactory extends XMLStreamReaderFactory {
     private static final FastInfosetStreamReaderFactory factory = new FastInfosetStreamReaderFactory();
-    
+
     private ThreadLocal<StAXDocumentParser> pool = new ThreadLocal<StAXDocumentParser>();
-    
+
     public static FastInfosetStreamReaderFactory getInstance() {
         return factory;
     }
-    
+
     public XMLStreamReader doCreate(String systemId, InputStream in, boolean rejectDTDs) {
         StAXDocumentParser parser = fetch();
         if (parser == null) {
             return FastInfosetCodec.createNewStreamReaderRecyclable(in, false);
         }
-        
+
         parser.setInputStream(in);
         return parser;
     }
-    
+
     public XMLStreamReader doCreate(String systemId, Reader reader, boolean rejectDTDs) {
         throw new UnsupportedOperationException();
     }
-    
+
     private StAXDocumentParser fetch() {
         StAXDocumentParser parser = pool.get();
         pool.set(null);
         return parser;
     }
-    
+
     public void doRecycle(XMLStreamReader r) {
         if (r instanceof StAXDocumentParser) {
             pool.set((StAXDocumentParser) r);

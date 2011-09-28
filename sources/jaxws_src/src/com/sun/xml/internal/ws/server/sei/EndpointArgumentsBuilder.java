@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.ws.server.sei;
 
 import com.sun.xml.internal.bind.api.AccessorException;
@@ -181,7 +182,7 @@ abstract class EndpointArgumentsBuilder {
         }
     }
 
-    
+
     /**
      * Reads an Attachment into a Java parameter.
      */
@@ -190,7 +191,7 @@ abstract class EndpointArgumentsBuilder {
         protected final ParameterImpl param;
         protected final String pname;
         protected final String pname1;
-            
+
         AttachmentBuilder(ParameterImpl param, EndpointValueSetter setter) {
             this.setter = setter;
             this.param = param;
@@ -227,7 +228,7 @@ abstract class EndpointArgumentsBuilder {
                 throw new UnsupportedOperationException("Unknown Type="+type+" Attachment is not mapped.");
             }
         }
-        
+
         public void readRequest(Message msg, Object[] args) throws JAXBException, XMLStreamException {
             boolean foundAttachment = false;
             // TODO not to loop
@@ -246,45 +247,45 @@ abstract class EndpointArgumentsBuilder {
                 throw new WebServiceException("Missing Attachment for "+pname);
             }
         }
-        
+
         abstract void mapAttachment(Attachment att, Object[] args) throws JAXBException;
     }
-        
+
     private static final class DataHandlerBuilder extends AttachmentBuilder {
         DataHandlerBuilder(ParameterImpl param, EndpointValueSetter setter) {
             super(param, setter);
         }
-        
+
         void mapAttachment(Attachment att, Object[] args) {
             setter.put(att.asDataHandler(), args);
         }
     }
-        
+
     private static final class ByteArrayBuilder extends AttachmentBuilder {
         ByteArrayBuilder(ParameterImpl param, EndpointValueSetter setter) {
             super(param, setter);
         }
-        
+
         void mapAttachment(Attachment att, Object[] args) {
             setter.put(att.asByteArray(), args);
         }
     }
-        
+
     private static final class SourceBuilder extends AttachmentBuilder {
         SourceBuilder(ParameterImpl param, EndpointValueSetter setter) {
             super(param, setter);
         }
-        
+
         void mapAttachment(Attachment att, Object[] args) {
             setter.put(att.asSource(), args);
         }
     }
-        
+
     private static final class ImageBuilder extends AttachmentBuilder {
         ImageBuilder(ParameterImpl param, EndpointValueSetter setter) {
             super(param, setter);
         }
-        
+
         void mapAttachment(Attachment att, Object[] args) {
             Image image;
             InputStream is = null;
@@ -305,22 +306,22 @@ abstract class EndpointArgumentsBuilder {
             setter.put(image, args);
         }
     }
-        
+
     private static final class InputStreamBuilder extends AttachmentBuilder {
         InputStreamBuilder(ParameterImpl param, EndpointValueSetter setter) {
             super(param, setter);
         }
-        
+
         void mapAttachment(Attachment att, Object[] args) {
             setter.put(att.asInputStream(), args);
         }
     }
-        
+
     private static final class JAXBBuilder extends AttachmentBuilder {
         JAXBBuilder(ParameterImpl param, EndpointValueSetter setter) {
             super(param, setter);
         }
-        
+
         void mapAttachment(Attachment att, Object[] args) throws JAXBException {
             Object obj = param.getBridge().unmarshal(att.asInputStream());
             setter.put(obj, args);
@@ -344,7 +345,7 @@ abstract class EndpointArgumentsBuilder {
         }
     }
 
-    
+
     /**
      * Gets the WSDL part name of this attachment.
      *
@@ -389,8 +390,8 @@ abstract class EndpointArgumentsBuilder {
         }
     }
 
-    
-    
+
+
 
     /**
      * Reads a header into a JAXB object.
@@ -488,8 +489,10 @@ abstract class EndpointArgumentsBuilder {
         private final PartBuilder[] parts;
 
         private final Bridge wrapper;
+        private final QName wrapperName;
 
         public DocLit(WrapperParameter wp, Mode skipMode) {
+            wrapperName = wp.getName();
             wrapper = wp.getBridge();
             Class wrapperType = (Class) wrapper.getTypeReference().type;
 
@@ -528,7 +531,11 @@ abstract class EndpointArgumentsBuilder {
         public void readRequest(Message msg, Object[] args) throws JAXBException, XMLStreamException {
 
             if (parts.length>0) {
+                if (!msg.hasPayload()) {
+                    throw new WebServiceException("No payload. Expecting payload with "+wrapperName+" element");
+                }
                 XMLStreamReader reader = msg.readPayload();
+                XMLStreamReaderUtil.verifyTag(reader, wrapperName);
                 Object wrapperBean = wrapper.unmarshal(reader, (msg.getAttachments() != null) ?
                         new AttachmentUnmarshallerImpl(msg.getAttachments()): null);
 
@@ -606,10 +613,11 @@ abstract class EndpointArgumentsBuilder {
         }
 
         public void readRequest(Message msg, Object[] args) throws JAXBException, XMLStreamException {
+            if (!msg.hasPayload()) {
+                throw new WebServiceException("No payload. Expecting payload with "+wrapperName+" element");
+            }
             XMLStreamReader reader = msg.readPayload();
-            if (!reader.getName().equals(wrapperName))
-                throw new WebServiceException( // TODO: i18n
-                    "Unexpected request element "+reader.getName()+" expected: "+wrapperName);
+            XMLStreamReaderUtil.verifyTag(reader,wrapperName);
             reader.nextTag();
 
             while(reader.getEventType()==XMLStreamReader.START_ELEMENT) {
@@ -659,7 +667,7 @@ abstract class EndpointArgumentsBuilder {
             }
         }
     }
-    
+
     private static boolean isXMLMimeType(String mimeType){
         return mimeType.equals("text/xml") || mimeType.equals("application/xml");
     }

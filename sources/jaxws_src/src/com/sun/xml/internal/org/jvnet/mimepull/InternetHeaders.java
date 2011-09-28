@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.org.jvnet.mimepull;
 
 import java.io.IOException;
@@ -69,13 +70,13 @@ final class InternetHeaders {
      * object, so any existing headers in this object will not be
      * affected.
      *
-     * @param	lis RFC822 input stream
+     * @param   lis RFC822 input stream
      */
     InternetHeaders(MIMEParser.LineInputStream lis) {
         // Read header lines until a blank line. It is valid
         // to have BodyParts with no header lines.
         String line;
-        String prevline = null;	// the previous header line, as a string
+        String prevline = null; // the previous header line, as a string
         // a buffer to accumulate the header in, when we know it's needed
         StringBuffer lineBuffer = new StringBuffer();
 
@@ -114,8 +115,8 @@ final class InternetHeaders {
      * values are String objects.  Returns <code>null</code>
      * if no headers with the specified name exist.
      *
-     * @param	name header name
-     * @return		array of header values, or null if none
+     * @param   name header name
+     * @return          array of header values, or null if none
      */
     List<String> getHeader(String name) {
         // XXX - should we just step through in index order?
@@ -135,7 +136,7 @@ final class InternetHeaders {
      * Return all the headers as an Enumeration of
      * {@link Header} objects.
      *
-     * @return	Header objects
+     * @return  Header objects
      */
     FinalArrayList<? extends Header> getAllHeaders() {
         return headers; // conceptually it should be read-only, but for performance reason I'm not wrapping it here
@@ -148,7 +149,7 @@ final class InternetHeaders {
      * <p/>
      * Note that RFC822 headers can only contain US-ASCII characters
      *
-     * @param	line	raw RFC822 header line
+     * @param   line    raw RFC822 header line
      */
     void addHeaderLine(String line) {
         try {
@@ -236,4 +237,3 @@ class hdr implements Header {
         return line.substring(j);
     }
 }
-

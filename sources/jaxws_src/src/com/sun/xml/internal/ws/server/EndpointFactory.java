@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -56,7 +56,7 @@ import com.sun.xml.internal.ws.util.ServiceFinder;
 import com.sun.xml.internal.ws.wsdl.parser.RuntimeWSDLParser;
 import com.sun.xml.internal.ws.wsdl.writer.WSDLGenerator;
 import com.sun.xml.internal.ws.policy.PolicyMap;
-import com.sun.xml.internal.ws.policy.PolicyUtil;
+import com.sun.xml.internal.ws.policy.jaxws.PolicyUtil;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.SAXException;
 
@@ -323,6 +323,7 @@ public class EndpointFactory {
             //now we got the Binding so lets build the model
             rap = new RuntimeModeler(implType, serviceName, (WSDLPortImpl)wsdlPort, binding.getFeatures().toArray());
         }
+        rap.setClassLoader(implType.getClassLoader());
         rap.setPortName(portName);
         return rap.buildRuntimeModel();
     }
@@ -427,7 +428,7 @@ public class EndpointFactory {
 
         // Generate WSDL and schema documents using runtime model
         WSDLGenResolver wsdlResolver = new WSDLGenResolver(docs,seiModel.getServiceQName(),seiModel.getPortTypeName());
-        WSDLGenerator wsdlGen = new WSDLGenerator(seiModel, wsdlResolver, binding, container, implType,
+        WSDLGenerator wsdlGen = new WSDLGenerator(seiModel, wsdlResolver, binding, container, implType, false,
                 ServiceFinder.find(WSDLGeneratorExtension.class).toArray());
         wsdlGen.doGeneration();
         return wsdlResolver.updateDocs();

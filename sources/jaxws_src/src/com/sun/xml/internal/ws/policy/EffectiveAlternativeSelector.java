@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -132,12 +132,12 @@ public class EffectiveAlternativeSelector {
                 }
             }
         };
-        
+
         abstract AlternativeFitness combine(Fitness assertionFitness);
     }
-    
+
     private static final PolicyLogger LOGGER = PolicyLogger.getLogger(EffectiveAlternativeSelector.class);
-    
+
     /**
      * Does the selection for policy map bound to given modifier.
      *
@@ -190,14 +190,14 @@ public class EffectiveAlternativeSelector {
             modifier.setNewEffectivePolicyForFaultMessageScope(mapKey, selectBestAlternative(oldPolicy, validationProcessor));
         }
     }
-    
+
     private static Policy selectBestAlternative(final Policy policy, final AssertionValidationProcessor validationProcessor) throws PolicyException {
         AssertionSet bestAlternative = null;
         AlternativeFitness bestAlternativeFitness = AlternativeFitness.UNEVALUATED;
         for (AssertionSet alternative : policy) {
             AlternativeFitness alternativeFitness = (alternative.isEmpty()) ? AlternativeFitness.SUPPORTED_EMPTY : AlternativeFitness.UNEVALUATED;
             for ( PolicyAssertion assertion : alternative ) {
-                
+
                 final Fitness assertionFitness = validationProcessor.validateClientSide(assertion);
                 switch(assertionFitness) {
                     case UNKNOWN:
@@ -208,22 +208,22 @@ public class EffectiveAlternativeSelector {
                     default:
                         break;
                 }
-                
+
                 alternativeFitness = alternativeFitness.combine(assertionFitness);
             }
-            
+
             if (bestAlternativeFitness.compareTo(alternativeFitness) < 0) {
                 // better alternative found
                 bestAlternative = alternative;
                 bestAlternativeFitness = alternativeFitness;
             }
-            
+
             if (bestAlternativeFitness == AlternativeFitness.SUPPORTED) {
                 // all assertions supported by at least one selector
                 break;
             }
         }
-        
+
         switch (bestAlternativeFitness) {
             case INVALID:
                 throw LOGGER.logSevereException(new PolicyException(LocalizationMessages.WSP_0053_INVALID_CLIENT_SIDE_ALTERNATIVE()));
@@ -235,7 +235,7 @@ public class EffectiveAlternativeSelector {
             default:
                 break;
         }
-        
+
         Collection<AssertionSet> alternativeSet = null;
         if (bestAlternative != null) {
             // return a policy containing just the picked alternative

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -83,9 +83,9 @@ public final class XmlString {
      * as defined in the XML Namespaces Recommendation.
      *
      * @return
-     *		namespace URI of this prefix.
-     *		If the specified prefix is not declared,
-     *		the implementation returns null.
+     *          namespace URI of this prefix.
+     *          If the specified prefix is not declared,
+     *          the implementation returns null.
      */
     public final String resolvePrefix(String prefix) {
         return context.resolveNamespacePrefix(prefix);

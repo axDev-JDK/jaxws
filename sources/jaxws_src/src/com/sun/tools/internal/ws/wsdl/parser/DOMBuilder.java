@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -23,17 +23,19 @@
  * questions.
  */
 
-
 package com.sun.tools.internal.ws.wsdl.parser;
 
 import com.sun.tools.internal.ws.wsdl.document.jaxws.JAXWSBindingsConstants;
 import com.sun.tools.internal.xjc.reader.internalizer.LocatorTable;
 import com.sun.xml.internal.bind.marshaller.SAX2DOMEx;
+import org.w3c.dom.Comment;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
+import org.xml.sax.SAXException;
+import org.xml.sax.ext.LexicalHandler;
 
 import java.util.Set;
 
@@ -48,7 +50,7 @@ import java.util.Set;
  *     Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  *     Vivek Pandey
  */
-class DOMBuilder extends SAX2DOMEx {
+class DOMBuilder extends SAX2DOMEx implements LexicalHandler {
     /**
      * Grows a DOM tree under the given document, and
      * stores location information to the given table.
@@ -100,5 +102,24 @@ class DOMBuilder extends SAX2DOMEx {
         locatorTable.storeEndLocation( getCurrentElement(), locator );
         super.endElement(namespaceURI, localName, qName);
     }
-}
 
+    public void startDTD(String name, String publicId, String systemId) throws SAXException {}
+
+    public void endDTD() throws SAXException {}
+
+    public void startEntity(String name) throws SAXException {}
+
+    public void endEntity(String name) throws SAXException {}
+
+    public void startCDATA() throws SAXException {}
+
+    public void endCDATA() throws SAXException {}
+
+    public void comment(char[] ch, int start, int length) throws SAXException {
+        //Element e = getCurrentElement(); // does not work as the comments at the top of the document would return Document Node
+        // instead of Element
+        Node parent = nodeStack.peek();
+        Comment comment = document.createComment(new String(ch,start,length));
+        parent.appendChild(comment);
+    }
+}

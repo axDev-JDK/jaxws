@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -40,27 +40,27 @@ import java.util.List;
  */
 final class PolicyScope {
     private static final PolicyLogger LOGGER = PolicyLogger.getLogger(PolicyScope.class);
-    
+
     private final List<PolicySubject> subjects = new LinkedList<PolicySubject>();
-    
+
     PolicyScope(final List<PolicySubject> initialSubjects) {
         if (initialSubjects != null && !initialSubjects.isEmpty()) {
             this.subjects.addAll(initialSubjects);
         }
     }
-    
+
     void attach(final PolicySubject subject) {
         if (subject == null) {
             throw LOGGER.logSevereException(new IllegalArgumentException(LocalizationMessages.WSP_0020_SUBJECT_PARAM_MUST_NOT_BE_NULL()));
         }
-        
+
         subjects.add(subject);
     }
-    
+
     void dettachAllSubjects() {
         subjects.clear();
     }
-    
+
     /**
      * Returns all policies of the scope merged into one policy
      *
@@ -73,7 +73,7 @@ final class PolicyScope {
         }
         return merger.merge(policies);
     }
-    
+
     /**
      * Returns all subjects contained by this scope
      *
@@ -82,8 +82,8 @@ final class PolicyScope {
     Collection<PolicySubject> getPolicySubjects() {
         return this.subjects;
     }
-    
-    
+
+
     /**
      * An {@code Object.toString()} method override.
      */
@@ -91,7 +91,7 @@ final class PolicyScope {
     public String toString() {
         return toString(0, new StringBuffer()).toString();
     }
-    
+
     /**
      * A helper method that appends indented string representation of this instance to the input string buffer.
      *
@@ -101,13 +101,13 @@ final class PolicyScope {
      */
     StringBuffer toString(final int indentLevel, final StringBuffer buffer) {
         final String indent = PolicyUtils.Text.createIndent(indentLevel);
-        
+
         buffer.append(indent).append("policy scope {").append(PolicyUtils.Text.NEW_LINE);
         for (PolicySubject policySubject : subjects) {
             policySubject.toString(indentLevel + 1, buffer).append(PolicyUtils.Text.NEW_LINE);
-        }        
+        }
         buffer.append(indent).append('}');
-        
+
         return buffer;
-    }    
+    }
 }

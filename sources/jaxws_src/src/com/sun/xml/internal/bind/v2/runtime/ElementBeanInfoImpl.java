@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -195,6 +195,7 @@ public final class ElementBeanInfoImpl extends JaxBeanInfo<JAXBElement> {
             this.core = core;
         }
 
+        @Override
         public final void startElement(UnmarshallingContext.State state, TagName ea) throws SAXException {
             state.loader = core;
             state.intercepter = this;
@@ -324,11 +325,13 @@ public final class ElementBeanInfoImpl extends JaxBeanInfo<JAXBElement> {
         return null;
     }
 
+    @Override
     public void wrapUp() {
         super.wrapUp();
         property.wrapUp();
     }
 
+    @Override
     public void link(JAXBContextImpl grammar) {
         super.link(grammar);
         getLoader(grammar,true);    // make sure to build them, if we hadn't done so

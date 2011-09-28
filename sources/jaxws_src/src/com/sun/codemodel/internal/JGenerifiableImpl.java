@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -29,17 +29,17 @@ import java.util.List;
 
 /**
  * Implementation of {@link JGenerifiable}.
- * 
+ *
  * @author
  *     Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
 abstract class JGenerifiableImpl implements JGenerifiable, JDeclaration {
-    
+
     /** Lazily created list of {@link JTypeVar}s. */
     private List<JTypeVar> typeVariables = null;
-    
+
     protected abstract JCodeModel owner();
-    
+
     public void declare( JFormatter f ) {
         if(typeVariables!=null) {
             f.p('<');
@@ -60,14 +60,14 @@ abstract class JGenerifiableImpl implements JGenerifiable, JDeclaration {
         return v;
     }
 
-    public JTypeVar generify(String name, Class bound) {
+    public JTypeVar generify(String name, Class<?> bound) {
         return generify(name,owner().ref(bound));
     }
 
     public JTypeVar generify(String name, JClass bound) {
         return generify(name).bound(bound);
     }
-    
+
     public JTypeVar[] typeParams() {
         if(typeVariables==null)
             return JTypeVar.EMPTY_ARRAY;

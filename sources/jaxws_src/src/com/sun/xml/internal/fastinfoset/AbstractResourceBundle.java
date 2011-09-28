@@ -46,9 +46,9 @@ import java.util.ResourceBundle;
  * @author FastInfoset team
  */
 public abstract class AbstractResourceBundle extends ResourceBundle {
-        
+
     public static final String LOCALE = "com.sun.xml.internal.fastinfoset.locale";
-    
+
     /**
      * Gets 'key' from ResourceBundle and format mesage using 'args'.
      *
@@ -68,7 +68,7 @@ public abstract class AbstractResourceBundle extends ResourceBundle {
      * Name for the locale of interest.  If null, use VM default locale.
      * @return New Locale instance.
      */
-    public static Locale parseLocale(String localeString) {        
+    public static Locale parseLocale(String localeString) {
         Locale locale = null;
         if (localeString == null) {
             locale = Locale.getDefault();
@@ -88,9 +88,9 @@ public abstract class AbstractResourceBundle extends ResourceBundle {
         }
         return locale;
     }
-    
+
     /**
-     * Subclasses of this class must implement this method so that the 
+     * Subclasses of this class must implement this method so that the
      * correct resource bundle is passed to methods in this class
      *
      * @return
@@ -98,7 +98,7 @@ public abstract class AbstractResourceBundle extends ResourceBundle {
      *  will use this reference.
      */
     public abstract ResourceBundle getBundle();
-    
+
 
     /**
      * Since we are changing the ResourceBundle extension point, must

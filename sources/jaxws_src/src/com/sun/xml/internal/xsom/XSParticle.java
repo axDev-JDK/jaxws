@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -26,23 +26,25 @@
 
 package com.sun.xml.internal.xsom;
 
+import java.math.*;
+
 /**
  * Particle schema component.
- * 
+ *
  * @author
  *  Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
 public interface XSParticle extends XSContentType
 {
-    int getMinOccurs();
+    BigInteger getMinOccurs();
     /**
      * Gets the max occurs property.
-     * 
+     *
      * @return
      *      {@link UNBOUNDED} will be returned if the value
      *      is "unbounded".
      */
-    int getMaxOccurs();
+    BigInteger getMaxOccurs();
 
     /**
      * True if the maxOccurs is neither 0 or 1.

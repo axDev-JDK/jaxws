@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -33,16 +33,16 @@ import com.sun.xml.internal.rngom.util.Localizer;
 
 class BuiltinDatatypeBuilder implements DatatypeBuilder {
   private final Datatype dt;
-  
+
   private static final Localizer localizer = new Localizer(BuiltinDatatypeBuilder.class);
-  
+
   BuiltinDatatypeBuilder(Datatype dt) {
     this.dt = dt;
   }
 
   public void addParameter(String name,
-			   String value,
-			   ValidationContext context) throws DatatypeException {
+                           String value,
+                           ValidationContext context) throws DatatypeException {
     throw new DatatypeException(localizer.message("builtin_param"));
   }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -37,25 +37,25 @@ import javax.xml.namespace.QName;
  * <p/>
  * The class wraps scope information and adds a package setter method to allow injection of actual equality comparator/tester. This injection
  * is made within a <code>get...</code> call on {@link PolicyMap}, before the actual scope map search is performed.
- * 
- * 
+ *
+ *
  * @author Marek Potociar (marek.potociar at sun.com)
  * @author Fabian Ritzmann
  */
 final public class PolicyMapKey  {
     private static final PolicyLogger LOGGER = PolicyLogger.getLogger(PolicyMapKey.class);
-    
+
     private final QName service;
     private final QName port;
     private final QName operation;
     private final QName faultMessage;
-    
+
     private PolicyMapKeyHandler handler;
-    
+
     PolicyMapKey(final QName service, final QName port, final QName operation, final PolicyMapKeyHandler handler) {
         this(service, port, operation, null, handler);
     }
-    
+
     PolicyMapKey(final QName service, final QName port, final QName operation, final QName faultMessage, final PolicyMapKeyHandler handler) {
         if (handler == null) {
             throw LOGGER.logSevereException(new IllegalArgumentException(LocalizationMessages.WSP_0046_POLICY_MAP_KEY_HANDLER_NOT_SET()));
@@ -67,7 +67,7 @@ final public class PolicyMapKey  {
         this.faultMessage = faultMessage;
         this.handler = handler;
     }
-    
+
     PolicyMapKey(final PolicyMapKey that) {
         this.service = that.service;
         this.port = that.port;
@@ -76,15 +76,15 @@ final public class PolicyMapKey  {
         this.handler = that.handler;
     }
 
-    QName getOperation() {
+    public QName getOperation() {
         return operation;
     }
 
-    QName getPort() {
+    public QName getPort() {
         return port;
     }
 
-    QName getService() {
+    public QName getService() {
         return service;
     }
 
@@ -105,11 +105,11 @@ final public class PolicyMapKey  {
         if (this == that) {
             return true; // we are lucky here => no special handling is required
         }
-        
+
         if (that == null) {
             return false;
         }
-        
+
         if (that instanceof PolicyMapKey) {
             return handler.areEqual(this, (PolicyMapKey) that);
         } else {
@@ -120,8 +120,8 @@ final public class PolicyMapKey  {
     @Override
     public int hashCode() {
         return handler.generateHashCode(this);
-    }    
-    
+    }
+
     @Override
     public String toString() {
         final StringBuffer result = new StringBuffer("PolicyMapKey(");

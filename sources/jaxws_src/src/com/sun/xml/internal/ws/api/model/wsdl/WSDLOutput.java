@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -57,7 +57,7 @@ public interface WSDLOutput extends WSDLObject, WSDLExtensible {
      * <p/>
      * This method provides the correct value irrespective of
      * whether the Action is explicitly specified in the WSDL or
-     * implicitly derived using the rules defined in WS-Addressing. 
+     * implicitly derived using the rules defined in WS-Addressing.
      *
      * @return Action
      */

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -48,9 +48,9 @@ import java.io.InputStream;
  *  <LI>A <code>SOAPBody</code> object
  *  <LI>A <code>SOAPHeader</code> object
  * </UL>
- * In some cases, specialized MessageFactory objects may be obtained that produce messages 
- * prepopulated with additional entries in the <code>SOAPHeader</code> object and the  
- * <code>SOAPBody</code> object. 
+ * In some cases, specialized MessageFactory objects may be obtained that produce messages
+ * prepopulated with additional entries in the <code>SOAPHeader</code> object and the
+ * <code>SOAPBody</code> object.
  * The content of a new <code>SOAPMessage</code> object depends on which of the two
  * <code>MessageFactory</code> methods is used to create it.
  * <UL>
@@ -94,7 +94,7 @@ public abstract class MessageFactory {
      *            <code>MessageFactory</code>.
      * @see SAAJMetaFactory
      */
-     
+
     public static MessageFactory newInstance()
         throws SOAPException {
         try {
@@ -120,9 +120,9 @@ public abstract class MessageFactory {
      * message factory creates messages based on the MIME headers specified
      * as arguments to the <code>createMessage</code> method.
      *
-     * This method uses the SAAJMetaFactory to locate the implementation class 
+     * This method uses the SAAJMetaFactory to locate the implementation class
      * and create the MessageFactory instance.
-     * 
+     *
      * @return a new instance of a <code>MessageFactory</code>
      *
      * @param protocol  a string constant representing the class of the
@@ -158,7 +158,7 @@ public abstract class MessageFactory {
      * @return a new <code>SOAPMessage</code> object
      * @exception SOAPException if a SOAP error occurs
      * @exception UnsupportedOperationException if the protocol of this
-     *      <code>MessageFactory</code> instance is <code>DYNAMIC_SOAP_PROTOCOL</code> 
+     *      <code>MessageFactory</code> instance is <code>DYNAMIC_SOAP_PROTOCOL</code>
      */
     public abstract SOAPMessage createMessage()
         throws SOAPException;
@@ -180,14 +180,14 @@ public abstract class MessageFactory {
      *            the input stream
      *
      * @exception SOAPException may be thrown if the message is invalid
-     * 
+     *
      * @exception IllegalArgumentException if the <code>MessageFactory</code>
-     *      requires one or more MIME headers to be present in the 
-     *      <code>headers</code> parameter and they are missing. 
+     *      requires one or more MIME headers to be present in the
+     *      <code>headers</code> parameter and they are missing.
      *      <code>MessageFactory</code> implementations for
-     *      <code>SOAP_1_1_PROTOCOL</code> or 
-     *      <code>SOAP_1_2_PROTOCOL</code> must not throw 
-     *      <code>IllegalArgumentException</code> for this reason.   
+     *      <code>SOAP_1_1_PROTOCOL</code> or
+     *      <code>SOAP_1_2_PROTOCOL</code> must not throw
+     *      <code>IllegalArgumentException</code> for this reason.
      */
     public abstract SOAPMessage createMessage(MimeHeaders headers,
                                               InputStream in)

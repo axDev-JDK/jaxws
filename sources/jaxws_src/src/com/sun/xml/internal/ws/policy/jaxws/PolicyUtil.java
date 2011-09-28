@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,7 +22,8 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
-package com.sun.xml.internal.ws.policy;
+
+package com.sun.xml.internal.ws.policy.jaxws;
 
 import com.sun.xml.internal.ws.addressing.policy.AddressingFeatureConfigurator;
 import com.sun.xml.internal.ws.api.model.wsdl.WSDLModel;
@@ -31,19 +32,18 @@ import com.sun.xml.internal.ws.api.model.wsdl.WSDLService;
 import com.sun.xml.internal.ws.encoding.policy.FastInfosetFeatureConfigurator;
 import com.sun.xml.internal.ws.encoding.policy.MtomFeatureConfigurator;
 import com.sun.xml.internal.ws.encoding.policy.SelectOptimalEncodingFeatureConfigurator;
-import com.sun.xml.internal.ws.policy.PolicyMap.ScopeType;
+import com.sun.xml.internal.ws.policy.PolicyException;
+import com.sun.xml.internal.ws.policy.PolicyMap;
+import com.sun.xml.internal.ws.policy.PolicyMapKey;
 import com.sun.xml.internal.ws.policy.jaxws.spi.PolicyFeatureConfigurator;
 import com.sun.xml.internal.ws.policy.privateutil.PolicyLogger;
-import com.sun.xml.internal.ws.policy.subject.PolicyMapKeyConverter;
-import com.sun.xml.internal.ws.policy.subject.WsdlBindingSubject;
-
 import com.sun.xml.internal.ws.util.ServiceFinder;
+
 import javax.xml.namespace.QName;
 import javax.xml.ws.WebServiceFeature;
 import javax.xml.ws.WebServiceException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -54,7 +54,6 @@ import java.util.LinkedList;
 public class PolicyUtil {
 
     private static final PolicyLogger LOGGER = PolicyLogger.getLogger(PolicyUtil.class);
-    private static final PolicyMerger MERGER = PolicyMerger.getMerger();
     private static final Collection<PolicyFeatureConfigurator> CONFIGURATORS =
             new LinkedList<PolicyFeatureConfigurator>();
 
@@ -132,64 +131,6 @@ public class PolicyUtil {
         }
         LOGGER.exiting(features);
         return features;
-    }
-
-    /**
-     * Inserts all PolicySubjects of type WsdlBindingSubject into the given policy map.
-     *
-     * @param policyMap The policy map
-     * @param policySubjects The policy subjects. The actual subject must have the
-     *   type WsdlBindingSubject, otherwise it will not be processed.
-     * @param serviceName The name of the current WSDL service
-     * @ param portName The name of the current WSDL port
-     * @throws PolicyException Thrown if the effective policy of a polic subject
-     *   could not be computed
-     */
-    static void insertPolicies(final PolicyMap policyMap, final Collection<PolicySubject> policySubjects, QName serviceName, QName portName)
-            throws PolicyException {
-        LOGGER.entering(policyMap, policySubjects, serviceName, portName);
-
-        final HashMap<WsdlBindingSubject, Collection<Policy>> subjectToPolicies = new HashMap<WsdlBindingSubject, Collection<Policy>>();
-        for (PolicySubject subject: policySubjects) {
-            final Object actualSubject = subject.getSubject();
-            if (actualSubject instanceof WsdlBindingSubject) {
-                final WsdlBindingSubject wsdlSubject = (WsdlBindingSubject) actualSubject;
-                final Collection<Policy> subjectPolicies = new LinkedList<Policy>();
-                subjectPolicies.add(subject.getEffectivePolicy(MERGER));
-                final Collection<Policy> existingPolicies = subjectToPolicies.put(wsdlSubject, subjectPolicies);
-                if (existingPolicies != null) {
-                    subjectPolicies.addAll(existingPolicies);
-                }
-            }
-        }
-
-        final PolicyMapKeyConverter converter = new PolicyMapKeyConverter(serviceName, portName);
-        for (WsdlBindingSubject wsdlSubject : subjectToPolicies.keySet()) {
-            final PolicySubject newSubject = new PolicySubject(wsdlSubject, subjectToPolicies.get(wsdlSubject));
-            PolicyMapKey mapKey = converter.getPolicyMapKey(wsdlSubject);
-
-            if (wsdlSubject.isBindingSubject()) {
-                policyMap.putSubject(ScopeType.ENDPOINT, mapKey, newSubject);
-            }
-            else if (wsdlSubject.isBindingOperationSubject()) {
-                policyMap.putSubject(ScopeType.OPERATION, mapKey, newSubject);
-            }
-            else if (wsdlSubject.isBindingMessageSubject()) {
-                switch (wsdlSubject.getMessageType()) {
-                    case INPUT:
-                        policyMap.putSubject(ScopeType.INPUT_MESSAGE, mapKey, newSubject);
-                        break;
-                    case OUTPUT:
-                        policyMap.putSubject(ScopeType.OUTPUT_MESSAGE, mapKey, newSubject);
-                        break;
-                    case FAULT:
-                        policyMap.putSubject(ScopeType.FAULT_MESSAGE, mapKey, newSubject);
-                        break;
-                }
-            }
-        }
-
-        LOGGER.exiting();
     }
 
 }

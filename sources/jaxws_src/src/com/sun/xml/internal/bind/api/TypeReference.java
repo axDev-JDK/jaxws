@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -74,7 +74,7 @@ public final class TypeReference {
             if(annotations == null) nullArgs += (nullArgs.length() > 0 ? ", annotations" : "annotations");
 
             Messages.ARGUMENT_CANT_BE_NULL.format(nullArgs);
-            
+
             throw new IllegalArgumentException(Messages.ARGUMENT_CANT_BE_NULL.format(nullArgs));
         }
 
@@ -101,7 +101,7 @@ public final class TypeReference {
      * Otherwise returns an identical type.
      */
     public TypeReference toItemType() {
-        // if we are to reinstitute this check, check JAXB annotations only 
+        // if we are to reinstitute this check, check JAXB annotations only
         // assert annotations.length==0;   // not designed to work with adapters.
 
         Type base = Navigator.REFLECTION.getBaseClass(type, Collection.class);

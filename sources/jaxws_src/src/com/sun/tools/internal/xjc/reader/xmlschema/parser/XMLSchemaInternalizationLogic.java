@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.tools.internal.xjc.reader.xmlschema.parser;
 
 import com.sun.tools.internal.xjc.reader.internalizer.AbstractReferenceFinderImpl;
@@ -37,7 +38,7 @@ import org.xml.sax.helpers.XMLFilterImpl;
 
 /**
  * XML Schema specific internalization logic.
- * 
+ *
  * @author
  *     Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
@@ -51,7 +52,7 @@ public class XMLSchemaInternalizationLogic implements InternalizationLogic {
         ReferenceFinder( DOMForest parent ) {
             super(parent);
         }
-        
+
         protected String findExternalResource( String nsURI, String localName, Attributes atts) {
             if( WellKnownNamespace.XML_SCHEMA.equals(nsURI)
             && ("import".equals(localName) || "include".equals(localName) ) )
@@ -75,20 +76,20 @@ public class XMLSchemaInternalizationLogic implements InternalizationLogic {
         if(annotation==null)
             // none exists. need to make one
             annotation = insertXMLSchemaElement( target, "annotation" );
-        
+
         // then look for appinfo
         Element appinfo = DOMUtils.getFirstChildElement(annotation, WellKnownNamespace.XML_SCHEMA, "appinfo" );
         if(appinfo==null)
             // none exists. need to make one
             appinfo = insertXMLSchemaElement( annotation, "appinfo" );
-        
+
         return appinfo;
     }
 
     /**
      * Creates a new XML Schema element of the given local name
      * and insert it as the first child of the given parent node.
-     * 
+     *
      * @return
      *      Newly create element.
      */
@@ -99,16 +100,16 @@ public class XMLSchemaInternalizationLogic implements InternalizationLogic {
         int idx = qname.indexOf(':');
         if(idx==-1)     qname = localName;
         else            qname = qname.substring(0,idx+1)+localName;
-        
+
         Element child = parent.getOwnerDocument().createElementNS( WellKnownNamespace.XML_SCHEMA, qname );
-        
+
         NodeList children = parent.getChildNodes();
-        
+
         if( children.getLength()==0 )
             parent.appendChild(child);
         else
             parent.insertBefore( child, children.item(0) );
-        
+
         return child;
     }
 }

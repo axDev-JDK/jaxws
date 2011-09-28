@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -23,6 +23,7 @@
  * questions.
  */
 
+
 package com.sun.xml.internal.ws.resources;
 
 import com.sun.xml.internal.ws.util.localization.Localizable;
@@ -32,7 +33,7 @@ import com.sun.xml.internal.ws.util.localization.Localizer;
 
 /**
  * Defines string formatting method for each constant in the resource file
- * 
+ *
  */
 public final class WsdlmodelMessages {
 
@@ -45,7 +46,7 @@ public final class WsdlmodelMessages {
 
     /**
      * For Port: {0}, service location {1} does not match address {2} in the EndpointReference
-     * 
+     *
      */
     public static String WSDL_PORTADDRESS_EPRADDRESS_NOT_MATCH(Object arg0, Object arg1, Object arg2) {
         return localizer.localize(localizableWSDL_PORTADDRESS_EPRADDRESS_NOT_MATCH(arg0, arg1, arg2));
@@ -58,7 +59,7 @@ public final class WsdlmodelMessages {
     /**
      * Import of {0} is violation of BP 1.1 R2001. Proceeding with a warning.
      * R2001 A DESCRIPTION MUST only use the WSDL "import" statement to import another WSDL description.
-     * 
+     *
      */
     public static String WSDL_IMPORT_SHOULD_BE_WSDL(Object arg0) {
         return localizer.localize(localizableWSDL_IMPORT_SHOULD_BE_WSDL(arg0));
@@ -70,7 +71,7 @@ public final class WsdlmodelMessages {
 
     /**
      * Mex WSDL metadata can not be parsed, the systemId is of the MEX source is null.
-     * 
+     *
      */
     public static String MEX_METADATA_SYSTEMID_NULL() {
         return localizer.localize(localizableMEX_METADATA_SYSTEMID_NULL());

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,7 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
- 
+
 package com.sun.org.glassfish.gmbal ;
 
 import java.lang.annotation.Documented ;
@@ -31,12 +31,12 @@ import java.lang.annotation.ElementType ;
 import java.lang.annotation.Retention ;
 import java.lang.annotation.RetentionPolicy ;
 
-/** This annotation defines an attribute in open MBean (ManagedObject) or 
- * CompositeData (ManagedData).  It is useful in cases where the parent class 
- * cannot be annotated (for example, Object.toString(), or a framework class 
+/** This annotation defines an attribute in open MBean (ManagedObject) or
+ * CompositeData (ManagedData).  It is useful in cases where the parent class
+ * cannot be annotated (for example, Object.toString(), or a framework class
  * that must be extended
- * but cannot be modified).  The attribute id is defined in the annotation, and 
- * it is implemented by the methods inherited by the Managed entity. 
+ * but cannot be modified).  The attribute id is defined in the annotation, and
+ * it is implemented by the methods inherited by the Managed entity.
  * <p>
  * An example of a use of this is to handle @ManagedData that inherits from
  * Collection<X>, and it is desired to display a read-only attribute containing
@@ -46,14 +46,14 @@ import java.lang.annotation.RetentionPolicy ;
  * <p>
  * to handle this case.  Note that this only supports read-only attributes.
  */
-@Documented 
-@Target(ElementType.TYPE) 
+@Documented
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface InheritedAttribute {
     /** The description of the attribute.  Can be a key to a resource
      * bundle for I18N support. Note that this needs a description, otherwise
      * the InheritedAttributes annotation won't work.  The Description
-     * annotation is used in all other cases.  The description cannot be 
+     * annotation is used in all other cases.  The description cannot be
      * empty.
      * @return The description.
      */
@@ -71,6 +71,3 @@ public @interface InheritedAttribute {
      */
     String methodName() default "" ;
 }
-
-
-

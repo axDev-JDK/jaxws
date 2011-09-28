@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -25,6 +25,7 @@
 
 package javax.xml.bind;
 
+import java.util.Iterator;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,10 +45,9 @@ import java.security.PrivilegedAction;
 
 import static javax.xml.bind.JAXBContext.JAXB_CONTEXT_FACTORY;
 
-//import java.lang.reflect.InvocationTargetException;
 
 /**
- * This class is package private and therefore is not exposed as part of the 
+ * This class is package private and therefore is not exposed as part of the
  * JAXB API.
  *
  * This code is designed to implement the JAXB 1.0 spec pluggability feature
@@ -123,58 +123,17 @@ class ContextFinder {
      * Create an instance of a class using the specified ClassLoader
      */
     static JAXBContext newInstance( String contextPath,
-                               String className, 
+                               String className,
                                ClassLoader classLoader,
                                Map properties )
-        throws JAXBException
-    {
+        throws JAXBException {
         try {
-            Class spiClass = safeLoadClass(className,classLoader);
-
-            /*
-             * javax.xml.bind.context.factory points to a class which has a
-             * static method called 'createContext' that
-             * returns a javax.xml.JAXBContext.
-             */
-
-            Object context = null;
-
-            // first check the method that takes Map as the third parameter.
-            // this is added in 2.0.
-            try {
-                Method m = spiClass.getMethod("createContext",String.class,ClassLoader.class,Map.class);
-                // any failure in invoking this method would be considered fatal
-                context = m.invoke(null,contextPath,classLoader,properties);
-            } catch (NoSuchMethodException e) {
-                // it's not an error for the provider not to have this method.
-            }
-
-            if(context==null) {
-                // try the old method that doesn't take properties. compatible with 1.0.
-                // it is an error for an implementation not to have both forms of the createContext method.
-                Method m = spiClass.getMethod("createContext",String.class,ClassLoader.class);
-                // any failure in invoking this method would be considered fatal
-                context = m.invoke(null,contextPath,classLoader);
-            }
-
-            if(!(context instanceof JAXBContext)) {
-                // the cast would fail, so generate an exception with a nice message
-                handleClassCastException(context.getClass(), JAXBContext.class);
-            }
-            return (JAXBContext)context;
+            Class spFactory = safeLoadClass(className,classLoader);
+            return newInstance(contextPath, spFactory, classLoader, properties);
         } catch (ClassNotFoundException x) {
             throw new JAXBException(
                 Messages.format( Messages.PROVIDER_NOT_FOUND, className ),
                 x);
-        } catch (InvocationTargetException x) {
-            handleInvocationTargetException(x);
-            // for other exceptions, wrap the internal target exception
-            // with a JAXBException
-            Throwable e = x;
-            if(x.getTargetException()!=null)
-                e = x.getTargetException();
-
-            throw new JAXBException( Messages.format( Messages.COULD_NOT_INSTANTIATE, className, e ), e );
         } catch (RuntimeException x) {
             // avoid wrapping RuntimeException to JAXBException,
             // because it indicates a bug in this code.
@@ -190,9 +149,71 @@ class ContextFinder {
         }
     }
 
+    static JAXBContext newInstance( String contextPath,
+                               Class spFactory,
+                               ClassLoader classLoader,
+                               Map properties )
+        throws JAXBException
+    {
+        try {
+            /*
+             * javax.xml.bind.context.factory points to a class which has a
+             * static method called 'createContext' that
+             * returns a javax.xml.JAXBContext.
+             */
+
+            Object context = null;
+
+            // first check the method that takes Map as the third parameter.
+            // this is added in 2.0.
+            try {
+                Method m = spFactory.getMethod("createContext",String.class,ClassLoader.class,Map.class);
+                // any failure in invoking this method would be considered fatal
+                context = m.invoke(null,contextPath,classLoader,properties);
+            } catch (NoSuchMethodException e) {
+                // it's not an error for the provider not to have this method.
+            }
+
+            if(context==null) {
+                // try the old method that doesn't take properties. compatible with 1.0.
+                // it is an error for an implementation not to have both forms of the createContext method.
+                Method m = spFactory.getMethod("createContext",String.class,ClassLoader.class);
+                // any failure in invoking this method would be considered fatal
+                context = m.invoke(null,contextPath,classLoader);
+            }
+
+            if(!(context instanceof JAXBContext)) {
+                // the cast would fail, so generate an exception with a nice message
+                throw handleClassCastException(context.getClass(), JAXBContext.class);
+            }
+            return (JAXBContext)context;
+        } catch (InvocationTargetException x) {
+            handleInvocationTargetException(x);
+            // for other exceptions, wrap the internal target exception
+            // with a JAXBException
+            Throwable e = x;
+            if(x.getTargetException()!=null)
+                e = x.getTargetException();
+
+            throw new JAXBException( Messages.format( Messages.COULD_NOT_INSTANTIATE, spFactory, e ), e );
+        } catch (RuntimeException x) {
+            // avoid wrapping RuntimeException to JAXBException,
+            // because it indicates a bug in this code.
+            throw x;
+        } catch (Exception x) {
+            // can't catch JAXBException because the method is hidden behind
+            // reflection.  Root element collisions detected in the call to
+            // createContext() are reported as JAXBExceptions - just re-throw it
+            // some other type of exception - just wrap it
+            throw new JAXBException(
+                Messages.format( Messages.COULD_NOT_INSTANTIATE, spFactory, x ),
+                x);
+        }
+    }
+
 
     /**
-     * Create an instance of a class using the specified ClassLoader
+     * Create an instance of a class using the thread context ClassLoader
      */
     static JAXBContext newInstance(
                               Class[] classes,
@@ -208,12 +229,18 @@ class ContextFinder {
 
         if(logger.isLoggable(Level.FINE)) {
             // extra check to avoid costly which operation if not logged
-            logger.fine("loaded "+className+" from "+which(spi));
+            logger.log(Level.FINE, "loaded {0} from {1}", new Object[]{className, which(spi)});
         }
 
+        return newInstance(classes, properties, spi);
+    }
+
+    static JAXBContext newInstance(Class[] classes,
+                                   Map properties,
+                                   Class spFactory) throws JAXBException {
         Method m;
         try {
-            m = spi.getMethod("createContext", Class[].class, Map.class);
+            m = spFactory.getMethod("createContext", Class[].class, Map.class);
         } catch (NoSuchMethodException e) {
             throw new JAXBException(e);
         }
@@ -236,7 +263,6 @@ class ContextFinder {
             throw new JAXBException(x);
         }
     }
-
 
     static JAXBContext find(String factoryId, String contextPath, ClassLoader classLoader, Map properties ) throws JAXBException {
 
@@ -280,22 +306,29 @@ class ContextFinder {
             return newInstance( contextPath, factoryClassName, classLoader, properties );
         }
 
-        logger.fine("Searching META-INF/services");
+        if (Thread.currentThread().getContextClassLoader() == classLoader) {
+            Class factory = lookupUsingOSGiServiceLoader("javax.xml.bind.JAXBContext");
+            if (factory != null) {
+                logger.fine("OSGi environment detected");
+                return newInstance(contextPath, factory, classLoader, properties);
+            }
+        }
 
+        logger.fine("Searching META-INF/services");
         // search META-INF services next
         BufferedReader r;
         try {
             final StringBuilder resource = new StringBuilder().append("META-INF/services/").append(jaxbContextFQCN);
             final InputStream resourceStream =
                     classLoader.getResourceAsStream(resource.toString());
-            
+
             if (resourceStream != null) {
                 r = new BufferedReader(new InputStreamReader(resourceStream, "UTF-8"));
                 factoryClassName = r.readLine().trim();
                 r.close();
                 return newInstance(contextPath, factoryClassName, classLoader, properties);
             } else {
-                logger.fine("Unable to load:" + resource.toString());
+                logger.log(Level.FINE, "Unable to load:{0}", resource.toString());
             }
         } catch (UnsupportedEncodingException e) {
             // should never happen
@@ -338,7 +371,7 @@ class ContextFinder {
 
             // build the resource name and use the property loader code
             String resourceName = packageName+"/jaxb.properties";
-            logger.fine("Trying to locate "+resourceName);
+            logger.log(Level.FINE, "Trying to locate {0}", resourceName);
             Properties props = loadJAXBProperties(classLoader, resourceName);
             if (props == null) {
                 logger.fine("  not found");
@@ -355,13 +388,19 @@ class ContextFinder {
         }
 
         // search for a system property second (javax.xml.bind.JAXBContext)
-        logger.fine("Checking system property "+jaxbContextFQCN);
+        logger.log(Level.FINE, "Checking system property {0}", jaxbContextFQCN);
         factoryClassName = AccessController.doPrivileged(new GetPropertyAction(jaxbContextFQCN));
-        if(  factoryClassName != null ) {
-            logger.fine("  found "+factoryClassName);
+        if (factoryClassName != null) {
+            logger.log(Level.FINE, "  found {0}", factoryClassName);
             return newInstance( classes, properties, factoryClassName );
         }
         logger.fine("  not found");
+
+        Class factory = lookupUsingOSGiServiceLoader("javax.xml.bind.JAXBContext");
+        if (factory != null) {
+            logger.fine("OSGi environment detected");
+            return newInstance(classes, properties, factory);
+        }
 
         // search META-INF services next
         logger.fine("Checking META-INF/services");
@@ -376,12 +415,12 @@ class ContextFinder {
                 resourceURL = classLoader.getResource(resource);
 
             if (resourceURL != null) {
-                logger.fine("Reading "+resourceURL);
+                logger.log(Level.FINE, "Reading {0}", resourceURL);
                 r = new BufferedReader(new InputStreamReader(resourceURL.openStream(), "UTF-8"));
                 factoryClassName = r.readLine().trim();
                 return newInstance(classes, properties, factoryClassName);
             } else {
-                logger.fine("Unable to find: " + resource);
+                logger.log(Level.FINE, "Unable to find: {0}", resource);
             }
         } catch (UnsupportedEncodingException e) {
             // should never happen
@@ -395,13 +434,26 @@ class ContextFinder {
         return newInstance(classes, properties, PLATFORM_DEFAULT_FACTORY_CLASS);
     }
 
+    private static Class lookupUsingOSGiServiceLoader(String factoryId) {
+        try {
+            // Use reflection to avoid having any dependendcy on ServiceLoader class
+            Class serviceClass = Class.forName(factoryId);
+            Class target = Class.forName("com.sun.org.glassfish.hk2.osgiresourcelocator.ServiceLoader");
+            Method m = target.getMethod("lookupProviderClasses", Class.class);
+            Iterator iter = ((Iterable) m.invoke(null, serviceClass)).iterator();
+            return iter.hasNext() ? (Class)iter.next() : null;
+        } catch(Exception e) {
+            logger.log(Level.FINE, "Unable to find from OSGi: {0}", factoryId);
+            return null;
+        }
+    }
 
     private static Properties loadJAXBProperties( ClassLoader classLoader,
-                                                  String propFileName ) 
+                                                  String propFileName )
         throws JAXBException {
-                                            
+
         Properties props = null;
-                                                    
+
         try {
             URL url;
             if(classLoader==null)
@@ -410,17 +462,17 @@ class ContextFinder {
                 url = classLoader.getResource( propFileName );
 
             if( url != null ) {
-                logger.fine("loading props from "+url);
+                logger.log(Level.FINE, "loading props from {0}", url);
                 props = new Properties();
                 InputStream is = url.openStream();
                 props.load( is );
                 is.close();
-            } 
+            }
         } catch( IOException ioe ) {
             logger.log(Level.FINE,"Unable to load "+propFileName,ioe);
             throw new JAXBException( ioe.toString(), ioe );
         }
-        
+
         return props;
     }
 
@@ -483,7 +535,7 @@ class ContextFinder {
      * Loads the class, provided that the calling thread has an access to the class being loaded.
      */
     private static Class safeLoadClass(String className, ClassLoader classLoader) throws ClassNotFoundException {
-       logger.fine("Trying to load "+className);
+       logger.log(Level.FINE, "Trying to load {0}", className);
        try {
           // make sure that the current thread has an access to the package of the given name.
           SecurityManager s = System.getSecurityManager();
@@ -493,7 +545,7 @@ class ContextFinder {
                   s.checkPackageAccess(className.substring(0,i));
               }
           }
- 
+
           if (classLoader == null) {
               return Class.forName(className);
           } else {

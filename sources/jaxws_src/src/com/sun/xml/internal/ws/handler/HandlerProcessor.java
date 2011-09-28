@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.ws.handler;
 
 import com.sun.xml.internal.ws.api.WSBinding;
@@ -132,7 +133,7 @@ abstract class HandlerProcessor<C extends MessageUpdatableContext> {
                 reverseDirection(direction, context);
                 //Set handleFault so that cousinTube is aware of fault
                 setHandleFaultProperty();
-                // call handle fault                
+                // call handle fault
                 if (direction == Direction.OUTBOUND) {
                     callHandleFault(context, getIndex() - 1, 0);
                 } else {
@@ -177,7 +178,7 @@ abstract class HandlerProcessor<C extends MessageUpdatableContext> {
      * throw RuntimeException, this happens when a RuntimeException occurs during
      * normal Response processing or remedy action 2) taken
      * during callHandlersRequest().
-     * CurrentPipe should close all the handlers in the chain.     * 
+     * CurrentPipe should close all the handlers in the chain.     *
      */
     public void callHandlersResponse(Direction direction,
                                      C context, boolean isFault) {
@@ -191,7 +192,7 @@ abstract class HandlerProcessor<C extends MessageUpdatableContext> {
                     callHandleFault(context, handlers.size() - 1, 0);
                 }
             } else {
-                // call handleMessage on handlers                
+                // call handleMessage on handlers
                 if (direction == Direction.OUTBOUND) {
                     callHandleMessageReverse(context, 0, handlers.size() - 1);
                 } else {

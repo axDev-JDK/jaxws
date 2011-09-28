@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -31,7 +31,7 @@ package com.sun.codemodel.internal;
 /**
  * A field that can have a {@link JDocComment} associated with it
  */
-public class JFieldVar extends JVar {
+public class JFieldVar extends JVar implements JDocCommentable {
 
     /**
      * javadoc comments for this JFieldVar
@@ -76,7 +76,7 @@ public class JFieldVar extends JVar {
      * @return JDocComment containing javadocs for this class
      */
     public JDocComment javadoc() {
-        if( jdoc == null ) 
+        if( jdoc == null )
             jdoc = new JDocComment(owner.owner());
         return jdoc;
     }
@@ -87,6 +87,5 @@ public class JFieldVar extends JVar {
         super.declare( f );
     }
 
-   
-}
 
+}

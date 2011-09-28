@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -97,7 +97,7 @@ import java.lang.reflect.Proxy;
  * <p>
  * If you want the created {@link Dispatch} to talk to the given EPR, specify the parameter.
  * Otherwise leave it <tt>null</tt>. Note that the addressing needs to be enabled separately
- * for this to take effect. 
+ * for this to take effect.
  *
  * @author Kohsuke Kawaguchi
  * @author Kathy Walsh

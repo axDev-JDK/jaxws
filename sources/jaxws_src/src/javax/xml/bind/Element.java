@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -28,13 +28,13 @@ package javax.xml.bind;
 /**
  * This is an element marker interface.
  *
- * Under certain circumstances, it is necessary for the binding compiler to 
- * generate derived java content classes that implement this interface.  In 
- * those cases, client applications must supply element instances rather than 
- * types of elements.  For more detail, see section 5.7 "Element Declaration" 
+ * Under certain circumstances, it is necessary for the binding compiler to
+ * generate derived java content classes that implement this interface.  In
+ * those cases, client applications must supply element instances rather than
+ * types of elements.  For more detail, see section 5.7 "Element Declaration"
  * and 5.7.1 "Bind to Java Element Interface" of the specification.
  *
- * @author <ul><li>Ryan Shoemaker, Sun Microsystems, Inc.</li><li>Kohsuke Kawaguchi, Sun Microsystems, Inc.</li><li>Joe Fialli, Sun Microsystems, Inc.</li></ul> 
+ * @author <ul><li>Ryan Shoemaker, Sun Microsystems, Inc.</li><li>Kohsuke Kawaguchi, Sun Microsystems, Inc.</li><li>Joe Fialli, Sun Microsystems, Inc.</li></ul>
  * @since JAXB1.0
  */
 

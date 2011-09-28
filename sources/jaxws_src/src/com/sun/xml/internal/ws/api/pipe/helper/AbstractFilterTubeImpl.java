@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -38,7 +38,7 @@ import com.sun.xml.internal.ws.api.pipe.TubeCloner;
  * In this prototype, this is not that convenient, but in the real production
  * code where we have {@code preDestroy()} and {@code clone()}, this
  * is fairly handy.
- * 
+ *
  * @author Kohsuke Kawaguchi
  */
 public abstract class AbstractFilterTubeImpl extends AbstractTubeImpl {
@@ -54,7 +54,7 @@ public abstract class AbstractFilterTubeImpl extends AbstractTubeImpl {
             this.next = cloner.copy(that.next);
         } else {
             this.next = null;
-        }        
+        }
     }
 
     /**

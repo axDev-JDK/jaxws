@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -81,12 +81,19 @@ public abstract class OptimizedAccessorFactory {
             // we can't access private fields
             return null;
 
-
         Class t = sparams[0];
         String typeName = t.getName().replace('.','_');
+        if (t.isArray()) {
+            typeName = "AOf_";
+            String compName = t.getComponentType().getName().replace('.','_');
+            while (compName.startsWith("[L")) {
+                compName = compName.substring(2);
+                typeName += "AOf_";
+            }
+            typeName = typeName + compName;
+        }
 
         String newClassName = toVMClassName(getter.getDeclaringClass())+"$JaxbAccessorM_"+getter.getName()+'_'+setter.getName()+'_'+typeName;
-
         Class opt;
 
         if(t.isPrimitive())

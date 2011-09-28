@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -23,6 +23,7 @@
  * questions.
  */
 
+
 package com.sun.xml.internal.ws.resources;
 
 import com.sun.xml.internal.ws.util.localization.Localizable;
@@ -32,7 +33,7 @@ import com.sun.xml.internal.ws.util.localization.Localizer;
 
 /**
  * Defines string formatting method for each constant in the resource file
- * 
+ *
  */
 public final class XmlmessageMessages {
 
@@ -45,7 +46,7 @@ public final class XmlmessageMessages {
 
     /**
      * Invalid argument. MimeHeaders=null
-     * 
+     *
      */
     public static String XML_NULL_HEADERS() {
         return localizer.localize(localizableXML_NULL_HEADERS());
@@ -57,7 +58,7 @@ public final class XmlmessageMessages {
 
     /**
      * Couldn't set Payload in XMLMessage
-     * 
+     *
      */
     public static String XML_SET_PAYLOAD_ERR() {
         return localizer.localize(localizableXML_SET_PAYLOAD_ERR());
@@ -69,7 +70,7 @@ public final class XmlmessageMessages {
 
     /**
      * Content-Type needs to be Multipart/Related and with type=text/xml
-     * 
+     *
      */
     public static String XML_CONTENT_TYPE_MUSTBE_MULTIPART() {
         return localizer.localize(localizableXML_CONTENT_TYPE_MUSTBE_MULTIPART());
@@ -81,7 +82,7 @@ public final class XmlmessageMessages {
 
     /**
      * Unrecognized Content-Type
-     * 
+     *
      */
     public static String XML_UNKNOWN_CONTENT_TYPE() {
         return localizer.localize(localizableXML_UNKNOWN_CONTENT_TYPE());
@@ -93,7 +94,7 @@ public final class XmlmessageMessages {
 
     /**
      * Couldn't get DataSource
-     * 
+     *
      */
     public static String XML_GET_DS_ERR() {
         return localizer.localize(localizableXML_GET_DS_ERR());
@@ -105,7 +106,7 @@ public final class XmlmessageMessages {
 
     /**
      * Error while parsing MimeHeaders for Content-Type
-     * 
+     *
      */
     public static String XML_CONTENT_TYPE_PARSE_ERR() {
         return localizer.localize(localizableXML_CONTENT_TYPE_PARSE_ERR());
@@ -117,7 +118,7 @@ public final class XmlmessageMessages {
 
     /**
      * Couldn't return Source
-     * 
+     *
      */
     public static String XML_GET_SOURCE_ERR() {
         return localizer.localize(localizableXML_GET_SOURCE_ERR());
@@ -129,7 +130,7 @@ public final class XmlmessageMessages {
 
     /**
      * Cannot create XMLMessage
-     * 
+     *
      */
     public static String XML_CANNOT_INTERNALIZE_MESSAGE() {
         return localizer.localize(localizableXML_CANNOT_INTERNALIZE_MESSAGE());
@@ -141,7 +142,7 @@ public final class XmlmessageMessages {
 
     /**
      * MimeHeaders doesn't contain Content-Type header
-     * 
+     *
      */
     public static String XML_NO_CONTENT_TYPE() {
         return localizer.localize(localizableXML_NO_CONTENT_TYPE());
@@ -153,7 +154,7 @@ public final class XmlmessageMessages {
 
     /**
      * Bad Content-Type for Root Part : {0}
-     * 
+     *
      */
     public static String XML_ROOT_PART_INVALID_CONTENT_TYPE(Object arg0) {
         return localizer.localize(localizableXML_ROOT_PART_INVALID_CONTENT_TYPE(arg0));
@@ -165,7 +166,7 @@ public final class XmlmessageMessages {
 
     /**
      * Invalid Content-Type: {0}
-     * 
+     *
      */
     public static String XML_INVALID_CONTENT_TYPE(Object arg0) {
         return localizer.localize(localizableXML_INVALID_CONTENT_TYPE(arg0));

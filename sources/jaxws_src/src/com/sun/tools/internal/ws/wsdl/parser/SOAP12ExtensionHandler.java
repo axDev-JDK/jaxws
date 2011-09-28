@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.tools.internal.ws.wsdl.parser;
 
 import com.sun.tools.internal.ws.wsdl.document.soap.SOAP12Binding;
@@ -38,7 +39,7 @@ public class SOAP12ExtensionHandler extends SOAPExtensionHandler {
         super(extensionHandlerMap);
     }
 
-    /* 
+    /*
      * @see SOAPExtensionHandler#getNamespaceURI()
      */
     @Override
@@ -46,7 +47,7 @@ public class SOAP12ExtensionHandler extends SOAPExtensionHandler {
         return Constants.NS_WSDL_SOAP12;
     }
 
-    /* 
+    /*
      * @see SOAPExtensionHandler#getAddressQName()
      */
     @Override
@@ -54,7 +55,7 @@ public class SOAP12ExtensionHandler extends SOAPExtensionHandler {
         return SOAP12Constants.QNAME_ADDRESS;
     }
 
-    /* 
+    /*
      * @see SOAPExtensionHandler#getBindingQName()
      */
     @Override
@@ -74,7 +75,7 @@ public class SOAP12ExtensionHandler extends SOAPExtensionHandler {
         return SOAP12Constants.QNAME_BODY;
     }
 
-    /* 
+    /*
      * @see SOAPExtensionHandler#getFaultQName()
      */
     @Override
@@ -82,7 +83,7 @@ public class SOAP12ExtensionHandler extends SOAPExtensionHandler {
         return SOAP12Constants.QNAME_FAULT;
     }
 
-    /* 
+    /*
      * @see SOAPExtensionHandler#getHeaderfaultQName()
      */
     @Override
@@ -90,7 +91,7 @@ public class SOAP12ExtensionHandler extends SOAPExtensionHandler {
         return SOAP12Constants.QNAME_HEADERFAULT;
     }
 
-    /* 
+    /*
      * @see SOAPExtensionHandler#getHeaderQName()
      */
     @Override
@@ -98,7 +99,7 @@ public class SOAP12ExtensionHandler extends SOAPExtensionHandler {
         return SOAP12Constants.QNAME_HEADER;
     }
 
-    /* 
+    /*
      * @see SOAPExtensionHandler#getOperationQName()
      */
     @Override

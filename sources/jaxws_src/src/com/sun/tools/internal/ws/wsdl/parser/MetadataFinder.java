@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -23,13 +23,14 @@
  * questions.
  */
 
-
 package com.sun.tools.internal.ws.wsdl.parser;
 
 import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
 import com.sun.tools.internal.ws.resources.WscompileMessages;
 import com.sun.tools.internal.ws.resources.WsdlMessages;
+import com.sun.tools.internal.ws.wscompile.AbortException;
+import com.sun.tools.internal.ws.wscompile.DefaultAuthenticator;
 import com.sun.tools.internal.ws.wscompile.ErrorReceiver;
 import com.sun.tools.internal.ws.wscompile.WsimportOptions;
 import com.sun.tools.internal.ws.wsdl.document.WSDLConstants;
@@ -39,24 +40,27 @@ import com.sun.xml.internal.ws.api.wsdl.parser.MetaDataResolver;
 import com.sun.xml.internal.ws.api.wsdl.parser.MetadataResolverFactory;
 import com.sun.xml.internal.ws.api.wsdl.parser.ServiceDescriptor;
 import com.sun.xml.internal.ws.util.DOMUtil;
+import com.sun.xml.internal.ws.util.JAXWSUtils;
 import com.sun.xml.internal.ws.util.ServiceFinder;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLSession;
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.io.InputStream;
+import java.net.*;
+import java.util.*;
 
 /**
  * @author Vivek Pandey
@@ -67,9 +71,8 @@ public final class MetadataFinder extends DOMForest{
     private String rootWSDL;
     private Set<String> rootWsdls = new HashSet<String>();
 
-
     public MetadataFinder(InternalizationLogic logic, WsimportOptions options, ErrorReceiver errReceiver) {
-        super(logic, options, errReceiver);
+        super(logic, new WSEntityResolver(options,errReceiver), options, errReceiver);
 
     }
 
@@ -121,6 +124,101 @@ public final class MetadataFinder extends DOMForest{
             }
         }
         identifyRootWsdls();
+    }
+
+    public static class WSEntityResolver implements EntityResolver {
+        EntityResolver parentResolver;
+        WsimportOptions options;
+        ErrorReceiver errorReceiver;
+
+        public WSEntityResolver(WsimportOptions options, ErrorReceiver errReceiver) {
+            this.parentResolver = options.entityResolver;
+            this.options = options;
+            this.errorReceiver = errReceiver;
+        }
+
+        public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
+            InputSource inputSource = null;
+
+            if(options.entityResolver != null ) {
+                inputSource = options.entityResolver.resolveEntity(null, systemId);
+            }
+            if (inputSource == null) {
+                inputSource = new InputSource(systemId);
+                InputStream is = null;
+                int redirects = 0;
+                boolean redirect;
+                URL url = JAXWSUtils.getFileOrURL(inputSource.getSystemId());
+                URLConnection conn = url.openConnection();
+                do {
+                    if (conn instanceof HttpsURLConnection) {
+                        if (options.disableSSLHostnameVerification) {
+                            ((HttpsURLConnection) conn).setHostnameVerifier(new HttpClientVerifier());
+                        }
+                    }
+                    redirect = false;
+                    if (conn instanceof HttpURLConnection) {
+                        ((HttpURLConnection) conn).setInstanceFollowRedirects(false);
+                    }
+
+                    try {
+                        is = conn.getInputStream();
+                        //is = sun.net.www.protocol.http.HttpURLConnection.openConnectionCheckRedirects(conn);
+                    } catch (IOException e) {
+                        if (conn instanceof HttpURLConnection) {
+                            HttpURLConnection httpConn = ((HttpURLConnection) conn);
+                            int code = httpConn.getResponseCode();
+                            if (code == 401) {
+                                errorReceiver.error(new SAXParseException(WscompileMessages.WSIMPORT_AUTH_INFO_NEEDED(e.getMessage(),
+                                        systemId, DefaultAuthenticator.defaultAuthfile), null, e));
+                                throw new AbortException();
+                            }
+                            //FOR other code we will retry with MEX
+                        }
+                        throw e;
+                    }
+
+                    //handle 302 or 303, JDK does not seem to handle 302 very well.
+                    //Need to redesign this a bit as we need to throw better error message for IOException in this case
+                    if (conn instanceof HttpURLConnection) {
+                        HttpURLConnection httpConn = ((HttpURLConnection) conn);
+                        int code = httpConn.getResponseCode();
+                        if (code == 302 || code == 303) {
+                            //retry with the value in Location header
+                            List<String> seeOther = httpConn.getHeaderFields().get("Location");
+                            if (seeOther != null && seeOther.size() > 0) {
+                                URL newurl = new URL(url, seeOther.get(0));
+                                if (!newurl.equals(url)) {
+                                    errorReceiver.info(new SAXParseException(WscompileMessages.WSIMPORT_HTTP_REDIRECT(code, seeOther.get(0)), null));
+                                    url = newurl;
+                                    httpConn.disconnect();
+                                    if (redirects >= 5) {
+                                        errorReceiver.error(new SAXParseException(WscompileMessages.WSIMPORT_MAX_REDIRECT_ATTEMPT(), null));
+                                        throw new AbortException();
+                                    }
+                                    conn = url.openConnection();
+                                    inputSource.setSystemId(url.toExternalForm());
+                                    redirects++;
+                                    redirect = true;
+                                }
+                            }
+                        }
+                    }
+                } while (redirect);
+                inputSource.setByteStream(is);
+            }
+
+            return inputSource;
+        }
+
+    }
+
+    // overide default SSL HttpClientVerifier to always return true
+    // effectively overiding Hostname client verification when using SSL
+    private static class HttpClientVerifier implements HostnameVerifier {
+        public boolean verify(String s, SSLSession sslSession) {
+            return true;
+        }
     }
 
     /**
@@ -243,6 +341,7 @@ public final class MetadataFinder extends DOMForest{
                 if (core.keySet().contains(systemId))
                     core.remove(systemId);
                 core.put(src.getSystemId(), doc);
+                resolvedCache.put(systemId, doc.getDocumentURI());
                 isMexMetadata = true;
             }
 

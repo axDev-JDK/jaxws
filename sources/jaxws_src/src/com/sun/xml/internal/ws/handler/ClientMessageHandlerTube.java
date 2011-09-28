@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -53,7 +53,7 @@ public class ClientMessageHandlerTube extends HandlerTube {
     private SEIModel seiModel;
     private WSBinding binding;
     private Set<String> roles;
-    
+
     /**
      * Creates a new instance of MessageHandlerTube
      */
@@ -75,7 +75,7 @@ public class ClientMessageHandlerTube extends HandlerTube {
     public AbstractFilterTubeImpl copy(TubeCloner cloner) {
         return new ClientMessageHandlerTube(this, cloner);
     }
-    
+
     void callHandlersOnResponse(MessageUpdatableContext context, boolean handleFault) {
         try {
             //CLIENT-SIDE
@@ -125,7 +125,7 @@ public class ClientMessageHandlerTube extends HandlerTube {
         closeClientsideHandlers(mc);
 
     }
-    
+
     void setUpProcessor() {
        // Take a snapshot, User may change chain after invocation, Same chain
         // should be used for the entire MEP

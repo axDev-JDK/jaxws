@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -32,19 +32,15 @@ import javax.management.remote.JMXServiceURL;
     To get its ObjectName, use {@link AMXGlassfish#getBootAMXMBeanObjectName}.
  */
 @com.sun.org.glassfish.external.arc.Taxonomy(stability = com.sun.org.glassfish.external.arc.Stability.UNCOMMITTED)
-public interface BootAMXMBean 
+public interface BootAMXMBean
 {
     /**
     Start AMX and return the ObjectName of DomainRoot.
      */
     public ObjectName bootAMX();
-    
+
     /** same as method above */
     public static final String BOOT_AMX_OPERATION_NAME = "bootAMX";
 
     public JMXServiceURL[] getJMXServiceURLs();
 }
-
-
-
-

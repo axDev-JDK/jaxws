@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -528,7 +528,7 @@ public enum AddressingVersion {
      *
      * @deprecated
      *     TODO  why are we exposing implementation specificc class through api?
-     *     TODO  Remove it if no one elase uses it. 
+     *     TODO  Remove it if no one elase uses it.
      */
     public abstract WsaTubeHelper getWsaHelper(WSDLPort wsdlPort, SEIModel seiModel, WSBinding binding);
 

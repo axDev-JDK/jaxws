@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -34,11 +34,11 @@ import com.sun.xml.internal.ws.policy.sourcemodel.AssertionData;
  * @author Marek Potociar
  */
 public final class AssertionCreationException extends PolicyException {
-    
-    private final AssertionData assertionData; 
-    
+
+    private final AssertionData assertionData;
+
     /**
-     * Constructs a new assertion creation exception with the specified detail message and cause.  
+     * Constructs a new assertion creation exception with the specified detail message and cause.
      * <p/>
      * Note that the detail message associated with {@code cause} is <emph>not</emph> automatically incorporated in
      * this exception's detail message.
@@ -50,9 +50,9 @@ public final class AssertionCreationException extends PolicyException {
         super(message);
         this.assertionData = assertionData;
     }
-    
+
     /**
-     * Constructs a new assertion creation exception with the specified detail message and cause.  
+     * Constructs a new assertion creation exception with the specified detail message and cause.
      * <p/>
      * Note that the detail message associated with {@code cause} is <emph>not</emph> automatically incorporated in
      * this exception's detail message.
@@ -65,9 +65,9 @@ public final class AssertionCreationException extends PolicyException {
         super(message, cause);
         this.assertionData = assertionData;
     }
-    
+
     /**
-     * Constructs a new assertion creation exception with the specified detail message and cause.  
+     * Constructs a new assertion creation exception with the specified detail message and cause.
      *
      * @param assertionData the data provided for assertion creation
      * @param  cause the cause.  (A {@code null} value is permitted, and indicates that the cause is nonexistent or unknown.)
@@ -76,7 +76,7 @@ public final class AssertionCreationException extends PolicyException {
         super(cause);
         this.assertionData = assertionData;
     }
-    
+
     /**
      * Retrieves assertion data associated with the exception.
      *

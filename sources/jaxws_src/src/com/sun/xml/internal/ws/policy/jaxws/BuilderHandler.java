@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,7 +22,8 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
-package com.sun.xml.internal.ws.policy;
+
+package com.sun.xml.internal.ws.policy.jaxws;
 
 import com.sun.xml.internal.ws.api.policy.ModelTranslator;
 import com.sun.xml.internal.ws.policy.Policy;
@@ -48,7 +49,7 @@ abstract class BuilderHandler{
     Map<String,PolicySourceModel> policyStore;
     Collection<String> policyURIs;
     Object policySubject;
-    
+
     /**
      * Creates a new instance of BuilderHandler
      */
@@ -57,17 +58,17 @@ abstract class BuilderHandler{
         this.policyURIs = policyURIs;
         this.policySubject = policySubject;
     }
-    
+
     final void populate(final PolicyMapExtender policyMapExtender) throws PolicyException {
         if (null == policyMapExtender) {
             throw LOGGER.logSevereException(new PolicyException(PolicyMessages.WSP_1006_POLICY_MAP_EXTENDER_CAN_NOT_BE_NULL()));
         }
-        
+
         doPopulate(policyMapExtender);
     }
-    
+
     protected abstract void doPopulate(final PolicyMapExtender policyMapExtender) throws PolicyException;
-    
+
     final Collection<Policy> getPolicies() throws PolicyException {
         if (null == policyURIs) {
             throw LOGGER.logSevereException(new PolicyException(PolicyMessages.WSP_1004_POLICY_URIS_CAN_NOT_BE_NULL()));
@@ -75,9 +76,9 @@ abstract class BuilderHandler{
         if (null == policyStore) {
             throw LOGGER.logSevereException(new PolicyException(PolicyMessages.WSP_1010_NO_POLICIES_DEFINED()));
         }
-        
+
         final Collection<Policy> result = new ArrayList<Policy>(policyURIs.size());
-        
+
         for (String policyURI : policyURIs) {
             final PolicySourceModel sourceModel = policyStore.get(policyURI);
             if (sourceModel == null) {
@@ -86,10 +87,10 @@ abstract class BuilderHandler{
                 result.add(ModelTranslator.getTranslator().translate(sourceModel));
             }
         }
-        
+
         return result;
     }
-    
+
     final Collection<PolicySubject> getPolicySubjects() throws PolicyException {
         final Collection<Policy> policies = getPolicies();
         final Collection<PolicySubject> result =  new ArrayList<PolicySubject>(policies.size());

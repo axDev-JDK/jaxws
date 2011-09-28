@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -37,7 +37,7 @@ import java.net.URISyntaxException;
  */
 final class PolicyReferenceData {
     private static final PolicyLogger LOGGER = PolicyLogger.getLogger(PolicyReferenceData.class);
-    
+
     private static final URI DEFAULT_DIGEST_ALGORITHM_URI;
     private static final URISyntaxException CLASS_INITIALIZATION_EXCEPTION;
     static {
@@ -52,34 +52,34 @@ final class PolicyReferenceData {
             CLASS_INITIALIZATION_EXCEPTION = tempEx;
         }
     }
-    
+
     private final URI referencedModelUri;
     private final String digest;
     private final URI digestAlgorithmUri;
-    
+
     /** Creates a new instance of PolicyReferenceData */
     public PolicyReferenceData(URI referencedModelUri) {
         this.referencedModelUri = referencedModelUri;
         this.digest = null;
         this.digestAlgorithmUri = null;
     }
-    
+
     public PolicyReferenceData(URI referencedModelUri, String expectedDigest, URI usedDigestAlgorithm) {
         if (CLASS_INITIALIZATION_EXCEPTION != null) {
             throw LOGGER.logSevereException(new IllegalStateException(LocalizationMessages.WSP_0015_UNABLE_TO_INSTANTIATE_DIGEST_ALG_URI_FIELD(), CLASS_INITIALIZATION_EXCEPTION));
         }
-        
+
         if (usedDigestAlgorithm != null && expectedDigest == null) {
             throw LOGGER.logSevereException(new IllegalArgumentException(LocalizationMessages.WSP_0072_DIGEST_MUST_NOT_BE_NULL_WHEN_ALG_DEFINED()));
         }
-        
+
         this.referencedModelUri = referencedModelUri;
         if (expectedDigest == null) {
             this.digest = null;
             this.digestAlgorithmUri = null;
         } else {
             this.digest = expectedDigest;
-            
+
             if (usedDigestAlgorithm == null) {
                 this.digestAlgorithmUri = DEFAULT_DIGEST_ALGORITHM_URI;
             } else {
@@ -87,19 +87,19 @@ final class PolicyReferenceData {
             }
         }
     }
-    
+
     public URI getReferencedModelUri() {
         return referencedModelUri;
     }
-    
+
     public String getDigest() {
         return digest;
     }
-    
+
     public URI getDigestAlgorithmUri() {
         return digestAlgorithmUri;
     }
-    
+
     /**
      * An {@code Object.toString()} method override.
      */
@@ -107,7 +107,7 @@ final class PolicyReferenceData {
     public String toString() {
         return toString(0, new StringBuffer()).toString();
     }
-    
+
     /**
      * A helper method that appends indented string representation of this instance to the input string buffer.
      *
@@ -118,17 +118,17 @@ final class PolicyReferenceData {
     public StringBuffer toString(final int indentLevel, final StringBuffer buffer) {
         final String indent = PolicyUtils.Text.createIndent(indentLevel);
         final String innerIndent = PolicyUtils.Text.createIndent(indentLevel + 1);
-        
+
         buffer.append(indent).append("reference data {").append(PolicyUtils.Text.NEW_LINE);
         buffer.append(innerIndent).append("referenced policy model URI = '").append(referencedModelUri).append('\'').append(PolicyUtils.Text.NEW_LINE);
         if (digest == null) {
-            buffer.append(innerIndent).append("no digest specified").append(PolicyUtils.Text.NEW_LINE);            
+            buffer.append(innerIndent).append("no digest specified").append(PolicyUtils.Text.NEW_LINE);
         } else {
             buffer.append(innerIndent).append("digest algorith URI = '").append(digestAlgorithmUri).append('\'').append(PolicyUtils.Text.NEW_LINE);
             buffer.append(innerIndent).append("digest = '").append(digest).append('\'').append(PolicyUtils.Text.NEW_LINE);
         }
         buffer.append(indent).append('}');
-        
+
         return buffer;
     }
 }

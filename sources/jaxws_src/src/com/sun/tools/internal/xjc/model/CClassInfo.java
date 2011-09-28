@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -43,7 +43,6 @@ import com.sun.codemodel.internal.JCodeModel;
 import com.sun.codemodel.internal.JPackage;
 import com.sun.istack.internal.Nullable;
 import com.sun.tools.internal.xjc.Language;
-import com.sun.tools.internal.xjc.Options;
 import com.sun.tools.internal.xjc.model.nav.NClass;
 import com.sun.tools.internal.xjc.model.nav.NType;
 import com.sun.tools.internal.xjc.outline.Aspect;
@@ -93,7 +92,7 @@ public final class CClassInfo extends AbstractCElement implements ClassInfo<NTyp
      * Custom {@link #getSqueezedName() squeezed name}, if any.
      */
     private /*almost final*/ @Nullable String squeezedName;
-    
+
     /**
      * If this class also gets {@link XmlRootElement}, the class name.
      */
@@ -156,7 +155,7 @@ public final class CClassInfo extends AbstractCElement implements ClassInfo<NTyp
                 this.squeezedName = factoryMethod.name;
             }
         }
-        
+
         model.add(this);
     }
 
@@ -190,7 +189,7 @@ public final class CClassInfo extends AbstractCElement implements ClassInfo<NTyp
     }
 
     /**
-     * Returns true iff a new attribute wildcard property needs to be
+     * Returns true if a new attribute wildcard property needs to be
      * declared on this class.
      */
     public boolean declaresAttributeWildcard() {
@@ -198,13 +197,20 @@ public final class CClassInfo extends AbstractCElement implements ClassInfo<NTyp
     }
 
     /**
-     * Returns true iff this class inherits a wildcard attribute property
+     * Returns true if this class inherits a wildcard attribute property
      * from its ancestor classes.
      */
     public boolean inheritsAttributeWildcard() {
-        for( CClassInfo c=getBaseClass(); c!=null; c=c.getBaseClass() ) {
-            if(c.hasAttributeWildcard)
+        if (getRefBaseClass() != null) {
+            CClassRef cref = (CClassRef)baseClass;
+            if (cref.getSchemaComponent().getForeignAttributes().size() > 0) {
                 return true;
+            }
+        } else {
+            for( CClassInfo c=getBaseClass(); c!=null; c=c.getBaseClass() ) {
+                if(c.hasAttributeWildcard)
+                    return true;
+            }
         }
         return false;
     }
@@ -291,7 +297,7 @@ public final class CClassInfo extends AbstractCElement implements ClassInfo<NTyp
     public CNonElement getInfo() {
         return this;
     }
-    
+
     public Element<NType,NClass> asElement() {
         if(isElement())
             return this;
@@ -397,7 +403,7 @@ public final class CClassInfo extends AbstractCElement implements ClassInfo<NTyp
             return null;
         }
     }
-    
+
     public CClassRef getRefBaseClass() {
         if (baseClass instanceof CClassRef) {
             return (CClassRef) baseClass;

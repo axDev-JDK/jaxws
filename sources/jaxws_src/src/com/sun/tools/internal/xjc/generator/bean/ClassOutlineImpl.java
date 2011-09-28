@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.tools.internal.xjc.generator.bean;
 
 import com.sun.codemodel.internal.JClass;
@@ -32,7 +33,7 @@ import com.sun.tools.internal.xjc.outline.ClassOutline;
 /**
  * {@link ClassOutline} enhanced with schema2java specific
  * information.
- * 
+ *
  * @author
  *     Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
@@ -43,7 +44,7 @@ public final class ClassOutlineImpl extends ClassOutline {
     public MethodWriter createMethodWriter() {
         return _parent.getModel().strategy.createMethodWriter(this);
     }
-    
+
     /**
      * Gets {@link #_package} as {@link PackageOutlineImpl},
      * since it's guaranteed to be of that type.

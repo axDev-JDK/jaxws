@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 /*
  * @(#)BEncoderStream.java    1.3 02/03/27
  */
@@ -36,7 +37,7 @@ import java.io.OutputStream;
  * This class implements a 'B' Encoder as defined by RFC2047 for
  * encoding MIME headers. It subclasses the BASE64EncoderStream
  * class.
- * 
+ *
  * @author John Mani
  */
 
@@ -47,9 +48,9 @@ public class BEncoderStream extends BASE64EncoderStream {
      * @param out        the output stream
      */
     public BEncoderStream(OutputStream out) {
-	super(out, Integer.MAX_VALUE); // MAX_VALUE is 2^31, should
-				       // suffice (!) to indicate that
-				       // CRLFs should not be inserted
+        super(out, Integer.MAX_VALUE); // MAX_VALUE is 2^31, should
+                                       // suffice (!) to indicate that
+                                       // CRLFs should not be inserted
     }
 
     /**

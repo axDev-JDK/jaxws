@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -48,7 +48,7 @@ public abstract class AsyncInvoker implements Runnable {
     public void setReceiver(AsyncResponseImpl responseImpl) {
         this.responseImpl = responseImpl;
     }
-    
+
     public void run () {
         try {
             do_run();

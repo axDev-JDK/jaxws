@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -30,7 +30,7 @@
  *
  * <p>The {@link com.sun.istack.internal.ws.AnnotationProcessorFactoryImpl AnnoatationnProcessorFactoryImpl} class
  * tells the <a href="http://java.sun.com/j2se/1.5.0/docs/tooldocs/share/apt.html">APT</a>
- * framework that there exists an {@com.sun.mirror.apt.AnnotationProcessor AnnotationProcessor} 
+ * framework that there exists an {@com.sun.mirror.apt.AnnotationProcessor AnnotationProcessor}
  * ({@link com.sun.istak.ws.WSAP WSAP}) for for processing javax.jws.*, javax.jws.soap.*,
  *  and javax.xml.ws.* annotations.
  *

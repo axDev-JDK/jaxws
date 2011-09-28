@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,7 +22,6 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
-
 
 package com.sun.tools.internal.ws.wsdl.parser;
 
@@ -106,7 +105,7 @@ public class VersionChecker extends XMLFilterImpl {
         if( JAXWSBindingsConstants.NS_JAXWS_BINDINGS.equals(namespaceURI)){
             seenBindings = true;
             if(version == null)
-                version = "2.0";            
+                version = "2.0";
         }
 
     }
@@ -135,4 +134,3 @@ public class VersionChecker extends XMLFilterImpl {
     private static final Set<String> VERSIONS = new HashSet<String>(Arrays.asList("2.0","2.1"));
 
 }
-

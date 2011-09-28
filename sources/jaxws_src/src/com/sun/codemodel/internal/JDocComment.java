@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -39,21 +39,22 @@ import java.util.Map;
  */
 public class JDocComment extends JCommentPart implements JGenerable {
 
+        private static final long serialVersionUID = 1L;
 
-    /** list of @param tags */
+        /** list of @param tags */
     private final Map<String,JCommentPart> atParams = new HashMap<String,JCommentPart>();
-    
+
     /** list of xdoclets */
     private final Map<String,Map<String,String>> atXdoclets = new HashMap<String,Map<String,String>>();
-    
+
     /** list of @throws tags */
     private final Map<JClass,JCommentPart> atThrows = new HashMap<JClass,JCommentPart>();
-    
+
     /**
      * The @return tag part.
      */
     private JCommentPart atReturn = null;
-    
+
     /** The @deprecated tag */
     private JCommentPart atDeprecated = null;
 
@@ -90,10 +91,10 @@ public class JDocComment extends JCommentPart implements JGenerable {
     /**
      * add an @throws tag to the javadoc
      */
-    public JCommentPart addThrows( Class exception ) {
+    public JCommentPart addThrows( Class<? extends Throwable> exception ) {
         return addThrows( owner.ref(exception) );
     }
-    
+
     /**
      * add an @throws tag to the javadoc
      */
@@ -103,7 +104,7 @@ public class JDocComment extends JCommentPart implements JGenerable {
             atThrows.put(exception,p=new JCommentPart());
         return p;
     }
-    
+
     /**
      * Appends a text to @return tag.
      */
@@ -193,4 +194,3 @@ public class JDocComment extends JCommentPart implements JGenerable {
 
     private static final String INDENT = " *     ";
 }
-

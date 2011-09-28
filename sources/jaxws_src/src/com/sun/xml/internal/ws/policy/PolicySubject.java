@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -40,10 +40,10 @@ import java.util.List;
  */
 public final class PolicySubject {
     private static final PolicyLogger LOGGER = PolicyLogger.getLogger(PolicySubject.class);
-    
+
     private final List<Policy> policies = new LinkedList<Policy>();
     private final Object subject;
-    
+
     /**
      * Constructs a policy subject instance.
      *
@@ -56,33 +56,33 @@ public final class PolicySubject {
         if (subject == null || policy == null) {
             throw LOGGER.logSevereException(new IllegalArgumentException(LocalizationMessages.WSP_0021_SUBJECT_AND_POLICY_PARAM_MUST_NOT_BE_NULL(subject, policy)));
         }
-        
+
         this.subject = subject;
         this.attach(policy);
     }
-    
+
     /**
      * Constructs a policy subject instance.
      *
      * @param subject object to which the policies are attached. Must not be {@code null}.
      * @param policies first policy attached to the subject. Must not be {@code null}.
      *
-     * @throws IllegalArgumentException in case any of the arguments is {@code null} or 
+     * @throws IllegalArgumentException in case any of the arguments is {@code null} or
      *         in case {@code policies} argument represents empty collection.
      */
     public PolicySubject(Object subject, Collection<Policy> policies) throws IllegalArgumentException {
         if (subject == null || policies == null) {
             throw LOGGER.logSevereException(new IllegalArgumentException(LocalizationMessages.WSP_0062_INPUT_PARAMS_MUST_NOT_BE_NULL()));
         }
-        
+
         if (policies.isEmpty()) {
             throw LOGGER.logSevereException(new IllegalArgumentException(LocalizationMessages.WSP_0064_INITIAL_POLICY_COLLECTION_MUST_NOT_BE_EMPTY()));
         }
-        
+
         this.subject = subject;
         this.policies.addAll(policies);
     }
-    
+
     /**
      * Attaches another Policy instance to the policy subject.
      *
@@ -96,17 +96,17 @@ public final class PolicySubject {
         }
         this.policies.add(policy);
     }
-    
+
     /**
      * Returns the effective policy of the subject, i.e. all policies of the subject
      * merged together.
-     * 
+     *
      * @return effective policy of the subject
      */
     public Policy getEffectivePolicy(final PolicyMerger merger) throws PolicyException {
         return merger.merge(policies);
     }
-    
+
     /**
      * A unique identifier of the subject
      *
@@ -117,7 +117,7 @@ public final class PolicySubject {
     public Object getSubject() {
         return this.subject;
     }
-    
+
     /**
      * An {@code Object.toString()} method override.
      */
@@ -125,7 +125,7 @@ public final class PolicySubject {
     public String toString() {
         return toString(0, new StringBuffer()).toString();
     }
-    
+
     /**
      * A helper method that appends indented string representation of this instance to the input string buffer.
      *
@@ -136,14 +136,14 @@ public final class PolicySubject {
     StringBuffer toString(final int indentLevel, final StringBuffer buffer) {
         final String indent = PolicyUtils.Text.createIndent(indentLevel);
         final String innerIndent = PolicyUtils.Text.createIndent(indentLevel + 1);
-        
+
         buffer.append(indent).append("policy subject {").append(PolicyUtils.Text.NEW_LINE);
         buffer.append(innerIndent).append("subject = '").append(subject).append('\'').append(PolicyUtils.Text.NEW_LINE);
         for (Policy policy : policies) {
             policy.toString(indentLevel + 1, buffer).append(PolicyUtils.Text.NEW_LINE);
         }
         buffer.append(indent).append('}');
-        
+
         return buffer;
-    }    
+    }
 }

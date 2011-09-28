@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -46,9 +46,9 @@ public interface PolicyResolver {
      * @param context
      *      ServerContext that captures information useful for resolving Policy on server-side
      *
-     * @return  
+     * @return
      *      A PolicyMap with single policy alternative that gets created after consulting various configuration models.
-     * 
+     *
      * @throws WebServiceException
      *      If resolution failed
      */
@@ -158,7 +158,7 @@ public interface PolicyResolver {
          * In presence of WSDL, JAX-WS by default creates PolicyMap from Policy Attachemnts in WSDL.
          *
          * @param policyMap PolicyMap created from PolicyAttachemnts in WSDL
-         * @param container 
+         * @param container
          */
         public ClientContext(@Nullable PolicyMap policyMap, Container container) {
             this.policyMap = policyMap;

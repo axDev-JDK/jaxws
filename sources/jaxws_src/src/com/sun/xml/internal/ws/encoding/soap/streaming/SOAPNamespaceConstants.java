@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -38,7 +38,7 @@ public class SOAPNamespaceConstants {
         "http://www.w3.org/2001/XMLSchema-instance";
     public static final String XMLNS = "http://www.w3.org/XML/1998/namespace";
     public static final String TRANSPORT_HTTP =
-        "http://schemas.xmlsoap.org/soap/http"; 
+        "http://schemas.xmlsoap.org/soap/http";
     public static final String ACTOR_NEXT =
         "http://schemas.xmlsoap.org/soap/actor/next";
 

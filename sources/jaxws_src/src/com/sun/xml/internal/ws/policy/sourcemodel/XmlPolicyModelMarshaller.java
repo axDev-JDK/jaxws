@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -45,14 +45,14 @@ import javax.xml.stream.XMLStreamWriter;
 public final class XmlPolicyModelMarshaller extends PolicyModelMarshaller {
 
     private static final PolicyLogger LOGGER = PolicyLogger.getLogger(XmlPolicyModelMarshaller.class);
-    
+
     private final boolean marshallInvisible;
 
-    
+
     XmlPolicyModelMarshaller(boolean marshallInvisible) {
         this.marshallInvisible = marshallInvisible;
     }
-    
+
     public void marshal(final PolicySourceModel model, final Object storage) throws PolicyException {
         if (storage instanceof StaxSerializer) {
             marshal(model, (StaxSerializer) storage);
@@ -64,13 +64,13 @@ public final class XmlPolicyModelMarshaller extends PolicyModelMarshaller {
             throw LOGGER.logSevereException(new PolicyException(LocalizationMessages.WSP_0022_STORAGE_TYPE_NOT_SUPPORTED(storage.getClass().getName())));
         }
     }
-    
+
     public void marshal(final Collection<PolicySourceModel> models, final Object storage) throws PolicyException {
         for (PolicySourceModel model : models) {
             marshal(model, storage);
         }
     }
-    
+
     /**
      * Marshal a policy onto the given StaxSerializer.
      *
@@ -101,7 +101,7 @@ public final class XmlPolicyModelMarshaller extends PolicyModelMarshaller {
         marshalPolicyAttributes(model, policy);
         marshal(model.getNamespaceVersion(), model.getRootNode(), policy);
     }
-    
+
     /**
      * Marshal a policy onto the given XMLStreamWriter.
      *
@@ -119,7 +119,7 @@ public final class XmlPolicyModelMarshaller extends PolicyModelMarshaller {
         policy.commit();
         serializer.flush();
     }
-    
+
     /**
      * Marshal the Policy root element attributes onto the TypedXmlWriter.
      *
@@ -131,13 +131,13 @@ public final class XmlPolicyModelMarshaller extends PolicyModelMarshaller {
         if (policyId != null) {
             writer._attribute(PolicyConstants.WSU_ID, policyId);
         }
-        
+
         final String policyName = model.getPolicyName();
         if (policyName != null) {
             writer._attribute(model.getNamespaceVersion().asQName(XmlToken.Name), policyName);
         }
     }
-    
+
     /**
      * Marshal given ModelNode and child elements on given TypedXmlWriter.
      *
@@ -159,10 +159,10 @@ public final class XmlPolicyModelMarshaller extends PolicyModelMarshaller {
                         child._pcdata(value);
                     }
                     if (data.isOptionalAttributeSet()) {
-                        child._attribute(nsVersion.asQName(XmlToken.Optional), Boolean.TRUE);                        
+                        child._attribute(nsVersion.asQName(XmlToken.Optional), Boolean.TRUE);
                     }
                     if (data.isIgnorableAttributeSet()) {
-                        child._attribute(nsVersion.asQName(XmlToken.Ignorable), Boolean.TRUE);                        
+                        child._attribute(nsVersion.asQName(XmlToken.Ignorable), Boolean.TRUE);
                     }
                     for (Entry<QName, String> entry : data.getAttributesSet()) {
                         child._attribute(entry.getKey(), entry.getValue());
@@ -189,5 +189,5 @@ public final class XmlPolicyModelMarshaller extends PolicyModelMarshaller {
             writer._namespace(nsMappingEntry.getKey(), nsMappingEntry.getValue());
         }
     }
-    
+
 }

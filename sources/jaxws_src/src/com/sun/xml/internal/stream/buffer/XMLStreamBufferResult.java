@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.stream.buffer;
 
 import com.sun.xml.internal.stream.buffer.sax.SAXBufferCreator;
@@ -34,16 +35,16 @@ import org.xml.sax.ext.LexicalHandler;
  * {@link MutableXMLStreamBuffer} for use by applications that expect a Result.
  *
  * <p>
- * Reuse of a XMLStreamBufferResult more than once will require that the 
+ * Reuse of a XMLStreamBufferResult more than once will require that the
  * MutableXMLStreamBuffer is reset by called
- * {@link #.getXMLStreamBuffer()}.reset(), or by calling 
+ * {@link #.getXMLStreamBuffer()}.reset(), or by calling
  * {@link #.setXMLStreamBuffer()} with a new instance of
  * {@link MutableXMLStreamBuffer}.
  *
  * <p>
  * The derivation of XMLStreamBufferResult from SAXResult is an implementation
  * detail.
- *  
+ *
  * <p>General applications shall not call the following methods:
  * <ul>
  * <li>setHandler</li>
@@ -54,7 +55,7 @@ import org.xml.sax.ext.LexicalHandler;
 public class XMLStreamBufferResult extends SAXResult {
     protected MutableXMLStreamBuffer _buffer;
     protected SAXBufferCreator _bufferCreator;
-    
+
     /**
      * The default XMLStreamBufferResult constructor.
      *
@@ -64,7 +65,7 @@ public class XMLStreamBufferResult extends SAXResult {
     public XMLStreamBufferResult() {
         setXMLStreamBuffer(new MutableXMLStreamBuffer());
     }
-    
+
     /**
      * XMLStreamBufferResult constructor.
      *
@@ -73,7 +74,7 @@ public class XMLStreamBufferResult extends SAXResult {
     public XMLStreamBufferResult(MutableXMLStreamBuffer buffer) {
         setXMLStreamBuffer(buffer);
     }
-    
+
     /**
      * Get the {@link MutableXMLStreamBuffer} that is used.
      *
@@ -81,8 +82,8 @@ public class XMLStreamBufferResult extends SAXResult {
      */
     public MutableXMLStreamBuffer getXMLStreamBuffer() {
         return _buffer;
-    }    
-    
+    }
+
     /**
      * Set the {@link MutableXMLStreamBuffer} to use.
      *
@@ -94,24 +95,24 @@ public class XMLStreamBufferResult extends SAXResult {
         }
         _buffer = buffer;
         setSystemId(_buffer.getSystemId());
-        
+
         if (_bufferCreator != null) {
             _bufferCreator.setXMLStreamBuffer(_buffer);
         }
-    }    
+    }
 
     public ContentHandler getHandler() {
         if (_bufferCreator == null) {
             _bufferCreator = new SAXBufferCreator(_buffer);
             setHandler(_bufferCreator);
-        } else if (super.getHandler() == null) {            
+        } else if (super.getHandler() == null) {
             setHandler(_bufferCreator);
         }
-        
-        return _bufferCreator;        
+
+        return _bufferCreator;
     }
-    
+
     public LexicalHandler getLexicalHandler() {
         return (LexicalHandler) getHandler();
-    }    
+    }
 }

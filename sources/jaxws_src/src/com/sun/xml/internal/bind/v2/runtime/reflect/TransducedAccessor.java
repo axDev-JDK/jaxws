@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -185,10 +185,12 @@ public abstract class TransducedAccessor<BeanT> {
             assert xducer.useNamespace();
         }
 
+        @Override
         public boolean useNamespace() {
             return true;
         }
 
+        @Override
         public void declareNamespace(BeanT bean, XMLSerializer w) throws AccessorException {
             ValueT o = acc.get(bean);
             if(o!=null)
@@ -211,7 +213,7 @@ public abstract class TransducedAccessor<BeanT> {
      * Implementation of {@link TransducedAccessor} that
      * simply combines a {@link Transducer} and {@link Accessor}.
      */
-    static class CompositeTransducedAccessorImpl<BeanT,ValueT> extends TransducedAccessor<BeanT> {
+    public static class CompositeTransducedAccessorImpl<BeanT,ValueT> extends TransducedAccessor<BeanT> {
         protected final Transducer<ValueT> xducer;
         protected final Accessor<BeanT,ValueT> acc;
 
@@ -267,7 +269,7 @@ public abstract class TransducedAccessor<BeanT> {
         public String print(BeanT bean) throws AccessorException, SAXException {
             TargetT target = acc.get(bean);
             if(target==null)    return null;
-            
+
             XMLSerializer w = XMLSerializer.getInstance();
             try {
                 String id = w.grammar.getBeanInfo(target,true).getId(target,w);

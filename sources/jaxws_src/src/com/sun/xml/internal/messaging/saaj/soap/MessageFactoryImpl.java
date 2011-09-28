@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,7 +22,6 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
-
 
 package com.sun.xml.internal.messaging.saaj.soap;
 
@@ -56,23 +55,23 @@ public class MessageFactoryImpl extends MessageFactory {
     protected  OutputStream listener;
 
     protected boolean lazyAttachments = false;
-    
+
     public  OutputStream listen(OutputStream newListener) {
         OutputStream oldListener = listener;
         listener = newListener;
         return oldListener;
     }
-    
+
     public SOAPMessage createMessage() throws SOAPException {
         throw new UnsupportedOperationException();
     }
 
-    public SOAPMessage createMessage(boolean isFastInfoset, 
-        boolean acceptFastInfoset) throws SOAPException 
+    public SOAPMessage createMessage(boolean isFastInfoset,
+        boolean acceptFastInfoset) throws SOAPException
     {
         throw new UnsupportedOperationException();
     }
-    
+
     public SOAPMessage createMessage(MimeHeaders headers, InputStream in)
         throws SOAPException, IOException {
         String contentTypeString = MessageImpl.getContentType(headers);
@@ -93,7 +92,7 @@ public class MessageFactoryImpl extends MessageFactory {
                 log.severe("SAAJ0530.soap.unknown.Content-Type");
                 throw new SOAPExceptionImpl("Unrecognized Content-Type");
             }
-        } catch (ParseException e) {            
+        } catch (ParseException e) {
             log.severe("SAAJ0531.soap.cannot.parse.Content-Type");
             throw new SOAPExceptionImpl(
                 "Unable to parse content type: " + e.getMessage());

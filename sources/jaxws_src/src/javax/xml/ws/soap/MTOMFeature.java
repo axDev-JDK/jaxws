@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -32,7 +32,7 @@ import javax.xml.ws.Endpoint;
 import javax.xml.ws.Service;
 
 /**
- * This feature represents the use of MTOM with a 
+ * This feature represents the use of MTOM with a
  * web service.
  *
  * This feature can be used during the creation of SEI proxy, and
@@ -52,26 +52,26 @@ import javax.xml.ws.Service;
  *  <li> DISABLED: In this Mode, MTOM will be disabled
  * </ul>
  * <p>
- * The {@link #threshold} property can be used to set the threshold 
+ * The {@link #threshold} property can be used to set the threshold
  * value used to determine when binary data should be XOP encoded.
  *
  * @since JAX-WS 2.1
- */       
+ */
 public final class MTOMFeature extends WebServiceFeature {
-    /** 
+    /**
      * Constant value identifying the MTOMFeature
      */
     public static final String ID = "http://www.w3.org/2004/08/soap/features/http-optimization";
-  
-   
+
+
     /**
-     * Property for MTOM threshold value. This property serves as a hint when 
-     * MTOM is enabled, binary data above this size in bytes SHOULD be sent 
+     * Property for MTOM threshold value. This property serves as a hint when
+     * MTOM is enabled, binary data above this size in bytes SHOULD be sent
      * as attachment.
-     * The value of this property MUST always be >= 0. Default value is 0.      
+     * The value of this property MUST always be >= 0. Default value is 0.
      */
     protected int threshold = 0;
-    
+
 
     /**
      * Create an <code>MTOMFeature</code>.
@@ -79,11 +79,11 @@ public final class MTOMFeature extends WebServiceFeature {
      */
     public MTOMFeature() {
         this.enabled = true;
-    }    
-    
+    }
+
     /**
      * Creates an <code>MTOMFeature</code>.
-     * 
+     *
      * @param enabled specifies if this feature should be enabled or not
      */
     public MTOMFeature(boolean enabled) {
@@ -105,11 +105,11 @@ public final class MTOMFeature extends WebServiceFeature {
             throw new WebServiceException("MTOMFeature.threshold must be >= 0, actual value: "+threshold);
         this.enabled = true;
         this.threshold = threshold;
-    }    
-    
+    }
+
     /**
      * Creates an <code>MTOMFeature</code>.
-     * 
+     *
      * @param enabled specifies if this feature should be enabled or not
      * @param threshold the size in bytes that binary data SHOULD be before
      * being sent as an attachment.
@@ -121,17 +121,17 @@ public final class MTOMFeature extends WebServiceFeature {
             throw new WebServiceException("MTOMFeature.threshold must be >= 0, actual value: "+threshold);
         this.enabled = enabled;
         this.threshold = threshold;
-    }    
-    
+    }
+
     /**
      * {@inheritDoc}
      */
     public String getID() {
         return ID;
     }
-    
+
     /**
-     * Gets the threshold value used to determine when binary data 
+     * Gets the threshold value used to determine when binary data
      * should be sent as an attachment.
      *
      * @return the current threshold size in bytes

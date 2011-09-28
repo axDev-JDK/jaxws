@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -28,9 +28,9 @@ package javax.xml.ws.http;
 
 import javax.xml.ws.Binding;
 
-/** The <code>HTTPBinding</code> interface is an 
+/** The <code>HTTPBinding</code> interface is an
  *  abstraction for the XML/HTTP binding.
- * 
+ *
  *  @since JAX-WS 2.0
 **/
 public interface HTTPBinding extends Binding {

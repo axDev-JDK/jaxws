@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,8 +22,6 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
-
-
 
 package com.sun.xml.internal.messaging.saaj.util;
 
@@ -67,7 +65,7 @@ public class ParserPool {
     }
 
     public SAXParser get() throws ParserConfigurationException,
-		SAXException {
+                SAXException {
 
         try {
             return (SAXParser) queue.take();
@@ -80,14 +78,14 @@ public class ParserPool {
     public void put(SAXParser parser) {
         queue.offer(parser);
     }
-    
+
     public void returnParser(SAXParser saxParser) {
         saxParser.reset();
         resetSaxParser(saxParser);
         put(saxParser);
     }
 
-    
+
     /**
      * SAAJ Issue 46 :https://saaj.dev.java.net/issues/show_bug.cgi?id=46
      * Xerces does not provide a way to reset the SymbolTable

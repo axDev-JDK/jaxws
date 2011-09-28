@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -51,8 +51,8 @@ import javax.xml.stream.XMLStreamReader;
  */
 public final class PolicyUtils {
     private PolicyUtils() { }
-    
-    public static class Commons {                        
+
+    public static class Commons {
         /**
          * Method returns the name of the method that is on the {@code methodIndexInStack}
          * position in the call stack of the current {@link Thread}.
@@ -63,17 +63,17 @@ public final class PolicyUtils {
          */
         public static String getStackMethodName(final int methodIndexInStack) {
             final String methodName;
-            
+
             final StackTraceElement[] stack = Thread.currentThread().getStackTrace();
             if (stack.length > methodIndexInStack + 1) {
                 methodName = stack[methodIndexInStack].getMethodName();
             } else {
                 methodName = "UNKNOWN METHOD";
             }
-            
+
             return methodName;
         }
-        
+
         /**
          * Function returns the name of the caller method for the method executing this
          * function.
@@ -89,10 +89,10 @@ public final class PolicyUtils {
             return result;
         }
     }
-    
+
     public static class IO {
         private static final PolicyLogger LOGGER = PolicyLogger.getLogger(PolicyUtils.IO.class);
-        
+
         /**
          * If the {@code resource} is not {@code null}, this method will try to close the
          * {@code resource} instance and log warning about any unexpected
@@ -109,7 +109,7 @@ public final class PolicyUtils {
                 }
             }
         }
-        
+
         /**
          * If the {@code reader} is not {@code null}, this method will try to close the
          * {@code reader} instance and log warning about any unexpected
@@ -127,7 +127,7 @@ public final class PolicyUtils {
             }
         }
     }
-    
+
     /**
      * Text utilities wrapper.
      */
@@ -137,7 +137,7 @@ public final class PolicyUtils {
          * <code>line.separator</code>
          */
         public final static String NEW_LINE = System.getProperty("line.separator");
-        
+
         /**
          * Method creates indent string consisting of as many {@code TAB} characters as specified by {@code indentLevel} parameter
          *
@@ -151,7 +151,7 @@ public final class PolicyUtils {
             return String.valueOf(charData);
         }
     }
-    
+
     public static class Comparison {
         /**
          * The comparator comapres QName objects according to their publicly accessible attributes, in the following
@@ -165,18 +165,18 @@ public final class PolicyUtils {
                 if (qn1 == qn2 || qn1.equals(qn2)) {
                     return 0;
                 }
-                
+
                 int result;
-                
+
                 result = qn1.getNamespaceURI().compareTo(qn2.getNamespaceURI());
                 if (result != 0) {
                     return result;
                 }
-                
+
                 return qn1.getLocalPart().compareTo(qn2.getLocalPart());
             }
         };
-        
+
         /**
          * Compares two boolean values in the following way: {@code false < true}
          *
@@ -185,10 +185,10 @@ public final class PolicyUtils {
         public static int compareBoolean(final boolean b1, final boolean b2) {
             final int i1 = (b1) ? 1 : 0;
             final int i2 = (b2) ? 1 : 0;
-            
+
             return i1 - i2;
         }
-        
+
         /**
          * Compares two String values, that may possibly be null in the following way: {@code null < "string value"}
          *
@@ -198,7 +198,7 @@ public final class PolicyUtils {
             return ((s1 == null) ? ((s2 == null) ? 0 : -1) : ((s2 == null) ? 1 : s1.compareTo(s2)));
         }
     }
-    
+
     public static class Collections {
         /**
          * TODO javadocs
@@ -219,7 +219,7 @@ public final class PolicyUtils {
                 }
                 return combinations;
             }
-            
+
             // creating defensive and modifiable copy of the base
             final Collection<E> base = new LinkedList<E>();
             if (initialBase != null && !initialBase.isEmpty()) {
@@ -237,7 +237,7 @@ public final class PolicyUtils {
             final Queue<T> optionProcessingQueue = new LinkedList<T>();
             for (T option : options) {
                 final int optionSize =  option.size();
-                
+
                 if (optionSize == 0) {
                     if (!ignoreEmptyOption) {
                         return null;
@@ -249,7 +249,7 @@ public final class PolicyUtils {
                     finalCombinationsSize *= optionSize;
                 }
             }
-            
+
             // creating final combinations
             combinations = new ArrayList<Collection<E>>(finalCombinationsSize);
             combinations.add(base);
@@ -258,17 +258,17 @@ public final class PolicyUtils {
                 while ((processedOption = optionProcessingQueue.poll()) != null) {
                     final int actualSemiCombinationCollectionSize = combinations.size();
                     final int newSemiCombinationCollectionSize = actualSemiCombinationCollectionSize * processedOption.size();
-                    
+
                     int semiCombinationIndex = 0;
                     for (E optionElement : processedOption) {
                         for (int i = 0; i < actualSemiCombinationCollectionSize; i++) {
                             final Collection<E> semiCombination = combinations.get(semiCombinationIndex); // unfinished combination
-                            
+
                             if (semiCombinationIndex + actualSemiCombinationCollectionSize < newSemiCombinationCollectionSize) {
                                 // this is not the last optionElement => we create a new combination copy for the next child
                                 combinations.add(new LinkedList<E>(semiCombination));
                             }
-                            
+
                             semiCombination.add(optionElement);
                             semiCombinationIndex++;
                         }
@@ -278,13 +278,13 @@ public final class PolicyUtils {
             return combinations;
         }
     }
-    
+
     /**
      * Reflection utilities wrapper
      */
     public static class Reflection {
         private static final PolicyLogger LOGGER = PolicyLogger.getLogger(PolicyUtils.Reflection.class);
-        
+
         /**
          * Reflectively invokes specified method on the specified target
          */
@@ -300,10 +300,10 @@ public final class PolicyUtils {
             } else {
                 parameterTypes = null;
             }
-            
+
             return invoke(target, methodName, resultClass, parameters, parameterTypes);
         }
-        
+
         /**
          * Reflectively invokes specified method on the specified target
          */
@@ -312,7 +312,7 @@ public final class PolicyUtils {
             try {
                 final Method method = target.getClass().getMethod(methodName, parameterTypes);
                 final Object result = method.invoke(target, parameters);
-                
+
                 return resultClass.cast(result);
             } catch (IllegalArgumentException e) {
                 throw LOGGER.logSevereException(new RuntimePolicyUtilsException(createExceptionMessage(target, parameters, methodName), e));
@@ -326,18 +326,18 @@ public final class PolicyUtils {
                 throw LOGGER.logSevereException(new RuntimePolicyUtilsException(createExceptionMessage(target, parameters, methodName), e));
             }
         }
-        
+
         private static String createExceptionMessage(final Object target, final Object[] parameters, final String methodName) {
             return LocalizationMessages.WSP_0061_METHOD_INVOCATION_FAILED(target.getClass().getName(), methodName,
                     parameters == null ? null : Arrays.asList(parameters).toString());
         }
     }
-    
+
     public static class ConfigFile {
         /**
-         * Generates a config file resource name from provided config file identifier. 
-         * The generated file name can be transformed into a URL instance using 
-         * {@link #loadFromContext(String, Object)} or {@link #loadFromClasspath(String)} 
+         * Generates a config file resource name from provided config file identifier.
+         * The generated file name can be transformed into a URL instance using
+         * {@link #loadFromContext(String, Object)} or {@link #loadFromClasspath(String)}
          * method.
          *
          * @param configFileIdentifier the string used to generate the config file URL that will be parsed. Each WSIT config
@@ -354,7 +354,7 @@ public final class PolicyUtils {
                 throw new PolicyException(LocalizationMessages.WSP_0080_IMPLEMENTATION_EXPECTED_NOT_NULL());
             }
         }
-        
+
         /**
          * Returns a URL pointing to the given config file. The file name is
          * looked up as a resource from a ServletContext.
@@ -367,7 +367,7 @@ public final class PolicyUtils {
         public static URL loadFromContext(final String configFileName, final Object context) {
             return Reflection.invoke(context, "getResource", URL.class, configFileName);
         }
-        
+
         /**
          * Returns a URL pointing to the given config file. The file is looked up as
          * a resource on the classpath.
@@ -385,7 +385,7 @@ public final class PolicyUtils {
             }
         }
     }
-    
+
     /**
      * Wrapper for ServiceFinder class which is not part of the Java SE yet.
      */
@@ -418,7 +418,7 @@ public final class PolicyUtils {
         public static <T> T[] load(final Class<T> serviceClass, final ClassLoader loader) {
             return ServiceFinder.find(serviceClass, loader).toArray();
         }
-        
+
         /**
          * Locates and incrementally instantiates the available providers of a
          * given service using the context class loader.  This convenience method
@@ -440,11 +440,11 @@ public final class PolicyUtils {
             return ServiceFinder.find(serviceClass).toArray();
         }
     }
-    
+
     public static class Rfc2396 {
-        
+
         private static final PolicyLogger LOGGER = PolicyLogger.getLogger(PolicyUtils.Reflection.class);
-        
+
         // converts "hello%20world" into "hello world"
         public static String unquote(final String quoted) {
             if (null == quoted) {

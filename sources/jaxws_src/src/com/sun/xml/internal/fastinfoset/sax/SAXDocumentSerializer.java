@@ -44,39 +44,39 @@ import com.sun.xml.internal.fastinfoset.CommonResourceBundle;
 /**
  * The Fast Infoset SAX serializer.
  * <p>
- * Instantiate this serializer to serialize a fast infoset document in accordance 
+ * Instantiate this serializer to serialize a fast infoset document in accordance
  * with the SAX API.
  * <p>
  * This utilizes the SAX API in a reverse manner to that of parsing. It is the
- * responsibility of the client to call the appropriate event methods on the 
- * SAX handlers, and to ensure that such a sequence of methods calls results 
- * in the production well-formed fast infoset documents. The 
+ * responsibility of the client to call the appropriate event methods on the
+ * SAX handlers, and to ensure that such a sequence of methods calls results
+ * in the production well-formed fast infoset documents. The
  * SAXDocumentSerializer performs no well-formed checks.
- * 
+ *
  * <p>
- * More than one fast infoset document may be encoded to the 
+ * More than one fast infoset document may be encoded to the
  * {@link java.io.OutputStream}.
  */
 public class SAXDocumentSerializer extends Encoder implements FastInfosetWriter {
     protected boolean _elementHasNamespaces = false;
 
     protected boolean _charactersAsCDATA = false;
-    
+
     protected SAXDocumentSerializer(boolean v) {
         super(v);
     }
-    
+
     public SAXDocumentSerializer() {
     }
 
 
     public void reset() {
         super.reset();
-        
+
         _elementHasNamespaces = false;
         _charactersAsCDATA = false;
     }
-    
+
     // ContentHandler
 
     public final void startDocument() throws SAXException {
@@ -118,7 +118,7 @@ public class SAXDocumentSerializer extends Encoder implements FastInfosetWriter 
 
     public final void startElement(String namespaceURI, String localName, String qName, Attributes atts) throws SAXException {
         // TODO consider using buffer for encoding of attributes, then pre-counting is not necessary
-        final int attributeCount = (atts != null && atts.getLength() > 0) 
+        final int attributeCount = (atts != null && atts.getLength() > 0)
                 ? countAttributes(atts) : 0;
         try {
             if (_elementHasNamespaces) {
@@ -166,8 +166,8 @@ public class SAXDocumentSerializer extends Encoder implements FastInfosetWriter 
         if (length <= 0) {
             return;
         }
-        
-        if (getIgnoreWhiteSpaceTextContent() && 
+
+        if (getIgnoreWhiteSpaceTextContent() &&
                 isWhiteSpace(ch, start, length)) return;
 
         try {
@@ -187,14 +187,14 @@ public class SAXDocumentSerializer extends Encoder implements FastInfosetWriter 
 
     public final void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
         if (getIgnoreWhiteSpaceTextContent()) return;
-        
+
         characters(ch, start, length);
     }
 
     public final void processingInstruction(String target, String data) throws SAXException {
         try {
             if (getIgnoreProcesingInstructions()) return;
-            
+
             if (target.length() == 0) {
                 throw new SAXException(CommonResourceBundle.getInstance().
                         getString("message.processingInstructionTargetIsEmpty"));
@@ -220,7 +220,7 @@ public class SAXDocumentSerializer extends Encoder implements FastInfosetWriter 
     public final void comment(char[] ch, int start, int length) throws SAXException {
         try {
             if (getIgnoreComments()) return;
-            
+
             encodeTermination();
 
             encodeComment(ch, start, length);
@@ -239,10 +239,10 @@ public class SAXDocumentSerializer extends Encoder implements FastInfosetWriter 
 
     public final void startDTD(String name, String publicId, String systemId) throws SAXException {
         if (getIgnoreDTD()) return;
-        
+
         try {
             encodeTermination();
-            
+
             encodeDocumentTypeDeclaration(publicId, systemId);
             encodeElementTermination();
         } catch (IOException e) {
@@ -259,9 +259,9 @@ public class SAXDocumentSerializer extends Encoder implements FastInfosetWriter 
     public final void endEntity(String name) throws SAXException {
     }
 
-    
+
     // EncodingAlgorithmContentHandler
-    
+
     public final void octets(String URI, int id, byte[] b, int start, int length)  throws SAXException {
         if (length <= 0) {
             return;
@@ -370,7 +370,7 @@ public class SAXDocumentSerializer extends Encoder implements FastInfosetWriter 
             throw new SAXException(e);
         }
     }
-    
+
     public final void floats(float[] f, int start, int length) throws SAXException {
         if (length <= 0) {
             return;
@@ -421,7 +421,7 @@ public class SAXDocumentSerializer extends Encoder implements FastInfosetWriter 
 
 
     // RestrictedAlphabetContentHandler
-    
+
     public void numericCharacters(char ch[], int start, int length) throws SAXException {
         if (length <= 0) {
             return;
@@ -438,7 +438,7 @@ public class SAXDocumentSerializer extends Encoder implements FastInfosetWriter 
             throw new SAXException(e);
         }
     }
-    
+
     public void dateTimeCharacters(char ch[], int start, int length) throws SAXException {
         if (length <= 0) {
             return;
@@ -455,7 +455,7 @@ public class SAXDocumentSerializer extends Encoder implements FastInfosetWriter 
             throw new SAXException(e);
         }
     }
-    
+
     public void alphabetCharacters(String alphabet, char ch[], int start, int length) throws SAXException {
         if (length <= 0) {
             return;
@@ -474,13 +474,13 @@ public class SAXDocumentSerializer extends Encoder implements FastInfosetWriter 
     }
 
     // ExtendedContentHandler
-    
+
     public void characters(char[] ch, int start, int length, boolean index) throws SAXException {
         if (length <= 0) {
             return;
         }
-        
-        if (getIgnoreWhiteSpaceTextContent() && 
+
+        if (getIgnoreWhiteSpaceTextContent() &&
                 isWhiteSpace(ch, start, length)) return;
 
         try {
@@ -495,10 +495,10 @@ public class SAXDocumentSerializer extends Encoder implements FastInfosetWriter 
             throw new SAXException(e);
         } catch (FastInfosetException e) {
             throw new SAXException(e);
-        }        
+        }
     }
 
-    
+
 
     protected final int countAttributes(Attributes atts) {
         // Count attributes ignoring any in the XMLNS namespace
@@ -561,7 +561,7 @@ public class SAXDocumentSerializer extends Encoder implements FastInfosetWriter 
         _b = EncodingConstants.TERMINATOR;
         _terminate = true;
     }
-    
+
     protected void encodeElement(String namespaceURI, String qName, String localName) throws IOException {
         LocalNameQualifiedNamesMap.Entry entry = _v.elementName.obtainEntry(qName);
         if (entry._valueIndex > 0) {
@@ -593,5 +593,5 @@ public class SAXDocumentSerializer extends Encoder implements FastInfosetWriter 
 
         return encodeLiteralAttributeQualifiedNameOnSecondBit(namespaceURI, getPrefixFromQualifiedName(qName),
                 localName, entry);
-    }    
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,7 +22,8 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
- 
+
+
 
 
 package com.sun.xml.internal.stream.buffer.sax;
@@ -30,12 +31,12 @@ package com.sun.xml.internal.stream.buffer.sax;
 public class Features {
     public static final String NAMESPACES_FEATURE =
         "http://xml.org/sax/features/namespaces";
-    public static final String NAMESPACE_PREFIXES_FEATURE = 
+    public static final String NAMESPACE_PREFIXES_FEATURE =
         "http://xml.org/sax/features/namespace-prefixes";
-    public static final String EXTERNAL_GENERAL_ENTITIES = 
+    public static final String EXTERNAL_GENERAL_ENTITIES =
         "http://xml.org/sax/features/external-general-entities";
-    public static final String EXTERNAL_PARAMETER_ENTITIES = 
+    public static final String EXTERNAL_PARAMETER_ENTITIES =
         "http://xml.org/sax/features/external-parameter-entities";
-    public static final String STRING_INTERNING_FEATURE = 
+    public static final String STRING_INTERNING_FEATURE =
         "http://xml.org/sax/features/string-interning";
 }

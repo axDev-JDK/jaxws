@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -86,7 +86,7 @@ enum Messages {
     INCOMPATIBLE_API_VERSION, // 2 args
     INCOMPATIBLE_API_VERSION_MUSTANG, // 2 args
     RUNNING_WITH_1_0_RUNTIME, // 2 args
-    
+
     MISSING_JAXB_PROPERTIES, // 1arg
     TRANSIENT_FIELD_NOT_BINDABLE, // 1 arg
     THERE_MUST_BE_VALUE_IN_XMLVALUE, // 1 arg
@@ -97,14 +97,14 @@ enum Messages {
     ACCESSORFACTORY_ACCESS_EXCEPTION, // 2 arg
     CUSTOM_ACCESSORFACTORY_PROPERTY_ERROR, // 2 arg
     CUSTOM_ACCESSORFACTORY_FIELD_ERROR, // 2 arg
-	XMLGREGORIANCALENDAR_INVALID, // 1 arg
-	XMLGREGORIANCALENDAR_SEC, // 0 arg
-	XMLGREGORIANCALENDAR_MIN, // 0 arg
-	XMLGREGORIANCALENDAR_HR, // 0 arg
-	XMLGREGORIANCALENDAR_DAY, // 0 arg
-	XMLGREGORIANCALENDAR_MONTH, // 0 arg
-	XMLGREGORIANCALENDAR_YEAR, // 0 arg
-	XMLGREGORIANCALENDAR_TIMEZONE, // 0 arg
+        XMLGREGORIANCALENDAR_INVALID, // 1 arg
+        XMLGREGORIANCALENDAR_SEC, // 0 arg
+        XMLGREGORIANCALENDAR_MIN, // 0 arg
+        XMLGREGORIANCALENDAR_HR, // 0 arg
+        XMLGREGORIANCALENDAR_DAY, // 0 arg
+        XMLGREGORIANCALENDAR_MONTH, // 0 arg
+        XMLGREGORIANCALENDAR_YEAR, // 0 arg
+        XMLGREGORIANCALENDAR_TIMEZONE, // 0 arg
     ;
 
     private static final ResourceBundle rb = ResourceBundle.getBundle(Messages.class.getName());

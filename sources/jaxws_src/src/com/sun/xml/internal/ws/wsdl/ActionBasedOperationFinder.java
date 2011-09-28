@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -59,7 +59,7 @@ import java.util.logging.Logger;
  * @author Rama Pulavarthi
  */
 final class ActionBasedOperationFinder extends WSDLOperationFinder {
-    
+
     private static final Logger LOGGER = Logger.getLogger(ActionBasedOperationFinder.class.getName());
     private final Map<ActionBasedOperationSignature, QName> uniqueOpSignatureMap;
     private final Map<String, QName> actionMap;
@@ -121,7 +121,7 @@ final class ActionBasedOperationFinder extends WSDLOperationFinder {
      *
      * @param request  Request Packet that is used to find the associated WSDLOperation
      * @return WSDL operation Qname.
-     *         return null if WS-Addressing is not engaged. 
+     *         return null if WS-Addressing is not engaged.
      * @throws DispatchException with WSA defined fault message when it cannot find an associated WSDL operation.
      *
      */

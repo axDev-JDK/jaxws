@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.ws.api.pipe;
 
 import com.sun.xml.internal.ws.api.message.Message;
@@ -81,7 +82,7 @@ import javax.xml.ws.handler.soap.SOAPHandler;
  * A {@link Pipe}line is not reentrant; one pipeline is used to process one request/response
  * at at time. The same pipeline instance may serve request/response for different threads,
  * if one comes after another and they don't overlap.
- * <p> 
+ * <p>
  * Where a need arises to process multiple requests concurrently, a pipeline
  * gets cloned through {@link PipeCloner}. Note that this need may happen on
  * both server (because it quite often serves multiple requests concurrently)
@@ -315,7 +316,7 @@ public interface Pipe {
      * {@link PipeCloner#add(Pipe,Pipe)} to register the copied pipe
      * with the original. This is required before you start copying
      * the other {@link Pipe} references you have, or else there's a
-     * risk of infinite recursion. 
+     * risk of infinite recursion.
      * <p>
      * For most {@link Pipe} implementations that delegate to another
      * {@link Pipe}, this method requires that you also copy the {@link Pipe}

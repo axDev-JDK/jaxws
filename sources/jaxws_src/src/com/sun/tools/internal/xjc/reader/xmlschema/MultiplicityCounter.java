@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -25,6 +25,7 @@
 
 package com.sun.tools.internal.xjc.reader.xmlschema;
 
+import java.math.BigInteger;
 import com.sun.tools.internal.xjc.model.Multiplicity;
 import com.sun.xml.internal.xsom.XSElementDecl;
 import com.sun.xml.internal.xsom.XSModelGroup;
@@ -50,8 +51,8 @@ public final class MultiplicityCounter implements XSTermFunction<Multiplicity> {
     public Multiplicity particle( XSParticle p ) {
         Multiplicity m = p.getTerm().apply(this);
 
-        Integer max;
-        if(m.max==null || p.getMaxOccurs()==XSParticle.UNBOUNDED)
+        BigInteger max;
+        if (m.max==null || (BigInteger.valueOf(XSParticle.UNBOUNDED).equals(p.getMaxOccurs())))
             max=null;
         else
             max=p.getMaxOccurs();

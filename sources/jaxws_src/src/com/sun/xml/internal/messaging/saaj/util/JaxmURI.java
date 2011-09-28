@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -23,12 +23,11 @@
  * questions.
  */
 
-
 package com.sun.xml.internal.messaging.saaj.util;
 
 // Imported from: org.apache.xerces.util
 // Needed to work around differences in JDK1.2 and 1.3 and deal with userInfo
-    
+
 import java.io.IOException;
 import java.io.Serializable;
 
@@ -62,7 +61,7 @@ import java.io.Serializable;
 * default port for a specific scheme). Rather, it only knows the
 * grammar and basic set of operations that can be applied to a URI.
 *
-* @version  
+* @version
 *
 **********************************************************************/
  public class JaxmURI implements Serializable {

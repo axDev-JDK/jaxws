@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,7 +22,6 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
-
 
 package com.sun.xml.internal.messaging.saaj.client.p2p;
 
@@ -56,7 +55,7 @@ public class HttpSOAPConnection extends SOAPConnection {
     private static final boolean isSunVM = sunVmVendor.equals(vmVendor) ? true: false;
     private static final boolean isIBMVM = ibmVmVendor.equals(vmVendor) ? true : false;
     private static final String JAXM_URLENDPOINT="javax.xml.messaging.URLEndpoint";
-    
+
     protected static final Logger log =
         Logger.getLogger(LogDomainConstants.HTTP_CONN_DOMAIN,
                          "com.sun.xml.internal.messaging.saaj.client.p2p.LocalStrings");
@@ -187,7 +186,7 @@ public class HttpSOAPConnection extends SOAPConnection {
     private String proxyHost = null;
 
     static class PriviledgedSetProxyAction implements PrivilegedExceptionAction {
-                                                                                                                                             
+
         String proxyHost = null;
         int proxyPort = 0;
 
@@ -195,11 +194,11 @@ public class HttpSOAPConnection extends SOAPConnection {
             this.proxyHost = host;
             this.proxyPort = port;
         }
-                                                                                                                                             
+
         public Object run() throws Exception {
             System.setProperty("http.proxyHost", proxyHost);
             System.setProperty("http.proxyPort", new Integer(proxyPort).toString());
-            log.log(Level.FINE, "SAAJ0050.p2p.proxy.host", 
+            log.log(Level.FINE, "SAAJ0050.p2p.proxy.host",
                     new String[] { proxyHost });
             log.log(Level.FINE, "SAAJ0051.p2p.proxy.port",
                     new String[] { new Integer(proxyPort).toString() });
@@ -211,13 +210,13 @@ public class HttpSOAPConnection extends SOAPConnection {
     public void setProxy(String host, int port) {
         try {
             proxyPort = port;
-            PriviledgedSetProxyAction ps = new PriviledgedSetProxyAction(host, port); 
+            PriviledgedSetProxyAction ps = new PriviledgedSetProxyAction(host, port);
             proxyHost = (String) AccessController.doPrivileged(ps);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
-    
+
     public String getProxyHost() {
         return proxyHost;
     }
@@ -393,7 +392,7 @@ public class HttpSOAPConnection extends SOAPConnection {
                     httpConnection.getContentLength() == -1
                         ? bytes.length
                         : httpConnection.getContentLength();
-                        
+
                 // If no reply message is returned,
                 // content-Length header field value is expected to be zero.
                 if (length == 0) {
@@ -403,7 +402,7 @@ public class HttpSOAPConnection extends SOAPConnection {
                     ByteInputStream in = new ByteInputStream(bytes, length);
                     response = messageFactory.createMessage(headers, in);
                 }
-                        
+
                 httpIn.close();
                 httpConnection.disconnect();
 
@@ -650,8 +649,8 @@ public class HttpSOAPConnection extends SOAPConnection {
       //  "com.sun.net.ssl.internal.ssl.Provider";
     private static final String SSL_PKG;
     private static final String SSL_PROVIDER;
-    
-    static {    
+
+    static {
         if (isIBMVM) {
             SSL_PKG ="com.ibm.net.ssl.internal.www.protocol";
             SSL_PROVIDER ="com.ibm.net.ssl.internal.ssl.Provider";
@@ -661,12 +660,12 @@ public class HttpSOAPConnection extends SOAPConnection {
             SSL_PROVIDER ="com.sun.net.ssl.internal.ssl.Provider";
         }
     }
-    
+
     private void initHttps() {
         //if(!setHttps) {
         String pkgs = System.getProperty("java.protocol.handler.pkgs");
         log.log(Level.FINE,
-                "SAAJ0053.p2p.providers", 
+                "SAAJ0053.p2p.providers",
                 new String[] { pkgs });
 
         if (pkgs == null || pkgs.indexOf(SSL_PKG) < 0) {
@@ -676,7 +675,7 @@ public class HttpSOAPConnection extends SOAPConnection {
                 pkgs = pkgs + "|" + SSL_PKG;
             System.setProperty("java.protocol.handler.pkgs", pkgs);
             log.log(Level.FINE,
-                    "SAAJ0054.p2p.set.providers", 
+                    "SAAJ0054.p2p.set.providers",
                     new String[] { pkgs });
             try {
                 Class c = Class.forName(SSL_PROVIDER);
@@ -731,7 +730,7 @@ public class HttpSOAPConnection extends SOAPConnection {
     private static final int dL = 0;
     private void d(String s) {
         log.log(Level.SEVERE,
-                "SAAJ0013.p2p.HttpSOAPConnection", 
+                "SAAJ0013.p2p.HttpSOAPConnection",
                 new String[] { s });
         System.err.println("HttpSOAPConnection: " + s);
     }

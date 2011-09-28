@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -71,7 +71,7 @@ import org.xml.sax.helpers.LocatorImpl;
 public final class ClassBeanInfoImpl<BeanT> extends JaxBeanInfo<BeanT> implements AttributeAccessor<BeanT> {
 
     private boolean isNilIncluded = false;
-    
+
     /**
      * Properties of this bean class but not its ancestor classes.
      */
@@ -109,7 +109,7 @@ public final class ClassBeanInfoImpl<BeanT> extends JaxBeanInfo<BeanT> implement
     private final Name tagName;
 
     private boolean retainPropertyInfo = false;
-            
+
     /**
      * The {@link AttributeProperty}s for this type and all its ancestors.
      * If {@link JAXBContextImpl#c14nSupport} is true, this is sorted alphabetically.
@@ -122,7 +122,7 @@ public final class ClassBeanInfoImpl<BeanT> extends JaxBeanInfo<BeanT> implement
     private /*final*/ Property<BeanT>[] uriProperties;
 
     private final Method factoryMethod;
-    
+
     /*package*/ ClassBeanInfoImpl(JAXBContextImpl owner, RuntimeClassInfo ci) {
         super(owner,ci,ci.getClazz(),ci.getTypeName(),ci.isElement(),false,true);
 
@@ -131,7 +131,7 @@ public final class ClassBeanInfoImpl<BeanT> extends JaxBeanInfo<BeanT> implement
         this.xducer = ci.getTransducer();
         this.factoryMethod = ci.getFactoryMethod();
         this.retainPropertyInfo = owner.retainPropertyInfo;
-        
+
         // make the factory accessible
         if(factoryMethod!=null) {
             int classMod = factoryMethod.getDeclaringClass().getModifiers();
@@ -148,7 +148,7 @@ public final class ClassBeanInfoImpl<BeanT> extends JaxBeanInfo<BeanT> implement
             }
         }
 
-        
+
         if(ci.getBaseClass()==null)
             this.superClazz = null;
         else
@@ -248,8 +248,8 @@ public final class ClassBeanInfoImpl<BeanT> extends JaxBeanInfo<BeanT> implement
     }
 
     public BeanT createInstance(UnmarshallingContext context) throws IllegalAccessException, InvocationTargetException, InstantiationException, SAXException {
-        
-        BeanT bean = null;        
+
+        BeanT bean = null;
         if (factoryMethod == null){
            bean = ClassFactory.create0(jaxbType);
         }else {
@@ -260,7 +260,7 @@ public final class ClassBeanInfoImpl<BeanT> extends JaxBeanInfo<BeanT> implement
                 throw new InstantiationException("The factory method didn't return a correct object");
             }
         }
-        
+
         if(xmlLocatorField!=null)
             // need to copy because Locator is mutable
             try {
@@ -414,4 +414,3 @@ public final class ClassBeanInfoImpl<BeanT> extends JaxBeanInfo<BeanT> implement
     private static final Logger logger = Util.getClassLogger();
 
 }
-

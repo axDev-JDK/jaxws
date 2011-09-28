@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.ws.message.stream;
 
 import com.sun.istack.internal.NotNull;
@@ -54,6 +55,7 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.stream.*;
 import static javax.xml.stream.XMLStreamConstants.START_DOCUMENT;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
+import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import javax.xml.transform.Source;
 import javax.xml.ws.WebServiceException;
 import java.util.ArrayList;
@@ -75,7 +77,7 @@ public final class StreamMessage extends AbstractMessageImpl {
     private @NotNull XMLStreamReader reader;
 
     // lazily created
-    private @Nullable HeaderList headers;    
+    private @Nullable HeaderList headers;
 
     private final String payloadLocalName;
 
@@ -153,9 +155,14 @@ public final class StreamMessage extends AbstractMessageImpl {
      */
     public StreamMessage(@NotNull TagInfoset envelopeTag, @Nullable TagInfoset headerTag, @NotNull AttachmentSet attachmentSet, @Nullable HeaderList headers, @NotNull TagInfoset bodyTag, @NotNull XMLStreamReader reader, @NotNull SOAPVersion soapVersion) {
         this(headers,attachmentSet,reader,soapVersion);
-        assert envelopeTag!=null && bodyTag!=null;
+        if(envelopeTag == null ) {
+            throw new IllegalArgumentException("EnvelopeTag TagInfoset cannot be null");
+        }
+        if(bodyTag == null ) {
+            throw new IllegalArgumentException("BodyTag TagInfoset cannot be null");
+        }
         this.envelopeTag = envelopeTag;
-        this.headerTag = headerTag!=null ? headerTag : 
+        this.headerTag = headerTag!=null ? headerTag :
             new TagInfoset(envelopeTag.nsUri,"Header",envelopeTag.prefix,EMPTY_ATTS);
         this.bodyTag = bodyTag;
     }
@@ -170,7 +177,7 @@ public final class StreamMessage extends AbstractMessageImpl {
         }
         return headers;
     }
-    
+
     public String getPayloadLocalPart() {
         return payloadLocalName;
     }
@@ -258,6 +265,8 @@ public final class StreamMessage extends AbstractMessageImpl {
     }
 
     public XMLStreamReader readPayload() {
+        if(!hasPayload())
+            return null;
         // TODO: What about access at and beyond </soap:Body>
         assert unconsumed();
         return this.reader;
@@ -363,26 +372,21 @@ public final class StreamMessage extends AbstractMessageImpl {
                 e.getMessage(),loc.getPublicId(),loc.getSystemId(),loc.getLineNumber(),loc.getColumnNumber(),e);
             errorHandler.error(x);
         }
-    }        
+    }
 
     public Message copy() {
         try {
-            // copy the payload
-            XMLStreamReader clone;
-            if(hasPayload()) {
-                assert unconsumed();
-                consumedAt = null; // but we don't want to mark it as consumed
-                MutableXMLStreamBuffer xsb = new MutableXMLStreamBuffer();
+            assert unconsumed();
+            consumedAt = null; // but we don't want to mark it as consumed
+            MutableXMLStreamBuffer xsb = new MutableXMLStreamBuffer();
+            StreamReaderBufferCreator c = new StreamReaderBufferCreator(xsb);
 
-                //the boolean value tells the first body part is written.
-                //based on this we do the right thing
-                StreamReaderBufferCreator c = new StreamReaderBufferCreator(xsb);
+            // preserving inscope namespaces from envelope, and body. Other option
+            // would be to create a filtering XMLStreamReader from reader+envelopeTag+bodyTag
+            c.storeElement(envelopeTag.nsUri, envelopeTag.localName, envelopeTag.prefix, envelopeTag.ns);
+            c.storeElement(bodyTag.nsUri, bodyTag.localName, bodyTag.prefix, bodyTag.ns);
 
-                // preserving inscope namespaces from envelope, and body. Other option
-                // would be to create a filtering XMLStreamReader from reader+envelopeTag+bodyTag
-                c.storeElement(envelopeTag.nsUri, envelopeTag.localName, envelopeTag.prefix, envelopeTag.ns);
-                c.storeElement(bodyTag.nsUri, bodyTag.localName, bodyTag.prefix, bodyTag.ns);
-
+            if (hasPayload()) {
                 // Loop all the way for multi payload case
                 while(reader.getEventType() != XMLStreamConstants.END_DOCUMENT){
                     String name = reader.getLocalName();
@@ -395,21 +399,21 @@ public final class StreamMessage extends AbstractMessageImpl {
                         XMLStreamReaderUtil.nextElementContent(reader);
                     }
                 }
-                XMLStreamReaderUtil.readRest(reader);
-                XMLStreamReaderUtil.close(reader);
-                XMLStreamReaderFactory.recycle(reader);
-
-                reader = xsb.readAsXMLStreamReader();
-                clone = xsb.readAsXMLStreamReader();
-
-                // advance to the start tag of the first element
-                proceedToRootElement(reader);
-                proceedToRootElement(clone);
-            } else {
-                // it's tempting to use EmptyMessageImpl, but it doesn't presere the infoset
-                // of <envelope>,<header>, and <body>, so we need to stick to StreamMessage.
-                clone = reader;
             }
+            c.storeEndElement();        // create structure element for </Body>
+            c.storeEndElement();        // create structure element for </Envelope>
+            c.storeEndElement();        // create structure element for END_DOCUMENT
+
+            XMLStreamReaderUtil.readRest(reader);
+            XMLStreamReaderUtil.close(reader);
+            XMLStreamReaderFactory.recycle(reader);
+
+            reader = xsb.readAsXMLStreamReader();
+            XMLStreamReader clone = xsb.readAsXMLStreamReader();
+
+            // advance to the start tag of the <Body> first child element
+            proceedToRootElement(reader);
+            proceedToRootElement(clone);
 
             return new StreamMessage(envelopeTag, headerTag, attachmentSet, HeaderList.copy(headers), bodyTag, clone, soapVersion);
         } catch (XMLStreamException e) {
@@ -422,7 +426,7 @@ public final class StreamMessage extends AbstractMessageImpl {
         xsr.nextTag();
         xsr.nextTag();
         xsr.nextTag();
-        assert xsr.getEventType()==START_ELEMENT;
+        assert xsr.getEventType()==START_ELEMENT || xsr.getEventType()==END_ELEMENT;
     }
 
     public void writeTo( ContentHandler contentHandler, ErrorHandler errorHandler ) throws SAXException {

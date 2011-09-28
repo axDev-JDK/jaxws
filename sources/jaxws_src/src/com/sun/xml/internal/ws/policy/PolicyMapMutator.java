@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -35,31 +35,32 @@ import com.sun.xml.internal.ws.policy.privateutil.PolicyLogger;
  * @author Marek Potociar (marek.potociar@sun.com)
  */
 public abstract class PolicyMapMutator {
+
     private static final PolicyLogger LOGGER = PolicyLogger.getLogger(PolicyMapMutator.class);
-    
+
     private PolicyMap map = null;
-    
+
     /**
      * Creates a new instance of PolicyMapMutator. This class cannot be extended from outside of this package.
      */
     PolicyMapMutator() {
         // nothing to instantiate
     }
-    
+
     /**
      * The method is used to connect the policy map mutator instance to the map it should mutate.
      *
      * @param map the policy map instance that will be mutable by this mutator.
      * @throws IllegalStateException in case this mutator object is already connected to a policy map.
      */
-    void connect(final PolicyMap map) {
+    public void connect(final PolicyMap map) {
         if (isConnected()) {
             throw LOGGER.logSevereException(new IllegalStateException(LocalizationMessages.WSP_0044_POLICY_MAP_MUTATOR_ALREADY_CONNECTED()));
         }
-        
+
         this.map = map;
     }
-    
+
     /**
      * Can be used to retrieve the policy map currently connected to this mutator. Will return {@code null} if not connected.
      *
@@ -71,18 +72,18 @@ public abstract class PolicyMapMutator {
     public PolicyMap getMap() {
         return this.map;
     }
-    
+
     /**
      * Disconnects the mutator from the policy map object it is connected to. Method must be called prior to connecting this
      * mutator instance to another policy map.
      * <p/>
-     * This operation is irreversible: you cannot connect the mutator to the same policy map instance once you disconnect from it. 
+     * This operation is irreversible: you cannot connect the mutator to the same policy map instance once you disconnect from it.
      * Multiple consequent calls of this method will have no effect.
      */
     public void disconnect() {
         this.map = null;
-    }    
-        
+    }
+
     /**
      * This method provides connection status information of the policy map mutator instance.
      *

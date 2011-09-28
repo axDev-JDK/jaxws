@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -23,7 +23,6 @@
  * questions.
  */
 
-
 package com.sun.xml.internal.messaging.saaj.soap.impl;
 
 import java.util.logging.Logger;
@@ -41,7 +40,7 @@ public class TextImpl
     protected static final Logger log =
         Logger.getLogger(LogDomainConstants.SOAP_IMPL_DOMAIN,
                          "com.sun.xml.internal.messaging.saaj.soap.impl.LocalStrings");
-    
+
     public TextImpl(SOAPDocumentImpl ownerDoc, String text) {
         super(ownerDoc, text);
     }
@@ -50,7 +49,7 @@ public class TextImpl
         String nodeValue = getNodeValue();
         return (nodeValue.equals("") ? null : nodeValue);
     }
-    
+
     public void setValue(String text) {
         setNodeValue(text);
     }
@@ -84,7 +83,9 @@ public class TextImpl
 
     public boolean isComment() {
         String txt = getNodeValue();
-
+        if (txt == null) {
+            return false;
+        }
         return txt.startsWith("<!--") && txt.endsWith("-->");
     }
 }

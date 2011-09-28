@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.tools.internal.xjc.generator.bean.field;
 
 import com.sun.codemodel.internal.JBlock;
@@ -40,7 +41,7 @@ import com.sun.xml.internal.bind.api.impl.NameConverter;
 
 /**
  * A required primitive property.
- * 
+ *
  * @author
  *     Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
@@ -59,7 +60,7 @@ public class UnboxedField extends AbstractFieldWithVar {
 
         ptype = (JPrimitiveType) implType;
         assert ptype!=null;
-        
+
         createField();
 
         // apparently a required attribute can be still defaulted.
@@ -70,7 +71,7 @@ public class UnboxedField extends AbstractFieldWithVar {
         NameConverter nc = outline.parent().getModel().getNameConverter();
 
         JBlock body;
-        
+
         // [RESULT]
         // Type getXXX() {
         //     return value;
@@ -107,11 +108,11 @@ public class UnboxedField extends AbstractFieldWithVar {
 
     public FieldAccessor create(JExpression targetObject) {
         return new Accessor(targetObject) {
-            
+
             public void unsetValues( JBlock body ) {
                 // you can't unset a value
             }
-            
+
             public JExpression hasSetValue() {
                 return JExpr.TRUE;
             }

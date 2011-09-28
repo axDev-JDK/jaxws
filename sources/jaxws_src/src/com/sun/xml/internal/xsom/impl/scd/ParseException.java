@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -148,7 +148,7 @@ public class ParseException extends Exception {
         break;
       }
       retval += add_escapes(tok.image);
-      tok = tok.next; 
+      tok = tok.next;
     }
     retval += "\" at line " + currentToken.next.beginLine + ", column " + currentToken.next.beginColumn;
     retval += "." + eol;
@@ -165,7 +165,7 @@ public class ParseException extends Exception {
    * The end of line string for this machine.
    */
   protected String eol = System.getProperty("line.separator", "\n");
- 
+
   /**
    * Used to convert raw characters to their escaped version
    * when these raw version cannot be used as part of an ASCII

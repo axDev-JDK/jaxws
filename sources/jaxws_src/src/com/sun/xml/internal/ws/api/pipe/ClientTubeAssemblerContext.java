@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -240,7 +240,7 @@ public class ClientTubeAssemblerContext {
     public Tube createWsaTube(Tube next) {
         if (binding instanceof SOAPBinding && AddressingVersion.isEnabled(binding) && wsdlModel!=null)
             if(AddressingVersion.fromBinding(binding) == AddressingVersion.MEMBER) {
-                return new MemberSubmissionWsaClientTube(wsdlModel, binding, next);    
+                return new MemberSubmissionWsaClientTube(wsdlModel, binding, next);
             } else {
                 return new W3CWsaClientTube(wsdlModel, binding, next);
             }
@@ -260,7 +260,7 @@ public class ClientTubeAssemblerContext {
             next = cousinHandlerTube = messageHandlerTube;
 
             //Add SOAPHandlerTuber
-            HandlerTube soapHandlerTube = new ClientSOAPHandlerTube(binding, next, cousinHandlerTube);            
+            HandlerTube soapHandlerTube = new ClientSOAPHandlerTube(binding, next, cousinHandlerTube);
             next = cousinHandlerTube = soapHandlerTube;
         }
         return new ClientLogicalHandlerTube(binding, seiModel, next, cousinHandlerTube);

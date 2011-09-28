@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -68,7 +68,7 @@ public class MimePullMultipart  extends MimeMultipart {
          }
          readSOAPPart();
          return soapPart;
-         
+
     }
 
     protected  void readSOAPPart() throws  MessagingException {
@@ -84,9 +84,9 @@ public class MimePullMultipart  extends MimeMultipart {
                 soapPart = mm.getPart(0);
             } else {
                   // Strip <...> from root part's Content-I
- 	        if (st != null && st.length() > 2 && st.charAt(0) == '<' && st.charAt(st.length()-1) == '>') {
- 	            st = st.substring(1, st.length()-1);
- 	        }
+                if (st != null && st.length() > 2 && st.charAt(0) == '<' && st.charAt(st.length()-1) == '>') {
+                    st = st.substring(1, st.length()-1);
+                }
                 startParam = st;
                 soapPart = mm.getPart(startParam);
 

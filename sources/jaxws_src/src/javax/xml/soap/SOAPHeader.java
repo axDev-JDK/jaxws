@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -102,7 +102,7 @@ public interface SOAPHeader extends SOAPElement {
      * that have the specified <i>actor</i> and that have a MustUnderstand attribute
      * whose value is equivalent to <code>true</code>.
      * <p>
-     * In SOAP 1.2 the <i>env:actor</i> attribute is replaced by the <i>env:role</i> 
+     * In SOAP 1.2 the <i>env:actor</i> attribute is replaced by the <i>env:role</i>
      * attribute, but with essentially the same semantics.
      *
      * @param actor a <code>String</code> giving the URI of the <code>actor</code> / <code>role</code>
@@ -131,7 +131,7 @@ public interface SOAPHeader extends SOAPElement {
      * <code>SOAPHeader</code> object, it is sent to the ultimate receiver
      * along with the message body.
      * <p>
-     * In SOAP 1.2 the <i>env:actor</i> attribute is replaced by the <i>env:role</i> 
+     * In SOAP 1.2 the <i>env:actor</i> attribute is replaced by the <i>env:role</i>
      * attribute, but with essentially the same semantics.
      *
      * @param actor a <code>String</code> giving the URI of the <code>actor</code> / <code>role</code>
@@ -154,7 +154,7 @@ public interface SOAPHeader extends SOAPElement {
      * <code>SOAPHeader</code> object that apply to it and to remove
      * them before passing the message on to the next actor.
      * <p>
-     * In SOAP 1.2 the <i>env:actor</i> attribute is replaced by the <i>env:role</i> 
+     * In SOAP 1.2 the <i>env:actor</i> attribute is replaced by the <i>env:role</i>
      * attribute, but with essentially the same semantics.
      *
      * @param actor a <code>String</code> giving the URI of the <code>actor</code> / <code>role</code>
@@ -259,5 +259,3 @@ public interface SOAPHeader extends SOAPElement {
     public Iterator extractAllHeaderElements();
 
 }
-
-

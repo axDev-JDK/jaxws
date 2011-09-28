@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -53,30 +53,30 @@ class HeaderTokenizer {
         /**
          * Token type indicating an ATOM.
          */
-        public static final int ATOM 		= -1;
+        public static final int ATOM            = -1;
 
         /**
          * Token type indicating a quoted string. The value
          * field contains the string without the quotes.
          */
-        public static final int QUOTEDSTRING 	= -2;
+        public static final int QUOTEDSTRING    = -2;
 
         /**
          * Token type indicating a comment. The value field
          * contains the comment string without the comment
          * start and end symbols.
          */
-        public static final int COMMENT		= -3;
+        public static final int COMMENT         = -3;
 
         /**
          * Token type indicating end of input.
          */
-        public static final int  EOF 		= -4;
+        public static final int  EOF            = -4;
 
         /**
          * Constructor.
-         * @param	type	Token type
-         * @param	value	Token value
+         * @param       type    Token type
+         * @param       value   Token value
          */
         public Token(int type, String value) {
              this.type = type;
@@ -90,12 +90,12 @@ class HeaderTokenizer {
          * one of the following:
          * <ul>
          * <li><code>ATOM</code> A sequence of ASCII characters
-         *	delimited by either SPACE, CTL, "(", <"> or the
-         *	specified SPECIALS
+         *      delimited by either SPACE, CTL, "(", <"> or the
+         *      specified SPECIALS
          * <li><code>QUOTEDSTRING</code> A sequence of ASCII characters
-         *	within quotes
+         *      within quotes
          * <li><code>COMMENT</code> A sequence of ASCII characters
-         *	within "(" and ")".
+         *      within "(" and ")".
          * <li><code>EOF</code> End of header
          * </ul>
          */
@@ -109,7 +109,7 @@ class HeaderTokenizer {
          * string, without the quotes. When the current token is a comment,
          * this field contains the body of the comment.
          *
-         * @return	token value
+         * @return      token value
          */
         public String getValue() {
             return value;
@@ -140,16 +140,16 @@ class HeaderTokenizer {
     /**
      * Constructor that takes a rfc822 style header.
      *
-     * @param	header	The rfc822 header to be tokenized
-     * @param	delimiters      Set of delimiter characters
-     *				to be used to delimit ATOMS. These
-     *				are usually <code>RFC822</code> or
-     *				<code>MIME</code>
+     * @param   header  The rfc822 header to be tokenized
+     * @param   delimiters      Set of delimiter characters
+     *                          to be used to delimit ATOMS. These
+     *                          are usually <code>RFC822</code> or
+     *                          <code>MIME</code>
      * @param   skipComments  If true, comments are skipped and
-     *				not returned as tokens
+     *                          not returned as tokens
      */
     HeaderTokenizer(String header, String delimiters,
-    			   boolean skipComments) {
+                           boolean skipComments) {
         string = (header == null) ? "" : header; // paranoia ?!
         this.skipComments = skipComments;
         this.delimiters = delimiters;
@@ -160,11 +160,11 @@ class HeaderTokenizer {
     /**
      * Constructor. Comments are ignored and not returned as tokens
      *
-     * @param	header  The header that is tokenized
-     * @param	delimiters  The delimiters to be used
+     * @param   header  The header that is tokenized
+     * @param   delimiters  The delimiters to be used
      */
     HeaderTokenizer(String header, String delimiters) {
-	    this(header, delimiters, true);
+            this(header, delimiters, true);
     }
 
     /**
@@ -173,7 +173,7 @@ class HeaderTokenizer {
      * returned as tokens
      */
     HeaderTokenizer(String header)  {
-	    this(header, RFC822);
+            this(header, RFC822);
     }
 
     /**
@@ -182,7 +182,7 @@ class HeaderTokenizer {
      * Clients sit in a loop calling next() to parse successive
      * tokens until an EOF Token is returned.
      *
-     * @return		the next Token
+     * @return          the next Token
      * @exception WebServiceException if the parse fails
      */
     Token next() throws WebServiceException {
@@ -200,8 +200,8 @@ class HeaderTokenizer {
      * will return successive tokens, until <code>next()</code> is
      * called. <p>
      *
-     * @return		the next Token
-     * @exception	WebServiceException if the parse fails
+     * @return          the next Token
+     * @exception       WebServiceException if the parse fails
      */
     Token peek() throws WebServiceException {
         Token tk;
@@ -215,11 +215,11 @@ class HeaderTokenizer {
     /**
      * Return the rest of the Header.
      *
-     * @return String	rest of header. null is returned if we are
-     *			already at end of header
+     * @return String   rest of header. null is returned if we are
+     *                  already at end of header
      */
     String getRemainder() {
-	    return string.substring(nextPos);
+            return string.substring(nextPos);
     }
 
     /*
@@ -375,4 +375,3 @@ class HeaderTokenizer {
         return sb.toString();
     }
 }
-

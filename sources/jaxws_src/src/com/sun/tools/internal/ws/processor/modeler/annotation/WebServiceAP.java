@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.tools.internal.ws.processor.modeler.annotation;
 
 import com.sun.mirror.apt.AnnotationProcessor;
@@ -59,8 +60,8 @@ import java.util.Set;
 
 
 /**
- * WebServiceAP is a APT AnnotationProcessor for processing javax.jws.* and 
- * javax.xml.ws.* annotations. This class is used either by the WsGen (CompileTool) tool or 
+ * WebServiceAP is a APT AnnotationProcessor for processing javax.jws.* and
+ * javax.xml.ws.* annotations. This class is used either by the WsGen (CompileTool) tool or
  *    idirectly via the {@link com.sun.istack.internal.ws.AnnotationProcessorFactoryImpl} when invoked by APT.
  *
  * @author WS Development Team
@@ -432,6 +433,3 @@ public class WebServiceAP implements AnnotationProcessor, ModelBuilder, WebServi
         return javaName;
     }
 }
-
-
-

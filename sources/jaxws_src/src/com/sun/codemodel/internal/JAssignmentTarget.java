@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -29,9 +29,9 @@ package com.sun.codemodel.internal;
 /**
  * Marker interface for code components that can be placed to
  * the left of '=' in an assignment.
- * 
+ *
  * A left hand value can always be a right hand value, so
- * this interface derives from {@link JExpression}. 
+ * this interface derives from {@link JExpression}.
  */
 public interface JAssignmentTarget extends JGenerable, JExpression {
     JExpression assign(JExpression rhs);

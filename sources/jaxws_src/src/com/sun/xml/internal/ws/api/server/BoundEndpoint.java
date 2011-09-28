@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -32,7 +32,7 @@ import java.net.URI;
 /**
  * Represents the {@link WSEndpoint} bound to a particular transport.
  *
- * @see Module#getBoundEndpoints() 
+ * @see Module#getBoundEndpoints()
  * @author Kohsuke Kawaguchi
  */
 public interface BoundEndpoint {
@@ -69,7 +69,7 @@ public interface BoundEndpoint {
      * "http://host:port/context". This method would include url-pattern
      * for the endpoint and return that address
      * for e.g. "http://host:port/context/url-pattern"
-     * 
+     *
      * @param baseAddress that is used in computing the full address
      * @return address of the endpoint
      */

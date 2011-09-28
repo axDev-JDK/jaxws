@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -109,7 +109,7 @@ abstract class AsyncMethodHandler extends SEIMethodHandler {
             }
         }
         asyncBeanClass = tempWrap;
-        
+
         switch(size) {
             case 0 :
                 responseBuilder = buildResponseBuilder(sync, ValueSetterFactory.NONE);
@@ -120,16 +120,15 @@ abstract class AsyncMethodHandler extends SEIMethodHandler {
             default :
                 responseBuilder = buildResponseBuilder(sync, new ValueSetterFactory.AsyncBeanValueSetterFactory(asyncBeanClass));
         }
-       
+
     }
 
     protected final Response<Object> doInvoke(Object proxy, Object[] args, AsyncHandler handler) {
-        
+
         AsyncInvoker invoker = new SEIAsyncInvoker(proxy, args);
         AsyncResponseImpl<Object> ft = new AsyncResponseImpl<Object>(invoker,handler);
         invoker.setReceiver(ft);
-        // TODO: Do we set this executor on Engine and run the AsyncInvoker in this thread ?
-        owner.getExecutor().execute(ft);
+        ft.run();
         return ft;
     }
 
@@ -184,7 +183,7 @@ abstract class AsyncMethodHandler extends SEIMethodHandler {
                         responseImpl.set(null, new WebServiceException(t));
                     }
                 }
-                
+
 
                 public void onCompletion(@NotNull Throwable error) {
                     if (error instanceof WebServiceException) {

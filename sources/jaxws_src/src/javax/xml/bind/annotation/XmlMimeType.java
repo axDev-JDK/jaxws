@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -45,7 +45,7 @@ import javax.xml.transform.Source;
  * <p>
  * If a property that has this annotation has a sibling property bound to
  * the xmime:contentType attribute, and if in the instance the property has a value,
- * the value of the attribute takes precedence and that will control the marshalling. 
+ * the value of the attribute takes precedence and that will control the marshalling.
  *
  * @author Kohsuke Kawaguchi
  * @since JAXB2.0

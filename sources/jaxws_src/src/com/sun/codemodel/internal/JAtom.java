@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -30,13 +30,13 @@ package com.sun.codemodel.internal;
  * JAtoms: Simple code components that merely generate themselves.
  */
 final class JAtom extends JExpressionImpl {
-    
+
     private final String what;
-    
+
     JAtom(String what) {
         this.what = what;
     }
-    
+
     public void generate(JFormatter f) {
         f.p(what);
     }

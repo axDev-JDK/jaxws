@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.ws.model.wsdl;
 
 import com.sun.istack.internal.NotNull;
@@ -110,7 +111,7 @@ public final class WSDLBoundPortTypeImpl extends AbstractFeaturedObjectImpl impl
 
     public BindingID getBindingId() {
         //Should the default be SOAP1.1/HTTP binding? For now lets keep it for
-        //JBI bug 6509800 
+        //JBI bug 6509800
         return (bindingId==null)?BindingID.SOAP11_HTTP:bindingId;
     }
 

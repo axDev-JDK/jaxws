@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -26,7 +26,7 @@ package javax.xml.soap;
 
 /**
  * A factory for creating <code>SOAPConnection</code> objects. Implementation of this class
- * is optional. If <code>SOAPConnectionFactory.newInstance()</code> throws an 
+ * is optional. If <code>SOAPConnectionFactory.newInstance()</code> throws an
  * UnsupportedOperationException then the implementation does not support the
  * SAAJ communication infrastructure. Otherwise {@link SOAPConnection} objects
  * can be created by calling <code>createConnection()</code> on the newly
@@ -83,4 +83,3 @@ public abstract class SOAPConnectionFactory {
     public abstract SOAPConnection createConnection()
         throws SOAPException;
 }
-

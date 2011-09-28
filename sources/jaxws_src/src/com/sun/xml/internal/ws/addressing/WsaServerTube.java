@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -72,7 +72,7 @@ public class WsaServerTube extends WsaTube {
     private boolean isAnonymousRequired = false;
     /**
      * WSDLBoundOperation calculated on the Request payload.
-     * Used for determining ReplyTo or Fault Action for non-anonymous responses     * 
+     * Used for determining ReplyTo or Fault Action for non-anonymous responses     *
      */
     private WSDLBoundOperation wbo;
     public WsaServerTube(WSEndpoint endpoint, @NotNull WSDLPort wsdlPort, WSBinding binding, Tube next) {
@@ -95,7 +95,7 @@ public class WsaServerTube extends WsaTube {
         Message msg = request.getMessage();
         if(msg==null)   return doInvoke(next,request); // hmm?
 
-        // expose bunch of addressing related properties for advanced applications 
+        // expose bunch of addressing related properties for advanced applications
         request.addSatellite(new WsaPropertyBag(addressingVersion,soapVersion,request));
 
         // Store request ReplyTo and FaultTo in requestPacket.invocationProperties
@@ -282,7 +282,7 @@ public class WsaServerTube extends WsaTube {
                 new EndpointAddress(URI.create(replyTo.getAddress()));
             } catch (Exception e) {
                 throw new InvalidAddressingHeaderException(addressingVersion.replyToTag, addressingVersion.invalidAddressTag);
-            } 
+            }
         }
         //for now only validate ReplyTo
         /*
@@ -296,7 +296,7 @@ public class WsaServerTube extends WsaTube {
         */
 
     }
-    
+
     /**
      * @deprecated
      *      Use {@link JAXWSProperties#ADDRESSING_MESSAGEID}.

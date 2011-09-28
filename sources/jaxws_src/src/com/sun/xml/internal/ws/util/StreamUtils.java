@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -23,39 +23,42 @@
  * questions.
  */
 
-package com.sun.xml.internal.ws.policy;
+package com.sun.xml.internal.ws.util;
 
-import com.sun.xml.internal.ws.api.model.wsdl.WSDLBoundFault;
-import com.sun.xml.internal.ws.api.model.wsdl.WSDLBoundOperation;
-import com.sun.xml.internal.ws.api.model.wsdl.WSDLObject;
-import org.xml.sax.Locator;
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
- * We need data from the WSDL operation that the default WSDLBoundFault does not
- * give us. This class holds all the necessary data.
- *
- * @author Fabian Ritzmann
+ * @author Jitendra Kotamraju
  */
-class WSDLBoundFaultContainer implements WSDLObject {
-    
-    private final WSDLBoundFault boundFault;
-    private final WSDLBoundOperation boundOperation;
-    
-    public WSDLBoundFaultContainer(final WSDLBoundFault fault, final WSDLBoundOperation operation) {
-        this.boundFault = fault;
-        this.boundOperation = operation;
-    }
-    
-    public Locator getLocation() {
-        return null;
+public class StreamUtils {
+
+    /*
+     * Finds if the stream has some content or not
+     *
+     * @return null if there is no data
+     *         else stream to be used
+     */
+    public static InputStream hasSomeData(InputStream in) {
+        if (in != null) {
+            try {
+                if (in.available() < 1) {
+                    if (!in.markSupported()) {
+                        in = new BufferedInputStream(in);
+                    }
+                    in.mark(1);
+                    if (in.read() != -1) {
+                        in.reset();
+                    } else {
+                        in = null;          // No data
+                    }
+                }
+            } catch(IOException ioe) {
+                in = null;
+            }
+        }
+        return in;
     }
 
-    public WSDLBoundFault getBoundFault() {
-        return this.boundFault;
-    }
-
-    public WSDLBoundOperation getBoundOperation() {
-        return this.boundOperation;
-    }
-    
 }

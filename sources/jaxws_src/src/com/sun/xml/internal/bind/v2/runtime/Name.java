@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -60,12 +60,12 @@ public final class Name implements Comparable<Name> {
      * Index of the Name for an EII or AII
      */
     public final short qNameIndex;
-            
+
     /**
      * Specifies if the Name is associated with an EII or AII
      */
     public final boolean isAttribute;
-    
+
     Name(int qNameIndex, int nsUriIndex, String nsUri, int localIndex, String localName, boolean isAttribute) {
         this.qNameIndex = (short)qNameIndex;
         this.nsUri = nsUri;

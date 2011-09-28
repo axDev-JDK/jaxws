@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.ws.message.stream;
 
 import com.sun.istack.internal.FinalArrayList;
@@ -42,7 +43,7 @@ public class StreamHeader11 extends StreamHeader {
     protected static final String SOAP_1_1_MUST_UNDERSTAND = "mustUnderstand";
 
     protected static final String SOAP_1_1_ROLE = "actor";
-    
+
     public StreamHeader11(XMLStreamReader reader, XMLStreamBuffer mark) {
         super(reader, mark);
     }

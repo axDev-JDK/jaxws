@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -31,7 +31,6 @@ import com.sun.xml.internal.bind.marshaller.SAX2DOMEx;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
-
 /**
  * {@link XmlOutput} implementation that does associative marshalling to DOM.
  *
@@ -53,6 +52,7 @@ public final class DOMOutput extends SAXOutput {
         return (SAX2DOMEx)out;
     }
 
+    @Override
     public void endStartTag() throws SAXException {
         super.endStartTag();
 

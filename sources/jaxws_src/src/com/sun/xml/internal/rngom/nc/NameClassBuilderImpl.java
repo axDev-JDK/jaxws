@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -35,7 +35,7 @@ import java.util.List;
 
 
 /**
- * 
+ *
  * @author
  *      Kohsuke Kawaguchi (kk@kohsuke.org)
  */
@@ -44,7 +44,7 @@ public class NameClassBuilderImpl<
     L extends Location,
     A extends Annotations<E,L,CL>,
     CL extends CommentList<L>> implements NameClassBuilder<NameClass,E,L,A,CL> {
-    
+
     public NameClass makeChoice(List<NameClass> nameClasses, L loc, A anno) {
       NameClass result = nameClasses.get(0);
       for (int i = 1; i < nameClasses.size(); i++)
@@ -75,15 +75,15 @@ public class NameClassBuilderImpl<
     public NameClass makeErrorNameClass() {
         return NameClass.NULL;
     }
-    
+
     public NameClass annotate(NameClass nc, A anno) throws BuildException {
       return nc;
     }
-    
+
     public NameClass annotateAfter(NameClass nc, E e) throws BuildException {
       return nc;
     }
-    
+
     public NameClass commentAfter(NameClass nc, CL comments) throws BuildException {
       return nc;
     }

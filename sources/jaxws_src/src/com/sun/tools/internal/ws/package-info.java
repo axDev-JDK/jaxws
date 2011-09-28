@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -25,13 +25,13 @@
 
 /**
  * <h1>JAX-WS 2.1 Tools</h1>
- * This document describes the tools included with JAX-WS 2.0.1. 
+ * This document describes the tools included with JAX-WS 2.0.1.
  *
  * {@DotDiagram
      digraph G {
        // external tools
        APT;
- 
+
        // ANT tasks
        node [style=filled,color=lightyellow];
        "WsGen ANT Task"; "WsImport ANT Task"; "Apt ANT Task";
@@ -39,7 +39,7 @@
       // commandline
        node [style=filled,color=lightpink];
        wsgen; wsimport;
- 
+
        // libraries
       node [style=filled,color=lightblue];
       WsimportTool; WsgenTool;"WSAP"; WebServiceAP; WSDLModeler;WSDLParser;SeiGenerator;ServiceGenerator;ExceptionGenerator;"JAXB XJC APIs";CodeModel;
@@ -51,7 +51,7 @@
        "Apt ANT Task" -> APT;
        "WsGen ANT Task" -> wsgen -> WsgenTool;
        "WsImport ANT Task" -> wsimport -> WsimportTool;
-       
+
        WsgenTool -> APT -> WSAP -> WebServiceAP;
        WsimportTool -> WSDLModeler;
        WSDLModeler->WSDLParser;
@@ -67,34 +67,34 @@
  * </div>
  *
  * <h2>ANT Tasks</h2>
-   <d1>   
+   <d1>
  *  <dt>{@link com.sun.tools.internal.ws.ant.Apt Apt}
  *  <dd>An ANT task to invoke <a href="http://java.sun.com/j2se/1.5.0/docs/tooldocs/share/apt.html">APT</a>.
 
  *  <dt>{@link com.sun.tools.internal.ws.ant.WsGen2 WsGen}
  *  <dd>
  *    An ANT task to invoke {@link com.sun.tools.internal.ws.WsGen WsGen}
- 
+
  *  <dt>{@link com.sun.tools.internal.ws.ant.WsImport2 WsImport}
  *  <dd>
  *    An ANT task to invoke {@link com.sun.tools.internal.ws.WsImport WsImport}
- * 
- *  </d1>       
+ *
+ *  </d1>
  * <h2>Command-line Tools</h2>
-   <d1>   
+   <d1>
  *  <dt><a href="http://java.sun.com/j2se/1.5.0/docs/tooldocs/share/apt.html">APT</a>
-     <dd>A Java SE tool and framework for processing annotations. APT will invoke a JAX-WS AnnotationProcossor for 
+     <dd>A Java SE tool and framework for processing annotations. APT will invoke a JAX-WS AnnotationProcossor for
  *   processing Java source  files with javax.jws.* annotations and making them web services.
- *   APT will compile the Java source files and generate any additional classes needed to make an javax.jws.WebService 
- *   annotated class a Web service.  
+ *   APT will compile the Java source files and generate any additional classes needed to make an javax.jws.WebService
+ *   annotated class a Web service.
  *
  *  <dt>{@link com.sun.tools.internal.ws.WsGen WsGen}
- *  <dd>Tool to process a compiled javax.jws.WebService annotated class and to generate the necessary classes to make 
- *  it a Web service.  
- 
+ *  <dd>Tool to process a compiled javax.jws.WebService annotated class and to generate the necessary classes to make
+ *  it a Web service.
+
  *  <dt>{@link com.sun.tools.internal.ws.ant.WsImport2 WsImport}
  *  <dd>
- *    Tool to import a WSDL and to generate an SEI (a javax.jws.WebService) interface that can be either implemented 
+ *    Tool to import a WSDL and to generate an SEI (a javax.jws.WebService) interface that can be either implemented
  *    on the server to build a web service, or can be used on the client to invoke the web service.
  *  </d1>
  * <h2>Implementation Classes</h2>
@@ -105,7 +105,7 @@
  *
  *
  *    <dt>{@link com.sun.tools.internal.ws.processor.modeler.Modeler Modeler}
- *    <dd>A Modeler is used to create a Model of a Web Service from a particular Web 
+ *    <dd>A Modeler is used to create a Model of a Web Service from a particular Web
  *    Web Service description such as a WSDL
  *    file.
  *
@@ -113,8 +113,8 @@
  *    <dd>The WSDLModeler processes a WSDL to create a Model.
  *
  *    <dt>{@link com.sun.tools.internal.ws.processor.modeler.annotation.WebServiceAP WebServiceAP}
- *    <dd>WebServiceAP is a APT AnnotationProcessor for processing javax.jws.* and 
- *    javax.xml.ws.* annotations. This class is used either by the WsGen (CompileTool) tool or 
+ *    <dd>WebServiceAP is a APT AnnotationProcessor for processing javax.jws.* and
+ *    javax.xml.ws.* annotations. This class is used either by the WsGen (CompileTool) tool or
  *    idirectly via the {@link com.sun.istack.internal.ws.WSAP WSAP} when invoked by APT.
  *
  *    <dt>{@link com.sun.istack.internal.ws.AnnotationProcessorFactoryImpl WSAP}

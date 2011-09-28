@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,7 +22,6 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
-
 
 package com.sun.tools.internal.ws.wscompile;
 
@@ -57,7 +56,7 @@ public class WsimportListener implements ErrorListener {
      * The callee is expected to add '\n'.
      */
     public void message(String msg) {}
-      
+
     public void error(SAXParseException exception) {
 
     }
@@ -78,7 +77,7 @@ public class WsimportListener implements ErrorListener {
 
     /**
      * wsimport will periodically invoke this method to see if it should cancel a compilation.
-     * 
+     *
      * @return
      *      true if the {@link com.sun.tools.internal.ws.wscompile.WsimportListener} wants to abort the processing.
      * @since 2.1

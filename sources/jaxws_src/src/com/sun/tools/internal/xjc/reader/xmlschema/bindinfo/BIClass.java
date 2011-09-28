@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.tools.internal.xjc.reader.xmlschema.bindinfo;
 
 import javax.xml.bind.annotation.XmlAttribute;
@@ -35,13 +36,13 @@ import com.sun.istack.internal.Nullable;
 
 /**
  * Class declaration.
- * 
+ *
  * This customization turns arbitrary schema component into a Java
  * content interface.
- * 
+ *
  * <p>
  * This customization is acknowledged by the ClassSelector.
- * 
+ *
  * @author
  *     Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
@@ -128,4 +129,3 @@ public final class BIClass extends AbstractDeclarationImpl {
     /** Name of this declaration. */
     public static final QName NAME = new QName( Const.JAXB_NSURI, "class" );
 }
-

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -29,16 +29,16 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.Map;
 import java.lang.reflect.*;
 
-/** 
+/**
  * @author Sreenivas Munnangi
  */
-public final class BoundaryStatisticImpl extends StatisticImpl 
+public final class BoundaryStatisticImpl extends StatisticImpl
     implements BoundaryStatistic, InvocationHandler {
-    
+
     private final long lowerBound;
     private final long upperBound;
-	
-    private final BoundaryStatistic bs = 
+
+    private final BoundaryStatistic bs =
             (BoundaryStatistic) Proxy.newProxyInstance(
             BoundaryStatistic.class.getClassLoader(),
             new Class[] { BoundaryStatistic.class },
@@ -55,7 +55,7 @@ public final class BoundaryStatisticImpl extends StatisticImpl
     public synchronized BoundaryStatistic getStatistic() {
         return bs;
     }
-    
+
     public synchronized Map getStaticAsMap() {
         Map m = super.getStaticAsMap();
         m.put("lowerbound", getLowerBound());
@@ -66,7 +66,7 @@ public final class BoundaryStatisticImpl extends StatisticImpl
     public synchronized long getLowerBound() {
         return lowerBound;
     }
-    
+
     public synchronized long getUpperBound() {
         return upperBound;
     }

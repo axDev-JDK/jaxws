@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,7 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
- 
+
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -47,7 +47,7 @@ import javax.management.ObjectName;
 class ManagedObjectManagerNOPImpl implements ManagedObjectManager {
     static final ManagedObjectManager self =
         new ManagedObjectManagerNOPImpl() ;
-    private static final GmbalMBean gmb = 
+    private static final GmbalMBean gmb =
         new GmbalMBeanNOPImpl() ;
 
     private ManagedObjectManagerNOPImpl() {}

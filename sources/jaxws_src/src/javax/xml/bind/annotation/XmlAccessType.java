@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -29,7 +29,7 @@ package javax.xml.bind.annotation;
 
 /**
  * Used by XmlAccessorType to control serialization of fields or
- * properties. 
+ * properties.
  *
  * @author Sekhar Vajjhala, Sun Microsystems, Inc.
  * @since JAXB2.0
@@ -57,7 +57,7 @@ public enum XmlAccessType {
      * Every public getter/setter pair and every public field will be
      * automatically bound to XML, unless annotated by {@link XmlTransient}.
      *
-     * Fields or getter/setter pairs that are private, protected, or 
+     * Fields or getter/setter pairs that are private, protected, or
      * defaulted to package-only access are bound to XML only when they are
      * explicitly annotated by the appropriate JAXB annotations.
      */
@@ -68,4 +68,3 @@ public enum XmlAccessType {
      */
     NONE
 }
-

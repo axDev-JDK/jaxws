@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -24,7 +24,7 @@
  */
 
 /**
- * This package contains utility classes that are not part of the public Policy API. None of the classes contained in this 
+ * This package contains utility classes that are not part of the public Policy API. None of the classes contained in this
  * package should be used outside the Policy API implementation. The creators of the Policy API will not provide any support
  * concerning usage of the classes in this package. I should be also clear that any method signatures, classes and interfaces
  * may be changed or even removed without a prior notice.

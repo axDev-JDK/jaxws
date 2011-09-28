@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -227,7 +227,7 @@ public final class CElementInfo extends AbstractCElement
     @XmlElement
     public String getSqueezedName() {
         if(squeezedName!=null)  return squeezedName;
-        
+
         StringBuilder b = new StringBuilder();
         CClassInfo s = getScope();
         if(s!=null)

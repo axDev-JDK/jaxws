@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -28,7 +28,7 @@ package javax.xml.soap;
 /**
  * An object that stores a MIME header name and its value. One or more
  * <code>MimeHeader</code> objects may be contained in a <code>MimeHeaders</code>
- * object.  
+ * object.
  *
  * @see MimeHeaders
  */
@@ -45,8 +45,8 @@ public class MimeHeader {
     * @param value a <code>String</code> giving the value of the header
     */
     public MimeHeader(String name, String value) {
-	this.name = name;
-	this.value = value;
+        this.name = name;
+        this.value = value;
     }
 
     /**
@@ -55,15 +55,15 @@ public class MimeHeader {
      * @return the name of the header as a <code>String</code>
      */
     public String getName() {
-	return name;
+        return name;
     }
 
     /**
      * Returns the value of this <code>MimeHeader</code> object.
      *
-     * @return 	the value of the header as a <code>String</code>
+     * @return  the value of the header as a <code>String</code>
      */
     public String getValue() {
-	return value;
+        return value;
     }
 }

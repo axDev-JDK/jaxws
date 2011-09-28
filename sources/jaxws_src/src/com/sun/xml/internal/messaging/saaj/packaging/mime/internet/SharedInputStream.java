@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 /*
  * @(#)SharedInputStream.java 1.2 02/03/27
  */
@@ -52,7 +53,7 @@ public interface SharedInputStream {
      * Return the current position in the InputStream, as an
      * offset from the beginning of the InputStream.
      *
-     * @return	the current position
+     * @return  the current position
      */
     public long getPosition();
 
@@ -64,9 +65,9 @@ public interface SharedInputStream {
      * at the same place as this stream.  The returned InputStream
      * will also implement the SharedInputStream interface.
      *
-     * @param	start	the starting position
-     * @param	end	the ending position + 1
-     * @return		the new stream
+     * @param   start   the starting position
+     * @param   end     the ending position + 1
+     * @return          the new stream
      */
     public InputStream newStream(long start, long end);
 

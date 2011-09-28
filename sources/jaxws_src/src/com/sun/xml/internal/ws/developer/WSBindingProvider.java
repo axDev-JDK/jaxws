@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -113,7 +113,7 @@ public interface WSBindingProvider extends BindingProvider, Closeable {
      *      BindingProvider.ENDPOINT_ADDRESS_PROPERTY, "...")
      * <p>
      * you could do this:
-     * 
+     *
      * <p>
      * ((WSBindingProvider)proxy).setAddress("...");
      *
@@ -134,7 +134,7 @@ public interface WSBindingProvider extends BindingProvider, Closeable {
     /**
      *
      * @return WSPortInfo object that captures the port information for which the stub is created.
-     * @since JAX-WS 2.2 
+     * @since JAX-WS 2.2
      */
     WSPortInfo getPortInfo();
 

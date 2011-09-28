@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.tools.internal.xjc.reader.xmlschema.ct;
 
 import com.sun.tools.internal.xjc.model.CClass;
@@ -63,9 +64,9 @@ final class RestrictedComplexTypeBuilder extends CTBuilder {
         // build the base class
         CClass baseClass = selector.bindToType(baseType,ct,true);
         assert baseClass!=null;   // global complex type must map to a class
-        
+
         selector.getCurrentBean().setBaseClass(baseClass);
-        
+
         if (bgmBuilder.isGenerateMixedExtensions()) {
             boolean forceFallbackInExtension = baseType.isMixed() &&
                                                ct.isMixed() &&

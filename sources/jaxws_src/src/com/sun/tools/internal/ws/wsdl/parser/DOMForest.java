@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,7 +22,6 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
-
 
 package com.sun.tools.internal.ws.wsdl.parser;
 
@@ -86,7 +85,6 @@ public class DOMForest {
      * actual data storage map&lt;SystemId,Document>.
      */
     protected final Map<String, Document> core = new HashMap<String, Document>();
-    protected final WsimportOptions options;
     protected final ErrorReceiver errorReceiver;
 
     private final DocumentBuilder documentBuilder;
@@ -103,6 +101,7 @@ public class DOMForest {
      */
     public final LocatorTable locatorTable = new LocatorTable();
 
+    protected final EntityResolver entityResolver;
     /**
      * Stores all the outer-most &lt;jaxb:bindings> customizations.
      */
@@ -112,9 +111,11 @@ public class DOMForest {
      * Schema language dependent part of the processing.
      */
     protected final InternalizationLogic logic;
+    protected final WsimportOptions options;
 
-    public DOMForest(InternalizationLogic logic, WsimportOptions options, ErrorReceiver errReceiver) {
+    public DOMForest(InternalizationLogic logic, @NotNull EntityResolver entityResolver, WsimportOptions options, ErrorReceiver errReceiver) {
         this.options = options;
+        this.entityResolver = entityResolver;
         this.errorReceiver = errReceiver;
         this.logic = logic;
         try {
@@ -153,17 +154,18 @@ public class DOMForest {
         InputSource is = null;
 
         // allow entity resolver to find the actual byte stream.
-        if (options.entityResolver != null)
-            is = options.entityResolver.resolveEntity(null, systemId);
+        is = entityResolver.resolveEntity(null, systemId);
         if (is == null)
             is = new InputSource(systemId);
-        else
+        else {
+            resolvedCache.put(systemId, is.getSystemId());
             systemId=is.getSystemId();
+        }
 
         if (core.containsKey(systemId)) {
             // this document has already been parsed. Just ignore.
             return core.get(systemId);
-        }        
+        }
 
         if(!root)
             addExternalReferences(systemId);
@@ -171,13 +173,17 @@ public class DOMForest {
         // but we still use the original system Id as the key.
         return parse(systemId, is, root);
     }
+    protected Map<String,String> resolvedCache = new HashMap<String,String>();
 
+    public Map<String,String> getReferencedEntityMap() {
+        return resolvedCache;
+    }
     /**
      * Parses the given document and add it to the DOM forest.
      *
      * @return null if there was a parse error. otherwise non-null.
      */
-    public @NotNull Document parse(String systemId, InputSource inputSource, boolean root) throws SAXException, IOException{
+    private @NotNull Document parse(String systemId, InputSource inputSource, boolean root) throws SAXException, IOException{
         Document dom = documentBuilder.newDocument();
 
         systemId = normalizeSystemId(systemId);
@@ -191,78 +197,12 @@ public class DOMForest {
             rootDocuments.add(systemId);
 
         try {
-            XMLReader reader = parserFactory.newSAXParser().getXMLReader();
-            reader.setContentHandler(getParserHandler(dom));
-            if (errorReceiver != null)
-                reader.setErrorHandler(errorReceiver);
-            if (options.entityResolver != null)
-                reader.setEntityResolver(options.entityResolver);
+            XMLReader reader = createReader(dom);
 
             InputStream is = null;
-            if(inputSource.getByteStream() != null){
-                is = inputSource.getByteStream();
+            if(inputSource.getByteStream() == null){
+                inputSource = entityResolver.resolveEntity(null, systemId);
             }
-            if(is == null){
-                int redirects=0;
-                boolean redirect;
-                URL url = JAXWSUtils.getFileOrURL(inputSource.getSystemId());
-                URLConnection conn = url.openConnection();
-                do {
-                    if (conn instanceof HttpsURLConnection) {
-                        if (options.disableSSLHostnameVerification) {
-                            ((HttpsURLConnection) conn).setHostnameVerifier(new HttpClientVerifier());
-                        }
-                    }
-                    redirect = false;
-                    if (conn instanceof HttpURLConnection) {
-                        ((HttpURLConnection) conn).setInstanceFollowRedirects(false);
-                    }
-
-                    try {
-                        is = conn.getInputStream();
-                        //is = sun.net.www.protocol.http.HttpURLConnection.openConnectionCheckRedirects(conn);
-                    } catch (IOException e) {
-                        if (conn instanceof HttpURLConnection) {
-                            HttpURLConnection httpConn = ((HttpURLConnection) conn);
-                            int code = httpConn.getResponseCode();
-                            if (code == 401) {
-                                errorReceiver.error(new SAXParseException(WscompileMessages.WSIMPORT_AUTH_INFO_NEEDED(e.getMessage(), systemId, DefaultAuthenticator.defaultAuthfile), null, e));
-                                throw new AbortException();
-                            }
-                            //FOR other code we will retry with MEX
-                        }
-                        throw e;
-                    }
-
-                    //handle 302 or 303, JDK does not seem to handle 302 very well.
-                    //Need to redesign this a bit as we need to throw better error message for IOException in this case
-                    if (conn instanceof HttpURLConnection) {
-                        HttpURLConnection httpConn = ((HttpURLConnection) conn);
-                        int code = httpConn.getResponseCode();
-                        if (code == 302 || code == 303) {
-                            //retry with the value in Location header
-                            List<String> seeOther = httpConn.getHeaderFields().get("Location");
-                            if (seeOther != null && seeOther.size() > 0) {
-                                URL newurl = new URL(url, seeOther.get(0));
-                                if (!newurl.equals(url)){
-                                    errorReceiver.info(new SAXParseException(WscompileMessages.WSIMPORT_HTTP_REDIRECT(code, seeOther.get(0)), null));
-                                    url = newurl;
-                                    httpConn.disconnect();
-                                    if(redirects >= 5){
-                                        errorReceiver.error(new SAXParseException(WscompileMessages.WSIMPORT_MAX_REDIRECT_ATTEMPT(), null));
-                                        throw new AbortException();
-                                    }
-                                    conn = url.openConnection();
-                                    inputSource.setSystemId(url.toExternalForm());
-                                    redirects++;
-                                    redirect = true;
-                                }                                
-                            }
-                        }
-                    }
-                } while (redirect);
-            }
-            inputSource.setByteStream(is);
             reader.parse(inputSource);
             Element doc = dom.getDocumentElement();
             if (doc == null) {
@@ -276,7 +216,7 @@ public class DOMForest {
             errorReceiver.error(e);
             throw new SAXException(e.getMessage());
         }
-
+        resolvedCache.put(systemId, dom.getDocumentURI());
         return dom;
     }
 
@@ -290,13 +230,7 @@ public class DOMForest {
         return externalReferences;
     }
 
-    // overide default SSL HttpClientVerifier to always return true
-    // effectively overiding Hostname client verification when using SSL
-    private static class HttpClientVerifier implements HostnameVerifier {
-        public boolean verify(String s, SSLSession sslSession) {
-            return true;
-        }
-    }
+
 
     public interface Handler extends ContentHandler {
         /**
@@ -305,62 +239,37 @@ public class DOMForest {
         public Document getDocument();
     }
 
-    private static abstract class HandlerImpl extends XMLFilterImpl implements Handler {
-    }
-
     /**
-     * Returns a {@link ContentHandler} to feed SAX events into.
-     * <p/>
-     * The client of this class can feed SAX events into the handler
-     * to parse a document into this DOM forest.
-     */
-    public Handler getParserHandler(String systemId, boolean root) {
-        final Document dom = documentBuilder.newDocument();
-        core.put(systemId, dom);
-        if (root)
-            rootDocuments.add(systemId);
+         * Returns a {@link org.xml.sax.XMLReader} to parse a document into this DOM forest.
+         * <p/>
+         * This version requires that the DOM object to be created and registered
+         * to the map beforehand.
+         */
+    private XMLReader createReader(Document dom) throws SAXException, ParserConfigurationException {
+        XMLReader reader = parserFactory.newSAXParser().getXMLReader();
+        DOMBuilder dombuilder = new DOMBuilder(dom, locatorTable, outerMostBindings);
+        try {
+            reader.setProperty("http://xml.org/sax/properties/lexical-handler", dombuilder);
+        } catch(SAXException e) {
+            errorReceiver.debug(e.getMessage());
+        }
 
-        ContentHandler handler = getParserHandler(dom);
-
-        // we will register the DOM to the map once the system ID becomes available.
-        // but the SAX allows the event source to not to provide that information,
-        // so be prepared for such case.
-        HandlerImpl x = new HandlerImpl() {
-            public Document getDocument() {
-                return dom;
-            }
-        };
-        x.setContentHandler(handler);
-
-        return x;
-    }
-
-    /**
-     * Returns a {@link org.xml.sax.ContentHandler} to feed SAX events into.
-     * <p/>
-     * <p/>
-     * The client of this class can feed SAX events into the handler
-     * to parse a document into this DOM forest.
-     * <p/>
-     * This version requires that the DOM object to be created and registered
-     * to the map beforehand.
-     */
-    private ContentHandler getParserHandler(Document dom) {
-        ContentHandler handler = new DOMBuilder(dom, locatorTable, outerMostBindings);
-        handler = new WhitespaceStripper(handler, errorReceiver, options.entityResolver);
-        handler = new VersionChecker(handler, errorReceiver, options.entityResolver);
+        ContentHandler handler = new WhitespaceStripper(dombuilder, errorReceiver, entityResolver);
+        handler = new VersionChecker(handler, errorReceiver, entityResolver);
 
         // insert the reference finder so that
         // included/imported schemas will be also parsed
         XMLFilterImpl f = logic.createExternalReferenceFinder(this);
         f.setContentHandler(handler);
-
         if (errorReceiver != null)
             f.setErrorHandler(errorReceiver);
-        if (options.entityResolver != null)
-            f.setEntityResolver(options.entityResolver);
+        f.setEntityResolver(entityResolver);
 
-        return f;
+        reader.setContentHandler(f);
+        if (errorReceiver != null)
+            reader.setErrorHandler(errorReceiver);
+        reader.setEntityResolver(entityResolver);
+        return reader;
     }
 
     private String normalizeSystemId(String systemId) {
@@ -446,7 +355,7 @@ public class DOMForest {
         if(rootDocuments.isEmpty()) return null;
         return rootDocuments.iterator().next();
     }
-    
+
     public Set<String> getRootDocuments() {
         return rootDocuments;
     }

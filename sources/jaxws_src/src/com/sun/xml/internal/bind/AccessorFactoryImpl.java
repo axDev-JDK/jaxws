@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -40,9 +40,9 @@ public class AccessorFactoryImpl implements AccessorFactory {
     public static AccessorFactoryImpl getInstance(){
         return instance;
     }
-    
+
     /**
-     * Access a field of the class. 
+     * Access a field of the class.
      *
      * @param bean the class to be processed.
      * @param field the field within the class to be accessed.
@@ -67,7 +67,7 @@ public class AccessorFactoryImpl implements AccessorFactory {
      *
      * @throws JAXBException reports failures of the method.
      */
-    public Accessor createPropertyAccessor(Class bean, Method getter, Method setter) {    
+    public Accessor createPropertyAccessor(Class bean, Method getter, Method setter) {
         if (getter == null) {
             return new Accessor.SetterOnlyReflection(setter);
         }

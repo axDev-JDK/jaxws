@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -27,8 +27,6 @@ package com.sun.xml.internal.ws.api;
 
 import com.sun.xml.internal.ws.developer.MemberSubmissionAddressing;
 import com.sun.xml.internal.ws.developer.MemberSubmissionAddressingFeature;
-import com.sun.xml.internal.ws.developer.Stateful;
-import com.sun.xml.internal.ws.developer.StatefulFeature;
 
 import javax.xml.ws.WebServiceFeature;
 import java.lang.annotation.ElementType;
@@ -50,8 +48,8 @@ import java.lang.annotation.Target;
  * @see MemberSubmissionAddressingFeature
  * @see MemberSubmissionAddressing
  *
- * @see Stateful
- * @see StatefulFeature
+ * @see com.sun.xml.internal.ws.developer.Stateful
+ * @see com.sun.xml.internal.ws.developer.StatefulFeature
  *
  * @author Rama Pulavarthi
  */

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -39,7 +39,7 @@ import java.util.concurrent.Executor;
  * {@link Provider} to implement asynchronous web services (AWS.) AWS enables
  * applications to perform operations with long latency without blocking a thread,
  * and thus particularly suitable for highly scalable service implementation,
- * at the expesnce of implementation complexity. 
+ * at the expesnce of implementation complexity.
  *
  * <h2>Programming Model</h2>
  * <p>

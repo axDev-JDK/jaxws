@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -61,7 +61,7 @@ import java.util.UUID;
  * @author Kohsuke Kawaguchi
  */
 abstract class MimeCodec implements Codec {
-    
+
     static {
         // DataHandler.writeTo() may search for DCH. So adding some default ones.
         try {
@@ -69,14 +69,20 @@ abstract class MimeCodec implements Codec {
             if (map instanceof MailcapCommandMap) {
                 MailcapCommandMap mailMap = (MailcapCommandMap) map;
                 String hndlrStr = ";;x-java-content-handler=";
+                // registering our DCH since javamail's DCH doesn't handle
+                // Source
                 mailMap.addMailcap(
                     "text/xml" + hndlrStr + XmlDataContentHandler.class.getName());
                 mailMap.addMailcap(
                     "application/xml" + hndlrStr + XmlDataContentHandler.class.getName());
-                mailMap.addMailcap(
-                    "image/*" + hndlrStr + ImageDataContentHandler.class.getName());
-                mailMap.addMailcap(
-                    "text/plain" + hndlrStr + StringDataContentHandler.class.getName());
+                if (map.createDataContentHandler("image/*") == null) {
+                    mailMap.addMailcap(
+                        "image/*" + hndlrStr + ImageDataContentHandler.class.getName());
+                }
+                if (map.createDataContentHandler("text/plain") == null) {
+                    mailMap.addMailcap(
+                        "text/plain" + hndlrStr + StringDataContentHandler.class.getName());
+                }
             }
         } catch (Throwable t) {
             // ignore the exception.
@@ -84,7 +90,7 @@ abstract class MimeCodec implements Codec {
     }
 
     public static final String MULTIPART_RELATED_MIME_TYPE = "multipart/related";
-    
+
     private String boundary;
     private String messageContentType;
     private boolean hasAttachments;
@@ -96,7 +102,7 @@ abstract class MimeCodec implements Codec {
         this.version = version;
         this.binding = binding;
     }
-    
+
     public String getMimeType() {
         return MULTIPART_RELATED_MIME_TYPE;
     }
@@ -141,7 +147,7 @@ abstract class MimeCodec implements Codec {
         // TODO not returing correct multipart/related type(no boundary)
         return hasAttachments ? new ContentTypeImpl(messageContentType, packet.soapAction, null) : primaryCt;
     }
-    
+
     public ContentType getStaticContentType(Packet packet) {
         Message msg = packet.getMessage();
         hasAttachments = !msg.getAttachments().isEmpty();
@@ -150,7 +156,7 @@ abstract class MimeCodec implements Codec {
             boundary = "uuid:" + UUID.randomUUID().toString();
             String boundaryParameter = "boundary=\"" + boundary + "\"";
             // TODO use primaryEncoder to get type
-            messageContentType =  MULTIPART_RELATED_MIME_TYPE + 
+            messageContentType =  MULTIPART_RELATED_MIME_TYPE +
                     "; type=\"" + rootCodec.getMimeType() + "\"; " +
                     boundaryParameter;
             return new ContentTypeImpl(messageContentType, packet.soapAction, null);

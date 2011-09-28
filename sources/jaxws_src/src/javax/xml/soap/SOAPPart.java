@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -148,7 +148,7 @@ public abstract class SOAPPart implements org.w3c.dom.Document, Node {
      * <code>SOAPEnvelope</code> object.
      */
     public abstract void removeAllMimeHeaders();
-    
+
     /**
      * Gets all the values of the <code>MimeHeader</code> object
      * in this <code>SOAPPart</code> object that
@@ -160,7 +160,7 @@ public abstract class SOAPPart implements org.w3c.dom.Document, Node {
      * @see #setMimeHeader
      */
     public abstract String[] getMimeHeader(String name);
-    
+
     /**
      * Changes the first header entry that matches the given header name
      * so that its value is the given value, adding a new header with the
@@ -238,8 +238,8 @@ public abstract class SOAPPart implements org.w3c.dom.Document, Node {
     public abstract Iterator getNonMatchingMimeHeaders(String[] names);
 
     /**
-     * Sets the content of the <code>SOAPEnvelope</code> object with the data 
-     * from the given <code>Source</code> object. This <code>Source</code> 
+     * Sets the content of the <code>SOAPEnvelope</code> object with the data
+     * from the given <code>Source</code> object. This <code>Source</code>
      * must contain a valid SOAP document.
      *
      * @param source the <code>javax.xml.transform.Source</code> object with the

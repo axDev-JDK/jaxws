@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -173,35 +173,14 @@ public abstract class RuntimeBuiltinLeafInfoImpl<T> extends BuiltinLeafInfoImpl<
      */
     public static final Map<Type,RuntimeBuiltinLeafInfoImpl<?>> LEAVES = new HashMap<Type, RuntimeBuiltinLeafInfoImpl<?>>();
 
-    public static final RuntimeBuiltinLeafInfoImpl<String> STRING = new StringImpl<String>(String.class,
-        createXS("string"),
-        createXS("normalizedString"),
-        createXS("anyURI"),
-        createXS("token"),
-        createXS("language"),
-        createXS("Name"),
-        createXS("NCName"),
-        createXS("NMTOKEN"),
-        createXS("ENTITY")
-        ) {
-        public String parse(CharSequence text) {
-            return text.toString();
-        }
-        public String print(String s) {
-            return s;
-        }
-        @Override
-        public final void writeText(XMLSerializer w, String o, String fieldName) throws IOException, SAXException, XMLStreamException {
-            w.text(o,fieldName);
-        }
-        @Override
-        public final void writeLeafElement(XMLSerializer w, Name tagName, String o, String fieldName) throws IOException, SAXException, XMLStreamException {
-            w.leafElement(tagName,o,fieldName);
-        }
-    };
+    private static QName createXS(String typeName) {
+        return new QName(WellKnownNamespace.XML_SCHEMA,typeName);
+    }
+
+    public static final RuntimeBuiltinLeafInfoImpl<String> STRING;
 
     private static final String DATE = "date";
-    
+
     /**
      * List of all {@link RuntimeBuiltinLeafInfoImpl}s.
      *
@@ -211,8 +190,34 @@ public abstract class RuntimeBuiltinLeafInfoImpl<T> extends BuiltinLeafInfoImpl<
      */
     public static final List<RuntimeBuiltinLeafInfoImpl<?>> builtinBeanInfos;
 
+    public static final String MAP_ANYURI_TO_URI = "mapAnyUriToUri";
+
     static {
-        RuntimeBuiltinLeafInfoImpl[] secondary = new RuntimeBuiltinLeafInfoImpl[] {
+
+        QName[] qnames = (System.getProperty(MAP_ANYURI_TO_URI) == null) ? new QName[] {
+                                createXS("string"),
+                                createXS("normalizedString"),
+                                createXS("anyURI"),
+                                createXS("token"),
+                                createXS("language"),
+                                createXS("Name"),
+                                createXS("NCName"),
+                                createXS("NMTOKEN"),
+                                createXS("ENTITY")}
+                                    :
+                         new QName[] {
+                                createXS("string"),
+                                createXS("normalizedString"),
+                                createXS("token"),
+                                createXS("language"),
+                                createXS("Name"),
+                                createXS("NCName"),
+                                createXS("NMTOKEN"),
+                                createXS("ENTITY")};
+
+        STRING = new StringImplImpl(String.class, qnames);
+
+        ArrayList<RuntimeBuiltinLeafInfoImpl<?>> secondaryList = new ArrayList<RuntimeBuiltinLeafInfoImpl<?>>();
             /*
                 There are cases where more than one Java classes map to the same XML type.
                 But when we see the same XML type in an incoming document, we only pick
@@ -230,6 +235,7 @@ public abstract class RuntimeBuiltinLeafInfoImpl<T> extends BuiltinLeafInfoImpl<
             /*
                 secondary bindings
             */
+        secondaryList.add(
             new StringImpl<Character>(Character.class, createXS("unsignedShort")) {
                 public Character parse(CharSequence text) {
                     // TODO.checkSpec("default mapping for char is not defined yet");
@@ -238,7 +244,8 @@ public abstract class RuntimeBuiltinLeafInfoImpl<T> extends BuiltinLeafInfoImpl<
                 public String print(Character v) {
                     return Integer.toString(v);
                 }
-            },
+            });
+        secondaryList.add(
             new StringImpl<Calendar>(Calendar.class, DatatypeConstants.DATETIME) {
                 public Calendar parse(CharSequence text) {
                     return DatatypeConverterImpl._parseDateTime(text.toString());
@@ -246,7 +253,8 @@ public abstract class RuntimeBuiltinLeafInfoImpl<T> extends BuiltinLeafInfoImpl<
                 public String print(Calendar v) {
                     return DatatypeConverterImpl._printDateTime(v);
                 }
-            },
+            });
+        secondaryList.add(
             new StringImpl<GregorianCalendar>(GregorianCalendar.class, DatatypeConstants.DATETIME) {
                 public GregorianCalendar parse(CharSequence text) {
                     return DatatypeConverterImpl._parseDateTime(text.toString());
@@ -254,7 +262,8 @@ public abstract class RuntimeBuiltinLeafInfoImpl<T> extends BuiltinLeafInfoImpl<
                 public String print(GregorianCalendar v) {
                     return DatatypeConverterImpl._printDateTime(v);
                 }
-            },
+            });
+        secondaryList.add(
             new StringImpl<Date>(Date.class, DatatypeConstants.DATETIME) {
                 public Date parse(CharSequence text) {
                     return DatatypeConverterImpl._parseDateTime(text.toString()).getTime();
@@ -271,7 +280,8 @@ public abstract class RuntimeBuiltinLeafInfoImpl<T> extends BuiltinLeafInfoImpl<
                         return DatatypeConverterImpl._printDateTime(cal);
                     }
                 }
-            },
+            });
+        secondaryList.add(
             new StringImpl<File>(File.class, createXS("string")) {
                 public File parse(CharSequence text) {
                     return new File(WhiteSpaceProcessor.trim(text).toString());
@@ -279,7 +289,8 @@ public abstract class RuntimeBuiltinLeafInfoImpl<T> extends BuiltinLeafInfoImpl<
                 public String print(File v) {
                     return v.getPath();
                 }
-            },
+            });
+        secondaryList.add(
             new StringImpl<URL>(URL.class, createXS("anyURI")) {
                 public URL parse(CharSequence text) throws SAXException {
                     TODO.checkSpec("JSR222 Issue #42");
@@ -293,21 +304,25 @@ public abstract class RuntimeBuiltinLeafInfoImpl<T> extends BuiltinLeafInfoImpl<
                 public String print(URL v) {
                     return v.toExternalForm();
                 }
-            },
-            new StringImpl<URI>(URI.class, createXS("string")) {
-                public URI parse(CharSequence text) throws SAXException {
-                    try {
-                        return new URI(text.toString());
-                    } catch (URISyntaxException e) {
-                        UnmarshallingContext.getInstance().handleError(e);
-                        return null;
+            });
+        if (System.getProperty(MAP_ANYURI_TO_URI) == null) {
+            secondaryList.add(
+                new StringImpl<URI>(URI.class, createXS("string")) {
+                    public URI parse(CharSequence text) throws SAXException {
+                        try {
+                            return new URI(text.toString());
+                        } catch (URISyntaxException e) {
+                            UnmarshallingContext.getInstance().handleError(e);
+                            return null;
+                        }
                     }
-                }
 
-                public String print(URI v) {
-                    return v.toString();
-                }
-            },
+                    public String print(URI v) {
+                        return v.toString();
+                    }
+                });
+        }
+        secondaryList.add(
             new StringImpl<Class>(Class.class, createXS("string")) {
                 public Class parse(CharSequence text) throws SAXException {
                     TODO.checkSpec("JSR222 Issue #42");
@@ -329,12 +344,13 @@ public abstract class RuntimeBuiltinLeafInfoImpl<T> extends BuiltinLeafInfoImpl<
                 public String print(Class v) {
                     return v.getName();
                 }
-            },
+            });
 
             /*
                 classes that map to base64Binary / MTOM related classes.
                 a part of the secondary binding.
             */
+        secondaryList.add(
             new PcdataImpl<Image>(Image.class, createXS("base64Binary")) {
                 public Image parse(CharSequence text) throws SAXException  {
                     try {
@@ -422,7 +438,8 @@ public abstract class RuntimeBuiltinLeafInfoImpl<T> extends BuiltinLeafInfoImpl<
                     imageData.set(bd,mimeType);
                     return bd;
                 }
-            },
+            });
+        secondaryList.add(
             new PcdataImpl<DataHandler>(DataHandler.class, createXS("base64Binary")) {
                 public DataHandler parse(CharSequence text) {
                     if(text instanceof Base64Data)
@@ -437,7 +454,8 @@ public abstract class RuntimeBuiltinLeafInfoImpl<T> extends BuiltinLeafInfoImpl<
                     bd.set(v);
                     return bd;
                 }
-            },
+            });
+        secondaryList.add(
             new PcdataImpl<Source>(Source.class, createXS("base64Binary")) {
                 public Source parse(CharSequence text) throws SAXException  {
                     try {
@@ -504,7 +522,8 @@ public abstract class RuntimeBuiltinLeafInfoImpl<T> extends BuiltinLeafInfoImpl<
                     bd.set(new byte[0],"application/xml");
                     return bd;
                 }
-            },
+            });
+        secondaryList.add(
             new StringImpl<XMLGregorianCalendar>(XMLGregorianCalendar.class,
                     createXS("anySimpleType"),
                     DatatypeConstants.DATE,
@@ -520,22 +539,20 @@ public abstract class RuntimeBuiltinLeafInfoImpl<T> extends BuiltinLeafInfoImpl<
                     XMLSerializer xs = XMLSerializer.getInstance();
 
                     QName type = xs.getSchemaType();
-                    if(type!=null) {
-						try {
-							checkXmlGregorianCalendarFieldRef(type, cal);
-							String format = xmlGregorianCalendarFormatString.get(type);
-							if(format!=null)
-								return format(format,cal);
-							// TODO:
-							// we need to think about how to report an error where @XmlSchemaType
-							// didn't take effect. a general case is when a transducer isn't even
-							// written to look at that value.
-						} catch (javax.xml.bind.MarshalException e){
-							//-xs.handleError(e);
-							System.out.println(e.toString());
-							return "";
-						}
-					}
+                    if (type != null) {
+                        try {
+                            checkXmlGregorianCalendarFieldRef(type, cal);
+                            String format = xmlGregorianCalendarFormatString.get(type);
+                            if (format != null) {
+                                return format(format, cal);
+                            }
+                        } catch (javax.xml.bind.MarshalException e) {
+                            // see issue 649
+                            xs.handleEvent(new ValidationEventImpl(ValidationEvent.WARNING, e.getMessage(),
+                                xs.getCurrentLocation(null) ));
+                            return "";
+                        }
+                    }
                     return cal.toXMLFormat();
                 }
 
@@ -623,15 +640,15 @@ public abstract class RuntimeBuiltinLeafInfoImpl<T> extends BuiltinLeafInfoImpl<
                 public QName getTypeName(XMLGregorianCalendar cal) {
                     return cal.getXMLSchemaType();
                 }
-            }
-        };
+            });
 
-        RuntimeBuiltinLeafInfoImpl[] primary = new RuntimeBuiltinLeafInfoImpl[] {
-            /*
-                primary bindings
-            */
-            STRING,
-            new StringImpl<Boolean>(Boolean.class,
+        ArrayList<RuntimeBuiltinLeafInfoImpl<?>> primaryList = new ArrayList<RuntimeBuiltinLeafInfoImpl<?>>();
+
+        /*
+            primary bindings
+        */
+        primaryList.add(STRING);
+        primaryList.add(new StringImpl<Boolean>(Boolean.class,
                 createXS("boolean")
                 ) {
                 public Boolean parse(CharSequence text) {
@@ -641,8 +658,8 @@ public abstract class RuntimeBuiltinLeafInfoImpl<T> extends BuiltinLeafInfoImpl<
                 public String print(Boolean v) {
                     return v.toString();
                 }
-            },
-            new PcdataImpl<byte[]>(byte[].class,
+            });
+        primaryList.add(new PcdataImpl<byte[]>(byte[].class,
                 createXS("base64Binary"),
                 createXS("hexBinary")
                 ) {
@@ -657,8 +674,8 @@ public abstract class RuntimeBuiltinLeafInfoImpl<T> extends BuiltinLeafInfoImpl<
                     bd.set(v,mimeType);
                     return bd;
                 }
-            },
-            new StringImpl<Byte>(Byte.class,
+            });
+        primaryList.add(new StringImpl<Byte>(Byte.class,
                 createXS("byte")
                 ) {
                 public Byte parse(CharSequence text) {
@@ -668,8 +685,8 @@ public abstract class RuntimeBuiltinLeafInfoImpl<T> extends BuiltinLeafInfoImpl<
                 public String print(Byte v) {
                     return DatatypeConverterImpl._printByte(v);
                 }
-            },
-            new StringImpl<Short>(Short.class,
+            });
+        primaryList.add(new StringImpl<Short>(Short.class,
                 createXS("short"),
                 createXS("unsignedByte")
                 ) {
@@ -680,8 +697,8 @@ public abstract class RuntimeBuiltinLeafInfoImpl<T> extends BuiltinLeafInfoImpl<
                 public String print(Short v) {
                     return DatatypeConverterImpl._printShort(v);
                 }
-            },
-            new StringImpl<Integer>(Integer.class,
+            });
+        primaryList.add(new StringImpl<Integer>(Integer.class,
                 createXS("int"),
                 createXS("unsignedShort")
                 ) {
@@ -692,7 +709,8 @@ public abstract class RuntimeBuiltinLeafInfoImpl<T> extends BuiltinLeafInfoImpl<
                 public String print(Integer v) {
                     return DatatypeConverterImpl._printInt(v);
                 }
-            },
+            });
+        primaryList.add(
             new StringImpl<Long>(Long.class,
                 createXS("long"),
                 createXS("unsignedInt")
@@ -704,7 +722,8 @@ public abstract class RuntimeBuiltinLeafInfoImpl<T> extends BuiltinLeafInfoImpl<
                 public String print(Long v) {
                     return DatatypeConverterImpl._printLong(v);
                 }
-            },
+            });
+        primaryList.add(
             new StringImpl<Float>(Float.class,
                 createXS("float")
                 ) {
@@ -715,7 +734,8 @@ public abstract class RuntimeBuiltinLeafInfoImpl<T> extends BuiltinLeafInfoImpl<
                 public String print(Float v) {
                     return DatatypeConverterImpl._printFloat(v);
                 }
-            },
+            });
+        primaryList.add(
             new StringImpl<Double>(Double.class,
                 createXS("double")
                 ) {
@@ -726,7 +746,8 @@ public abstract class RuntimeBuiltinLeafInfoImpl<T> extends BuiltinLeafInfoImpl<
                 public String print(Double v) {
                     return DatatypeConverterImpl._printDouble(v);
                 }
-            },
+            });
+        primaryList.add(
             new StringImpl<BigInteger>(BigInteger.class,
                 createXS("integer"),
                 createXS("positiveInteger"),
@@ -742,7 +763,8 @@ public abstract class RuntimeBuiltinLeafInfoImpl<T> extends BuiltinLeafInfoImpl<
                 public String print(BigInteger v) {
                     return DatatypeConverterImpl._printInteger(v);
                 }
-            },
+            });
+        primaryList.add(
             new StringImpl<BigDecimal>(BigDecimal.class,
                 createXS("decimal")
                 ) {
@@ -753,7 +775,8 @@ public abstract class RuntimeBuiltinLeafInfoImpl<T> extends BuiltinLeafInfoImpl<
                 public String print(BigDecimal v) {
                     return DatatypeConverterImpl._printDecimal(v);
                 }
-            },
+            });
+        primaryList.add(
             new StringImpl<QName>(QName.class,
                 createXS("QName")
                 ) {
@@ -770,14 +793,34 @@ public abstract class RuntimeBuiltinLeafInfoImpl<T> extends BuiltinLeafInfoImpl<
                     return DatatypeConverterImpl._printQName(v,XMLSerializer.getInstance().getNamespaceContext());
                 }
 
+                @Override
                 public boolean useNamespace() {
                     return true;
                 }
 
+                @Override
                 public void declareNamespace(QName v, XMLSerializer w) {
                     w.getNamespaceContext().declareNamespace(v.getNamespaceURI(),v.getPrefix(),false);
                 }
-            },
+            });
+        if (System.getProperty(MAP_ANYURI_TO_URI) != null) {
+            primaryList.add(
+                new StringImpl<URI>(URI.class, createXS("anyURI")) {
+                    public URI parse(CharSequence text) throws SAXException {
+                        try {
+                            return new URI(text.toString());
+                        } catch (URISyntaxException e) {
+                            UnmarshallingContext.getInstance().handleError(e);
+                            return null;
+                        }
+                    }
+
+                    public String print(URI v) {
+                        return v.toString();
+                    }
+                });
+        }
+        primaryList.add(
             new StringImpl<Duration>(Duration.class,  createXS("duration")) {
                 public String print(Duration duration) {
                     return duration.toString();
@@ -787,7 +830,8 @@ public abstract class RuntimeBuiltinLeafInfoImpl<T> extends BuiltinLeafInfoImpl<
                     TODO.checkSpec("JSR222 Issue #42");
                     return datatypeFactory.newDuration(lexical.toString());
                 }
-            },
+            });
+        primaryList.add(
             new StringImpl<Void>(Void.class) {
                 // 'void' binding isn't defined by the spec, but when the JAX-RPC processes user-defined
                 // methods like "int actionFoo()", they need this pseudo-void property.
@@ -799,12 +843,10 @@ public abstract class RuntimeBuiltinLeafInfoImpl<T> extends BuiltinLeafInfoImpl<
                 public Void parse(CharSequence lexical) {
                     return null;
                 }
-            }
-        };
+            });
 
-        List<RuntimeBuiltinLeafInfoImpl<?>> l = new ArrayList<RuntimeBuiltinLeafInfoImpl<?>>(secondary.length+primary.length+1);
-        for (RuntimeBuiltinLeafInfoImpl<?> item : secondary)
-            l.add(item);
+        List<RuntimeBuiltinLeafInfoImpl<?>> l = new ArrayList<RuntimeBuiltinLeafInfoImpl<?>>(secondaryList.size()+primaryList.size()+1);
+        l.addAll(secondaryList);
 
         // UUID may fail to load if we are running on JDK 1.4. Handle gracefully
         try {
@@ -813,8 +855,7 @@ public abstract class RuntimeBuiltinLeafInfoImpl<T> extends BuiltinLeafInfoImpl<
             // ignore
         }
 
-        for (RuntimeBuiltinLeafInfoImpl<?> item : primary)
-            l.add(item);
+        l.addAll(primaryList);
 
         builtinBeanInfos = Collections.unmodifiableList(l);
     }
@@ -828,10 +869,6 @@ public abstract class RuntimeBuiltinLeafInfoImpl<T> extends BuiltinLeafInfoImpl<
         }
     }
 
-
-    private static QName createXS(String typeName) {
-        return new QName(WellKnownNamespace.XML_SCHEMA,typeName);
-    }
 
     /**
      * Cached instance of {@link DatatypeFactory} to create
@@ -847,61 +884,61 @@ public abstract class RuntimeBuiltinLeafInfoImpl<T> extends BuiltinLeafInfoImpl<
         }
     }
 
-	private static void checkXmlGregorianCalendarFieldRef(QName type, 
-		XMLGregorianCalendar cal)throws javax.xml.bind.MarshalException{
-		StringBuffer buf = new StringBuffer();
-		int bitField = xmlGregorianCalendarFieldRef.get(type);
-		final int l = 0x1;
-		int pos = 0;
-		while (bitField != 0x0){
-			int bit = bitField & l;
-			bitField >>>= 4;
-			pos++;
-			
-			if (bit == 1) {
-				switch(pos){
-					case 1:
-						if (cal.getSecond() == DatatypeConstants.FIELD_UNDEFINED){
-							buf.append("  " + Messages.XMLGREGORIANCALENDAR_SEC);
-						}
-						break;
-					case 2:
-						if (cal.getMinute() == DatatypeConstants.FIELD_UNDEFINED){
-							buf.append("  " + Messages.XMLGREGORIANCALENDAR_MIN);
-						}
-						break;
-					case 3:
-						if (cal.getHour() == DatatypeConstants.FIELD_UNDEFINED){
-							buf.append("  " + Messages.XMLGREGORIANCALENDAR_HR);
-						}
-						break;
-					case 4:
-						if (cal.getDay() == DatatypeConstants.FIELD_UNDEFINED){
-							buf.append("  " + Messages.XMLGREGORIANCALENDAR_DAY);
-						}
-						break;
-					case 5:
-						if (cal.getMonth() == DatatypeConstants.FIELD_UNDEFINED){
-							buf.append("  " + Messages.XMLGREGORIANCALENDAR_MONTH);
-						}
-						break;
-					case 6:
-						if (cal.getYear() == DatatypeConstants.FIELD_UNDEFINED){
-							buf.append("  " + Messages.XMLGREGORIANCALENDAR_YEAR);
-						}
-						break;
-					case 7:  // ignore timezone setting
-						break;
-				}
-			}
-		}
-		if (buf.length() > 0){
-			throw new javax.xml.bind.MarshalException(
-			 Messages.XMLGREGORIANCALENDAR_INVALID.format(type.getLocalPart()) 
-			 + buf.toString());
-		}
-	}
-	
+        private static void checkXmlGregorianCalendarFieldRef(QName type,
+                XMLGregorianCalendar cal)throws javax.xml.bind.MarshalException{
+                StringBuffer buf = new StringBuffer();
+                int bitField = xmlGregorianCalendarFieldRef.get(type);
+                final int l = 0x1;
+                int pos = 0;
+                while (bitField != 0x0){
+                        int bit = bitField & l;
+                        bitField >>>= 4;
+                        pos++;
+
+                        if (bit == 1) {
+                                switch(pos){
+                                        case 1:
+                                                if (cal.getSecond() == DatatypeConstants.FIELD_UNDEFINED){
+                                                        buf.append("  " + Messages.XMLGREGORIANCALENDAR_SEC);
+                                                }
+                                                break;
+                                        case 2:
+                                                if (cal.getMinute() == DatatypeConstants.FIELD_UNDEFINED){
+                                                        buf.append("  " + Messages.XMLGREGORIANCALENDAR_MIN);
+                                                }
+                                                break;
+                                        case 3:
+                                                if (cal.getHour() == DatatypeConstants.FIELD_UNDEFINED){
+                                                        buf.append("  " + Messages.XMLGREGORIANCALENDAR_HR);
+                                                }
+                                                break;
+                                        case 4:
+                                                if (cal.getDay() == DatatypeConstants.FIELD_UNDEFINED){
+                                                        buf.append("  " + Messages.XMLGREGORIANCALENDAR_DAY);
+                                                }
+                                                break;
+                                        case 5:
+                                                if (cal.getMonth() == DatatypeConstants.FIELD_UNDEFINED){
+                                                        buf.append("  " + Messages.XMLGREGORIANCALENDAR_MONTH);
+                                                }
+                                                break;
+                                        case 6:
+                                                if (cal.getYear() == DatatypeConstants.FIELD_UNDEFINED){
+                                                        buf.append("  " + Messages.XMLGREGORIANCALENDAR_YEAR);
+                                                }
+                                                break;
+                                        case 7:  // ignore timezone setting
+                                                break;
+                                }
+                        }
+                }
+                if (buf.length() > 0){
+                        throw new javax.xml.bind.MarshalException(
+                         Messages.XMLGREGORIANCALENDAR_INVALID.format(type.getLocalPart())
+                         + buf.toString());
+                }
+        }
+
     /**
      * Format string for the {@link XMLGregorianCalendar}.
      */
@@ -920,30 +957,30 @@ public abstract class RuntimeBuiltinLeafInfoImpl<T> extends BuiltinLeafInfoImpl<
         m.put(DatatypeConstants.GMONTHDAY,  "--%M-%D" +"%z");
     }
 
-	/**
-	 * Field designations for XMLGregorianCalendar format string.
-	 * sec		0x0000001
-	 * min		0x0000010
-	 * hrs		0x0000100
-	 * day		0x0001000
-	 * month	0x0010000
-	 * year		0x0100000
-	 * timezone 0x1000000
-	 */
-	private static final Map<QName, Integer> xmlGregorianCalendarFieldRef =
-		new HashMap<QName, Integer>();
-	static {
-		Map<QName, Integer> f = xmlGregorianCalendarFieldRef;
-		f.put(DatatypeConstants.DATETIME,   0x1111111);
-		f.put(DatatypeConstants.DATE,       0x1111000);
-		f.put(DatatypeConstants.TIME,       0x1000111);
-		f.put(DatatypeConstants.GDAY,       0x1001000);
-		f.put(DatatypeConstants.GMONTH,     0x1010000);
-		f.put(DatatypeConstants.GYEAR,      0x1100000);
-		f.put(DatatypeConstants.GYEARMONTH, 0x1110000);
-		f.put(DatatypeConstants.GMONTHDAY,  0x1011000);
-	}
-	
+        /**
+         * Field designations for XMLGregorianCalendar format string.
+         * sec          0x0000001
+         * min          0x0000010
+         * hrs          0x0000100
+         * day          0x0001000
+         * month        0x0010000
+         * year         0x0100000
+         * timezone 0x1000000
+         */
+        private static final Map<QName, Integer> xmlGregorianCalendarFieldRef =
+                new HashMap<QName, Integer>();
+        static {
+                Map<QName, Integer> f = xmlGregorianCalendarFieldRef;
+                f.put(DatatypeConstants.DATETIME,   0x1111111);
+                f.put(DatatypeConstants.DATE,       0x1111000);
+                f.put(DatatypeConstants.TIME,       0x1000111);
+                f.put(DatatypeConstants.GDAY,       0x1001000);
+                f.put(DatatypeConstants.GMONTH,     0x1010000);
+                f.put(DatatypeConstants.GYEAR,      0x1100000);
+                f.put(DatatypeConstants.GYEARMONTH, 0x1110000);
+                f.put(DatatypeConstants.GMONTHDAY,  0x1011000);
+        }
+
     /**
      * {@link RuntimeBuiltinLeafInfoImpl} for {@link UUID}.
      *
@@ -966,6 +1003,31 @@ public abstract class RuntimeBuiltinLeafInfoImpl<T> extends BuiltinLeafInfoImpl<
 
         public String print(UUID v) {
             return v.toString();
+        }
+    }
+
+    private static class StringImplImpl extends StringImpl<String> {
+
+        public StringImplImpl(Class type, QName[] typeNames) {
+            super(type, typeNames);
+        }
+
+        public String parse(CharSequence text) {
+            return text.toString();
+        }
+
+        public String print(String s) {
+            return s;
+        }
+
+        @Override
+        public final void writeText(XMLSerializer w, String o, String fieldName) throws IOException, SAXException, XMLStreamException {
+            w.text(o, fieldName);
+        }
+
+        @Override
+        public final void writeLeafElement(XMLSerializer w, Name tagName, String o, String fieldName) throws IOException, SAXException, XMLStreamException {
+            w.leafElement(tagName, o, fieldName);
         }
     }
 }

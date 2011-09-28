@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -23,6 +23,7 @@
  * questions.
  */
 
+
 package com.sun.xml.internal.ws.resources;
 
 import com.sun.xml.internal.ws.util.localization.Localizable;
@@ -32,7 +33,7 @@ import com.sun.xml.internal.ws.util.localization.Localizer;
 
 /**
  * Defines string formatting method for each constant in the resource file
- * 
+ *
  */
 public final class ProviderApiMessages {
 
@@ -45,7 +46,7 @@ public final class ProviderApiMessages {
 
     /**
      * Address in an EPR cannot be null, when serviceName or portName is null
-     * 
+     *
      */
     public static String NULL_ADDRESS_SERVICE_ENDPOINT() {
         return localizer.localize(localizableNULL_ADDRESS_SERVICE_ENDPOINT());
@@ -56,8 +57,8 @@ public final class ProviderApiMessages {
     }
 
     /**
-     * WSDL Metadata not available to create the proxy, either Service instance or ServiceEndpointInterface {0} should have WSDL information  
-     * 
+     * WSDL Metadata not available to create the proxy, either Service instance or ServiceEndpointInterface {0} should have WSDL information
+     *
      */
     public static String NO_WSDL_NO_PORT(Object arg0) {
         return localizer.localize(localizableNO_WSDL_NO_PORT(arg0));
@@ -69,7 +70,7 @@ public final class ProviderApiMessages {
 
     /**
      * serviceName can't be null when portName is specified
-     * 
+     *
      */
     public static String NULL_SERVICE() {
         return localizer.localize(localizableNULL_SERVICE());
@@ -81,7 +82,7 @@ public final class ProviderApiMessages {
 
     /**
      * Address in an EPR cannot be null
-     * 
+     *
      */
     public static String NULL_ADDRESS() {
         return localizer.localize(localizableNULL_ADDRESS());
@@ -93,7 +94,7 @@ public final class ProviderApiMessages {
 
     /**
      * EPR does n't have EndpointName in the Metadata
-     * 
+     *
      */
     public static String NULL_PORTNAME() {
         return localizer.localize(localizableNULL_PORTNAME());
@@ -105,7 +106,7 @@ public final class ProviderApiMessages {
 
     /**
      * Service: {0} not found in WSDL: {1}
-     * 
+     *
      */
     public static String NOTFOUND_SERVICE_IN_WSDL(Object arg0, Object arg1) {
         return localizer.localize(localizableNOTFOUND_SERVICE_IN_WSDL(arg0, arg1));
@@ -117,7 +118,7 @@ public final class ProviderApiMessages {
 
     /**
      * EndpointReference is null
-     * 
+     *
      */
     public static String NULL_EPR() {
         return localizer.localize(localizableNULL_EPR());
@@ -129,7 +130,7 @@ public final class ProviderApiMessages {
 
     /**
      * EPR does n't have WSDL Metadata which is needed for the current operation
-     * 
+     *
      */
     public static String NULL_WSDL() {
         return localizer.localize(localizableNULL_WSDL());
@@ -141,7 +142,7 @@ public final class ProviderApiMessages {
 
     /**
      * Port: {0} not a valid port in Service: {1} in WSDL: {2}
-     * 
+     *
      */
     public static String NOTFOUND_PORT_IN_WSDL(Object arg0, Object arg1, Object arg2) {
         return localizer.localize(localizableNOTFOUND_PORT_IN_WSDL(arg0, arg1, arg2));
@@ -153,7 +154,7 @@ public final class ProviderApiMessages {
 
     /**
      * Error in parsing WSDL: {0}
-     * 
+     *
      */
     public static String ERROR_WSDL(Object arg0) {
         return localizer.localize(localizableERROR_WSDL(arg0));

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -40,10 +40,10 @@ public final class ElementPattern extends Pattern {
 
   ElementPattern(NameClass nameClass, Pattern p, Locator loc) {
     super(false,
-	  ELEMENT_CONTENT_TYPE,
-	  combineHashCode(ELEMENT_HASH_CODE,
-			  nameClass.hashCode(),
-			  p.hashCode()));
+          ELEMENT_CONTENT_TYPE,
+          combineHashCode(ELEMENT_HASH_CODE,
+                          nameClass.hashCode(),
+                          p.hashCode()));
     this.nameClass = nameClass;
     this.origNameClass = nameClass;
     this.p = p;

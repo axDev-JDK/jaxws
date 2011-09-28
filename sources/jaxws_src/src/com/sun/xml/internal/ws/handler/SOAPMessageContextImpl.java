@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.ws.handler;
 import com.sun.xml.internal.ws.api.message.Header;
 import com.sun.xml.internal.ws.api.message.Message;
@@ -80,14 +81,14 @@ class SOAPMessageContextImpl extends MessageUpdatableContext implements SOAPMess
             throw new WebServiceException(e);
         }
     }
-    
+
     void setPacketMessage(Message newMessage){
         if(newMessage != null) {
             packet.setMessage(newMessage);
             soapMsg = null;
         }
     }
-    
+
     protected void updateMessage() {
         //Check if SOAPMessage has changed, if so construct new one,
         // Packet are handled through MessageContext
@@ -125,5 +126,5 @@ class SOAPMessageContextImpl extends MessageUpdatableContext implements SOAPMess
 
     public Set<String> getRoles() {
         return roles;
-    } 
+    }
 }

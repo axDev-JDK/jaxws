@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -44,6 +44,7 @@ import com.sun.xml.internal.xsom.XSParticle;
 import com.sun.xml.internal.xsom.XSTerm;
 import com.sun.xml.internal.xsom.XSWildcard;
 import com.sun.xml.internal.xsom.visitor.XSTermVisitor;
+import java.math.BigInteger;
 
 /**
  * {@link ParticleBinder} that follows the JAXB spec.
@@ -357,7 +358,7 @@ final class DefaultParticleBinder extends ParticleBinder {
                 assert !p.isRepeated();
 
                 boolean oldIOP = insideOptionalParticle;
-                insideOptionalParticle |= p.getMinOccurs()==0;
+                insideOptionalParticle |= BigInteger.ZERO.equals(p.getMinOccurs());
                 // this is an unmarked particle
                 t.visit(this);
                 insideOptionalParticle = oldIOP;

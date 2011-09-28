@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.ws.protocol.soap;
 
 import com.sun.xml.internal.ws.api.WSBinding;
@@ -37,22 +38,29 @@ import java.util.Set;
  */
 
 public class ServerMUTube extends MUTube {
-    
+
     private HandlerConfiguration handlerConfig;
     private ServerTubeAssemblerContext tubeContext;
+    private final Set<String> roles;
+    private final Set<QName> handlerKnownHeaders;
+
     public ServerMUTube(ServerTubeAssemblerContext tubeContext, Tube next) {
         super(tubeContext.getEndpoint().getBinding(), next);
 
         this.tubeContext = tubeContext;
 
-        //On Server, HandlerConfiguration does n't change after publish.
-        handlerConfig = ((BindingImpl)tubeContext.getEndpoint().getBinding()).getHandlerConfig();
+        //On Server, HandlerConfiguration does n't change after publish, so store locally
+        handlerConfig = binding.getHandlerConfig();
+        roles = handlerConfig.getRoles();
+        handlerKnownHeaders = handlerConfig.getHandlerKnownHeaders();
     }
 
     protected ServerMUTube(ServerMUTube that, TubeCloner cloner) {
         super(that,cloner);
         handlerConfig = that.handlerConfig;
         tubeContext = that.tubeContext;
+        roles = that.roles;
+        handlerKnownHeaders = that.handlerKnownHeaders;
     }
 
     /**
@@ -65,8 +73,7 @@ public class ServerMUTube extends MUTube {
      */
     @Override
     public NextAction processRequest(Packet request) {
-        Set<QName> misUnderstoodHeaders = getMisUnderstoodHeaders(request.getMessage().getHeaders(),
-                handlerConfig.getRoles(),handlerConfig.getKnownHeaders());
+        Set<QName> misUnderstoodHeaders = getMisUnderstoodHeaders(request.getMessage().getHeaders(),roles, handlerKnownHeaders);
         if((misUnderstoodHeaders == null)  || misUnderstoodHeaders.isEmpty()) {
             return doInvoke(super.next, request);
         }

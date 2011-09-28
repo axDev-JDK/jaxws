@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -41,26 +41,26 @@ public class AttributeDeclImpl extends DeclarationImpl implements XSAttributeDec
         AnnotationImpl _annon, Locator _loc, ForeignAttributesImpl _fa, boolean _anonymous,
         XmlString _defValue, XmlString _fixedValue,
         Ref.SimpleType _type ) {
-        
+
         super(owner,_annon,_loc,_fa,_targetNamespace,_name,_anonymous);
-        
+
         if(_name==null) // assertion failed.
             throw new IllegalArgumentException();
-        
+
         this.defaultValue = _defValue;
         this.fixedValue = _fixedValue;
         this.type = _type;
     }
-    
+
     private final Ref.SimpleType type;
     public XSSimpleType getType() { return type.getType(); }
 
     private final XmlString defaultValue;
     public XmlString getDefaultValue() { return defaultValue; }
-    
+
     private final XmlString fixedValue;
     public XmlString getFixedValue() { return fixedValue; }
-    
+
     public void visit( XSVisitor visitor ) {
         visitor.attributeDecl(this);
     }

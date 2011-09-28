@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -23,8 +23,6 @@
  * questions.
  */
 
-
-
 /**
 *
 * @author SAAJ RI Development Team
@@ -47,7 +45,7 @@ public class HeaderElement1_2Impl extends HeaderElementImpl {
     private static final Logger log =
         Logger.getLogger(HeaderElement1_2Impl.class.getName(),
                          "com.sun.xml.internal.messaging.saaj.soap.ver1_2.LocalStrings");
-       
+
     public HeaderElement1_2Impl(SOAPDocumentImpl ownerDoc, Name qname) {
         super(ownerDoc, qname);
     }
@@ -66,7 +64,7 @@ public class HeaderElement1_2Impl extends HeaderElementImpl {
     }
 
     // Actor equivalent to Role in SOAP 1.2
-    protected NameImpl getActorAttributeName() {              
+    protected NameImpl getActorAttributeName() {
         return getRoleAttributeName();
     }
 
@@ -74,7 +72,7 @@ public class HeaderElement1_2Impl extends HeaderElementImpl {
         return NameImpl.create("mustUnderstand", null, NameImpl.SOAP12_NAMESPACE);
     }
 
-    // mustUnderstand attribute has literal value "true" or "false" 
+    // mustUnderstand attribute has literal value "true" or "false"
     protected String getMustunderstandLiteralValue(boolean mustUnderstand) {
         return (mustUnderstand == true ? "true" : "false");
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -35,7 +35,7 @@ import javax.xml.namespace.QName;
  * Implementations of this class can contribute properties associated with an Endpoint. The properties appear as
  * extensibility elements inside the EndpointReference of the endpoint. If any EPR extensibility elements are configured
  * for an endpoint, the EndpointReference is published inside the WSDL.
- * 
+ *
  * @since JAX-WS 2.2
  * @author Rama Pulavarthi
  */

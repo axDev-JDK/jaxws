@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,18 +22,19 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.messaging.saaj.util;
 
 import java.io.*;
 
 import javax.xml.transform.TransformerException;
 
-/* 
+/*
  * Class that parses the very first construct in the document i.e.
  *  <?xml ... ?>
  *
  * @author Panos Kougiouris (panos@acm.org)
- * @version  
+ * @version
  */
 
 public class XMLDeclarationParser {
@@ -107,7 +108,7 @@ public class XMLDeclarationParser {
             return;
         }
         m_hasHeader = true;
-        
+
         if (utf16) {
             xmlDecl = new String(decl.getBytes(), "utf-16");
             xmlDecl = xmlDecl.substring(xmlDecl.indexOf("<"));
@@ -176,4 +177,3 @@ public class XMLDeclarationParser {
     }
 
 }
-    

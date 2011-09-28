@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -46,7 +46,7 @@ import java.io.IOException;
  */
 final class StreamSOAP12Codec extends StreamSOAPCodec {
     public static final String SOAP12_MIME_TYPE = "application/soap+xml";
-    public static final String SOAP12_CONTENT_TYPE = SOAP12_MIME_TYPE+";charset=utf-8";
+    public static final String SOAP12_CONTENT_TYPE = SOAP12_MIME_TYPE+"; charset=utf-8";
 
     private static final List<String> expectedContentTypes = Collections.singletonList(SOAP12_MIME_TYPE);
 
@@ -57,7 +57,7 @@ final class StreamSOAP12Codec extends StreamSOAPCodec {
     public String getMimeType() {
         return SOAP12_MIME_TYPE;
     }
-    
+
     @Override
     protected final StreamHeader createHeader(XMLStreamReader reader, XMLStreamBuffer mark) {
         return new StreamHeader12(reader, mark);
@@ -94,7 +94,7 @@ final class StreamSOAP12Codec extends StreamSOAPCodec {
         }
         return soapAction;
     }
-    
+
     protected List<String> getExpectedContentTypes() {
         return expectedContentTypes;
     }

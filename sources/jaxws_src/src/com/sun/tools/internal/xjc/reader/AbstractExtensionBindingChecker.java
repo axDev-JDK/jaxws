@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -38,6 +38,8 @@ import org.xml.sax.Locator;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.SAXException;
+
+import com.sun.xml.internal.bind.v2.WellKnownNamespace;
 
 /**
  * Common code between {@code DTDExtensionBindingChecker} and {@link ExtensionBindingChecker}.
@@ -159,12 +161,13 @@ public abstract class AbstractExtensionBindingChecker extends SubtreeCutter {
         return recognizableExtensions.contains(namespaceUri);
     }
 
-
+    @Override
     public void setDocumentLocator(Locator locator) {
         super.setDocumentLocator(locator);
         this.locator = locator;
     }
 
+    @Override
     public void startDocument() throws SAXException {
         super.startDocument();
 
@@ -172,13 +175,17 @@ public abstract class AbstractExtensionBindingChecker extends SubtreeCutter {
         enabledExtensions.clear();
     }
 
+    @Override
     public void startPrefixMapping(String prefix, String uri) throws SAXException {
-        super.startPrefixMapping(prefix, uri);
+        if (WellKnownNamespace.XML_NAMESPACE_URI.equals(uri)) return;
+        super.startPrefixMapping(prefix, uri); //xml prefix shall not be declared based on jdk api javado
         nsSupport.pushContext();
         nsSupport.declarePrefix(prefix,uri);
     }
 
+    @Override
     public void endPrefixMapping(String prefix) throws SAXException {
+        if ("xml".equals(prefix)) return; //xml prefix shall not be declared based on jdk api javadoc
         super.endPrefixMapping(prefix);
         nsSupport.popContext();
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -62,54 +62,54 @@ public final class AssertionSet implements Iterable<PolicyAssertion>, Comparable
             if (pa1.equals(pa2)) {
                 return 0;
             }
-            
+
             int result;
-            
+
             result = PolicyUtils.Comparison.QNAME_COMPARATOR.compare(pa1.getName(), pa2.getName());
             if (result != 0) {
                 return result;
             }
-            
+
             result = PolicyUtils.Comparison.compareNullableStrings(pa1.getValue(), pa2.getValue());
             if (result != 0) {
                 return result;
             }
-            
+
             result = PolicyUtils.Comparison.compareBoolean(pa1.hasNestedAssertions(), pa2.hasNestedAssertions());
             if (result != 0) {
                 return result;
             }
-            
+
             result = PolicyUtils.Comparison.compareBoolean(pa1.hasNestedPolicy(), pa2.hasNestedPolicy());
             if (result != 0) {
                 return result;
             }
-            
+
             return Math.round(Math.signum(pa1.hashCode() - pa2.hashCode()));
         }
     };
-    
+
     private final List<PolicyAssertion> assertions;
     private final Set<QName> vocabulary = new TreeSet<QName>(PolicyUtils.Comparison.QNAME_COMPARATOR);
     private final Collection<QName> immutableVocabulary = Collections.unmodifiableCollection(vocabulary);
-    
+
     private AssertionSet(List<PolicyAssertion> list) {
         assert (list != null) : LocalizationMessages.WSP_0037_PRIVATE_CONSTRUCTOR_DOES_NOT_TAKE_NULL();
         this.assertions = list;
     }
-    
+
     private AssertionSet(final Collection<AssertionSet> alternatives) {
         this.assertions = new LinkedList<PolicyAssertion>();
         for (AssertionSet alternative : alternatives) {
             addAll(alternative.assertions);
         }
     }
-    
+
     private boolean add(final PolicyAssertion assertion) {
         if (assertion == null) {
             return false;
         }
-        
+
         if (this.assertions.contains(assertion)) {
             return false;
         } else {
@@ -118,19 +118,19 @@ public final class AssertionSet implements Iterable<PolicyAssertion>, Comparable
             return true;
         }
     }
-    
+
     private boolean addAll(final Collection<? extends PolicyAssertion> assertions) {
         boolean result = true;
-        
+
         if (assertions != null) {
             for (PolicyAssertion assertion : assertions) {
                 result &= add(assertion); // this is here to ensure that vocabulary is built correctly as well
             }
         }
-        
+
         return result;
     }
-    
+
     /**
      * Return all assertions contained in this assertion set.
      *
@@ -139,7 +139,7 @@ public final class AssertionSet implements Iterable<PolicyAssertion>, Comparable
     Collection<PolicyAssertion> getAssertions() {
         return assertions;
     }
-    
+
     /**
      * Retrieves the vocabulary of this policy expression. The vocabulary is represented by an immutable collection of
      * unique QName objects. Each of those objects represents single assertion type contained in the assertion set.
@@ -149,7 +149,7 @@ public final class AssertionSet implements Iterable<PolicyAssertion>, Comparable
     Collection<QName> getVocabulary() {
         return immutableVocabulary;
     }
-    
+
     /**
      * Checks whether this policy alternative is compatible with the provided policy alternative.
      *
@@ -157,15 +157,15 @@ public final class AssertionSet implements Iterable<PolicyAssertion>, Comparable
      * @param mode compatibility mode to be used
      * @return {@code true} if the two policy alternatives are compatible, {@code false} otherwise
      */
-    boolean isCompatibleWith(final AssertionSet alternative, PolicyIntersector.CompatibilityMode mode) {        
+    boolean isCompatibleWith(final AssertionSet alternative, PolicyIntersector.CompatibilityMode mode) {
         boolean result = (mode == PolicyIntersector.CompatibilityMode.LAX) || this.vocabulary.equals(alternative.vocabulary);
-      
+
         result = result && this.areAssertionsCompatible(alternative, mode);
         result = result && alternative.areAssertionsCompatible(this, mode);
-                
+
         return result;
     }
-    
+
     private boolean areAssertionsCompatible(final AssertionSet alternative, PolicyIntersector.CompatibilityMode mode) {
         nextAssertion: for (PolicyAssertion thisAssertion : this.assertions) {
             if ((mode == PolicyIntersector.CompatibilityMode.STRICT) || !thisAssertion.isIgnorable()) {
@@ -179,7 +179,7 @@ public final class AssertionSet implements Iterable<PolicyAssertion>, Comparable
         }
         return true;
     }
-    
+
     /**
      * Creates and returns new assertion set holding content of all provided policy assertion sets.
      * <p/>
@@ -195,13 +195,13 @@ public final class AssertionSet implements Iterable<PolicyAssertion>, Comparable
         if (alternatives == null || alternatives.isEmpty()) {
             return EMPTY_ASSERTION_SET;
         }
-        
+
         final AssertionSet result = new AssertionSet(alternatives);
         Collections.sort(result.assertions, ASSERTION_COMPARATOR);
-        
+
         return result;
     }
-    
+
     /**
      * Creates and returns new assertion set holding a set of provided policy assertions.
      *
@@ -212,14 +212,14 @@ public final class AssertionSet implements Iterable<PolicyAssertion>, Comparable
         if (assertions == null || assertions.isEmpty()) {
             return EMPTY_ASSERTION_SET;
         }
-        
+
         final AssertionSet result = new AssertionSet(new LinkedList<PolicyAssertion>());
         result.addAll(assertions);
         Collections.sort(result.assertions, ASSERTION_COMPARATOR);
-        
+
         return result;
     }
-    
+
     public static AssertionSet emptyAssertionSet() {
         return EMPTY_ASSERTION_SET;
     }
@@ -231,7 +231,7 @@ public final class AssertionSet implements Iterable<PolicyAssertion>, Comparable
     public Iterator<PolicyAssertion> iterator() {
         return this.assertions.iterator();
     }
-    
+
     /**
      * Searches for assertions with given name. Only assertions that are contained as immediate children of the assertion set are
      * searched, i.e. nested policies are not searched.
@@ -242,7 +242,7 @@ public final class AssertionSet implements Iterable<PolicyAssertion>, Comparable
      */
     public Collection<PolicyAssertion> get(final QName name) {
         final List<PolicyAssertion> matched = new LinkedList<PolicyAssertion>();
-        
+
         if (vocabulary.contains(name)) {
             // we iterate the assertion set only if we are sure we contain such assertion name in our vocabulary
             for (PolicyAssertion assertion : assertions) {
@@ -251,10 +251,10 @@ public final class AssertionSet implements Iterable<PolicyAssertion>, Comparable
                 }
             }
         }
-        
+
         return matched;
     }
-    
+
     /**
      * Returns {@code true} if this assertion set contains no assertions.
      *
@@ -263,7 +263,7 @@ public final class AssertionSet implements Iterable<PolicyAssertion>, Comparable
     public boolean isEmpty() {
         return assertions.isEmpty();
     }
-    
+
     /**
      * Returns true if the assertion set contains the assertion name specified in its vocabulary
      *
@@ -273,7 +273,7 @@ public final class AssertionSet implements Iterable<PolicyAssertion>, Comparable
     public boolean contains(final QName assertionName) {
         return vocabulary.contains(assertionName);
     }
-    
+
     /**
      * An {@code Comparable<T>.compareTo(T o)} interface method implementation.
      * @param that other alternative to compare with
@@ -282,7 +282,7 @@ public final class AssertionSet implements Iterable<PolicyAssertion>, Comparable
         if (this.equals(that)) {
             return 0;
         }
-        
+
         // comparing vocabularies
         final Iterator<QName> vIterator1 = this.getVocabulary().iterator();
         final Iterator<QName> vIterator2 = that.getVocabulary().iterator();
@@ -298,11 +298,11 @@ public final class AssertionSet implements Iterable<PolicyAssertion>, Comparable
                 return 1; // we have more entries in this vocabulary
             }
         }
-        
+
         if (vIterator2.hasNext()) {
             return -1;  // we have more entries in that vocabulary
         }
-        
+
         // vocabularies are equal => comparing assertions
         final Iterator<PolicyAssertion> pIterator1 = this.getAssertions().iterator();
         final Iterator<PolicyAssertion> pIterator2 = that.getAssertions().iterator();
@@ -318,17 +318,17 @@ public final class AssertionSet implements Iterable<PolicyAssertion>, Comparable
                 return 1; // we have more entries in this assertion set
             }
         }
-        
+
         if (pIterator2.hasNext()) {
             return -1;  // we have more entries in that assertion set
         }
-        
+
         // seems like objects are very simmilar although not equal => we must not return 0 otherwise the TreeSet
         // holding this element would discard the newly added element. Thus we return that the first argument is
         // greater than second (just because it is first...)
         return 1;
     }
-    
+
     /**
      * An {@code Object.equals(Object obj)} method override.
      */
@@ -336,39 +336,39 @@ public final class AssertionSet implements Iterable<PolicyAssertion>, Comparable
         if (this == obj) {
             return true;
         }
-        
+
         if (!(obj instanceof AssertionSet)) {
             return false;
         }
-        
+
         final AssertionSet that = (AssertionSet) obj;
         boolean result = true;
-        
+
         result = result && this.vocabulary.equals(that.vocabulary);
         result = result && this.assertions.size() == that.assertions.size() && this.assertions.containsAll(that.assertions);
-        
+
         return result;
     }
-    
+
     /**
      * An {@code Object.hashCode()} method override.
      */
     public int hashCode() {
         int result = 17;
-        
+
         result = 37 * result + vocabulary.hashCode();
         result = 37 * result + assertions.hashCode();
-        
+
         return result;
     }
-    
+
     /**
      * An {@code Object.toString()} method override.
      */
     public String toString() {
         return toString(0, new StringBuffer()).toString();
     }
-    
+
     /**
      * A helper method that appends indented string representation of this instance to the input string buffer.
      *
@@ -379,9 +379,9 @@ public final class AssertionSet implements Iterable<PolicyAssertion>, Comparable
     StringBuffer toString(final int indentLevel, final StringBuffer buffer) {
         final String indent = PolicyUtils.Text.createIndent(indentLevel);
         final String innerIndent = PolicyUtils.Text.createIndent(indentLevel + 1);
-        
+
         buffer.append(indent).append("assertion set {").append(PolicyUtils.Text.NEW_LINE);
-        
+
         if (assertions.isEmpty()) {
             buffer.append(innerIndent).append("no assertions").append(PolicyUtils.Text.NEW_LINE);
         } else {
@@ -389,9 +389,9 @@ public final class AssertionSet implements Iterable<PolicyAssertion>, Comparable
                 assertion.toString(indentLevel + 1, buffer).append(PolicyUtils.Text.NEW_LINE);
             }
         }
-        
+
         buffer.append(indent).append('}');
-        
+
         return buffer;
     }
 }

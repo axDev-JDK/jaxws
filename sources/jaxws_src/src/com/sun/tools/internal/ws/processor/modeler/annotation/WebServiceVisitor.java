@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.tools.internal.ws.processor.modeler.annotation;
 
 
@@ -36,13 +37,13 @@ import com.sun.tools.internal.ws.resources.WebserviceapMessages;
 import com.sun.tools.internal.ws.util.ClassNameInfo;
 import com.sun.tools.internal.ws.wsdl.document.soap.SOAPStyle;
 import com.sun.tools.internal.ws.wsdl.document.soap.SOAPUse;
-import com.sun.xml.internal.ws.developer.Stateful;
 import com.sun.xml.internal.ws.model.RuntimeModeler;
 import com.sun.xml.internal.ws.util.localization.Localizable;
 
 import javax.jws.*;
 import javax.jws.soap.SOAPBinding;
 import javax.jws.soap.SOAPBinding.ParameterStyle;
+import java.lang.annotation.Annotation;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -526,8 +527,14 @@ public abstract class WebServiceVisitor extends SimpleDeclarationVisitor impleme
         return true;
     }
 
-    private boolean isStateful(ClassDeclaration classDecl) {
-        return classDecl.getAnnotation(Stateful.class)!=null;
+    private boolean isStateful(ClassDeclaration classDecl){
+        try {
+            // We don't want dependency on rt-ha module as its not integrated in JDK
+            return classDecl.getAnnotation((Class <? extends Annotation>)Class.forName("com.sun.xml.internal.ws.developer.Stateful"))!=null;
+        } catch (ClassNotFoundException e) {
+            //ignore
+        }
+        return false;
     }
 
     protected boolean classImplementsSEI(ClassDeclaration classDecl,
@@ -601,7 +608,7 @@ public abstract class WebServiceVisitor extends SimpleDeclarationVisitor impleme
                 return false;
         }
         ClassType superClass = classDecl.getSuperclass();
-        
+
         if (!superClass.getDeclaration().getQualifiedName().equals(JAVA_LANG_OBJECT) && !methodsAreLegal(superClass.getDeclaration())) {
             return false;
         }
@@ -735,11 +742,11 @@ public abstract class WebServiceVisitor extends SimpleDeclarationVisitor impleme
             if (builder.isServiceException(exDecl)) {
                 builder.onError(method.getPosition(), WebserviceapMessages.localizableWEBSERVICEAP_ONEWAY_OPERATION_CANNOT_DECLARE_EXCEPTIONS(typeDecl.getQualifiedName(), method.toString(), exDecl.getQualifiedName()));
                 valid = false;
-            }                
+            }
         }
         return valid;
     }
-    
+
     protected int getModeParameterCount(MethodDeclaration method, WebParam.Mode mode) {
         WebParam webParam;
         int cnt = 0;
@@ -758,7 +765,7 @@ public abstract class WebServiceVisitor extends SimpleDeclarationVisitor impleme
         }
         return cnt;
     }
-    
+
     protected boolean isEquivalentModes(WebParam.Mode mode1, WebParam.Mode mode2) {
         if (mode1.equals(mode2))
             return true;
@@ -769,18 +776,18 @@ public abstract class WebServiceVisitor extends SimpleDeclarationVisitor impleme
             return true;
         return false;
     }
-    
+
     protected boolean isHolder(ParameterDeclaration param) {
         return builder.getHolderValueType(param.getType()) != null;
     }
-    
+
     protected boolean isLegalType(TypeMirror type) {
         if (!(type instanceof DeclaredType))
             return true;
         TypeDeclaration typeDecl = ((DeclaredType)type).getDeclaration();
         if(typeDecl == null) {
             // can be null, if this type's declaration is unknown. This may be the result of a processing error, such as a missing class file.
-            builder.onError(WebserviceapMessages.WEBSERVICEAP_COULD_NOT_FIND_TYPEDECL(typeDecl.toString(), context.getRound()));
+            builder.onError(WebserviceapMessages.WEBSERVICEAP_COULD_NOT_FIND_TYPEDECL(type.toString(), context.getRound()));
         }
         return !builder.isRemote(typeDecl);
     }
@@ -795,7 +802,7 @@ public abstract class WebServiceVisitor extends SimpleDeclarationVisitor impleme
         }
         return null;
     }
-    
+
     protected static class MySOAPBinding implements SOAPBinding {
         public Style style() {return SOAPBinding.Style.DOCUMENT;}
         public Use use() {return SOAPBinding.Use.LITERAL; }
@@ -805,4 +812,3 @@ public abstract class WebServiceVisitor extends SimpleDeclarationVisitor impleme
         }
     }
 }
-

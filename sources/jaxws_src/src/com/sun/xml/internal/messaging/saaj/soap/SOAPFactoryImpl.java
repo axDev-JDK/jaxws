@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,7 +22,6 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
-
 
 package com.sun.xml.internal.messaging.saaj.soap;
 
@@ -54,10 +53,10 @@ public abstract class SOAPFactoryImpl extends SOAPFactory {
     public SOAPElement createElement(String tagName) throws SOAPException {
          if (tagName == null) {
              log.log(
-                 Level.SEVERE,"SAAJ0567.soap.null.input", 
+                 Level.SEVERE,"SAAJ0567.soap.null.input",
                  new Object[] {"tagName","SOAPFactory.createElement"});
              throw new SOAPException("Null tagName argument passed to createElement");
-         } 
+         }
         return ElementFactory.createElement(createDocument(),
                         NameImpl.createFromTagName(tagName));
     }
@@ -66,7 +65,7 @@ public abstract class SOAPFactoryImpl extends SOAPFactory {
         // @since SAAJ 1.3
         // If the Name was null it would cause a NullPointerException in earlier release
         if (name == null) {
-            log.log(Level.SEVERE,"SAAJ0567.soap.null.input", 
+            log.log(Level.SEVERE,"SAAJ0567.soap.null.input",
                         new Object[] {"name","SOAPFactory.createElement"});
             throw new SOAPException("Null name argument passed to createElement");
         }
@@ -75,7 +74,7 @@ public abstract class SOAPFactoryImpl extends SOAPFactory {
 
     public SOAPElement createElement(QName qname) throws SOAPException {
         if (qname == null) {
-            log.log(Level.SEVERE,"SAAJ0567.soap.null.input", 
+            log.log(Level.SEVERE,"SAAJ0567.soap.null.input",
                         new Object[] {"qname","SOAPFactory.createElement"});
             throw new SOAPException("Null qname argument passed to createElement");
         }
@@ -91,7 +90,7 @@ public abstract class SOAPFactoryImpl extends SOAPFactory {
         // if prefix !=null but localName== null then in earlier releases it would create
         // a Qualified Name  <prefix>:null which is not meaningful
         if (localName == null) {
-            log.log(Level.SEVERE,"SAAJ0567.soap.null.input", 
+            log.log(Level.SEVERE,"SAAJ0567.soap.null.input",
                         new Object[] {"localName","SOAPFactory.createElement"});
             throw new SOAPException("Null localName argument passed to createElement");
         }
@@ -101,27 +100,27 @@ public abstract class SOAPFactoryImpl extends SOAPFactory {
     public Name createName(String localName, String prefix, String uri)
         throws SOAPException {
         // @since SAAJ 1.3
-        // if localName==null, earlier impl would create Name with localName="" 
+        // if localName==null, earlier impl would create Name with localName=""
         // which is absurd.
         if (localName == null) {
             log.log(
-                 Level.SEVERE,"SAAJ0567.soap.null.input", 
+                 Level.SEVERE,"SAAJ0567.soap.null.input",
                  new Object[] {"localName","SOAPFactory.createName"});
             throw new SOAPException("Null localName argument passed to createName");
-        } 
+        }
         return NameImpl.create(localName, prefix, uri);
     }
 
     public Name createName(String localName) throws SOAPException {
         // @since SAAJ 1.3
-        // if localName==null, earlier impl would create Name with localName=null 
+        // if localName==null, earlier impl would create Name with localName=null
         // which is absurd.
         if (localName == null) {
             log.log(
-                Level.SEVERE,"SAAJ0567.soap.null.input", 
+                Level.SEVERE,"SAAJ0567.soap.null.input",
                 new Object[] {"localName","SOAPFactory.createName"});
             throw new SOAPException("Null localName argument passed to createName");
-        } 
+        }
         return NameImpl.createFromUnqualifiedName(localName);
     }
 
@@ -138,10 +137,10 @@ public abstract class SOAPFactoryImpl extends SOAPFactory {
 
         if (element instanceof SOAPElement) {
             return (SOAPElement) element;
-        } 
+        }
 
         SOAPElement copy = createElement(
-                                element.getLocalName(), 
+                                element.getLocalName(),
                                 element.getPrefix(),
                                 element.getNamespaceURI());
 
@@ -161,7 +160,7 @@ public abstract class SOAPFactoryImpl extends SOAPFactory {
             org.w3c.dom.Node imported = ownerDoc.importNode(next, true);
             copy.appendChild(imported);
         }
-        
+
         return copy;
     }
 

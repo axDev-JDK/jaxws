@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -42,7 +42,7 @@ import org.xml.sax.SAXException;
  * The print method that works for {@link String} determines the dispatching
  * of the {@link #writeText(XMLSerializer,Object,String)} and
  * {@link #writeLeafElement(XMLSerializer, Name, Object, String)} methods,
- * so those are implemented here. 
+ * so those are implemented here.
  *
  * @author Kohsuke Kawaguchi
  */

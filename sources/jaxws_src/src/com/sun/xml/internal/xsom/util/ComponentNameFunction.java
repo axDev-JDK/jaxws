@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -46,14 +46,14 @@ import com.sun.xml.internal.xsom.visitor.XSFunction;
 
 /**
  * Extract the name of the components.
- * 
+ *
  * @author <ul><li>Ryan Shoemaker, Sun Microsystems, Inc.</li></ul>
  */
 public class ComponentNameFunction implements XSFunction<String> {
 
     // delegate to this object to get the localized name of the component type
     private NameGetter nameGetter = new NameGetter(null);
-    
+
     /**
      * @see com.sun.xml.internal.xsom.visitor.XSFunction#annotation(XSAnnotation)
      */

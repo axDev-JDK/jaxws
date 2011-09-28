@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.bind;
 
 import java.math.BigDecimal;
@@ -37,14 +38,12 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
 
-import com.sun.xml.internal.bind.v2.TODO;
-
 /**
- * This class is the JAXB RI's default implementation of the 
+ * This class is the JAXB RI's default implementation of the
  * {@link DatatypeConverterInterface}.
  *
  * <p>
- * When client apps specify the use of the static print/parse
+ * When client applications specify the use of the static print/parse
  * methods in {@link DatatypeConverter}, it will delegate
  * to this class.
  *
@@ -55,15 +54,15 @@ import com.sun.xml.internal.bind.v2.TODO;
  * @since JAXB1.0
  */
 public final class DatatypeConverterImpl implements DatatypeConverterInterface {
-    
+
     /**
      * To avoid re-creating instances, we cache one instance.
      */
     public static final DatatypeConverterInterface theInstance = new DatatypeConverterImpl();
-        
+
     protected DatatypeConverterImpl() {
     }
-    
+
     public String parseString(String lexicalXSDString) {
         return lexicalXSDString;
     }
@@ -94,7 +93,7 @@ public final class DatatypeConverterImpl implements DatatypeConverterInterface {
      * Note that:
      * <ol>
      *  <li>XML Schema allows '+', but {@link Integer#valueOf(String)} is not.
-     *  <li>XML Schema allows leading and trailing (but not in-between) whitespaces..
+     *  <li>XML Schema allows leading and trailing (but not in-between) whitespaces.
      *      {@link Integer#valueOf(String)} doesn't allow any.
      * </ol>
      */
@@ -153,15 +152,15 @@ public final class DatatypeConverterImpl implements DatatypeConverterInterface {
     }
     public static BigDecimal _parseDecimal(CharSequence content) {
         content = WhiteSpaceProcessor.trim(content);
-        
+
         if (content.length() <= 0) {
             return null;
         }
 
         return new BigDecimal(content.toString());
-        
+
         // from purely XML Schema perspective,
-        // this implementation has a problem, since 
+        // this implementation has a problem, since
         // in xs:decimal "1.0" and "1" is equal whereas the above
         // code will return different values for those two forms.
         //
@@ -170,7 +169,7 @@ public final class DatatypeConverterImpl implements DatatypeConverterInterface {
         // could take non-trivial time.
         //
         // also, from the user's point of view, one might be surprised if
-        // 1 (not 1.0) is returned from "1.000" 
+        // 1 (not 1.0) is returned from "1.000"
     }
 
     public float parseFloat(String lexicalXSDFloat) {
@@ -246,6 +245,9 @@ public final class DatatypeConverterImpl implements DatatypeConverterInterface {
     }
 
     public static Boolean _parseBoolean(CharSequence literal) {
+        if(literal == null)
+            return null;
+
         int i=0;
         int len = literal.length();
         char ch;
@@ -253,9 +255,8 @@ public final class DatatypeConverterImpl implements DatatypeConverterInterface {
 
         if (literal.length() <= 0) {
             return null;
-            // throw new IllegalArgumentException("Input is empty");
         }
-        
+
         do {
             ch = literal.charAt(i++);
         } while(WhiteSpaceProcessor.isWhiteSpace(ch) && i<len);
@@ -278,7 +279,8 @@ public final class DatatypeConverterImpl implements DatatypeConverterInterface {
                 if(strIndex == 3)
                     value = true;
                 else
-                    throw new IllegalArgumentException("String \"" + literal + "\" is not valid boolean value.");
+                    return false;
+//                    throw new IllegalArgumentException("String \"" + literal + "\" is not valid boolean value.");
 
                 break;
             case 'f':
@@ -291,7 +293,8 @@ public final class DatatypeConverterImpl implements DatatypeConverterInterface {
                 if(strIndex == 4)
                     value = false;
                 else
-                    throw new IllegalArgumentException("String \"" + literal + "\" is not valid boolean value.");
+                    return false;
+//                    throw new IllegalArgumentException("String \"" + literal + "\" is not valid boolean value.");
 
                 break;
         }
@@ -303,7 +306,8 @@ public final class DatatypeConverterImpl implements DatatypeConverterInterface {
         if(i == len)
             return value;
         else
-            throw new IllegalArgumentException("String \"" + literal + "\" is not valid boolean value.");
+            return false;
+//            throw new IllegalArgumentException("String \"" + literal + "\" is not valid boolean value.");
     }
 
     public String printBoolean(boolean val) {
@@ -312,7 +316,7 @@ public final class DatatypeConverterImpl implements DatatypeConverterInterface {
     public static String _printBoolean(boolean val) {
         return val?"true":"false";
     }
-    
+
     public byte parseByte(String lexicalXSDByte) {
         return _parseByte(lexicalXSDByte);
     }
@@ -529,7 +533,7 @@ public final class DatatypeConverterImpl implements DatatypeConverterInterface {
         String qname;
         String prefix = nsc.getPrefix( val.getNamespaceURI() );
         String localPart = val.getLocalPart();
-        
+
         if( prefix == null || prefix.length()==0 ) { // be defensive
             qname = localPart;
         } else {
@@ -550,8 +554,8 @@ public final class DatatypeConverterImpl implements DatatypeConverterInterface {
     public String printAnySimpleType(String val) {
         return val;
     }
-    
-    
+
+
     /**
      * Just return the string passed as a parameter but
      * installs an instance of this class as the DatatypeConverter
@@ -561,9 +565,6 @@ public final class DatatypeConverterImpl implements DatatypeConverterInterface {
         DatatypeConverter.setDatatypeConverter(theInstance);
         return s;
     }
-
-
-
 
 // base64 decoder
 
@@ -720,33 +721,33 @@ public final class DatatypeConverterImpl implements DatatypeConverterInterface {
      *      in the output buffer where the further bytes should be placed.
      */
     public static int _printBase64Binary(byte[] input, int offset, int len, char[] buf, int ptr) {
-        for( int i=offset; i<len; i+=3 ) {
-            switch( len-i ) {
-            case 1:
-                buf[ptr++] = encode(input[i]>>2);
-                buf[ptr++] = encode(((input[i])&0x3)<<4);
-                buf[ptr++] = '=';
-                buf[ptr++] = '=';
-                break;
-            case 2:
-                buf[ptr++] = encode(input[i]>>2);
-                buf[ptr++] = encode(
-                            ((input[i]&0x3)<<4) |
-                            ((input[i+1]>>4)&0xF));
-                buf[ptr++] = encode((input[i+1]&0xF)<<2);
-                buf[ptr++] = '=';
-                break;
-            default:
-                buf[ptr++] = encode(input[i]>>2);
-                buf[ptr++] = encode(
-                            ((input[i]&0x3)<<4) |
-                            ((input[i+1]>>4)&0xF));
-                buf[ptr++] = encode(
-                            ((input[i+1]&0xF)<<2)|
-                            ((input[i+2]>>6)&0x3));
-                buf[ptr++] = encode(input[i+2]&0x3F);
-                break;
-            }
+        // encode elements until only 1 or 2 elements are left to encode
+        int remaining = len;
+        int i;
+        for (i = offset;remaining >= 3; remaining -= 3, i += 3) {
+            buf[ptr++] = encode(input[i] >> 2);
+            buf[ptr++] = encode(
+                    ((input[i] & 0x3) << 4)
+                    | ((input[i + 1] >> 4) & 0xF));
+            buf[ptr++] = encode(
+                    ((input[i + 1] & 0xF) << 2)
+                    | ((input[i + 2] >> 6) & 0x3));
+            buf[ptr++] = encode(input[i + 2] & 0x3F);
+        }
+        // encode when exactly 1 element (left) to encode
+        if (remaining == 1) {
+            buf[ptr++] = encode(input[i] >> 2);
+            buf[ptr++] = encode(((input[i]) & 0x3) << 4);
+            buf[ptr++] = '=';
+            buf[ptr++] = '=';
+        }
+        // encode when exactly 2 elements (left) to encode
+        if (remaining == 2) {
+            buf[ptr++] = encode(input[i] >> 2);
+            buf[ptr++] = encode(((input[i] & 0x3) << 4)
+                    | ((input[i + 1] >> 4) & 0xF));
+            buf[ptr++] = encode((input[i + 1] & 0xF) << 2);
+            buf[ptr++] = '=';
         }
         return ptr;
     }
@@ -763,34 +764,33 @@ public final class DatatypeConverterImpl implements DatatypeConverterInterface {
      */
     public static int _printBase64Binary(byte[] input, int offset, int len, byte[] out, int ptr) {
         byte[] buf = out;
-        int max = len+offset;
-        for( int i=offset; i<max; i+=3 ) {
-            switch( max-i ) {
-            case 1:
-                buf[ptr++] = encodeByte(input[i]>>2);
-                buf[ptr++] = encodeByte(((input[i])&0x3)<<4);
-                buf[ptr++] = '=';
-                buf[ptr++] = '=';
-                break;
-            case 2:
-                buf[ptr++] = encodeByte(input[i]>>2);
-                buf[ptr++] = encodeByte(
-                            ((input[i]&0x3)<<4) |
-                            ((input[i+1]>>4)&0xF));
-                buf[ptr++] = encodeByte((input[i+1]&0xF)<<2);
-                buf[ptr++] = '=';
-                break;
-            default:
-                buf[ptr++] = encodeByte(input[i]>>2);
-                buf[ptr++] = encodeByte(
-                            ((input[i]&0x3)<<4) |
-                            ((input[i+1]>>4)&0xF));
-                buf[ptr++] = encodeByte(
-                            ((input[i+1]&0xF)<<2)|
-                            ((input[i+2]>>6)&0x3));
-                buf[ptr++] = encodeByte(input[i+2]&0x3F);
-                break;
-            }
+        int remaining = len;
+        int i;
+        for (i=offset; remaining >= 3; remaining -= 3, i += 3 ) {
+            buf[ptr++] = encodeByte(input[i]>>2);
+            buf[ptr++] = encodeByte(
+                        ((input[i]&0x3)<<4) |
+                        ((input[i+1]>>4)&0xF));
+            buf[ptr++] = encodeByte(
+                        ((input[i+1]&0xF)<<2)|
+                        ((input[i+2]>>6)&0x3));
+            buf[ptr++] = encodeByte(input[i+2]&0x3F);
+        }
+        // encode when exactly 1 element (left) to encode
+        if (remaining == 1) {
+            buf[ptr++] = encodeByte(input[i]>>2);
+            buf[ptr++] = encodeByte(((input[i])&0x3)<<4);
+            buf[ptr++] = '=';
+            buf[ptr++] = '=';
+        }
+        // encode when exactly 2 elements (left) to encode
+        if (remaining == 2) {
+            buf[ptr++] = encodeByte(input[i]>>2);
+            buf[ptr++] = encodeByte(
+                        ((input[i]&0x3)<<4) |
+                        ((input[i+1]>>4)&0xF));
+            buf[ptr++] = encodeByte((input[i+1]&0xF)<<2);
+            buf[ptr++] = '=';
         }
 
         return ptr;

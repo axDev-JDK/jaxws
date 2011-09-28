@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.tools.internal.xjc.generator.bean;
 
 import java.util.Collections;
@@ -53,7 +54,7 @@ import com.sun.tools.internal.xjc.outline.Aspect;
 /**
  * {@link PackageOutline} enhanced with schema2java specific
  * information.
- * 
+ *
  * @author
  *     Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
@@ -220,7 +221,7 @@ public final class PackageOutlineImpl implements PackageOutline {
      * <p>
      * Because JAX-WS often reassigns the "" namespace URI,
      * and when that happens it unintentionally also renames (normally
-     * unqualified) local elements, prefer non-"" URI when there's a tie. 
+     * unqualified) local elements, prefer non-"" URI when there's a tie.
      */
     private String getMostUsedURI(HashMap<String, Integer> map) {
         String mostPopular = null;

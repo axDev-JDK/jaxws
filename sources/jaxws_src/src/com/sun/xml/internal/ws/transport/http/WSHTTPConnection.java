@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.ws.transport.http;
 
 import com.sun.istack.internal.NotNull;
@@ -89,7 +90,7 @@ public abstract class WSHTTPConnection extends PropertySet {
      *      This parameter may not be null, but since the user application
      *      code may invoke this method, a graceful error checking with
      *      an helpful error message should be provided if it's actually null.
-     * @see #setContentTypeResponseHeader(String) 
+     * @see #setContentTypeResponseHeader(String)
      */
     public abstract void setResponseHeaders(@NotNull Map<String,List<String>> headers);
 
@@ -101,7 +102,7 @@ public abstract class WSHTTPConnection extends PropertySet {
      * the previously set value. If not, this method adds it.
      *
      * <p>
-     * Note that this method and {@link #setResponseHeaders(Map<String,List<String>>)}
+     * Note that this method and {@link #setResponseHeaders(Map&lt;String,List&lt;String>>)}
      * may be invoked in any arbitrary order.
      *
      * @param value
@@ -120,7 +121,7 @@ public abstract class WSHTTPConnection extends PropertySet {
      * so do not consider the value to be final until {@link #getOutput()}
      * is invoked.
      */
-    
+
     public abstract void setStatus(int status);
 
     /**
@@ -231,7 +232,7 @@ public abstract class WSHTTPConnection extends PropertySet {
      */
     public abstract boolean isSecure();
 
-    private boolean closed;
+    private volatile boolean closed;
 
     /**
      * Close the connection
@@ -259,9 +260,28 @@ public abstract class WSHTTPConnection extends PropertySet {
     /**
      * Subclasses are expected to override
      *
+     * @since JAX-WS RI 2.2.2
+     * @return
+     */
+    public String getCookie(String name) {
+        return null;
+    }
+
+    /**
+     * Subclasses are expected to override
+     *
+     *
+     * @since JAX-WS RI 2.2.2
+     */
+    public void setCookie(String name, String value) {
+    }
+
+    /**
+     * Subclasses are expected to override
+     *
      * @return
      */
     public void setContentLengthResponseHeader(int value) {
     }
-    
+
 }

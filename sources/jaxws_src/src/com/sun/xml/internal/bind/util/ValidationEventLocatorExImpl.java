@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.bind.util;
 
 import javax.xml.bind.helpers.ValidationEventLocatorImpl;
@@ -29,25 +30,25 @@ import javax.xml.bind.helpers.ValidationEventLocatorImpl;
 import com.sun.xml.internal.bind.ValidationEventLocatorEx;
 
 /**
- * 
- * 
+ *
+ *
  * @author
  *     Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
 public class ValidationEventLocatorExImpl
     extends ValidationEventLocatorImpl implements ValidationEventLocatorEx {
-    
+
     private final String fieldName;
-        
+
     public ValidationEventLocatorExImpl( Object target, String fieldName ) {
         super(target);
         this.fieldName = fieldName;
     }
-    
+
     public String getFieldName() {
         return fieldName;
     }
-    
+
     /**
      * Returns a nice string representation for better debug experience.
      */
@@ -66,7 +67,7 @@ public class ValidationEventLocatorExImpl
         buf.append(",field=");
         buf.append(getFieldName());
         buf.append("]");
-        
+
         return buf.toString();
     }
 }

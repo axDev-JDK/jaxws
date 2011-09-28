@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -66,6 +66,7 @@ import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.math.BigInteger;
 import java.text.MessageFormat;
 import java.util.Iterator;
 
@@ -903,22 +904,22 @@ public class SchemaTreeTraverser implements XSVisitor, XSSimpleTypeVisitor {
      * @see com.sun.xml.internal.xsom.visitor.XSContentTypeVisitor#particle(com.sun.xml.internal.xsom.XSParticle)
      */
     public void particle(XSParticle part) {
-        int i;
+        BigInteger i;
 
         StringBuffer buf = new StringBuffer();
 
         i = part.getMaxOccurs();
-        if (i == XSParticle.UNBOUNDED) {
+        if (i.equals(BigInteger.valueOf(XSParticle.UNBOUNDED))) {
             buf.append(" maxOccurs=\"unbounded\"");
         }
         else {
-            if (i != 1) {
+            if (!i.equals(BigInteger.ONE)) {
                 buf.append(" maxOccurs=\"" + i + "\"");
             }
         }
 
         i = part.getMinOccurs();
-        if (i != 1) {
+        if (!i.equals(BigInteger.ONE)) {
             buf.append(" minOccurs=\"" + i + "\"");
         }
 

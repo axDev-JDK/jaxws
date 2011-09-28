@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -46,12 +46,12 @@ import java.util.Vector;
 
 /**
  * Provides context information to be used by {@link NGCCRuntimeEx}s.
- * 
+ *
  * <p>
  * This class does the actual processing for {@link XSOMParser},
  * but to hide the details from the public API, this class in
  * a different package.
- * 
+ *
  * @author Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
 public class ParserContext {

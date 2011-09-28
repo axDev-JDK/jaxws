@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -44,13 +44,13 @@ import static com.sun.org.glassfish.external.amx.AMX.*;
 public class MBeanListener<T extends MBeanListener.Callback> implements NotificationListener
 {
     private static void debug(final Object o) { System.out.println( "" + o ); }
-    
-    /** listen for MBeans in a given domain of a given type[name] 
+
+    /** listen for MBeans in a given domain of a given type[name]
         OR an ObjectName (below) */
     private final String mJMXDomain;
     private final String mType;
     private final String mName;
-    
+
     /** mType and mName should be null if mObjectName is non-null, and vice versa */
     private final ObjectName mObjectName;
 
@@ -62,7 +62,7 @@ public class MBeanListener<T extends MBeanListener.Callback> implements Notifica
     {
         return "MBeanListener: ObjectName=" + mObjectName + ", type=" + mType + ", name=" + mName;
     }
-    
+
     public String getType()
     {
         return mType;
@@ -77,14 +77,14 @@ public class MBeanListener<T extends MBeanListener.Callback> implements Notifica
     {
         return mMBeanServer;
     }
-    
+
     /** Callback interface.  */
     public interface Callback
     {
         public void mbeanRegistered(final ObjectName objectName, final MBeanListener listener);
         public void mbeanUnregistered(final ObjectName objectName, final MBeanListener listener);
     }
-    
+
     /**
         Default callback implementation, can be subclassed if needed
         Remembers only the last MBean that was seen.
@@ -94,23 +94,23 @@ public class MBeanListener<T extends MBeanListener.Callback> implements Notifica
         private volatile ObjectName mRegistered = null;
         private volatile ObjectName mUnregistered = null;
         private final boolean mStopAtFirst;
-        
+
         public CallbackImpl() {
             this(true);
         }
-        
+
         public CallbackImpl(final boolean stopAtFirst)
         {
             mStopAtFirst = stopAtFirst;
         }
-        
+
         public ObjectName getRegistered()   { return mRegistered; }
         public ObjectName getUnregistered() { return mUnregistered; }
-        
+
         protected final CountDownLatch mLatch = new CountDownLatch(1);
-        
+
         /** Optional: wait for the CountDownLatch to fire
-            If used, the subclass should countDown() the latch when the 
+            If used, the subclass should countDown() the latch when the
             appropriate event happens
         */
         public void await()
@@ -142,12 +142,12 @@ public class MBeanListener<T extends MBeanListener.Callback> implements Notifica
             }
         }
     }
-    
+
     public T getCallback()
     {
         return mCallback;
     }
- 
+
     /**
      * Listener for a specific MBean.
      * Caller must call {@link #start} to start listening.
@@ -167,7 +167,7 @@ public class MBeanListener<T extends MBeanListener.Callback> implements Notifica
         mName = null;
         mCallback = callback;
     }
-    
+
     /**
      * Listener for all MBeans of specified type, with or without a name.
      * Caller must call {@link #start} to start listening.
@@ -208,7 +208,7 @@ public class MBeanListener<T extends MBeanListener.Callback> implements Notifica
         mCallback = callback;
     }
 
-  
+
     private boolean isRegistered( final MBeanServerConnection conn, final ObjectName objectName )
     {
         try
@@ -269,8 +269,8 @@ public class MBeanListener<T extends MBeanListener.Callback> implements Notifica
             }
         }
     }
-    
-    
+
+
     /** unregister the listener */
     public void stopListening()
     {
@@ -309,7 +309,7 @@ public class MBeanListener<T extends MBeanListener.Callback> implements Notifica
                     }
                 }
             }
-            
+
             if ( match )
             {
                 final String notifType = notif.getType();
@@ -326,6 +326,3 @@ public class MBeanListener<T extends MBeanListener.Callback> implements Notifica
     }
 
 }
-
-
-

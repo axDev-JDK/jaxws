@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -29,28 +29,28 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.Map;
 import java.lang.reflect.*;
 
-/** 
+/**
  * @author Sreenivas Munnangi
  */
 public final class CountStatisticImpl extends StatisticImpl
     implements CountStatistic, InvocationHandler {
-    
+
     private long count = 0L;
     private final long initCount;
 
-    private final CountStatistic cs = 
+    private final CountStatistic cs =
             (CountStatistic) Proxy.newProxyInstance(
             CountStatistic.class.getClassLoader(),
             new Class[] { CountStatistic.class },
             this);
 
-    public CountStatisticImpl(long countVal, String name, String unit, 
+    public CountStatisticImpl(long countVal, String name, String unit,
                               String desc, long sampleTime, long startTime) {
         super(name, unit, desc, startTime, sampleTime);
         count = countVal;
         initCount = countVal;
     }
-    
+
     public CountStatisticImpl(String name, String unit, String desc) {
         this(0L, name, unit, desc, -1L, System.currentTimeMillis());
     }

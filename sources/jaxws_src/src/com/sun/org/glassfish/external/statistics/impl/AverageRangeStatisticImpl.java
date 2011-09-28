@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -53,7 +53,7 @@ public final class AverageRangeStatisticImpl extends StatisticImpl implements
     private final long initNumberOfSamples;
     private final long initRunningTotal;
 
-    private final AverageRangeStatistic as = 
+    private final AverageRangeStatistic as =
             (AverageRangeStatistic) Proxy.newProxyInstance(
             AverageRangeStatistic.class.getClassLoader(),
             new Class[] { AverageRangeStatistic.class },
@@ -95,7 +95,7 @@ public final class AverageRangeStatisticImpl extends StatisticImpl implements
         m.put("average", getAverage());
         return m;
     }
-    
+
     public synchronized void reset() {
         super.reset();
         currentVal = initCurrentVal;
@@ -104,7 +104,7 @@ public final class AverageRangeStatisticImpl extends StatisticImpl implements
         numberOfSamples = initNumberOfSamples;
         runningTotal = initRunningTotal;
         sampleTime = -1L;
-    }    
+    }
 
     public synchronized long getAverage() {
         if(numberOfSamples == 0) {
@@ -113,7 +113,7 @@ public final class AverageRangeStatisticImpl extends StatisticImpl implements
             return runningTotal / numberOfSamples;
         }
     }
-    
+
     public synchronized long getCurrent() {
         return currentVal;
     }
@@ -126,11 +126,11 @@ public final class AverageRangeStatisticImpl extends StatisticImpl implements
         runningTotal += curVal;
         sampleTime = System.currentTimeMillis();
     }
-    
+
     public synchronized long getHighWaterMark() {
         return highWaterMark;
     }
-    
+
     public synchronized long getLowWaterMark() {
         return lowWaterMark;
     }
@@ -149,5 +149,5 @@ public final class AverageRangeStatisticImpl extends StatisticImpl implements
         }
         return result;
     }
-    
+
 }

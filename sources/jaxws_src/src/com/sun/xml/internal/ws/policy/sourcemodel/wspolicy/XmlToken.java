@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.ws.policy.sourcemodel.wspolicy;
 
 /**
@@ -41,17 +42,17 @@ public enum XmlToken {
     Uri("URI", false),
     Digest("Digest", false),
     DigestAlgorithm("DigestAlgorithm", false),
-    
+
     UNKNOWN("", true);
-    
-    
-    
+
+
+
     /**
-     * Resolves URI represented as a String into an enumeration value. If the URI 
+     * Resolves URI represented as a String into an enumeration value. If the URI
      * doesn't represent any existing enumeration value, method returns {@code null}
-     * 
+     *
      * @param uri
-     * @return Enumeration value that represents given URI or {@code null} if 
+     * @return Enumeration value that represents given URI or {@code null} if
      * no enumeration value exists for given URI.
      */
     public static XmlToken resolveToken(String name) {
@@ -63,10 +64,10 @@ public enum XmlToken {
 
         return UNKNOWN;
     }
-    
+
     private String tokenName;
     private boolean element;
-    
+
     private XmlToken(final String name, boolean element) {
         this.tokenName = name;
         this.element = element;
@@ -74,10 +75,10 @@ public enum XmlToken {
 
     public boolean isElement() {
         return element;
-    }        
+    }
 
     @Override
     public String toString() {
         return tokenName;
-    }        
+    }
 }

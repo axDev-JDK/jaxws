@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,7 +22,6 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
-
 
 package com.sun.xml.internal.messaging.saaj.soap;
 
@@ -84,7 +83,7 @@ public class JpegDataContentHandler
 
                 try {
                     inputStream = ds.getInputStream();
-                    jpegLoadImage = ImageIO.read(inputStream); 
+                    jpegLoadImage = ImageIO.read(inputStream);
 
                 } catch (Exception e) {
                     System.out.println(e);
@@ -141,8 +140,8 @@ public class JpegDataContentHandler
                 tracker.addImage(img, 0);
                 tracker.waitForAll();
                 if (tracker.isErrorAny()) {
-			throw new IOException("Error while loading image");
-		}
+                        throw new IOException("Error while loading image");
+                }
                 bufImage =
                     new BufferedImage(
                         img.getWidth(null),

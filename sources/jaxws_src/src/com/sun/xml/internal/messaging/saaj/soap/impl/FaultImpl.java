@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,7 +22,6 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
-
 
 package com.sun.xml.internal.messaging.saaj.soap.impl;
 
@@ -109,7 +108,7 @@ public abstract class FaultImpl extends ElementImpl implements SOAPFault {
             this.faultCodeElement = addFaultCodeElement();
         else
             this.faultCodeElement.removeContents();
- 
+
         if (uri == null || "".equals(uri)) {
             uri = this.faultCodeElement.getNamespaceURI(prefix);
         }
@@ -124,7 +123,7 @@ public abstract class FaultImpl extends ElementImpl implements SOAPFault {
         }
         checkIfStandardFaultCode(faultCode, uri);
         ((FaultElementImpl) this.faultCodeElement).ensureNamespaceIsDeclared(prefix, uri);
-        
+
         if (prefix == null || "".equals(prefix)) {
             finallySetFaultCode(faultCode);
         } else {
@@ -205,7 +204,7 @@ public abstract class FaultImpl extends ElementImpl implements SOAPFault {
     }
 
     public SOAPElement setElementQName(QName newName) throws SOAPException {
-        
+
         log.log(
             Level.SEVERE,
             "SAAJ0146.impl.invalid.name.change.requested",
@@ -215,7 +214,7 @@ public abstract class FaultImpl extends ElementImpl implements SOAPFault {
     }
 
     protected SOAPElement convertToSoapElement(Element element) {
-        if (element instanceof SOAPFaultElement) { 
+        if (element instanceof SOAPFaultElement) {
             return (SOAPElement) element;
         } else if (element instanceof SOAPElement) {
             SOAPElement soapElement = (SOAPElement) element;
@@ -226,7 +225,7 @@ public abstract class FaultImpl extends ElementImpl implements SOAPFault {
                     soapElement.getElementName().getLocalName();
                 if (isStandardFaultElement(localName))
                     return replaceElementWithSOAPElement(
-                               element, 
+                               element,
                                createSOAPFaultElement(soapElement.getElementQName()));
                 return soapElement;
             }
@@ -302,7 +301,7 @@ public abstract class FaultImpl extends ElementImpl implements SOAPFault {
         return addElement(NameImpl.convertToName(name));
     }
 
-    protected FaultElementImpl addSOAPFaultElement(String localName) 
+    protected FaultElementImpl addSOAPFaultElement(String localName)
         throws SOAPException {
 
         FaultElementImpl faultElem = createSOAPFaultElement(localName);

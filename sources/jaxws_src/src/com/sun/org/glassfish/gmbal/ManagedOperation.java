@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,7 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
- 
+
 package com.sun.org.glassfish.gmbal ;
 
 import java.lang.annotation.Documented ;
@@ -31,10 +31,10 @@ import java.lang.annotation.ElementType ;
 import java.lang.annotation.Retention ;
 import java.lang.annotation.RetentionPolicy ;
 
-/** This annotation defines an attribute in open MBean (ManagedObject).   
+/** This annotation defines an attribute in open MBean (ManagedObject).
  */
-@Documented 
-@Target(ElementType.METHOD) 
+@Documented
+@Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ManagedOperation {
     /** The id of the operation.  Defaults to the method name.
@@ -43,4 +43,3 @@ public @interface ManagedOperation {
 
     Impact impact() default Impact.UNKNOWN ;
 }
-

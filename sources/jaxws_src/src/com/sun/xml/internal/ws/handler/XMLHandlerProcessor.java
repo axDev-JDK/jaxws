@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -27,7 +27,7 @@
  * LogicalHandlerProcessor.java
  *
  * Created on February 8, 2006, 5:40 PM
- * 
+ *
  */
 
 package com.sun.xml.internal.ws.handler;
@@ -45,14 +45,14 @@ import javax.xml.ws.http.HTTPException;
  * @author WS Development Team
  */
 final class XMLHandlerProcessor<C extends MessageUpdatableContext> extends HandlerProcessor<C> {
-    
+
     /**
      * Creates a new instance of LogicalHandlerProcessor
      */
     public XMLHandlerProcessor(HandlerTube owner, WSBinding binding, List<? extends Handler> chain) {
         super(owner, binding, chain);
     }
-    
+
     /*
      * TODO: This is valid only for XML/HTTP binding
      * Empty the XML message
@@ -64,7 +64,7 @@ final class XMLHandlerProcessor<C extends MessageUpdatableContext> extends Handl
         }
         if (context != null) {
             // non-soap case
-            context.setPacketMessage(Messages.createEmpty(binding.getSOAPVersion()));            
-        }        
+            context.setPacketMessage(Messages.createEmpty(binding.getSOAPVersion()));
+        }
     }
 }

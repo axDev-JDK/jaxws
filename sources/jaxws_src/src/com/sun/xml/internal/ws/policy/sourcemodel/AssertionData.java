@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -38,7 +38,7 @@ import java.util.Set;
 import javax.xml.namespace.QName;
 
 /**
- * Wrapper class for possible data that each 'assertion' and 'assertion parameter content' policy source model node may
+ * Wrapper class for possible data that each "assertion" and "assertion parameter content" policy source model node may
  * have attached.
  * <p/>
  * This data, when stored in an 'assertion' model node, is intended to be used as input parameter when creating
@@ -51,15 +51,15 @@ import javax.xml.namespace.QName;
 public final class AssertionData implements Cloneable, Serializable {
     private static final long serialVersionUID = 4416256070795526315L;
     private static final PolicyLogger LOGGER = PolicyLogger.getLogger(AssertionData.class);
-    
+
     private final QName name;
     private final String value;
-    private Map<QName, String> attributes = new HashMap<QName, String>();
+    private final Map<QName, String> attributes;
     private ModelNode.Type type;
-    
+
     private boolean optional;
     private boolean ignorable;
-    
+
     /**
      * Constructs assertion data wrapper instance for an assertion that does not
      * contain any value nor any attributes.
@@ -73,7 +73,7 @@ public final class AssertionData implements Cloneable, Serializable {
     public static AssertionData createAssertionData(final QName name) throws IllegalArgumentException {
         return new AssertionData(name, null, null, ModelNode.Type.ASSERTION, false, false);
     }
-    
+
     /**
      * Constructs assertion data wrapper instance for an assertion parameter that
      * does not contain any value nor any attributes.
@@ -86,8 +86,8 @@ public final class AssertionData implements Cloneable, Serializable {
      */
     public static AssertionData createAssertionParameterData(final QName name) throws IllegalArgumentException {
         return new AssertionData(name, null, null, ModelNode.Type.ASSERTION_PARAMETER_NODE, false, false);
-    }    
-    
+    }
+
     /**
      * Constructs assertion data wrapper instance for an assertion that does
      * contain a value or attributes.
@@ -105,7 +105,7 @@ public final class AssertionData implements Cloneable, Serializable {
     public static AssertionData createAssertionData(final QName name, final String value, final Map<QName, String> attributes, boolean optional, boolean ignorable) throws IllegalArgumentException {
         return new AssertionData(name, value, attributes, ModelNode.Type.ASSERTION, optional, ignorable);
     }
-    
+
     /**
      * Constructs assertion data wrapper instance for an assertion parameter that
      * contains a value or attributes
@@ -121,7 +121,7 @@ public final class AssertionData implements Cloneable, Serializable {
     public static AssertionData createAssertionParameterData(final QName name, final String value, final Map<QName, String> attributes) throws IllegalArgumentException {
         return new AssertionData(name, value, attributes, ModelNode.Type.ASSERTION_PARAMETER_NODE, false, false);
     }
-    
+
     /**
      * Constructs assertion data wrapper instance for an assertion or assertion parameter that contains a value or
      * some attributes. Whether the data wrapper is constructed for assertion or assertion parameter node is distinguished by
@@ -144,12 +144,14 @@ public final class AssertionData implements Cloneable, Serializable {
         this.value = value;
         this.optional = optional;
         this.ignorable = ignorable;
-        if (attributes != null) {
+
+        this.attributes = new HashMap<QName, String>();
+        if (attributes != null && !attributes.isEmpty()) {
             this.attributes.putAll(attributes);
         }
         setModelNodeType(type);
     }
-    
+
     private void setModelNodeType(final ModelNode.Type type) throws IllegalArgumentException {
         if (type == ModelNode.Type.ASSERTION || type == ModelNode.Type.ASSERTION_PARAMETER_NODE) {
             this.type = type;
@@ -158,7 +160,7 @@ public final class AssertionData implements Cloneable, Serializable {
                     LocalizationMessages.WSP_0074_CANNOT_CREATE_ASSERTION_BAD_TYPE(type, ModelNode.Type.ASSERTION, ModelNode.Type.ASSERTION_PARAMETER_NODE)));
         }
     }
-    
+
     /**
      * Copy constructor.
      *
@@ -167,21 +169,18 @@ public final class AssertionData implements Cloneable, Serializable {
     AssertionData(final AssertionData data) {
         this.name = data.name;
         this.value = data.value;
-        if (attributes != null) {
+        this.attributes = new HashMap<QName, String>();
+        if (!data.attributes.isEmpty()) {
             this.attributes.putAll(data.attributes);
         }
         this.type = data.type;
     }
-    
+
     @Override
     protected AssertionData clone() throws CloneNotSupportedException {
-        final AssertionData clone = (AssertionData) super.clone();
-        
-        clone.attributes = new HashMap<QName, String>(this.attributes);
-        
-        return clone;
+        return (AssertionData) super.clone();
     }
-    
+
     /**
      * Returns true if the given attribute exists, false otherwise.
      *
@@ -193,31 +192,31 @@ public final class AssertionData implements Cloneable, Serializable {
             return attributes.containsKey(name);
         }
     }
-    
-    
+
+
     @Override
     public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
         }
-        
+
         if (!(obj instanceof AssertionData)) {
             return false;
         }
-        
+
         boolean result = true;
         final AssertionData that = (AssertionData) obj;
-        
+
         result = result && this.name.equals(that.name);
         result = result && ((this.value == null) ? that.value == null : this.value.equals(that.value));
         synchronized (attributes) {
-            result = result && ((this.attributes == null) ? that.attributes == null : this.attributes.equals(that.attributes));
+            result = result && this.attributes.equals(that.attributes);
         }
-        
+
         return result;
     }
-    
-    
+
+
     /**
      * Returns the value of the given attribute. Returns null if the attribute
      * does not exist.
@@ -231,8 +230,8 @@ public final class AssertionData implements Cloneable, Serializable {
             return attributes.get(name);
         }
     }
-    
-    
+
+
     /**
      * Returns the disconnected map of attributes attached to the assertion.
      * <p/>
@@ -247,8 +246,8 @@ public final class AssertionData implements Cloneable, Serializable {
             return new HashMap<QName, String>(attributes);
         }
     }
-    
-    
+
+
     /**
      * Returns the disconnected set of attributes attached to the assertion. Each attribute is represented as a single
      * {@code Map.Entry<attributeName, attributeValue>} element.
@@ -264,54 +263,54 @@ public final class AssertionData implements Cloneable, Serializable {
             return new HashSet<Map.Entry<QName, String>>(attributes.entrySet());
         }
     }
-    
-    
+
+
     /**
      * Returns the name of the assertion.
      *
-     * @return assetion's name
+     * @return assertion's name
      */
     public QName getName() {
         return name;
     }
-    
-    
+
+
     /**
      * Returns the value of the assertion.
      *
-     * @return assetion's value
+     * @return assertion's value
      */
     public String getValue() {
         return value;
     }
-    
-    
+
+
     /**
      * An {@code Object.hashCode()} method override.
      */
     @Override
     public int hashCode() {
         int result = 17;
-        
+
         result = 37 * result + this.name.hashCode();
         result = 37 * result + ((this.value == null) ? 0 : this.value.hashCode());
         synchronized (attributes) {
-            result = 37 * result + ((this.attributes == null) ? 0 : this.attributes.hashCode());
+            result = 37 * result + this.attributes.hashCode();
         }
         return result;
     }
-    
-    
+
+
     /**
      * Method specifies whether the assertion data contain proprietary visibility element set to "private" value.
      *
      * @return {@code 'true'} if the attribute is present and set properly (i.e. the node containing this assertion data instance should
-     * not be marshalled int generated WSDL documents). Returns {@code false} otherwise.
+     * not be marshaled into generated WSDL documents). Returns {@code false} otherwise.
      */
     public boolean isPrivateAttributeSet() {
         return PolicyConstants.VISIBILITY_VALUE_PRIVATE.equals(getAttributeValue(PolicyConstants.VISIBILITY_ATTRIBUTE));
     }
-    
+
     /**
      * Removes the given attribute from the assertion data.
      *
@@ -323,7 +322,7 @@ public final class AssertionData implements Cloneable, Serializable {
             return attributes.remove(name);
         }
     }
-    
+
     /**
      * Adds or overwrites an attribute.
      *
@@ -335,7 +334,7 @@ public final class AssertionData implements Cloneable, Serializable {
             attributes.put(name, value);
         }
     }
-    
+
     /**
      * Sets the optional attribute.
      *
@@ -344,7 +343,7 @@ public final class AssertionData implements Cloneable, Serializable {
     public void setOptionalAttribute(final boolean value) {
         optional = value;
     }
-    
+
     /**
      * Tests if the optional attribute is set.
      *
@@ -353,7 +352,7 @@ public final class AssertionData implements Cloneable, Serializable {
     public boolean isOptionalAttributeSet() {
         return optional;
     }
-    
+
     /**
      * Sets the ignorable attribute.
      *
@@ -362,7 +361,7 @@ public final class AssertionData implements Cloneable, Serializable {
     public void setIgnorableAttribute(final boolean value) {
         ignorable = value;
     }
-    
+
     /**
      * Tests if the ignorable attribute is set.
      *
@@ -371,12 +370,12 @@ public final class AssertionData implements Cloneable, Serializable {
     public boolean isIgnorableAttributeSet() {
         return ignorable;
     }
-    
+
     @Override
     public String toString() {
         return toString(0, new StringBuffer()).toString();
     }
-    
+
     /**
      * A helper method that appends indented string representation of this instance to the input string buffer.
      *
@@ -388,7 +387,7 @@ public final class AssertionData implements Cloneable, Serializable {
         final String indent = PolicyUtils.Text.createIndent(indentLevel);
         final String innerIndent = PolicyUtils.Text.createIndent(indentLevel + 1);
         final String innerDoubleIndent = PolicyUtils.Text.createIndent(indentLevel + 2);
-        
+
         buffer.append(indent);
         if (type == ModelNode.Type.ASSERTION) {
             buffer.append("assertion data {");
@@ -396,7 +395,7 @@ public final class AssertionData implements Cloneable, Serializable {
             buffer.append("assertion parameter data {");
         }
         buffer.append(PolicyUtils.Text.NEW_LINE);
-        
+
         buffer.append(innerIndent).append("namespace = '").append(name.getNamespaceURI()).append('\'').append(PolicyUtils.Text.NEW_LINE);
         buffer.append(innerIndent).append("prefix = '").append(name.getPrefix()).append('\'').append(PolicyUtils.Text.NEW_LINE);
         buffer.append(innerIndent).append("local name = '").append(name.getLocalPart()).append('\'').append(PolicyUtils.Text.NEW_LINE);
@@ -407,7 +406,7 @@ public final class AssertionData implements Cloneable, Serializable {
             if (attributes.isEmpty()) {
                 buffer.append(innerIndent).append("no attributes");
             } else {
-                
+
                 buffer.append(innerIndent).append("attributes {").append(PolicyUtils.Text.NEW_LINE);
                 for(Map.Entry<QName, String> entry : attributes.entrySet()) {
                     final QName aName = entry.getKey();
@@ -417,14 +416,14 @@ public final class AssertionData implements Cloneable, Serializable {
                 buffer.append(innerIndent).append('}');
             }
         }
-        
+
         buffer.append(PolicyUtils.Text.NEW_LINE).append(indent).append('}');
-        
+
         return buffer;
     }
-    
+
     public ModelNode.Type getNodeType() {
         return type;
     }
-    
+
 }

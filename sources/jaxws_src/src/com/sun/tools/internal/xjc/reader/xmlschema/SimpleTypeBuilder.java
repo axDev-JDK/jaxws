@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.tools.internal.xjc.reader.xmlschema;
 
 import java.io.StringWriter;
@@ -377,15 +378,6 @@ public final class SimpleTypeBuilder extends BindingComponent {
         }
 
 
-//        // Issue 558 .. ugly fix; see https://wsit-docs.dev.java.net/releases/1-0-FCS/DataBinding5.html and https://jaxb.dev.java.net/issues/show_bug.cgi?id=558
-//        // need to check specification
-//        if (type.isSimpleType() && builder.getGlobalBinding().isSimpleTypeSubstitution() &&
-//                type.isGlobal() && type.getName() != null &&
-//                (type.getName().equals("unsignedInt") || type.getName().equals("unsignedShort") || type.getName().equals("unsignedByte"))) {
-//                // !type.getName().equals("anySimpleType") && !type.getName().equals("string")) {
-//            return (CNonElement) getClassSelector()._bindToClass(type, type.getSimpleBaseType(), false);
-//        }
-
         // if the type is built in, look for the default binding
         if(type.getTargetNamespace().equals(WellKnownNamespace.XML_SCHEMA)) {
             String name = type.getName();
@@ -419,6 +411,8 @@ public final class SimpleTypeBuilder extends BindingComponent {
         return (CNonElement)getClassSelector()._bindToClass(type,null,false);
     }
 
+    private static Set<XSRestrictionSimpleType> reportedEnumMemberSizeWarnings;
+
     /**
      * Returns true if a type-safe enum should be created from
      * the given simple type by default without an explicit &lt;jaxb:enum> customization.
@@ -432,12 +426,28 @@ public final class SimpleTypeBuilder extends BindingComponent {
         if( type.getRedefinedBy()!=null )   return false;
 
         List<XSFacet> facets = type.getDeclaredFacets(XSFacet.FACET_ENUMERATION);
-        if( facets.isEmpty() || facets.size()>builder.getGlobalBinding().getDefaultEnumMemberSizeCap() )
+        if( facets.isEmpty() )
             // if the type itself doesn't have the enumeration facet,
             // it won't be mapped to a type-safe enum.
-            //
-            // if there are too many facets, it's not very useful
             return false;
+
+        if(facets.size() > builder.getGlobalBinding().getDefaultEnumMemberSizeCap()) {
+            // if there are too many facets, it's not very useful
+            // produce warning when simple type is not mapped to enum
+            // see issue https://jaxb.dev.java.net/issues/show_bug.cgi?id=711
+
+            if(reportedEnumMemberSizeWarnings == null)
+                reportedEnumMemberSizeWarnings = new HashSet<XSRestrictionSimpleType>();
+
+            if(!reportedEnumMemberSizeWarnings.contains(type)) {
+                getErrorReporter().warning(type.getLocator(), Messages.WARN_ENUM_MEMBER_SIZE_CAP,
+                        type.getName(), facets.size(), builder.getGlobalBinding().getDefaultEnumMemberSizeCap());
+
+                reportedEnumMemberSizeWarnings.add(type);
+            }
+
+            return false;
+        }
 
         if( !canBeMappedToTypeSafeEnum(type) )
             // we simply can't map this to an enumeration

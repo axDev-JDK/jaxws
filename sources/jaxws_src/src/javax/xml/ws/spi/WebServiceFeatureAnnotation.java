@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -42,12 +42,12 @@ import javax.xml.ws.soap.MTOM;
  * as a <code>WebServiceFeature</code>.
  * <p>
  * Each <code>WebServiceFeature</code> annotation annotated with
- * this annotation MUST contain an 
+ * this annotation MUST contain an
  * <code>enabled</code> property of type
- * <code>boolean</code> with a default value of <code>true</code>. 
+ * <code>boolean</code> with a default value of <code>true</code>.
  * <p>
  * JAX-WS defines the following
- * <code>WebServiceFeature</code> annotations (<code>Addressing</code>, 
+ * <code>WebServiceFeature</code> annotations (<code>Addressing</code>,
  * <code>MTOM</code>, <code>RespectBinding</code>), however, an implementation
  * may define vendors specific annotations for other features.
  * <p>
@@ -72,7 +72,7 @@ import javax.xml.ws.soap.MTOM;
 @Documented
 public @interface WebServiceFeatureAnnotation {
     /**
-     * Unique identifier for the WebServiceFeature.  This 
+     * Unique identifier for the WebServiceFeature.  This
      * identifier MUST be unique across all implementations
      * of JAX-WS.
      */

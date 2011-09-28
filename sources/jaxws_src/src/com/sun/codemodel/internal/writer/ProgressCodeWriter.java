@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -36,9 +36,9 @@ import com.sun.codemodel.internal.JPackage;
 /**
  * Filter CodeWriter that writes a progress message to the specified
  * PrintStream.
- * 
+ *
  * @author
- * 	Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
+ *      Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
 public class ProgressCodeWriter extends FilterCodeWriter {
     public ProgressCodeWriter( CodeWriter output, PrintStream progress ) {
@@ -49,7 +49,7 @@ public class ProgressCodeWriter extends FilterCodeWriter {
     }
 
     private final PrintStream progress;
-    
+
     public OutputStream openBinary(JPackage pkg, String fileName) throws IOException {
         report(pkg, fileName);
         return super.openBinary(pkg,fileName);
@@ -59,7 +59,7 @@ public class ProgressCodeWriter extends FilterCodeWriter {
         report(pkg, fileName);
         return super.openSource(pkg,fileName);
     }
-    
+
     private void report(JPackage pkg, String fileName) {
         if(pkg.isUnnamed()) progress.println(fileName);
         else

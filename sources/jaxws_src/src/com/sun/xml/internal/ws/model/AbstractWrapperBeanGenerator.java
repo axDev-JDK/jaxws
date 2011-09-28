@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.ws.model;
 
 import com.sun.istack.internal.NotNull;
@@ -70,6 +71,7 @@ public abstract class AbstractWrapperBeanGenerator<T,C,M,A extends Comparable> {
         skipProperties.add("getLocalizedMessage");
         skipProperties.add("getClass");
         skipProperties.add("getStackTrace");
+        skipProperties.add("getSuppressed");  // JDK 7 adds this
     }
 
     private final AnnotationReader<T,C,?,M> annReader;
@@ -127,7 +129,7 @@ public abstract class AbstractWrapperBeanGenerator<T,C,M,A extends Comparable> {
      * parameters as request bean fields. In this process, if a parameter
      * has any known JAXB annotations they are collected as well.
      * Special processing for @XmlElement annotation is done.
-     * 
+     *
      * @param method SEI method for which request bean members are computed
      * @return List of request bean members
      */
@@ -291,7 +293,7 @@ public abstract class AbstractWrapperBeanGenerator<T,C,M,A extends Comparable> {
      * But if the exception has @XmlType its values are honored. Only the
      * propOrder properties are considered. The returned collection is sorted
      * as per the given propOrder.
-     * 
+     *
      * @param exception
      * @return list of properties in the correct order for an exception bean
      */
@@ -335,7 +337,7 @@ public abstract class AbstractWrapperBeanGenerator<T,C,M,A extends Comparable> {
             // 2.1.x is doing the following: no final static, transient, non-public
             // transient cannot used as modifier for method, so not doing it now
             if (!nav.isPublicMethod(method)
-                || (nav.isStaticMethod(method) && nav.isFinalMethod(method))) { 
+                || (nav.isStaticMethod(method) && nav.isFinalMethod(method))) {
                  continue;
             }
 

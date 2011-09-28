@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -37,7 +37,7 @@ import javax.xml.ws.WebServiceException;
 class FactoryFinder {
 
     /**
-     * Creates an instance of the specified class using the specified 
+     * Creates an instance of the specified class using the specified
      * <code>ClassLoader</code> object.
      *
      * @exception WebServiceException if the given class could not be found
@@ -97,11 +97,11 @@ class FactoryFinder {
             } else {
                 is=classLoader.getResourceAsStream(serviceId);
             }
-        
+
             if( is!=null ) {
                 BufferedReader rd =
                     new BufferedReader(new InputStreamReader(is, "UTF-8"));
-        
+
                 String factoryClassName = rd.readLine();
                 rd.close();
 
@@ -112,7 +112,7 @@ class FactoryFinder {
             }
         } catch( Exception ex ) {
         }
-        
+
 
         // try to read from $java.home/lib/jaxws.properties
         try {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,8 +22,6 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
-
-
 
 /**
 *
@@ -52,7 +50,7 @@ public class SOAPPart1_1Impl extends SOAPPartImpl implements SOAPConstants {
     public SOAPPart1_1Impl() {
         super();
      }
-    
+
     public SOAPPart1_1Impl(MessageImpl message) {
         super(message);
     }
@@ -75,7 +73,7 @@ public class SOAPPart1_1Impl extends SOAPPartImpl implements SOAPConstants {
             throw new SOAPException("InputStream does not represent a valid SOAP 1.1 Message");
         }
 
-        if (!omitXmlDecl) {
+        if (parser != null && !omitXmlDecl) {
             envelope.setOmitXmlDecl("no");
             envelope.setXmlDecl(parser.getXmlDeclaration());
             envelope.setCharsetEncoding(parser.getEncoding());

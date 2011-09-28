@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -28,7 +28,7 @@ package com.sun.xml.internal.xsom;
 
 /**
  * Facet for a simple type.
- * 
+ *
  * @author
  *  Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
@@ -36,14 +36,14 @@ public interface XSFacet extends XSComponent
 {
     /** Gets the name of the facet, such as "length". */
     String getName();
-    
+
     /** Gets the value of the facet. */
     XmlString getValue();
-    
+
     /** Returns true if this facet is "fixed". */
     boolean isFixed();
-    
-    
+
+
     // well-known facet name constants
     final static String FACET_LENGTH            = "length";
     final static String FACET_MINLENGTH         = "minLength";

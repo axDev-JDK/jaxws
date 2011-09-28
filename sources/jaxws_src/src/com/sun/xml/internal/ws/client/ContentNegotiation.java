@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,12 +22,13 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.ws.client;
 
 /**
  * Content negotiation enum.
  * <p>
- * A value of {@link #none} means no content negotation at level of the 
+ * A value of {@link #none} means no content negotation at level of the
  * client transport will be performed to negotiate the encoding of XML infoset.
  * The default encoding will always be used.
  * <p>
@@ -48,12 +49,12 @@ public enum ContentNegotiation {
     none,
     pessimistic,
     optimistic;
-  
+
     /**
      * Property name for content negotiation on {@link RequestContext}.
      */
     public static final String PROPERTY = "com.sun.xml.internal.ws.client.ContentNegotiation";
-    
+
     /**
      * Obtain the content negotiation value from a system property.
      * <p>
@@ -64,9 +65,9 @@ public enum ContentNegotiation {
     public static ContentNegotiation obtainFromSystemProperty() {
         try {
             String value = System.getProperty(PROPERTY);
-            
+
             if (value == null) return none;
-            
+
             return valueOf(value);
         } catch (Exception e) {
             // Default to none for any unrecognized value or any other

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -26,7 +26,7 @@
 package com.sun.xml.internal.ws.policy;
 
 /**
- * The class serves as a policy map mutator that allows for replacement of current effective policies 
+ * The class serves as a policy map mutator that allows for replacement of current effective policies
  * stored in the policy map with new effective policy provided by the mutator user.
  *
  * @author Marek Potociar (marek.potociar@sun.com)
@@ -35,16 +35,16 @@ public final class EffectivePolicyModifier extends PolicyMapMutator {
     public static EffectivePolicyModifier createEffectivePolicyModifier() {
         return new EffectivePolicyModifier();
     }
-    
+
     /**
      * Ensures that direct instantiation is not possible from outside of the class
      */
     private EffectivePolicyModifier() {
         // no initialization required
     }
-            
+
     /**
-     * Replaces current effective policy on the service scope (identified by a {@code key} parameter) with the new efective 
+     * Replaces current effective policy on the service scope (identified by a {@code key} parameter) with the new efective
      * policy provided as a second input parameter. If no policy was defined for the presented key, the new policy is simply
      * stored with the key.
      *
@@ -53,13 +53,13 @@ public final class EffectivePolicyModifier extends PolicyMapMutator {
      *
      * @throws IllegalArgumentException in case any of the input parameters is {@code null}
      */
-    public void setNewEffectivePolicyForServiceScope( 
+    public void setNewEffectivePolicyForServiceScope(
             final PolicyMapKey key, final Policy newEffectivePolicy) {
         getMap().setNewEffectivePolicyForScope(PolicyMap.ScopeType.SERVICE, key, newEffectivePolicy);
     }
-            
+
     /**
-     * Replaces current effective policy on the endpoint scope (identified by a {@code key} parameter) with the new efective 
+     * Replaces current effective policy on the endpoint scope (identified by a {@code key} parameter) with the new efective
      * policy provided as a second input parameter.
      *
      * @param key identifier of the scope the effective policy should be replaced with the new one. Must not be {@code null}.
@@ -71,9 +71,9 @@ public final class EffectivePolicyModifier extends PolicyMapMutator {
             final PolicyMapKey key, final Policy newEffectivePolicy) {
         getMap().setNewEffectivePolicyForScope(PolicyMap.ScopeType.ENDPOINT, key, newEffectivePolicy);
     }
-            
+
     /**
-     * Replaces current effective policy on the operation scope (identified by a {@code key} parameter) with the new efective 
+     * Replaces current effective policy on the operation scope (identified by a {@code key} parameter) with the new efective
      * policy provided as a second input parameter. If no policy was defined for the presented key, the new policy is simply
      * stored with the key.
      *
@@ -86,9 +86,9 @@ public final class EffectivePolicyModifier extends PolicyMapMutator {
             final PolicyMapKey key, final Policy newEffectivePolicy) {
         getMap().setNewEffectivePolicyForScope(PolicyMap.ScopeType.OPERATION, key, newEffectivePolicy);
     }
-            
+
     /**
-     * Replaces current effective policy on the input message scope (identified by a {@code key} parameter) with the new efective 
+     * Replaces current effective policy on the input message scope (identified by a {@code key} parameter) with the new efective
      * policy provided as a second input parameter. If no policy was defined for the presented key, the new policy is simply
      * stored with the key.
      *
@@ -101,9 +101,9 @@ public final class EffectivePolicyModifier extends PolicyMapMutator {
             final PolicyMapKey key, final Policy newEffectivePolicy) {
         getMap().setNewEffectivePolicyForScope(PolicyMap.ScopeType.INPUT_MESSAGE, key, newEffectivePolicy);
     }
-            
+
     /**
-     * Replaces current effective policy on the output message scope (identified by a {@code key} parameter) with the new efective 
+     * Replaces current effective policy on the output message scope (identified by a {@code key} parameter) with the new efective
      * policy provided as a second input parameter. If no policy was defined for the presented key, the new policy is simply
      * stored with the key.
      *
@@ -116,9 +116,9 @@ public final class EffectivePolicyModifier extends PolicyMapMutator {
             final PolicyMapKey key, final Policy newEffectivePolicy) {
         getMap().setNewEffectivePolicyForScope(PolicyMap.ScopeType.OUTPUT_MESSAGE, key, newEffectivePolicy);
     }
-            
+
     /**
-     * Replaces current effective policy on the fault message scope (identified by a {@code key} parameter) with the new efective 
+     * Replaces current effective policy on the fault message scope (identified by a {@code key} parameter) with the new efective
      * policy provided as a second input parameter. If no policy was defined for the presented key, the new policy is simply
      * stored with the key.
      *

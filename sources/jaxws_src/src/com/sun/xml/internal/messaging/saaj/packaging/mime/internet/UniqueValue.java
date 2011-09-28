@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 /*
  * @(#)UniqueValue.java       1.6 02/03/27
  */
@@ -59,12 +60,12 @@ class UniqueValue {
      * and the current time (in milliseconds).
      */
     public static String getUniqueBoundaryValue() {
-	StringBuffer s = new StringBuffer();
+        StringBuffer s = new StringBuffer();
 
-	// Unique string is ----=_Part_<part>_<hashcode>.<currentTime>
-	s.append("----=_Part_").append(part++).append("_").
-	  append(s.hashCode()).append('.').
-	  append(System.currentTimeMillis());
-	return s.toString();
+        // Unique string is ----=_Part_<part>_<hashcode>.<currentTime>
+        s.append("----=_Part_").append(part++).append("_").
+          append(s.hashCode()).append('.').
+          append(System.currentTimeMillis());
+        return s.toString();
     }
 }

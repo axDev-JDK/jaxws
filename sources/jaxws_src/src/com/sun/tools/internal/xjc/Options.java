@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -87,6 +87,12 @@ public class Options
 
     /** No file header comment (to be more friendly with diff.) */
     public boolean noFileHeader;
+
+    /** When on, fixes getter/setter generation to match the Bean Introspection API */
+    public boolean enableIntrospection;
+
+    /** When on, generates content property for types with multiple xs:any derived elements (which is supposed to be correct behaviour) */
+    public boolean contentForWildcard;
 
     /**
      * Check the source schemas with extra scrutiny.
@@ -520,6 +526,14 @@ public class Options
         }
         if (args[i].equals("-XexplicitAnnotation")) {
             runtime14 = true;
+            return 1;
+        }
+        if (args[i].equals("-enableIntrospection")) {
+            enableIntrospection = true;
+            return 1;
+        }
+        if (args[i].equals("-contentForWildcard")) {
+            contentForWildcard = true;
             return 1;
         }
         if (args[i].equals("-XautoNameResolution")) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.bind.v2.runtime;
 
 import java.io.BufferedWriter;
@@ -463,8 +464,8 @@ public /*to make unit tests happy*/ final class MarshallerImpl extends AbstractM
             return header;
         if( C14N.equals(name) )
             return c14nSupport;
-        if ( OBJECT_IDENTITY_CYCLE_DETECTION.equals(name)) 
-        	return serializer.getObjectIdentityCycleDetection();
+        if ( OBJECT_IDENTITY_CYCLE_DETECTION.equals(name))
+                return serializer.getObjectIdentityCycleDetection();
 ;
 
         return super.getProperty(name);
@@ -514,7 +515,7 @@ public /*to make unit tests happy*/ final class MarshallerImpl extends AbstractM
             return;
         }
         if (OBJECT_IDENTITY_CYCLE_DETECTION.equals(name)) {
-        	checkBoolean(name,value);
+                checkBoolean(name,value);
             serializer.setObjectIdentityCycleDetection((Boolean)value);
             return;
         }

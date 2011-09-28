@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -34,7 +34,7 @@ import javax.management.ObjectName;
 public final class AMXUtil
 {
     private AMXUtil() {}
- 
+
     /**
         Make a new ObjectName (unchecked exception).
      */
@@ -75,22 +75,3 @@ public final class AMXUtil
         return key + "=" + value;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

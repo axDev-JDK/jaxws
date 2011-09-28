@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -110,7 +110,7 @@ class TypeInfoSetImpl<T,C,F,M> implements TypeInfoSet<T,C,F,M> {
      */
     private final Map<C,Map<QName,ElementInfoImpl<T,C,F,M>>> elementMappings =
         new LinkedHashMap<C,Map<QName,ElementInfoImpl<T,C,F,M>>>();
-    
+
     private final Iterable<? extends ElementInfoImpl<T,C,F,M>> allElements =
         new Iterable<ElementInfoImpl<T,C,F,M>>() {
             public Iterator<ElementInfoImpl<T,C,F,M>> iterator() {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -29,8 +29,8 @@ import com.sun.istack.internal.NotNull;
 import com.sun.xml.internal.ws.api.server.SDDocument;
 import com.sun.xml.internal.ws.api.server.SDDocumentFilter;
 import com.sun.xml.internal.ws.api.server.ServiceDefinition;
+import com.sun.xml.internal.ws.wsdl.SDDocumentResolver;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -46,7 +46,7 @@ import java.util.Map;
  *
  * @author Kohsuke Kawaguchi
  */
-public final class ServiceDefinitionImpl implements ServiceDefinition {
+public final class ServiceDefinitionImpl implements ServiceDefinition, SDDocumentResolver {
     private final List<SDDocumentImpl> docs;
 
     private final Map<String,SDDocumentImpl> bySystemId;
@@ -73,9 +73,8 @@ public final class ServiceDefinitionImpl implements ServiceDefinition {
         this.bySystemId = new HashMap<String, SDDocumentImpl>(docs.size());
         for (SDDocumentImpl doc : docs) {
             bySystemId.put(doc.getURL().toExternalForm(),doc);
-
-            assert doc.owner==null;
-            doc.owner = this;
+            doc.setFilters(filters);
+            doc.setResolver(this);
         }
     }
 
@@ -100,20 +99,13 @@ public final class ServiceDefinitionImpl implements ServiceDefinition {
     }
 
     /**
-     * @see #getBySystemId(String)
-     */
-    public SDDocument getBySystemId(URL systemId) {
-        return getBySystemId(systemId.toString());
-    }
-
-    /**
      * Gets the {@link SDDocumentImpl} whose {@link SDDocumentImpl#getURL()}
      * returns the specified value.
      *
      * @return
      *      null if none is found.
      */
-    public SDDocumentImpl getBySystemId(String systemId) {
+    public SDDocument resolve(String systemId) {
         return bySystemId.get(systemId);
     }
 }

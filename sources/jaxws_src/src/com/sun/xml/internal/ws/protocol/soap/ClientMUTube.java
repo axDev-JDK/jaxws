@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.ws.protocol.soap;
 
 import com.sun.istack.internal.NotNull;
@@ -67,18 +68,26 @@ public class ClientMUTube extends MUTube {
             return super.processResponse(response);
         }
         HandlerConfiguration handlerConfig = response.handlerConfig;
-        Set<QName> knownHeaders;
-        Set<String> roles;
-        if (handlerConfig != null) {
-            knownHeaders = handlerConfig.getKnownHeaders();
-            roles = handlerConfig.getRoles();
-        } else {
-            roles = soapVersion.implicitRoleSet;
-            knownHeaders = new HashSet<QName>();
+
+//        Set<QName> knownHeaders;
+//        Set<String> roles;
+
+//        if (handlerConfig != null) {
+//            knownHeaders = handlerConfig.getKnownHeaders();
+//            roles = handlerConfig.getRoles();
+//        } else {
+//            roles = soapVersion.implicitRoleSet;
+//            knownHeaders = new HashSet<QName>();
+//        }
+//        Set<QName> misUnderstoodHeaders = getMisUnderstoodHeaders(
+//                response.getMessage().getHeaders(), roles,
+//                knownHeaders);
+        if (handlerConfig == null) {
+            //Use from binding instead of defaults in case response packet does not have it,
+            //may have been changed from the time of invocation, it ok as its only fallback case.
+            handlerConfig = binding.getHandlerConfig();
         }
-        Set<QName> misUnderstoodHeaders = getMisUnderstoodHeaders(
-                response.getMessage().getHeaders(), roles,
-                knownHeaders);
+        Set<QName> misUnderstoodHeaders = getMisUnderstoodHeaders(response.getMessage().getHeaders(), handlerConfig.getRoles(),handlerConfig.getHandlerKnownHeaders());
         if((misUnderstoodHeaders == null) || misUnderstoodHeaders.isEmpty()) {
             return super.processResponse(response);
         }

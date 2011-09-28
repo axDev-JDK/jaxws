@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -33,6 +33,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import com.sun.xml.internal.bind.WhiteSpaceProcessor;
+import com.sun.xml.internal.bind.v2.util.ClassLoaderRetriever;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -43,7 +44,7 @@ import org.xml.sax.SAXException;
  * <p>
  * TODO:
  * Finding the optimized FI implementations is a bit hacky and not very
- * extensible. Can we use the service provider mechnism in general for 
+ * extensible. Can we use the service provider mechanism in general for
  * concrete implementations of StAXConnector.
  *
  * @author Ryan.Shoemaker@Sun.COM
@@ -119,7 +120,7 @@ class StAXStreamConnector extends StAXConnector {
     private final XMLStreamReader staxStreamReader;
 
     /**
-     * SAX may fire consective characters event, but we don't allow it.
+     * SAX may fire consecutive characters event, but we don't allow it.
      * so use this buffer to perform buffering.
      */
     protected final StringBuilder buffer = new StringBuilder();
@@ -336,10 +337,9 @@ class StAXStreamConnector extends StAXConnector {
 
     private static Class initFIStAXReaderClass() {
         try {
-            Class fisr = UnmarshallerImpl.class.getClassLoader().
-                    loadClass("com.sun.xml.internal.org.jvnet.fastinfoset.stax.FastInfosetStreamReader");
-            Class sdp = UnmarshallerImpl.class.getClassLoader().
-                    loadClass("com.sun.xml.internal.fastinfoset.stax.StAXDocumentParser");
+            ClassLoader cl = getClassLoader();
+            Class fisr = cl.loadClass("com.sun.xml.internal.org.jvnet.fastinfoset.stax.FastInfosetStreamReader");
+            Class sdp = cl.loadClass("com.sun.xml.internal.fastinfoset.stax.StAXDocumentParser");
             // Check if StAXDocumentParser implements FastInfosetStreamReader
             if (fisr.isAssignableFrom(sdp))
                 return sdp;
@@ -354,9 +354,9 @@ class StAXStreamConnector extends StAXConnector {
         try {
             if (FI_STAX_READER_CLASS == null)
                 return null;
-            
-            Class c = UnmarshallerImpl.class.getClassLoader().loadClass(
-                    "com.sun.xml.internal.bind.v2.runtime.unmarshaller.FastInfosetConnector");                
+
+            Class c = getClassLoader().loadClass(
+                    "com.sun.xml.internal.bind.v2.runtime.unmarshaller.FastInfosetConnector");
             return c.getConstructor(FI_STAX_READER_CLASS,XmlVisitor.class);
         } catch (Throwable e) {
             return null;
@@ -371,7 +371,7 @@ class StAXStreamConnector extends StAXConnector {
 
     private static Class initStAXExReader() {
         try {
-            return UnmarshallerImpl.class.getClassLoader().loadClass("com.sun.xml.internal.org.jvnet.staxex.XMLStreamReaderEx");
+            return getClassLoader().loadClass("com.sun.xml.internal.org.jvnet.staxex.XMLStreamReaderEx");
         } catch (Throwable e) {
             return null;
         }
@@ -379,10 +379,15 @@ class StAXStreamConnector extends StAXConnector {
 
     private static Constructor<? extends StAXConnector> initStAXExConnector() {
         try {
-            Class c = UnmarshallerImpl.class.getClassLoader().loadClass("com.sun.xml.internal.bind.v2.runtime.unmarshaller.StAXExConnector");
+            Class c = getClassLoader().loadClass("com.sun.xml.internal.bind.v2.runtime.unmarshaller.StAXExConnector");
             return c.getConstructor(STAX_EX_READER_CLASS,XmlVisitor.class);
         } catch (Throwable e) {
             return null;
         }
     }
+
+    public static ClassLoader getClassLoader() {
+        return ClassLoaderRetriever.getClassLoader();
+    }
+
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -31,14 +31,14 @@ import com.sun.xml.internal.rngom.ast.om.Location;
 import com.sun.xml.internal.rngom.ast.om.ParsedPattern;
 
 /**
- * 
+ *
  * @author
  *      Kohsuke Kawaguchi (kk@kohsuke.org)
  */
 public class ScopeHost extends GrammarSectionHost implements Scope {
     protected final Scope lhs;
     protected final Scope rhs;
-    
+
     protected ScopeHost( Scope lhs, Scope rhs ) {
         super(lhs,rhs);
         this.lhs = lhs;
@@ -48,7 +48,7 @@ public class ScopeHost extends GrammarSectionHost implements Scope {
     public ParsedPattern makeParentRef(String name, Location _loc, Annotations _anno) throws BuildException {
         LocationHost loc = cast(_loc);
         AnnotationsHost anno = cast(_anno);
-        
+
         return new ParsedPatternHost(
             lhs.makeParentRef(name, loc.lhs, anno.lhs),
             rhs.makeParentRef(name, loc.rhs, anno.rhs));
@@ -57,7 +57,7 @@ public class ScopeHost extends GrammarSectionHost implements Scope {
     public ParsedPattern makeRef(String name, Location _loc, Annotations _anno) throws BuildException {
         LocationHost loc = cast(_loc);
         AnnotationsHost anno = cast(_anno);
-        
+
         return new ParsedPatternHost(
             lhs.makeRef(name, loc.lhs, anno.lhs),
             rhs.makeRef(name, loc.rhs, anno.rhs));

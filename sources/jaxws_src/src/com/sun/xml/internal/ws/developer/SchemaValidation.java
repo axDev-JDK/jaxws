@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -72,6 +72,21 @@ public @interface SchemaValidation {
      * a custom implementation of {@link ValidationErrorHandler}.
      */
     Class<? extends ValidationErrorHandler> handler() default DraconianValidationErrorHandler.class;
+
+    /**
+     * Turns validation on/off for inbound messages
+     *
+     * @since JAX-WS RI 2.2.2
+     */
+    boolean inbound() default true;
+
+
+    /**
+     * Turns validation on/off for outbound messages
+     *
+     * @since JAX-WS RI 2.2.2
+     */
+    boolean outbound() default true;
 
     /**
      * Does validation for bound headers in a SOAP message.

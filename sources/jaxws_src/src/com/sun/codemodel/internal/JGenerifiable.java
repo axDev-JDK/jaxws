@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -26,9 +26,9 @@ package com.sun.codemodel.internal;
 
 /**
  * Declarations that can have type variables.
- * 
+ *
  * Something that can be made into a generic.
- * 
+ *
  * @author
  *     Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
@@ -37,17 +37,17 @@ public interface JGenerifiable {
      * Adds a new type variable to this declaration.
      */
     JTypeVar generify( String name );
-    
+
     /**
      * Adds a new type variable to this declaration with a bound.
      */
-    JTypeVar generify( String name, Class bound );
-    
+    JTypeVar generify( String name, Class<?> bound );
+
     /**
      * Adds a new type variable to this declaration with a bound.
      */
     JTypeVar generify( String name, JClass bound );
-    
+
     /**
      * Iterates all the type parameters of this class/interface.
      */

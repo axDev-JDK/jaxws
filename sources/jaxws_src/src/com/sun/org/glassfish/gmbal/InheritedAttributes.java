@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,7 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
- 
+
 package com.sun.org.glassfish.gmbal ;
 
 import java.lang.annotation.Documented ;
@@ -33,14 +33,11 @@ import java.lang.annotation.RetentionPolicy ;
 
 /** This annotation defines one or more attributes inherited from a superclass.
  * It is simply a way to include multiple InheritedAttribute annotations on a
- * single class. 
+ * single class.
  */
-@Documented 
-@Target(ElementType.TYPE) 
+@Documented
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface InheritedAttributes {
     InheritedAttribute[] value() ;
 }
-
-
-

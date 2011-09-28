@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -30,13 +30,13 @@ import com.sun.codemodel.internal.JClass;
 /**
  * Comparator object that sorts {@link JClass}es in the order
  * of their names.
- * 
+ *
  * @author
- * 	Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
+ *      Kohsuke Kawaguchi (kohsuke.kawaguchi@sun.com)
  */
 public class ClassNameComparator implements Comparator<JClass> {
     private ClassNameComparator() {}
-    
+
     public int compare(JClass l, JClass r) {
         return l.fullName().compareTo(r.fullName());
     }

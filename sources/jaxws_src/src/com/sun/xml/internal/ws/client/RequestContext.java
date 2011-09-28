@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.ws.client;
 
 import com.sun.istack.internal.NotNull;
@@ -154,7 +155,7 @@ public final class RequestContext extends PropertySet {
     }
 
     /**
-     * The value of {@link ContentNegotiation#PROPERTY} 
+     * The value of {@link ContentNegotiation#PROPERTY}
      * property.
      */
     public ContentNegotiation contentNegotiation = defaultContentNegotiation;
@@ -296,7 +297,7 @@ public final class RequestContext extends PropertySet {
             // SoapAction as specified in the javadoc of BindingProvider. The spec seems to be little contradicting with
             //  javadoc and says that the use property effects the sending of SOAPAction property.
             // Since the user has the capability to set the value as "" if needed, implement the javadoc behavior.
-            
+
             if ((soapActionUse != null && soapActionUse) || (soapActionUse == null && isAddressingEnabled)) {
                 if (soapAction != null) {
                     packet.soapAction = soapAction;
@@ -304,7 +305,7 @@ public final class RequestContext extends PropertySet {
             }
             if((!isAddressingEnabled && (soapActionUse == null || !soapActionUse)) && soapAction != null) {
                 LOGGER.warning("BindingProvider.SOAPACTION_URI_PROPERTY is set in the RequestContext but is ineffective," +
-                        " Either set BindingProvider.SOAPACTION_USE_PROPERTY to true or enable AddressingFeature"); 
+                        " Either set BindingProvider.SOAPACTION_USE_PROPERTY to true or enable AddressingFeature");
             }
             if(!others.isEmpty()) {
                 packet.invocationProperties.putAll(others);
@@ -326,7 +327,7 @@ public final class RequestContext extends PropertySet {
                     handlerScopePropertyNames.add(key);
                 }
             }
-            
+
             if(!handlerScopePropertyNames.isEmpty())
                 packet.getHandlerScopePropertyNames(false).addAll(handlerScopePropertyNames);
         }

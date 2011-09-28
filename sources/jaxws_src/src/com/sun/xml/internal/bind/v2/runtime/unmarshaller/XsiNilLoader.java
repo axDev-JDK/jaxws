@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -25,14 +25,16 @@
 
 package com.sun.xml.internal.bind.v2.runtime.unmarshaller;
 
+import java.util.Collection;
+
+import javax.xml.bind.JAXBElement;
+import javax.xml.namespace.QName;
+
 import com.sun.xml.internal.bind.DatatypeConverterImpl;
 import com.sun.xml.internal.bind.api.AccessorException;
 import com.sun.xml.internal.bind.v2.WellKnownNamespace;
 import com.sun.xml.internal.bind.v2.runtime.reflect.Accessor;
 
-import java.util.Collection;
-import javax.xml.bind.JAXBElement;
-import javax.xml.namespace.QName;
 import org.xml.sax.SAXException;
 
 /**
@@ -54,7 +56,9 @@ public class XsiNilLoader extends ProxyLoader {
         int idx = ea.atts.getIndex(WellKnownNamespace.XML_SCHEMA_INSTANCE,"nil");
 
         if (idx!=-1) {
-            if (DatatypeConverterImpl._parseBoolean(ea.atts.getValue(idx))) {
+            Boolean b = DatatypeConverterImpl._parseBoolean(ea.atts.getValue(idx));
+
+            if (b != null && b) {
                 onNil(state);
                 boolean hasOtherAttributes = (ea.atts.getLength() - 1) > 0;
                 // see issues 6759703 and 565 - need to preserve attributes even if the element is nil; only when the type is stored in JAXBElement
@@ -81,8 +85,6 @@ public class XsiNilLoader extends ProxyLoader {
      */
     protected void onNil(UnmarshallingContext.State state) throws SAXException {
     }
-
-
 
     public static final class Single extends XsiNilLoader {
         private final Accessor acc;

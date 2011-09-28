@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.sun.xml.internal.ws.policy;
 
 import com.sun.xml.internal.ws.policy.sourcemodel.AssertionData;
@@ -30,7 +31,7 @@ import java.util.Collection;
 /**
  * Complex assertion is an abstract class that serves as a base class for any assertion
  * that <b>MAY</b> contain nested policies.
- * 
+ *
  * @author Marek Potociar (marek.potociar at sun.com)
  */
 public abstract class ComplexAssertion extends PolicyAssertion {

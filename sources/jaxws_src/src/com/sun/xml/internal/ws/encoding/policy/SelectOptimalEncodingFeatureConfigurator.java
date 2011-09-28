@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -41,7 +41,7 @@ import javax.xml.namespace.QName;
 
 import static com.sun.xml.internal.ws.encoding.policy.EncodingConstants.SELECT_OPTIMAL_ENCODING_ASSERTION;
 import javax.xml.ws.WebServiceFeature;
-        
+
 /**
  * A configurator provider for FastInfoset policy assertions.
  *
@@ -50,7 +50,7 @@ import javax.xml.ws.WebServiceFeature;
  */
 public class SelectOptimalEncodingFeatureConfigurator implements PolicyFeatureConfigurator {
     public static final QName enabled = new QName("enabled");
-    
+
     /**
      * Process SelectOptimalEncoding policy assertions.
      *
