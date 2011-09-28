@@ -158,10 +158,12 @@ public /*to make unit tests happy*/ final class MarshallerImpl extends AbstractM
         write(obj, createWriter(out), new StAXPostInitAction(inscopeNamespace,serializer));
     }
 
+    @Override
     public void marshal(Object obj, XMLStreamWriter writer) throws JAXBException {
         write(obj, XMLStreamWriterOutput.create(writer,context), new StAXPostInitAction(writer,serializer));
     }
 
+    @Override
     public void marshal(Object obj, XMLEventWriter writer) throws JAXBException {
         write(obj, new XMLEventWriterOutput(writer), new StAXPostInitAction(writer,serializer));
     }
@@ -283,6 +285,7 @@ public /*to make unit tests happy*/ final class MarshallerImpl extends AbstractM
                 validator.setErrorHandler(new FatalAdapter(serializer));
                 // work around a bug in JAXP validator in Tiger
                 XMLFilterImpl f = new XMLFilterImpl() {
+                    @Override
                     public void startPrefixMapping(String prefix, String uri) throws SAXException {
                         super.startPrefixMapping(prefix.intern(), uri.intern());
                     }
@@ -451,6 +454,7 @@ public /*to make unit tests happy*/ final class MarshallerImpl extends AbstractM
     }
 
 
+    @Override
     public Object getProperty(String name) throws PropertyException {
         if( INDENT_STRING.equals(name) )
             return indent;
@@ -466,11 +470,11 @@ public /*to make unit tests happy*/ final class MarshallerImpl extends AbstractM
             return c14nSupport;
         if ( OBJECT_IDENTITY_CYCLE_DETECTION.equals(name))
                 return serializer.getObjectIdentityCycleDetection();
-;
 
         return super.getProperty(name);
     }
 
+    @Override
     public void setProperty(String name, Object value) throws PropertyException {
         if( INDENT_STRING.equals(name) ) {
             checkString(name, value);
@@ -575,10 +579,12 @@ public /*to make unit tests happy*/ final class MarshallerImpl extends AbstractM
         return serializer.attachmentMarshaller;
     }
 
+    @Override
     public Schema getSchema() {
         return schema;
     }
 
+    @Override
     public void setSchema(Schema s) {
         this.schema = s;
     }
@@ -591,10 +597,12 @@ public /*to make unit tests happy*/ final class MarshallerImpl extends AbstractM
         return false;
     }
 
+    @Override
     public Listener getListener() {
         return externalListener;
     }
 
+    @Override
     public void setListener(Listener listener) {
         externalListener = listener;
     }

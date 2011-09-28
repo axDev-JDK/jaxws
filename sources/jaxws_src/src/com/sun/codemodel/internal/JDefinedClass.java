@@ -56,7 +56,6 @@ public class JDefinedClass
     /** Name of this class. Null if anonymous. */
     private String name = null;
 
-
     /** Modifiers for the class declaration */
     private JMods mods;
 
@@ -886,5 +885,14 @@ public class JDefinedClass
         if (annotations == null)
             annotations = new ArrayList<JAnnotationUse>();
         return Collections.unmodifiableCollection(annotations);
+    }
+
+    /**
+     * @return
+     *      the current modifiers of this class.
+     *      Always return non-null valid object.
+     */
+    public JMods mods() {
+        return mods;
     }
 }

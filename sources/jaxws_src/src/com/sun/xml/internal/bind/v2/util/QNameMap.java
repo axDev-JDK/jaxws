@@ -147,7 +147,7 @@ public final class QNameMap<V> {
         Entry<V> e = getEntry(nsUri,localPart);
         if(e==null) return null;
         else        return e.value;
-    }
+        }
 
     public V get( QName name ) {
         return get(name.getNamespaceURI(),name.getLocalPart());
@@ -300,8 +300,7 @@ public final class QNameMap<V> {
             int i = t.length;
             Entry<V> n = null;
             if (size != 0) { // advance to first entry
-                while (i > 0 && (n = t[--i]) == null)
-                    ;
+                while (i > 0 && (n = t[--i]) == null) {}
             }
             next = n;
             index = i;
@@ -383,6 +382,7 @@ public final class QNameMap<V> {
             return oldValue;
         }
 
+        @Override
         public boolean equals(Object o) {
             if (!(o instanceof Entry))
                 return false;
@@ -401,11 +401,13 @@ public final class QNameMap<V> {
             return false;
         }
 
+        @Override
         public int hashCode() {
             return ( localName.hashCode()) ^
                     (value==null   ? 0 : value.hashCode());
         }
 
+        @Override
         public String toString() {
             return '"'+nsUri +"\",\"" +localName + "\"=" + getValue();
         }
@@ -429,6 +431,7 @@ public final class QNameMap<V> {
         public Iterator<Entry<V>> iterator() {
             return newEntryIterator();
         }
+        @Override
         public boolean contains(Object o) {
             if (!(o instanceof Entry))
                 return false;
@@ -436,6 +439,7 @@ public final class QNameMap<V> {
             Entry<V> candidate = getEntry(e.nsUri,e.localName);
             return candidate != null && candidate.equals(e);
         }
+        @Override
         public boolean remove(Object o) {
             throw new UnsupportedOperationException();
         }
@@ -457,6 +461,7 @@ public final class QNameMap<V> {
         return e;
     }
 
+    @Override
     public String toString() {
         StringBuilder buf = new StringBuilder();
         buf.append('{');

@@ -63,7 +63,6 @@ public abstract class NamespacePrefixMapper {
      *
      * This method is intended to be overrided by a derived class.
      *
-     *
      * <p>
      * As noted in the return value portion of the javadoc, there
      * are several cases where the preference cannot be honored.
@@ -242,7 +241,6 @@ public abstract class NamespacePrefixMapper {
      *     </foo:abc>
      *   </foo:abc>
      * </xmp></pre>
-     * <!-- TODO: shall we relax this constraint? -->
      *
      * @return
      *      always return a non-null (but possibly empty) array. The array stores

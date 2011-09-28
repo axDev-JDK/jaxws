@@ -114,6 +114,7 @@ final class RuntimeEnumLeafInfoImpl<T extends Enum<T>,B> extends EnumLeafInfoImp
         return false;
     }
 
+    @Override
     public Class getClazz() {
         return clazz;
     }
@@ -135,12 +136,8 @@ final class RuntimeEnumLeafInfoImpl<T extends Enum<T>,B> extends EnumLeafInfoImp
 
         B b = baseXducer.parse(lexical);
 
-        if(b instanceof String) { // issue 602 - ugly patch
+        if (tokenStringType) {
             b = (B) ((String)b).trim();
-        }
-
-        if(b==null) {
-            return null;
         }
 
         return parseMap.get(b);

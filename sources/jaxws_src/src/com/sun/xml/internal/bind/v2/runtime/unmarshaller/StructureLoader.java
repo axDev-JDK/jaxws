@@ -182,7 +182,11 @@ public final class StructureLoader extends Loader {
             Attributes atts = ea.atts;
             for (int i = 0; i < atts.getLength(); i ++){
                 String auri = atts.getURI(i);
+                // may be empty string based on parser settings
                 String alocal = atts.getLocalName(i);
+                if ("".equals(alocal)) {
+                    alocal = atts.getQName(i);
+                }
                 String avalue = atts.getValue(i);
                 TransducedAccessor xacc = attUnmarshallers.get(auri, alocal);
                 try {

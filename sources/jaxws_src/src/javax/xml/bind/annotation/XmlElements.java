@@ -85,8 +85,8 @@ import java.lang.annotation.Target;
  *    &lt;!-- XML Representation for a List of {1,2.5}
  *            XML output is not wrapped using another element -->
  *    ...
- *    <A> 1 </A>
- *    <B> 2.5 </B>
+ *    &lt;A> 1 &lt;/A>
+ *    &lt;B> 2.5 &lt;/B>
  *    ...
  *
  *    &lt;!-- XML Schema fragment -->

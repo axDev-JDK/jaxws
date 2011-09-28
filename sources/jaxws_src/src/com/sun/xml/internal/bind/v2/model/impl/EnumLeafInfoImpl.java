@@ -39,6 +39,8 @@ import com.sun.xml.internal.bind.v2.model.core.NonElement;
 import com.sun.xml.internal.bind.v2.model.core.Element;
 import com.sun.xml.internal.bind.v2.model.core.ClassInfo;
 import com.sun.xml.internal.bind.v2.runtime.Location;
+import java.util.Collection;
+import javax.xml.bind.annotation.XmlSchemaType;
 
 /**
  * {@link EnumLeafInfo} implementation.
@@ -72,6 +74,11 @@ class EnumLeafInfoImpl<T,C,F,M> extends TypeInfoImpl<T,C,F,M>
      * Or else null.
      */
     private QName elementName;
+
+    /**
+     * Used to recognize token vs string.
+     */
+    protected boolean tokenStringType;
 
     /**
      * @param clazz
@@ -108,6 +115,20 @@ class EnumLeafInfoImpl<T,C,F,M> extends TypeInfoImpl<T,C,F,M>
      */
     protected void calcConstants() {
         EnumConstantImpl<T,C,F,M> last = null;
+
+        // first check if we represent xs:token derived type
+        Collection<? extends F> fields = nav().getDeclaredFields(clazz);
+        for (F f : fields) {
+            if (nav().getFieldType(f).equals(String.class)) {
+                XmlSchemaType schemaTypeAnnotation = builder.reader.getFieldAnnotation(XmlSchemaType.class, f, this);
+                if (schemaTypeAnnotation != null) {
+                    if ("token".equals(schemaTypeAnnotation.name())) {
+                        tokenStringType = true;
+                        break;
+                    }
+                };
+            }
+        }
         F[] constants = nav().getEnumConstants(clazz);
         for( int i=constants.length-1; i>=0; i-- ) {
             F constant = constants[i];
@@ -130,6 +151,14 @@ class EnumLeafInfoImpl<T,C,F,M> extends TypeInfoImpl<T,C,F,M>
 
     public T getType() {
         return type;
+    }
+
+    /**
+     *
+     * @return true if enum is restriction/extension from xs:token type, otherwise false
+     */
+    public boolean isToken() {
+        return tokenStringType;
     }
 
     /**
@@ -168,6 +197,7 @@ class EnumLeafInfoImpl<T,C,F,M> extends TypeInfoImpl<T,C,F,M>
         return this;
     }
 
+    @Override
     public void link() {
         // make sure we've computed constants
         getConstants();

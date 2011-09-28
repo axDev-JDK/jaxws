@@ -233,7 +233,7 @@ public final class XmlSchemaGenerator<T,C,F,M> {
 
         // search properties for foreign namespace references
         for( PropertyInfo<T,C> p : clazz.getProperties()) {
-            n.processForeignNamespaces(p);
+            n.processForeignNamespaces(p, 1);
             if (p instanceof AttributePropertyInfo) {
                 AttributePropertyInfo<T,C> ap = (AttributePropertyInfo<T,C>) p;
                 String aUri = ap.getXmlName().getNamespaceURI();
@@ -295,7 +295,7 @@ public final class XmlSchemaGenerator<T,C,F,M> {
         n.elementDecls.put(name.getLocalPart(),n.new ElementWithType(nillable, elem.getContentType()));
 
         // search for foreign namespace references
-        n.processForeignNamespaces(elem.getProperty());
+        n.processForeignNamespaces(elem.getProperty(), 1);
     }
 
     public void add( EnumLeafInfo<T,C> envm ) {
@@ -543,15 +543,19 @@ public final class XmlSchemaGenerator<T,C,F,M> {
          *
          * @param p the PropertyInfo
          */
-        private void processForeignNamespaces(PropertyInfo<T, C> p) {
-            // TODO: missing the correct handling of anonymous type,
-            // which requires recursive checks
-            for( TypeInfo<T, C> t : p.ref()) {
-                if(t instanceof Element) {
-                    addDependencyTo(((Element)t).getElementName());
+        private void processForeignNamespaces(PropertyInfo<T, C> p, int processingDepth) {
+            for (TypeInfo<T, C> t : p.ref()) {
+                if ((t instanceof ClassInfo) && (processingDepth > 0)) {
+                    java.util.List<PropertyInfo> l = ((ClassInfo) t).getProperties();
+                    for (PropertyInfo subp : l) {
+                        processForeignNamespaces(subp, --processingDepth);
+                    }
                 }
-                if(t instanceof NonElement) {
-                    addDependencyTo(((NonElement)t).getTypeName());
+                if (t instanceof Element) {
+                    addDependencyTo(((Element) t).getElementName());
+                }
+                if (t instanceof NonElement) {
+                    addDependencyTo(((NonElement) t).getTypeName());
                 }
             }
         }
@@ -560,15 +564,18 @@ public final class XmlSchemaGenerator<T,C,F,M> {
             // even though the Element interface says getElementName() returns non-null,
             // ClassInfo always implements Element (even if an instance of ClassInfo might not be an Element).
             // so this check is still necessary
-            if(qname==null)   return;
+            if (qname==null) {
+                return;
+            }
 
             String nsUri = qname.getNamespaceURI();
 
-            if(nsUri.equals(XML_SCHEMA))
+            if (nsUri.equals(XML_SCHEMA)) {
                 // no need to explicitly refer to XSD namespace
                 return;
+            }
 
-            if(nsUri.equals(uri)) {
+            if (nsUri.equals(uri)) {
                 selfReference = true;
                 return;
             }
@@ -1472,8 +1479,6 @@ public final class XmlSchemaGenerator<T,C,F,M> {
 
 
     /**
-     * TODO: JAX-WS dependency on this method - consider moving this method into com.sun.tools.internal.jxc.util.Util
-     *
      * Relativizes a URI by using another URI (base URI.)
      *
      * <p>

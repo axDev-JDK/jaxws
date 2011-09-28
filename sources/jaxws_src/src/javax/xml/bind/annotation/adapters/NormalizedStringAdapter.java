@@ -31,10 +31,10 @@ package javax.xml.bind.annotation.adapters;
  * {@link XmlAdapter} to handle <tt>xs:normalizedString</tt>.
  *
  * <p>
- * This adapter removes leading and trailing whitespaces, then replace
- * any tab, CR, and LF by a whitespace character ' '.
+ * Replaces any tab, CR, and LF by a whitespace character ' ',
+ * as specified in <a href="http://www.w3.org/TR/xmlschema-2/#rf-whiteSpace">the whitespace facet 'replace'</a>
  *
- * @author Kohsuke Kawaguchi
+ * @author Kohsuke Kawaguchi, Martin Grebac
  * @since JAXB 2.0
  */
 public final class NormalizedStringAdapter extends XmlAdapter<String,String> {

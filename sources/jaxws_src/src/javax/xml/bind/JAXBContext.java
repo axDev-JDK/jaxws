@@ -50,7 +50,7 @@ import java.io.InputStream;
  *   separated Java package names. Each java package contains
  *   JAXB mapped classes, schema-derived classes and/or user annotated
  *   classes. Additionally, the java package may contain JAXB package annotations
- *   that must be processed. (see JLS 3rd Edition, Section 7.4.1. Package Annotations).
+ *   that must be processed. (see JLS, Section 7.4.1 "Named Packages").
  *   </li>
  *   <li>{@link #newInstance(Class...) JAXBContext.newInstance( com.acme.foo.Foo.class )} <br/>
  *    The JAXBContext instance is intialized with class(es)
@@ -256,7 +256,7 @@ import java.io.InputStream;
  * @author <ul><li>Ryan Shoemaker, Sun Microsystems, Inc.</li><li>Kohsuke Kawaguchi, Sun Microsystems, Inc.</li><li>Joe Fialli, Sun Microsystems, Inc.</li></ul>
  * @see Marshaller
  * @see Unmarshaller
- * @see <a href="http://java.sun.com/docs/books/jls">S 7.4.1.1 "Package Annotations" in Java Language Specification, 3rd Edition</a>
+ * @see S 7.4.1 "Named Packages" in Java Language Specification</a>
  * @since JAXB1.0
  */
 public abstract class JAXBContext {
@@ -314,8 +314,8 @@ public abstract class JAXBContext {
      * <tt>jaxb.index</tt> resource file, format described below.
      * Note that a java package can contain both schema-derived classes and
      * user annotated JAXB classes. Additionally, the java package may
-     * contain JAXB package annotations  that must be processed. (see JLS 3rd Edition,
-     * Section 7.4.1. "Package Annotations").
+     * contain JAXB package annotations  that must be processed. (see JLS,
+     * Section 7.4.1 "Named Packages").
      * </p>
      *
      * <p>
@@ -548,7 +548,7 @@ public abstract class JAXBContext {
      * <p>
      * Note that for each java package registered with JAXBContext,
      * when the optional package annotations exist, they must be processed.
-     * (see JLS 3rd Edition, Section 7.4.1. "Package Annotations").
+     * (see JLS, Section 7.4.1 "Named Packages").
      *
      * <p>
      * The steps involved in discovering the JAXB implementation is discussed in the class javadoc.

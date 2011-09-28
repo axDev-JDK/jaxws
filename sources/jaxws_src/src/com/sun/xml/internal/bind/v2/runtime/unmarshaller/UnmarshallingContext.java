@@ -469,7 +469,6 @@ public final class UnmarshallingContext extends Coordinator
     }
 
     private void _startElement(TagName tagName) throws SAXException {
-
         // remember the current element if we are interested in it.
         // because the inner peer might not be found while we consume
         // the enter element token, we need to keep this information

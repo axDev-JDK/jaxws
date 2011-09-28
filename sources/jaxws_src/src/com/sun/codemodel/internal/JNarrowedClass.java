@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -25,6 +25,7 @@
 
 package com.sun.codemodel.internal;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Collections;
@@ -59,21 +60,22 @@ class JNarrowedClass extends JClass {
         this.args = args;
     }
 
+    @Override
     public JClass narrow( JClass clazz ) {
         List<JClass> newArgs = new ArrayList<JClass>(args);
         newArgs.add(clazz);
         return new JNarrowedClass(basis,newArgs);
     }
 
+    @Override
     public JClass narrow( JClass... clazz ) {
         List<JClass> newArgs = new ArrayList<JClass>(args);
-        for (JClass c : clazz)
-            newArgs.add(c);
+        newArgs.addAll(Arrays.asList(clazz));
         return new JNarrowedClass(basis,newArgs);
     }
 
     public String name() {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append(basis.name());
         buf.append('<');
         boolean first = true;
@@ -104,6 +106,7 @@ class JNarrowedClass extends JClass {
         return buf.toString();
     }
 
+    @Override
     public String binaryName() {
         StringBuilder buf = new StringBuilder();
         buf.append(basis.binaryName());
@@ -120,6 +123,7 @@ class JNarrowedClass extends JClass {
         return buf.toString();
     }
 
+    @Override
     public void generate(JFormatter f) {
         f.t(basis).p('<').g(args).p(JFormatter.CLOSE_TYPE_ARGS);
     }
@@ -164,6 +168,7 @@ class JNarrowedClass extends JClass {
         };
     }
 
+    @Override
     public JClass erasure() {
         return basis;
     }
@@ -176,6 +181,7 @@ class JNarrowedClass extends JClass {
         return basis.isAbstract();
     }
 
+    @Override
     public boolean isArray() {
         return false;
     }
@@ -185,11 +191,13 @@ class JNarrowedClass extends JClass {
     // Equality is based on value
     //
 
+    @Override
     public boolean equals(Object obj) {
         if(!(obj instanceof JNarrowedClass))   return false;
         return fullName().equals(((JClass)obj).fullName());
     }
 
+    @Override
     public int hashCode() {
         return fullName().hashCode();
     }
@@ -211,6 +219,7 @@ class JNarrowedClass extends JClass {
             return this;
     }
 
+    @Override
     public List<JClass> getTypeParameters() {
         return args;
     }

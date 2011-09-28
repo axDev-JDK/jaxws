@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -57,4 +57,28 @@ public interface WSFeatureList extends Iterable<WebServiceFeature> {
      * Obtains all the features in the array.
       */
     @NotNull WebServiceFeature[] toArray();
+
+    /**
+     * Merges the extra features that are not already set on binding.
+     * i.e, if a feature is set already on binding through someother API
+     * the coresponding wsdlFeature is not set.
+     *
+     * @param features          Web Service features that need to be merged with already configured features.
+     * @param reportConflicts   If true, checks if the feature setting in WSDL (wsdl extension or
+     *                          policy configuration) colflicts with feature setting in Deployed Service and
+     *                          logs warning if there are any conflicts.
+     */
+    void mergeFeatures(@NotNull WebServiceFeature[] features, boolean reportConflicts);
+
+   /**
+    * Merges the extra features that are not already set on binding.
+    * i.e, if a feature is set already on binding through someother API
+    * the coresponding wsdlFeature is not set.
+    *
+    * @param features          Web Service features that need to be merged with already configured features.
+    * @param reportConflicts   If true, checks if the feature setting in WSDL (wsdl extension or
+    *                          policy configuration) colflicts with feature setting in Deployed Service and
+    *                          logs warning if there are any conflicts.
+    */
+   void mergeFeatures(@NotNull Iterable<WebServiceFeature> features, boolean reportConflicts);
 }

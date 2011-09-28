@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -42,7 +42,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
-
 import javax.xml.bind.Binder;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -232,7 +231,7 @@ public final class JAXBContextImpl extends JAXBRIContext {
 
     private WeakReference<RuntimeTypeInfoSet> typeInfoSetCache;
 
-    private @NotNull RuntimeAnnotationReader annotaitonReader;
+    private @NotNull RuntimeAnnotationReader annotationReader;
 
     private /*almost final*/ boolean hasSwaRef;
     private final @NotNull Map<Class,Class> subclassReplacements;
@@ -256,20 +255,11 @@ public final class JAXBContextImpl extends JAXBRIContext {
         return xmlNsSet;
     }
 
-    /**
-     *
-     * @param typeRefs
-     *      used to build {@link Bridge}s. Can be empty.
-     * @param c14nSupport
-     *      {@link #c14nSupport}.
-     * @param xmlAccessorFactorySupport
-     *      Use custom com.sun.xml.internal.bind.v2.runtime.reflect.Accessor implementation.
-     */
-    public JAXBContextImpl(JAXBContextBuilder builder) throws JAXBException {
+    private JAXBContextImpl(JAXBContextBuilder builder) throws JAXBException {
 
         this.defaultNsUri = builder.defaultNsUri;
         this.retainPropertyInfo = builder.retainPropertyInfo;
-        this.annotaitonReader = builder.annotationReader;
+        this.annotationReader = builder.annotationReader;
         this.subclassReplacements = builder.subclassReplacements;
         this.c14nSupport = builder.c14nSupport;
         this.classes = builder.classes;
@@ -320,14 +310,12 @@ public final class JAXBContextImpl extends JAXBRIContext {
         for( Entry<Class, ? extends RuntimeClassInfo> e : typeSet.beans().entrySet() ) {
             ClassBeanInfoImpl<?> bi = getOrCreate(e.getValue());
 
-            XmlSchema xs = this.annotaitonReader.getPackageAnnotation(XmlSchema.class, e.getKey(), null);
+            XmlSchema xs = this.annotationReader.getPackageAnnotation(XmlSchema.class, e.getKey(), null);
             if(xs != null) {
                 if(xs.xmlns() != null && xs.xmlns().length > 0) {
                     if(xmlNsSet == null)
                         xmlNsSet = new HashSet<XmlNs>();
-
-                    for(int i = 0; i < xs.xmlns().length; i++)
-                        xmlNsSet.add(xs.xmlns()[i]);
+                    xmlNsSet.addAll(Arrays.asList(xs.xmlns()));
                 }
             }
 
@@ -444,7 +432,7 @@ public final class JAXBContextImpl extends JAXBRIContext {
                 return r;
         }
 
-        final RuntimeModelBuilder builder = new RuntimeModelBuilder(this,annotaitonReader,subclassReplacements,defaultNsUri);
+        final RuntimeModelBuilder builder = new RuntimeModelBuilder(this,annotationReader,subclassReplacements,defaultNsUri);
 
         IllegalAnnotationsException.Builder errorHandler = new IllegalAnnotationsException.Builder();
         builder.setErrorHandler(errorHandler);
@@ -795,7 +783,7 @@ public final class JAXBContextImpl extends JAXBRIContext {
         XmlJavaTypeAdapter xjta = tr.get(XmlJavaTypeAdapter.class);
         XmlList xl = tr.get(XmlList.class);
 
-        Ref<Type,Class> ref = new Ref<Type,Class>(annotaitonReader, tis.getNavigator(), tr.type, xjta, xl );
+        Ref<Type,Class> ref = new Ref<Type,Class>(annotationReader, tis.getNavigator(), tr.type, xjta, xl );
 
         return tis.getTypeInfo(ref);
     }
@@ -808,11 +796,13 @@ public final class JAXBContextImpl extends JAXBRIContext {
     }
 
     @Override
+    @SuppressWarnings("ThrowableInitCause")
     public void generateSchema(SchemaOutputResolver outputResolver) throws IOException {
         if(outputResolver==null)
             throw new IOException(Messages.NULL_OUTPUT_RESOLVER.format());
 
         final SAXParseException[] e = new SAXParseException[1];
+        final SAXParseException[] w = new SAXParseException[1];
 
         createSchemaGenerator().write(outputResolver, new ErrorListener() {
             public void error(SAXParseException exception) {
@@ -823,13 +813,21 @@ public final class JAXBContextImpl extends JAXBRIContext {
                 e[0] = exception;
             }
 
-            public void warning(SAXParseException exception) {}
+            public void warning(SAXParseException exception) {
+                w[0] = exception;
+            }
+
             public void info(SAXParseException exception) {}
         });
 
-        if(e[0]!=null) {
+        if (e[0]!=null) {
             IOException x = new IOException(Messages.FAILED_TO_GENERATE_SCHEMA.format());
             x.initCause(e[0]);
+            throw x;
+        }
+        if (w[0]!=null) {
+            IOException x = new IOException(Messages.ERROR_PROCESSING_SCHEMA.format());
+            x.initCause(w[0]);
             throw x;
         }
     }
@@ -1058,7 +1056,7 @@ public final class JAXBContextImpl extends JAXBRIContext {
             this.supressAccessorWarnings = baseImpl.supressAccessorWarnings;
             this.retainPropertyInfo = baseImpl.retainPropertyInfo;
             this.defaultNsUri = baseImpl.defaultNsUri;
-            this.annotationReader = baseImpl.annotaitonReader;
+            this.annotationReader = baseImpl.annotationReader;
             this.subclassReplacements = baseImpl.subclassReplacements;
             this.c14nSupport = baseImpl.c14nSupport;
             this.classes = baseImpl.classes;

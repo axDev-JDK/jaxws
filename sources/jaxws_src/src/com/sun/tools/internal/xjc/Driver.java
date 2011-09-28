@@ -59,7 +59,7 @@ import org.xml.sax.SAXParseException;
 
 
 /**
- * CUI of XJC.
+ * Command Line Interface of XJC.
  */
 public class Driver {
 
@@ -501,13 +501,12 @@ public class Driver {
      *      {@link Options} object.
      */
     public static void usage( @Nullable Options opts, boolean privateUsage ) {
-        if( privateUsage ) {
+        System.out.println(Messages.format(Messages.DRIVER_PUBLIC_USAGE));
+        if (privateUsage) {
             System.out.println(Messages.format(Messages.DRIVER_PRIVATE_USAGE));
-        } else {
-            System.out.println(Messages.format(Messages.DRIVER_PUBLIC_USAGE));
         }
 
-        if( opts!=null && opts.getAllPlugins().isEmpty()) {
+        if( opts!=null && !opts.getAllPlugins().isEmpty()) {
             System.out.println(Messages.format(Messages.ADDON_USAGE));
             for (Plugin p : opts.getAllPlugins()) {
                 System.out.println(p.getUsage());

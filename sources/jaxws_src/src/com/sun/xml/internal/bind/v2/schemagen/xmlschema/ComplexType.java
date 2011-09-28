@@ -36,16 +36,16 @@ public interface ComplexType
 
 
     @XmlAttribute("final")
-    public ComplexType _final(String[] value);
-
-    @XmlAttribute("final")
     public ComplexType _final(String value);
 
-    @XmlAttribute
-    public ComplexType block(String[] value);
+    @XmlAttribute("final")
+    public ComplexType _final(String[] value);
 
     @XmlAttribute
     public ComplexType block(String value);
+
+    @XmlAttribute
+    public ComplexType block(String[] value);
 
     @XmlAttribute("abstract")
     public ComplexType _abstract(boolean value);

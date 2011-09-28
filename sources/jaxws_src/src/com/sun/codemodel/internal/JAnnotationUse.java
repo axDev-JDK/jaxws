@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2008, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -27,6 +27,7 @@ package com.sun.codemodel.internal;
 
 
 import java.lang.annotation.Annotation;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -52,6 +53,14 @@ public final class JAnnotationUse extends JAnnotationValue {
 
     JAnnotationUse(JClass clazz){
         this.clazz = clazz;
+    }
+
+    public JClass getAnnotationClass() {
+        return clazz;
+    }
+
+    public Map<String, JAnnotationValue> getAnnotationMembers() {
+        return Collections.unmodifiableMap(memberValues);
     }
 
     private JCodeModel owner() {
@@ -322,8 +331,8 @@ public final class JAnnotationUse extends JAnnotationValue {
      *         be added to it using the same or the overloaded methods.
      */
     public JAnnotationUse param(String name, JType type){
-        JClass clazz = type.boxify();
-        addValue(name, new JAnnotationStringValue ( clazz.dotclass() ));
+        JClass c = type.boxify();
+        addValue(name, new JAnnotationStringValue ( c.dotclass() ));
         return this;
     }
 
