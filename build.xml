@@ -43,8 +43,8 @@
     <!-- Project build properties. -->
     <property file="build.properties"/>
 
-    <property name="jaxws.src.dir" value="src/share/jaxws_classes"/>
-    <property name="jaf.src.dir" value="src/share/jaf_classes"/>
+    <property name="jaxws.src.dir" value="sources/jaxws_src/src"/>
+    <property name="jaf.src.dir" value="sources/jaf_src/src"/>
     <path id="src.dir.id">
       <pathelement path="${jaxws.src.dir}"/>
       <pathelement path="${jaf.src.dir}"/>
