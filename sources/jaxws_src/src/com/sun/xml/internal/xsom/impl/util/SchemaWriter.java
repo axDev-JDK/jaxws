@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -508,7 +508,7 @@ public class SchemaWriter implements XSVisitor, XSSimpleTypeVisitor {
     public void particle( XSParticle part ) {
         BigInteger i;
 
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
 
         i = part.getMaxOccurs();
         if(i.equals(BigInteger.valueOf(XSParticle.UNBOUNDED)))
@@ -580,7 +580,7 @@ public class SchemaWriter implements XSVisitor, XSSimpleTypeVisitor {
         }
 
         public String union(Union wc) {
-            StringBuffer buf = new StringBuffer(" namespace='");
+            StringBuilder buf = new StringBuilder(" namespace='");
             boolean first = true;
             for (String s : wc.getNamespaces()) {
                 if(first)   first=false;

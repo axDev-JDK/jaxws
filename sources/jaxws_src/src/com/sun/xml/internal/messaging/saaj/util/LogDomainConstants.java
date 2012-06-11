@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -35,10 +35,8 @@ package com.sun.xml.internal.messaging.saaj.util;
 
 public interface LogDomainConstants {
 
-    // TBD -- this should be configurable from a properties
-    // file or something .. Leaving it as it is for now.
     public static String MODULE_TOPLEVEL_DOMAIN =
-                    "javax.xml.messaging.saaj";
+                    "com.sun.xml.internal.messaging.saaj";
 
     // First Level Domain
     public static String CLIENT_DOMAIN =

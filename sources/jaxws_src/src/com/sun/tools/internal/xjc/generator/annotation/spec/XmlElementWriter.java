@@ -34,18 +34,18 @@ public interface XmlElementWriter
 {
 
 
-    XmlElementWriter namespace(String value);
-
-    XmlElementWriter required(boolean value);
-
-    XmlElementWriter nillable(boolean value);
-
     XmlElementWriter name(String value);
 
     XmlElementWriter type(Class value);
 
     XmlElementWriter type(JType value);
 
+    XmlElementWriter namespace(String value);
+
     XmlElementWriter defaultValue(String value);
+
+    XmlElementWriter required(boolean value);
+
+    XmlElementWriter nillable(boolean value);
 
 }

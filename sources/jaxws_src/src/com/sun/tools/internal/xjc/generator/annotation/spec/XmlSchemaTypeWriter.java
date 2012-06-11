@@ -34,12 +34,12 @@ public interface XmlSchemaTypeWriter
 {
 
 
-    XmlSchemaTypeWriter namespace(String value);
-
     XmlSchemaTypeWriter name(String value);
 
     XmlSchemaTypeWriter type(Class value);
 
     XmlSchemaTypeWriter type(JType value);
+
+    XmlSchemaTypeWriter namespace(String value);
 
 }

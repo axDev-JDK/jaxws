@@ -83,18 +83,6 @@ class occurs extends NGCCHandler {
         $localName = $__local;
         $qname = $__qname;
         switch($_ngcc_current_state) {
-        case 1:
-            {
-                if(($ai = $runtime.getAttributeIndex("","minOccurs"))>=0) {
-                    $runtime.consumeAttribute($ai);
-                    $runtime.sendEnterElement(super._cookie, $__uri, $__local, $__qname, $attrs);
-                }
-                else {
-                    $_ngcc_current_state = 0;
-                    $runtime.sendEnterElement(super._cookie, $__uri, $__local, $__qname, $attrs);
-                }
-            }
-            break;
         case 5:
             {
                 if(($ai = $runtime.getAttributeIndex("","maxOccurs"))>=0) {
@@ -103,6 +91,18 @@ class occurs extends NGCCHandler {
                 }
                 else {
                     $_ngcc_current_state = 1;
+                    $runtime.sendEnterElement(super._cookie, $__uri, $__local, $__qname, $attrs);
+                }
+            }
+            break;
+        case 1:
+            {
+                if(($ai = $runtime.getAttributeIndex("","minOccurs"))>=0) {
+                    $runtime.consumeAttribute($ai);
+                    $runtime.sendEnterElement(super._cookie, $__uri, $__local, $__qname, $attrs);
+                }
+                else {
+                    $_ngcc_current_state = 0;
                     $runtime.sendEnterElement(super._cookie, $__uri, $__local, $__qname, $attrs);
                 }
             }
@@ -126,18 +126,6 @@ class occurs extends NGCCHandler {
         $localName = $__local;
         $qname = $__qname;
         switch($_ngcc_current_state) {
-        case 1:
-            {
-                if(($ai = $runtime.getAttributeIndex("","minOccurs"))>=0) {
-                    $runtime.consumeAttribute($ai);
-                    $runtime.sendLeaveElement(super._cookie, $__uri, $__local, $__qname);
-                }
-                else {
-                    $_ngcc_current_state = 0;
-                    $runtime.sendLeaveElement(super._cookie, $__uri, $__local, $__qname);
-                }
-            }
-            break;
         case 5:
             {
                 if(($ai = $runtime.getAttributeIndex("","maxOccurs"))>=0) {
@@ -146,6 +134,18 @@ class occurs extends NGCCHandler {
                 }
                 else {
                     $_ngcc_current_state = 1;
+                    $runtime.sendLeaveElement(super._cookie, $__uri, $__local, $__qname);
+                }
+            }
+            break;
+        case 1:
+            {
+                if(($ai = $runtime.getAttributeIndex("","minOccurs"))>=0) {
+                    $runtime.consumeAttribute($ai);
+                    $runtime.sendLeaveElement(super._cookie, $__uri, $__local, $__qname);
+                }
+                else {
+                    $_ngcc_current_state = 0;
                     $runtime.sendLeaveElement(super._cookie, $__uri, $__local, $__qname);
                 }
             }
@@ -169,17 +169,6 @@ class occurs extends NGCCHandler {
         $localName = $__local;
         $qname = $__qname;
         switch($_ngcc_current_state) {
-        case 1:
-            {
-                if(($__uri.equals("") && $__local.equals("minOccurs"))) {
-                    $_ngcc_current_state = 3;
-                }
-                else {
-                    $_ngcc_current_state = 0;
-                    $runtime.sendEnterAttribute(super._cookie, $__uri, $__local, $__qname);
-                }
-            }
-            break;
         case 5:
             {
                 if(($__uri.equals("") && $__local.equals("maxOccurs"))) {
@@ -187,6 +176,17 @@ class occurs extends NGCCHandler {
                 }
                 else {
                     $_ngcc_current_state = 1;
+                    $runtime.sendEnterAttribute(super._cookie, $__uri, $__local, $__qname);
+                }
+            }
+            break;
+        case 1:
+            {
+                if(($__uri.equals("") && $__local.equals("minOccurs"))) {
+                    $_ngcc_current_state = 3;
+                }
+                else {
+                    $_ngcc_current_state = 0;
                     $runtime.sendEnterAttribute(super._cookie, $__uri, $__local, $__qname);
                 }
             }
@@ -210,25 +210,15 @@ class occurs extends NGCCHandler {
         $localName = $__local;
         $qname = $__qname;
         switch($_ngcc_current_state) {
-        case 1:
-            {
-                $_ngcc_current_state = 0;
-                $runtime.sendLeaveAttribute(super._cookie, $__uri, $__local, $__qname);
-            }
-            break;
-        case 2:
-            {
-                if(($__uri.equals("") && $__local.equals("minOccurs"))) {
-                    $_ngcc_current_state = 0;
-                }
-                else {
-                    unexpectedLeaveAttribute($__qname);
-                }
-            }
-            break;
         case 5:
             {
                 $_ngcc_current_state = 1;
+                $runtime.sendLeaveAttribute(super._cookie, $__uri, $__local, $__qname);
+            }
+            break;
+        case 1:
+            {
+                $_ngcc_current_state = 0;
                 $runtime.sendLeaveAttribute(super._cookie, $__uri, $__local, $__qname);
             }
             break;
@@ -236,6 +226,16 @@ class occurs extends NGCCHandler {
             {
                 if(($__uri.equals("") && $__local.equals("maxOccurs"))) {
                     $_ngcc_current_state = 1;
+                }
+                else {
+                    unexpectedLeaveAttribute($__qname);
+                }
+            }
+            break;
+        case 2:
+            {
+                if(($__uri.equals("") && $__local.equals("minOccurs"))) {
+                    $_ngcc_current_state = 0;
                 }
                 else {
                     unexpectedLeaveAttribute($__qname);
@@ -258,6 +258,18 @@ class occurs extends NGCCHandler {
     public void text(String $value) throws SAXException {
         int $ai;
         switch($_ngcc_current_state) {
+        case 5:
+            {
+                if(($ai = $runtime.getAttributeIndex("","maxOccurs"))>=0) {
+                    $runtime.consumeAttribute($ai);
+                    $runtime.sendText(super._cookie, $value);
+                }
+                else {
+                    $_ngcc_current_state = 1;
+                    $runtime.sendText(super._cookie, $value);
+                }
+            }
+            break;
         case 1:
             {
                 if(($ai = $runtime.getAttributeIndex("","minOccurs"))>=0) {
@@ -270,23 +282,9 @@ class occurs extends NGCCHandler {
                 }
             }
             break;
-        case 3:
+        case 0:
             {
-                v = $value;
-                $_ngcc_current_state = 2;
-                action0();
-            }
-            break;
-        case 5:
-            {
-                if(($ai = $runtime.getAttributeIndex("","maxOccurs"))>=0) {
-                    $runtime.consumeAttribute($ai);
-                    $runtime.sendText(super._cookie, $value);
-                }
-                else {
-                    $_ngcc_current_state = 1;
-                    $runtime.sendText(super._cookie, $value);
-                }
+                revertToParentFromText(this, super._cookie, $value);
             }
             break;
         case 7:
@@ -302,9 +300,11 @@ class occurs extends NGCCHandler {
                 }
             }
             break;
-        case 0:
+        case 3:
             {
-                revertToParentFromText(this, super._cookie, $value);
+                v = $value;
+                $_ngcc_current_state = 2;
+                action0();
             }
             break;
         }
@@ -316,7 +316,7 @@ class occurs extends NGCCHandler {
     }
 
     public boolean accepted() {
-        return((($_ngcc_current_state == 0) || (($_ngcc_current_state == 5) || ($_ngcc_current_state == 1))));
+        return((($_ngcc_current_state == 0) || (($_ngcc_current_state == 1) || ($_ngcc_current_state == 5))));
     }
 
 

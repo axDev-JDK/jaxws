@@ -85,14 +85,14 @@ class facet extends NGCCHandler {
         $localName = $__local;
         $qname = $__qname;
         switch($_ngcc_current_state) {
-        case 5:
+        case 2:
             {
-                if(($ai = $runtime.getAttributeIndex("","fixed"))>=0) {
-                    $runtime.consumeAttribute($ai);
-                    $runtime.sendEnterElement(super._cookie, $__uri, $__local, $__qname, $attrs);
+                if(($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation"))) {
+                    NGCCHandler h = new annotation(this, super._source, $runtime, 418, null,AnnotationContext.SIMPLETYPE_DECL);
+                    spawnChildFromEnterElement(h, $__uri, $__local, $__qname, $attrs);
                 }
                 else {
-                    $_ngcc_current_state = 4;
+                    $_ngcc_current_state = 1;
                     $runtime.sendEnterElement(super._cookie, $__uri, $__local, $__qname, $attrs);
                 }
             }
@@ -128,7 +128,7 @@ class facet extends NGCCHandler {
         case 4:
             {
                 if(($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation"))) {
-                    NGCCHandler h = new foreignAttributes(this, super._source, $runtime, 192, fa);
+                    NGCCHandler h = new foreignAttributes(this, super._source, $runtime, 420, fa);
                     spawnChildFromEnterElement(h, $__uri, $__local, $__qname, $attrs);
                 }
                 else {
@@ -136,14 +136,14 @@ class facet extends NGCCHandler {
                 }
             }
             break;
-        case 2:
+        case 5:
             {
-                if(($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation"))) {
-                    NGCCHandler h = new annotation(this, super._source, $runtime, 190, null,AnnotationContext.SIMPLETYPE_DECL);
-                    spawnChildFromEnterElement(h, $__uri, $__local, $__qname, $attrs);
+                if(($ai = $runtime.getAttributeIndex("","fixed"))>=0) {
+                    $runtime.consumeAttribute($ai);
+                    $runtime.sendEnterElement(super._cookie, $__uri, $__local, $__qname, $attrs);
                 }
                 else {
-                    $_ngcc_current_state = 1;
+                    $_ngcc_current_state = 4;
                     $runtime.sendEnterElement(super._cookie, $__uri, $__local, $__qname, $attrs);
                 }
             }
@@ -162,16 +162,10 @@ class facet extends NGCCHandler {
         $localName = $__local;
         $qname = $__qname;
         switch($_ngcc_current_state) {
-        case 5:
+        case 2:
             {
-                if(($ai = $runtime.getAttributeIndex("","fixed"))>=0) {
-                    $runtime.consumeAttribute($ai);
-                    $runtime.sendLeaveElement(super._cookie, $__uri, $__local, $__qname);
-                }
-                else {
-                    $_ngcc_current_state = 4;
-                    $runtime.sendLeaveElement(super._cookie, $__uri, $__local, $__qname);
-                }
+                $_ngcc_current_state = 1;
+                $runtime.sendLeaveElement(super._cookie, $__uri, $__local, $__qname);
             }
             break;
         case 1:
@@ -205,7 +199,7 @@ class facet extends NGCCHandler {
         case 4:
             {
                 if((((((((((((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("minExclusive")) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("maxExclusive"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("minInclusive"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("maxInclusive"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("totalDigits"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("fractionDigits"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("length"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("maxLength"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("minLength"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("enumeration"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("whiteSpace"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("pattern")))) {
-                    NGCCHandler h = new foreignAttributes(this, super._source, $runtime, 192, fa);
+                    NGCCHandler h = new foreignAttributes(this, super._source, $runtime, 420, fa);
                     spawnChildFromLeaveElement(h, $__uri, $__local, $__qname);
                 }
                 else {
@@ -213,10 +207,16 @@ class facet extends NGCCHandler {
                 }
             }
             break;
-        case 2:
+        case 5:
             {
-                $_ngcc_current_state = 1;
-                $runtime.sendLeaveElement(super._cookie, $__uri, $__local, $__qname);
+                if(($ai = $runtime.getAttributeIndex("","fixed"))>=0) {
+                    $runtime.consumeAttribute($ai);
+                    $runtime.sendLeaveElement(super._cookie, $__uri, $__local, $__qname);
+                }
+                else {
+                    $_ngcc_current_state = 4;
+                    $runtime.sendLeaveElement(super._cookie, $__uri, $__local, $__qname);
+                }
             }
             break;
         default:
@@ -233,15 +233,10 @@ class facet extends NGCCHandler {
         $localName = $__local;
         $qname = $__qname;
         switch($_ngcc_current_state) {
-        case 5:
+        case 2:
             {
-                if(($__uri.equals("") && $__local.equals("fixed"))) {
-                    $_ngcc_current_state = 7;
-                }
-                else {
-                    $_ngcc_current_state = 4;
-                    $runtime.sendEnterAttribute(super._cookie, $__uri, $__local, $__qname);
-                }
+                $_ngcc_current_state = 1;
+                $runtime.sendEnterAttribute(super._cookie, $__uri, $__local, $__qname);
             }
             break;
         case 0:
@@ -259,10 +254,15 @@ class facet extends NGCCHandler {
                 }
             }
             break;
-        case 2:
+        case 5:
             {
-                $_ngcc_current_state = 1;
-                $runtime.sendEnterAttribute(super._cookie, $__uri, $__local, $__qname);
+                if(($__uri.equals("") && $__local.equals("fixed"))) {
+                    $_ngcc_current_state = 7;
+                }
+                else {
+                    $_ngcc_current_state = 4;
+                    $runtime.sendEnterAttribute(super._cookie, $__uri, $__local, $__qname);
+                }
             }
             break;
         default:
@@ -279,27 +279,6 @@ class facet extends NGCCHandler {
         $localName = $__local;
         $qname = $__qname;
         switch($_ngcc_current_state) {
-        case 5:
-            {
-                $_ngcc_current_state = 4;
-                $runtime.sendLeaveAttribute(super._cookie, $__uri, $__local, $__qname);
-            }
-            break;
-        case 9:
-            {
-                if(($__uri.equals("") && $__local.equals("value"))) {
-                    $_ngcc_current_state = 5;
-                }
-                else {
-                    unexpectedLeaveAttribute($__qname);
-                }
-            }
-            break;
-        case 0:
-            {
-                revertToParentFromLeaveAttribute(result, super._cookie, $__uri, $__local, $__qname);
-            }
-            break;
         case 2:
             {
                 $_ngcc_current_state = 1;
@@ -316,6 +295,27 @@ class facet extends NGCCHandler {
                 }
             }
             break;
+        case 0:
+            {
+                revertToParentFromLeaveAttribute(result, super._cookie, $__uri, $__local, $__qname);
+            }
+            break;
+        case 9:
+            {
+                if(($__uri.equals("") && $__local.equals("value"))) {
+                    $_ngcc_current_state = 5;
+                }
+                else {
+                    unexpectedLeaveAttribute($__qname);
+                }
+            }
+            break;
+        case 5:
+            {
+                $_ngcc_current_state = 4;
+                $runtime.sendLeaveAttribute(super._cookie, $__uri, $__local, $__qname);
+            }
+            break;
         default:
             {
                 unexpectedLeaveAttribute($__qname);
@@ -327,6 +327,31 @@ class facet extends NGCCHandler {
     public void text(String $value) throws SAXException {
         int $ai;
         switch($_ngcc_current_state) {
+        case 2:
+            {
+                $_ngcc_current_state = 1;
+                $runtime.sendText(super._cookie, $value);
+            }
+            break;
+        case 0:
+            {
+                revertToParentFromText(result, super._cookie, $value);
+            }
+            break;
+        case 7:
+            {
+                fixed = $value;
+                $_ngcc_current_state = 6;
+            }
+            break;
+        case 11:
+            {
+                if(($ai = $runtime.getAttributeIndex("","value"))>=0) {
+                    $runtime.consumeAttribute($ai);
+                    $runtime.sendText(super._cookie, $value);
+                }
+            }
+            break;
         case 10:
             {
                 value = $value;
@@ -345,46 +370,21 @@ class facet extends NGCCHandler {
                 }
             }
             break;
-        case 0:
-            {
-                revertToParentFromText(result, super._cookie, $value);
-            }
-            break;
-        case 11:
-            {
-                if(($ai = $runtime.getAttributeIndex("","value"))>=0) {
-                    $runtime.consumeAttribute($ai);
-                    $runtime.sendText(super._cookie, $value);
-                }
-            }
-            break;
-        case 7:
-            {
-                fixed = $value;
-                $_ngcc_current_state = 6;
-            }
-            break;
-        case 2:
-            {
-                $_ngcc_current_state = 1;
-                $runtime.sendText(super._cookie, $value);
-            }
-            break;
         }
     }
 
     public void onChildCompleted(Object $__result__, int $__cookie__, boolean $__needAttCheck__)throws SAXException {
         switch($__cookie__) {
-        case 192:
-            {
-                fa = ((ForeignAttributesImpl)$__result__);
-                $_ngcc_current_state = 2;
-            }
-            break;
-        case 190:
+        case 418:
             {
                 annotation = ((AnnotationImpl)$__result__);
                 $_ngcc_current_state = 1;
+            }
+            break;
+        case 420:
+            {
+                fa = ((ForeignAttributesImpl)$__result__);
+                $_ngcc_current_state = 2;
             }
             break;
         }

@@ -116,19 +116,16 @@ public abstract class MessageImpl
     private static boolean useMimePull = false;
 
     static {
-        try {
-            String s = System.getProperty("saaj.mime.optimization");
+            String s = SAAJUtil.getSystemProperty("saaj.mime.optimization");
             if ((s != null) && s.equals("false")) {
                 switchOffBM = true;
             }
-            s = System.getProperty("saaj.lazy.mime.optimization");
+            s = SAAJUtil.getSystemProperty("saaj.lazy.mime.optimization");
             if ((s != null) && s.equals("false")) {
                 switchOffLazyAttachment = true;
             }
-            useMimePull = Boolean.getBoolean("saaj.use.mimepull");
-        } catch (SecurityException ex) {
-            // ignore it
-        }
+            useMimePull = SAAJUtil.getSystemBoolean("saaj.use.mimepull");
+
     }
 
     //property to indicate optimized serialization for lazy attachments
@@ -427,6 +424,7 @@ public abstract class MessageImpl
                 MimeBodyPart soapMessagePart = null;
                 InputStream soapPartInputStream = null;
                 String contentID = null;
+                String contentIDNoAngle = null;
                 if (switchOffBM || switchOffLazyAttachment) {
                     if(startParam == null) {
                         soapMessagePart = multiPart.getBodyPart(0);
@@ -437,7 +435,11 @@ public abstract class MessageImpl
                         soapMessagePart = multiPart.getBodyPart(startParam);
                         for (int i = 0; i < multiPart.getCount(); i++) {
                             contentID = multiPart.getBodyPart(i).getContentID();
-                            if(!contentID.equals(startParam))
+                            // Old versions of AXIS2 put angle brackets around the content
+                            // id but not the start param
+                            contentIDNoAngle = (contentID != null) ?
+                                contentID.replaceFirst("^<", "").replaceFirst(">$", "") : null;
+                            if(!startParam.equals(contentID) && !startParam.equals(contentIDNoAngle))
                                 initializeAttachment(multiPart, i);
                         }
                     }
@@ -467,10 +469,14 @@ public abstract class MessageImpl
                         } else {
                             MimeBodyPart bp = null;
                             try {
-                                while (!startParam.equals(contentID)) {
+                               while (!startParam.equals(contentID) && !startParam.equals(contentIDNoAngle)) {
                                     bp = bmMultipart.getNextPart(
                                             stream, bndbytes, sin);
                                     contentID = bp.getContentID();
+                                    // Old versions of AXIS2 put angle brackets around the content
+                                    // id but not the start param
+                                    contentIDNoAngle = (contentID != null) ?
+                                        contentID.replaceFirst("^<", "").replaceFirst(">$", "") : null;
                                 }
                                 soapMessagePart = bp;
                                 bmMultipart.removeBodyPart(bp);

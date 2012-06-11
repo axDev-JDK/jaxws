@@ -54,8 +54,16 @@ final class XmlSchemaQuick
         return XmlSchema.class;
     }
 
+    public String location() {
+        return core.location();
+    }
+
     public String namespace() {
         return core.namespace();
+    }
+
+    public XmlNs[] xmlns() {
+        return core.xmlns();
     }
 
     public XmlNsForm elementFormDefault() {
@@ -64,14 +72,6 @@ final class XmlSchemaQuick
 
     public XmlNsForm attributeFormDefault() {
         return core.attributeFormDefault();
-    }
-
-    public String location() {
-        return core.location();
-    }
-
-    public XmlNs[] xmlns() {
-        return core.xmlns();
     }
 
 }

@@ -34,6 +34,8 @@ public interface XmlTypeWriter
 {
 
 
+    XmlTypeWriter name(String value);
+
     XmlTypeWriter namespace(String value);
 
     XmlTypeWriter propOrder(String value);
@@ -43,7 +45,5 @@ public interface XmlTypeWriter
     XmlTypeWriter factoryClass(JType value);
 
     XmlTypeWriter factoryMethod(String value);
-
-    XmlTypeWriter name(String value);
 
 }

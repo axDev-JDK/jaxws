@@ -39,6 +39,7 @@ import com.sun.xml.internal.messaging.saaj.packaging.mime.*;
 import com.sun.xml.internal.messaging.saaj.packaging.mime.util.*;
 import com.sun.xml.internal.messaging.saaj.util.FinalArrayList;
 import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream;
+import com.sun.xml.internal.messaging.saaj.util.SAAJUtil;
 
 /**
  * The MimeMultipart class is an implementation
@@ -110,7 +111,7 @@ public  class MimeMultipart {
     protected static boolean ignoreMissingEndBoundary = true;
 
     static {
-        ignoreMissingEndBoundary = Boolean.getBoolean("saaj.mime.multipart.ignoremissingendboundary");
+        ignoreMissingEndBoundary = SAAJUtil.getSystemBoolean("saaj.mime.multipart.ignoremissingendboundary");
     }
     /**
      * Default constructor. An empty MimeMultipart object
@@ -229,7 +230,11 @@ public  class MimeMultipart {
         for (int i = 0; i < count; i++) {
            MimeBodyPart part = getBodyPart(i);
            String s = part.getContentID();
-           if (s != null && s.equals(CID))
+           // Old versions of AXIS2 put angle brackets around the content
+           // id but not the start param
+           String sNoAngle = (s!= null) ? s.replaceFirst("^<", "").replaceFirst(">$", "")
+                   :null;
+           if (s != null && (s.equals(CID) || CID.equals(sNoAngle)))
                 return part;
         }
         return null;

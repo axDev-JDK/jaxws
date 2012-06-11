@@ -52,16 +52,16 @@ final class XmlAttributeQuick
         return XmlAttribute.class;
     }
 
+    public String name() {
+        return core.name();
+    }
+
     public String namespace() {
         return core.namespace();
     }
 
     public boolean required() {
         return core.required();
-    }
-
-    public String name() {
-        return core.name();
     }
 
 }

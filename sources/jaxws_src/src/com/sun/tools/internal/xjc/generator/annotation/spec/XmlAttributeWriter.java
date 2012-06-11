@@ -33,10 +33,10 @@ public interface XmlAttributeWriter
 {
 
 
+    XmlAttributeWriter name(String value);
+
     XmlAttributeWriter namespace(String value);
 
     XmlAttributeWriter required(boolean value);
-
-    XmlAttributeWriter name(String value);
 
 }

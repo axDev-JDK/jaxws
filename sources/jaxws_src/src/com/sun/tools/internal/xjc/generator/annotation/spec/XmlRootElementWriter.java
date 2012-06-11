@@ -33,8 +33,8 @@ public interface XmlRootElementWriter
 {
 
 
-    XmlRootElementWriter namespace(String value);
-
     XmlRootElementWriter name(String value);
+
+    XmlRootElementWriter namespace(String value);
 
 }

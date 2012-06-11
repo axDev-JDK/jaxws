@@ -52,18 +52,6 @@ final class XmlElementQuick
         return XmlElement.class;
     }
 
-    public String namespace() {
-        return core.namespace();
-    }
-
-    public boolean required() {
-        return core.required();
-    }
-
-    public boolean nillable() {
-        return core.nillable();
-    }
-
     public String name() {
         return core.name();
     }
@@ -72,8 +60,20 @@ final class XmlElementQuick
         return core.type();
     }
 
+    public String namespace() {
+        return core.namespace();
+    }
+
     public String defaultValue() {
         return core.defaultValue();
+    }
+
+    public boolean required() {
+        return core.required();
+    }
+
+    public boolean nillable() {
+        return core.nillable();
     }
 
 }

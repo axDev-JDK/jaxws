@@ -34,14 +34,14 @@ public interface XmlElementRefWriter
 {
 
 
-    XmlElementRefWriter namespace(String value);
-
-    XmlElementRefWriter required(boolean value);
-
     XmlElementRefWriter name(String value);
 
     XmlElementRefWriter type(Class value);
 
     XmlElementRefWriter type(JType value);
+
+    XmlElementRefWriter namespace(String value);
+
+    XmlElementRefWriter required(boolean value);
 
 }

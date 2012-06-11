@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2011, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -23,23 +23,29 @@
  * questions.
  */
 
-package com.sun.xml.internal.bind.v2.schemagen.xmlschema;
+package com.sun.xml.internal.messaging.saaj.util;
 
-import com.sun.xml.internal.txw2.TypedXmlWriter;
-import com.sun.xml.internal.txw2.annotation.XmlAttribute;
+import java.security.AccessControlException;
 
-public interface Occurs
-    extends TypedXmlWriter
-{
+/**
+ *
+ * @author vbkumarjayanti
+ */
+public final class SAAJUtil {
 
+    public static boolean getSystemBoolean(String arg) {
+        try {
+            return Boolean.getBoolean(arg);
+        } catch (AccessControlException ex) {
+            return false;
+        }
+    }
 
-    @XmlAttribute
-    public Occurs minOccurs(int value);
-
-    @XmlAttribute
-    public Occurs maxOccurs(String value);
-
-    @XmlAttribute
-    public Occurs maxOccurs(int value);
-
+    public static String getSystemProperty(String arg) {
+        try {
+            return System.getProperty(arg);
+        } catch (SecurityException ex) {
+            return null;
+        }
+    }
 }

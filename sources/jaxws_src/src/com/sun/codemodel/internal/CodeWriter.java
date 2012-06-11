@@ -43,6 +43,13 @@ import com.sun.codemodel.internal.util.UnicodeEscapeWriter;
 public abstract class CodeWriter {
 
     /**
+     * Encoding to be used by the writer. Null means platform specific encoding.
+     *
+     * @since 2.5
+     */
+    protected String encoding = null;
+
+    /**
      * Called by CodeModel to store the specified file.
      * The callee must allocate a storage to store the specified file.
      *
@@ -75,7 +82,9 @@ public abstract class CodeWriter {
      *      "Foo.java" or "Bar.properties"
      */
     public Writer openSource( JPackage pkg, String fileName ) throws IOException {
-        final OutputStreamWriter bw = new OutputStreamWriter(openBinary(pkg,fileName));
+        final OutputStreamWriter bw = encoding != null
+                ? new OutputStreamWriter(openBinary(pkg,fileName), encoding)
+                : new OutputStreamWriter(openBinary(pkg,fileName));
 
         // create writer
         try {

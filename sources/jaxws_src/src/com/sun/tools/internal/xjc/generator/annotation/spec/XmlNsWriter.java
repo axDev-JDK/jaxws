@@ -33,8 +33,8 @@ public interface XmlNsWriter
 {
 
 
-    XmlNsWriter namespaceURI(String value);
-
     XmlNsWriter prefix(String value);
+
+    XmlNsWriter namespaceURI(String value);
 
 }

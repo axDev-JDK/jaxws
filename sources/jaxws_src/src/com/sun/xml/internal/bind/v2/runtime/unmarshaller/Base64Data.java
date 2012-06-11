@@ -32,6 +32,9 @@ import java.io.OutputStream;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
+import javax.xml.stream.XMLStreamException;
+
+import javax.xml.stream.XMLStreamWriter;
 
 import com.sun.xml.internal.bind.DatatypeConverterImpl;
 import com.sun.xml.internal.bind.v2.runtime.XMLSerializer;
@@ -56,14 +59,12 @@ import com.sun.istack.internal.Nullable;
  * @see XmlVisitor#text(CharSequence)
  * @see XMLSerializer#text(Pcdata,String)
  *
- * @author Kohsuke Kawaguchi
+ * @author Kohsuke Kawaguchi, Martin Grebac
  */
 public final class Base64Data extends Pcdata {
 
     // either dataHandler or (data,dataLen,mimeType?) must be present
-
     private DataHandler dataHandler;
-
     private byte[] data;
     /**
      * Length of the valid data in {@link #data}.
@@ -75,7 +76,8 @@ public final class Base64Data extends Pcdata {
      * Unused when {@link #dataHandler} is set.
      * Use {@link DataHandler#getContentType()} in that case.
      */
-    private @Nullable String mimeType;
+    private @Nullable
+    String mimeType;
 
     /**
      * Fills in the data object by a portion of the byte[].
@@ -96,15 +98,15 @@ public final class Base64Data extends Pcdata {
      * @param data
      *      this buffer may be owned directly by the unmarshaleld JAXB object.
      */
-    public void set(byte[] data,@Nullable String mimeType) {
-        set(data,data.length,mimeType);
+    public void set(byte[] data, @Nullable String mimeType) {
+        set(data, data.length, mimeType);
     }
 
     /**
      * Fills in the data object by a {@link DataHandler}.
      */
     public void set(DataHandler data) {
-        assert data!=null;
+        assert data != null;
         this.dataHandler = data;
         this.data = null;
     }
@@ -113,14 +115,15 @@ public final class Base64Data extends Pcdata {
      * Gets the raw data.
      */
     public DataHandler getDataHandler() {
-        if(dataHandler==null) {
+        if (dataHandler == null) {
             dataHandler = new DataHandler(new DataSource() {
+
                 public String getContentType() {
                     return getMimeType();
                 }
 
                 public InputStream getInputStream() {
-                    return new ByteArrayInputStream(data,0,dataLen);
+                    return new ByteArrayInputStream(data, 0, dataLen);
                 }
 
                 public String getName() {
@@ -141,9 +144,9 @@ public final class Base64Data extends Pcdata {
      */
     public byte[] getExact() {
         get();
-        if(dataLen!=data.length) {
+        if (dataLen != data.length) {
             byte[] buf = new byte[dataLen];
-            System.arraycopy(data,0,buf,0,dataLen);
+            System.arraycopy(data, 0, buf, 0, dataLen);
             data = buf;
         }
         return data;
@@ -153,10 +156,11 @@ public final class Base64Data extends Pcdata {
      * Gets the data as an {@link InputStream}.
      */
     public InputStream getInputStream() throws IOException {
-        if(dataHandler!=null)
+        if (dataHandler != null) {
             return dataHandler.getInputStream();
-        else
-            return new ByteArrayInputStream(data,0,dataLen);
+        } else {
+            return new ByteArrayInputStream(data, 0, dataLen);
+        }
     }
 
     /**
@@ -164,14 +168,14 @@ public final class Base64Data extends Pcdata {
      * {@link #get()} operation is likely going to be expensive.
      */
     public boolean hasData() {
-        return data!=null;
+        return data != null;
     }
 
     /**
      * Gets the raw data. The size of the byte array maybe larger than the actual length.
      */
     public byte[] get() {
-        if(data==null) {
+        if (data == null) {
             try {
                 ByteArrayOutputStreamEx baos = new ByteArrayOutputStreamEx(1024);
                 InputStream is = dataHandler.getDataSource().getInputStream();
@@ -192,8 +196,9 @@ public final class Base64Data extends Pcdata {
     }
 
     public String getMimeType() {
-        if(mimeType==null)
+        if (mimeType == null) {
             return "application/octet-stream";
+        }
         return mimeType;
     }
 
@@ -205,7 +210,7 @@ public final class Base64Data extends Pcdata {
         // for each 3 bytes you use 4 chars
         // if the remainder is 1 or 2 there will be 4 more
         get();  // fill in the buffer if necessary
-        return ((dataLen+2)/3)*4;
+        return ((dataLen + 2) / 3) * 4;
     }
 
     /**
@@ -217,40 +222,44 @@ public final class Base64Data extends Pcdata {
         // (otherwise how would the caller know that the index is valid?)
         // so we assume that the byte[] is already populated
 
-        int offset = index%4;
-        int base = (index/4)*3;
+        int offset = index % 4;
+        int base = (index / 4) * 3;
 
-        byte b1,b2;
+        byte b1, b2;
 
-        switch(offset) {
-        case 0:
-            return DatatypeConverterImpl.encode(data[base]>>2);
-        case 1:
-            if(base+1<dataLen)
-                b1 = data[base+1];
-            else
-                b1 = 0;
-            return DatatypeConverterImpl.encode(
-                        ((data[base]&0x3)<<4) |
-                        ((b1>>4)&0xF));
-        case 2:
-            if(base+1<dataLen) {
-                b1 = data[base+1];
-                if(base+2<dataLen)
-                    b2 = data[base+2];
-                else
-                    b2 = 0;
-
+        switch (offset) {
+            case 0:
+                return DatatypeConverterImpl.encode(data[base] >> 2);
+            case 1:
+                if (base + 1 < dataLen) {
+                    b1 = data[base + 1];
+                } else {
+                    b1 = 0;
+                }
                 return DatatypeConverterImpl.encode(
-                            ((b1&0xF)<<2)|
-                            ((b2>>6)&0x3));
-            } else
-                return '=';
-        case 3:
-            if(base+2<dataLen)
-                return DatatypeConverterImpl.encode(data[base+2]&0x3F);
-            else
-                return '=';
+                        ((data[base] & 0x3) << 4)
+                        | ((b1 >> 4) & 0xF));
+            case 2:
+                if (base + 1 < dataLen) {
+                    b1 = data[base + 1];
+                    if (base + 2 < dataLen) {
+                        b2 = data[base + 2];
+                    } else {
+                        b2 = 0;
+                    }
+
+                    return DatatypeConverterImpl.encode(
+                            ((b1 & 0xF) << 2)
+                            | ((b2 >> 6) & 0x3));
+                } else {
+                    return '=';
+                }
+            case 3:
+                if (base + 2 < dataLen) {
+                    return DatatypeConverterImpl.encode(data[base + 2] & 0x3F);
+                } else {
+                    return '=';
+                }
         }
 
         throw new IllegalStateException();
@@ -264,8 +273,9 @@ public final class Base64Data extends Pcdata {
     public CharSequence subSequence(int start, int end) {
         StringBuilder buf = new StringBuilder();
         get();  // fill in the buffer if we haven't done so
-        for( int i=start; i<end; i++ )
+        for (int i = start; i < end; i++) {
             buf.append(charAt(i));
+        }
         return buf;
     }
 
@@ -286,6 +296,12 @@ public final class Base64Data extends Pcdata {
     public void writeTo(UTF8XmlOutput output) throws IOException {
         // TODO: this is inefficient if the data source is note byte[] but DataHandler
         get();
-        output.text(data,dataLen);
+        output.text(data, dataLen);
     }
+
+    public void writeTo(XMLStreamWriter output) throws IOException, XMLStreamException {
+        get();
+        DatatypeConverterImpl._printBase64Binary(data, 0, dataLen, output);
+    }
+
 }

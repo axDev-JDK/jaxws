@@ -33,12 +33,12 @@ public interface XmlElementWrapperWriter
 {
 
 
+    XmlElementWrapperWriter name(String value);
+
     XmlElementWrapperWriter namespace(String value);
 
     XmlElementWrapperWriter required(boolean value);
 
     XmlElementWrapperWriter nillable(boolean value);
-
-    XmlElementWrapperWriter name(String value);
 
 }

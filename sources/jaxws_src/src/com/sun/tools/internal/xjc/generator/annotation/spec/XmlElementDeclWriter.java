@@ -34,18 +34,18 @@ public interface XmlElementDeclWriter
 {
 
 
-    XmlElementDeclWriter namespace(String value);
-
-    XmlElementDeclWriter substitutionHeadNamespace(String value);
-
-    XmlElementDeclWriter substitutionHeadName(String value);
-
     XmlElementDeclWriter name(String value);
-
-    XmlElementDeclWriter defaultValue(String value);
 
     XmlElementDeclWriter scope(Class value);
 
     XmlElementDeclWriter scope(JType value);
+
+    XmlElementDeclWriter namespace(String value);
+
+    XmlElementDeclWriter defaultValue(String value);
+
+    XmlElementDeclWriter substitutionHeadNamespace(String value);
+
+    XmlElementDeclWriter substitutionHeadName(String value);
 
 }

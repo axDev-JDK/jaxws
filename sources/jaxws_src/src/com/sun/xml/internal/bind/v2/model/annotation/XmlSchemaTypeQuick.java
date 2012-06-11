@@ -52,16 +52,16 @@ final class XmlSchemaTypeQuick
         return XmlSchemaType.class;
     }
 
-    public String namespace() {
-        return core.namespace();
-    }
-
     public String name() {
         return core.name();
     }
 
     public Class type() {
         return core.type();
+    }
+
+    public String namespace() {
+        return core.namespace();
     }
 
 }

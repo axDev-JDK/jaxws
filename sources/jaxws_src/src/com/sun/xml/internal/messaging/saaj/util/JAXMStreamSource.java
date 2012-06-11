@@ -39,7 +39,7 @@ public class JAXMStreamSource extends StreamSource {
     Reader reader;
     private static final boolean lazyContentLength;
     static {
-        lazyContentLength = Boolean.getBoolean("saaj.lazy.contentlength");
+        lazyContentLength = SAAJUtil.getSystemBoolean("saaj.lazy.contentlength");
     }
     public JAXMStreamSource(InputStream is) throws IOException {
         if (lazyContentLength) {

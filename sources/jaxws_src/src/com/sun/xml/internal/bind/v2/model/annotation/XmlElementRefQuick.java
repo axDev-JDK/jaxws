@@ -52,20 +52,20 @@ final class XmlElementRefQuick
         return XmlElementRef.class;
     }
 
-    public String namespace() {
-        return core.namespace();
-    }
-
-    public boolean required() {
-        return core.required();
-    }
-
     public String name() {
         return core.name();
     }
 
     public Class type() {
         return core.type();
+    }
+
+    public String namespace() {
+        return core.namespace();
+    }
+
+    public boolean required() {
+        return core.required();
     }
 
 }

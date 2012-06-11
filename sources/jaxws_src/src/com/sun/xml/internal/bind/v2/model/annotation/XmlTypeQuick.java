@@ -52,6 +52,10 @@ final class XmlTypeQuick
         return XmlType.class;
     }
 
+    public String name() {
+        return core.name();
+    }
+
     public String namespace() {
         return core.namespace();
     }
@@ -66,10 +70,6 @@ final class XmlTypeQuick
 
     public String factoryMethod() {
         return core.factoryMethod();
-    }
-
-    public String name() {
-        return core.name();
     }
 
 }

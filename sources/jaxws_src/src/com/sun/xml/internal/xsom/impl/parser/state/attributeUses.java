@@ -143,15 +143,26 @@ class attributeUses extends NGCCHandler {
         $localName = $__local;
         $qname = $__qname;
         switch($_ngcc_current_state) {
-        case 9:
+        case 29:
             {
-                if(($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation"))) {
-                    NGCCHandler h = new annotation(this, super._source, $runtime, 352, null,AnnotationContext.ATTRIBUTE_USE);
+                if(($ai = $runtime.getAttributeIndex("","default"))>=0) {
+                    $runtime.consumeAttribute($ai);
+                    $runtime.sendEnterElement(super._cookie, $__uri, $__local, $__qname, $attrs);
+                }
+                else {
+                    $_ngcc_current_state = 25;
+                    $runtime.sendEnterElement(super._cookie, $__uri, $__local, $__qname, $attrs);
+                }
+            }
+            break;
+        case 3:
+            {
+                if((($ai = $runtime.getAttributeIndex("","processContents"))>=0 || (($ai = $runtime.getAttributeIndex("","namespace"))>=0 || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation"))))) {
+                    NGCCHandler h = new wildcardBody(this, super._source, $runtime, 448, wloc);
                     spawnChildFromEnterElement(h, $__uri, $__local, $__qname, $attrs);
                 }
                 else {
-                    $_ngcc_current_state = 8;
-                    $runtime.sendEnterElement(super._cookie, $__uri, $__local, $__qname, $attrs);
+                    unexpectedEnterElement($__qname);
                 }
             }
             break;
@@ -166,11 +177,28 @@ class attributeUses extends NGCCHandler {
                 }
             }
             break;
-        case 8:
+        case 9:
             {
-                action2();
-                $_ngcc_current_state = 7;
-                $runtime.sendEnterElement(super._cookie, $__uri, $__local, $__qname, $attrs);
+                if(($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation"))) {
+                    NGCCHandler h = new annotation(this, super._source, $runtime, 455, null,AnnotationContext.ATTRIBUTE_USE);
+                    spawnChildFromEnterElement(h, $__uri, $__local, $__qname, $attrs);
+                }
+                else {
+                    $_ngcc_current_state = 8;
+                    $runtime.sendEnterElement(super._cookie, $__uri, $__local, $__qname, $attrs);
+                }
+            }
+            break;
+        case 25:
+            {
+                if(($ai = $runtime.getAttributeIndex("","fixed"))>=0) {
+                    $runtime.consumeAttribute($ai);
+                    $runtime.sendEnterElement(super._cookie, $__uri, $__local, $__qname, $attrs);
+                }
+                else {
+                    $_ngcc_current_state = 17;
+                    $runtime.sendEnterElement(super._cookie, $__uri, $__local, $__qname, $attrs);
+                }
             }
             break;
         case 5:
@@ -205,10 +233,17 @@ class attributeUses extends NGCCHandler {
                 }
             }
             break;
+        case 16:
+            {
+                action4();
+                $_ngcc_current_state = 15;
+                $runtime.sendEnterElement(super._cookie, $__uri, $__local, $__qname, $attrs);
+            }
+            break;
         case 19:
             {
                 if(($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation"))) {
-                    NGCCHandler h = new annotation(this, super._source, $runtime, 363, null,AnnotationContext.ATTRIBUTE_USE);
+                    NGCCHandler h = new annotation(this, super._source, $runtime, 466, null,AnnotationContext.ATTRIBUTE_USE);
                     spawnChildFromEnterElement(h, $__uri, $__local, $__qname, $attrs);
                 }
                 else {
@@ -217,29 +252,10 @@ class attributeUses extends NGCCHandler {
                 }
             }
             break;
-        case 16:
-            {
-                action4();
-                $_ngcc_current_state = 15;
-                $runtime.sendEnterElement(super._cookie, $__uri, $__local, $__qname, $attrs);
-            }
-            break;
-        case 25:
-            {
-                if(($ai = $runtime.getAttributeIndex("","fixed"))>=0) {
-                    $runtime.consumeAttribute($ai);
-                    $runtime.sendEnterElement(super._cookie, $__uri, $__local, $__qname, $attrs);
-                }
-                else {
-                    $_ngcc_current_state = 17;
-                    $runtime.sendEnterElement(super._cookie, $__uri, $__local, $__qname, $attrs);
-                }
-            }
-            break;
         case 17:
             {
-                if((($ai = $runtime.getAttributeIndex("","name"))>=0 || ($ai = $runtime.getAttributeIndex("","form"))>=0)) {
-                    NGCCHandler h = new attributeDeclBody(this, super._source, $runtime, 370, locator,true,defaultValue,fixedValue);
+                if((($ai = $runtime.getAttributeIndex("","form"))>=0 || ($ai = $runtime.getAttributeIndex("","name"))>=0)) {
+                    NGCCHandler h = new attributeDeclBody(this, super._source, $runtime, 473, locator,true,defaultValue,fixedValue);
                     spawnChildFromEnterElement(h, $__uri, $__local, $__qname, $attrs);
                 }
                 else {
@@ -253,20 +269,11 @@ class attributeUses extends NGCCHandler {
                 }
             }
             break;
-        case 0:
+        case 8:
             {
-                revertToParentFromEnterElement(this, super._cookie, $__uri, $__local, $__qname, $attrs);
-            }
-            break;
-        case 3:
-            {
-                if((($ai = $runtime.getAttributeIndex("","processContents"))>=0 || (($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation")) || ($ai = $runtime.getAttributeIndex("","namespace"))>=0))) {
-                    NGCCHandler h = new wildcardBody(this, super._source, $runtime, 345, wloc);
-                    spawnChildFromEnterElement(h, $__uri, $__local, $__qname, $attrs);
-                }
-                else {
-                    unexpectedEnterElement($__qname);
-                }
+                action2();
+                $_ngcc_current_state = 7;
+                $runtime.sendEnterElement(super._cookie, $__uri, $__local, $__qname, $attrs);
             }
             break;
         case 1:
@@ -296,16 +303,9 @@ class attributeUses extends NGCCHandler {
                 }
             }
             break;
-        case 29:
+        case 0:
             {
-                if(($ai = $runtime.getAttributeIndex("","default"))>=0) {
-                    $runtime.consumeAttribute($ai);
-                    $runtime.sendEnterElement(super._cookie, $__uri, $__local, $__qname, $attrs);
-                }
-                else {
-                    $_ngcc_current_state = 25;
-                    $runtime.sendEnterElement(super._cookie, $__uri, $__local, $__qname, $attrs);
-                }
+                revertToParentFromEnterElement(this, super._cookie, $__uri, $__local, $__qname, $attrs);
             }
             break;
         default:
@@ -322,10 +322,27 @@ class attributeUses extends NGCCHandler {
         $localName = $__local;
         $qname = $__qname;
         switch($_ngcc_current_state) {
-        case 9:
+        case 29:
             {
-                $_ngcc_current_state = 8;
-                $runtime.sendLeaveElement(super._cookie, $__uri, $__local, $__qname);
+                if(($ai = $runtime.getAttributeIndex("","default"))>=0) {
+                    $runtime.consumeAttribute($ai);
+                    $runtime.sendLeaveElement(super._cookie, $__uri, $__local, $__qname);
+                }
+                else {
+                    $_ngcc_current_state = 25;
+                    $runtime.sendLeaveElement(super._cookie, $__uri, $__local, $__qname);
+                }
+            }
+            break;
+        case 3:
+            {
+                if(((($ai = $runtime.getAttributeIndex("","processContents"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("anyAttribute"))) || ((($ai = $runtime.getAttributeIndex("","namespace"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("anyAttribute"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("anyAttribute"))))) {
+                    NGCCHandler h = new wildcardBody(this, super._source, $runtime, 448, wloc);
+                    spawnChildFromLeaveElement(h, $__uri, $__local, $__qname);
+                }
+                else {
+                    unexpectedLeaveElement($__qname);
+                }
             }
             break;
         case 13:
@@ -339,41 +356,9 @@ class attributeUses extends NGCCHandler {
                 }
             }
             break;
-        case 8:
+        case 9:
             {
-                action2();
-                $_ngcc_current_state = 7;
-                $runtime.sendLeaveElement(super._cookie, $__uri, $__local, $__qname);
-            }
-            break;
-        case 5:
-            {
-                $_ngcc_current_state = 1;
-                $runtime.sendLeaveElement(super._cookie, $__uri, $__local, $__qname);
-            }
-            break;
-        case 33:
-            {
-                if(($ai = $runtime.getAttributeIndex("","use"))>=0) {
-                    $runtime.consumeAttribute($ai);
-                    $runtime.sendLeaveElement(super._cookie, $__uri, $__local, $__qname);
-                }
-                else {
-                    $_ngcc_current_state = 29;
-                    $runtime.sendLeaveElement(super._cookie, $__uri, $__local, $__qname);
-                }
-            }
-            break;
-        case 19:
-            {
-                $_ngcc_current_state = 18;
-                $runtime.sendLeaveElement(super._cookie, $__uri, $__local, $__qname);
-            }
-            break;
-        case 16:
-            {
-                action4();
-                $_ngcc_current_state = 15;
+                $_ngcc_current_state = 8;
                 $runtime.sendLeaveElement(super._cookie, $__uri, $__local, $__qname);
             }
             break;
@@ -389,64 +374,9 @@ class attributeUses extends NGCCHandler {
                 }
             }
             break;
-        case 17:
+        case 5:
             {
-                if(((($ai = $runtime.getAttributeIndex("","name"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("attribute"))) || (($ai = $runtime.getAttributeIndex("","form"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("attribute"))))) {
-                    NGCCHandler h = new attributeDeclBody(this, super._source, $runtime, 370, locator,true,defaultValue,fixedValue);
-                    spawnChildFromLeaveElement(h, $__uri, $__local, $__qname);
-                }
-                else {
-                    if(($ai = $runtime.getAttributeIndex("","ref"))>=0) {
-                        $runtime.consumeAttribute($ai);
-                        $runtime.sendLeaveElement(super._cookie, $__uri, $__local, $__qname);
-                    }
-                    else {
-                        unexpectedLeaveElement($__qname);
-                    }
-                }
-            }
-            break;
-        case 0:
-            {
-                revertToParentFromLeaveElement(this, super._cookie, $__uri, $__local, $__qname);
-            }
-            break;
-        case 2:
-            {
-                if(($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("anyAttribute"))) {
-                    $runtime.onLeaveElementConsumed($__uri, $__local, $__qname);
-                    $_ngcc_current_state = 0;
-                }
-                else {
-                    unexpectedLeaveElement($__qname);
-                }
-            }
-            break;
-        case 3:
-            {
-                if((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("anyAttribute")) || ((($ai = $runtime.getAttributeIndex("","processContents"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("anyAttribute"))) || (($ai = $runtime.getAttributeIndex("","namespace"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("anyAttribute")))))) {
-                    NGCCHandler h = new wildcardBody(this, super._source, $runtime, 345, wloc);
-                    spawnChildFromLeaveElement(h, $__uri, $__local, $__qname);
-                }
-                else {
-                    unexpectedLeaveElement($__qname);
-                }
-            }
-            break;
-        case 15:
-            {
-                if(($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("attribute"))) {
-                    $runtime.onLeaveElementConsumed($__uri, $__local, $__qname);
-                    $_ngcc_current_state = 1;
-                }
-                else {
-                    unexpectedLeaveElement($__qname);
-                }
-            }
-            break;
-        case 1:
-            {
-                $_ngcc_current_state = 0;
+                $_ngcc_current_state = 1;
                 $runtime.sendLeaveElement(super._cookie, $__uri, $__local, $__qname);
             }
             break;
@@ -461,22 +391,92 @@ class attributeUses extends NGCCHandler {
                 }
             }
             break;
-        case 29:
+        case 33:
             {
-                if(($ai = $runtime.getAttributeIndex("","default"))>=0) {
+                if(($ai = $runtime.getAttributeIndex("","use"))>=0) {
                     $runtime.consumeAttribute($ai);
                     $runtime.sendLeaveElement(super._cookie, $__uri, $__local, $__qname);
                 }
                 else {
-                    $_ngcc_current_state = 25;
+                    $_ngcc_current_state = 29;
                     $runtime.sendLeaveElement(super._cookie, $__uri, $__local, $__qname);
                 }
+            }
+            break;
+        case 15:
+            {
+                if(($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("attribute"))) {
+                    $runtime.onLeaveElementConsumed($__uri, $__local, $__qname);
+                    $_ngcc_current_state = 1;
+                }
+                else {
+                    unexpectedLeaveElement($__qname);
+                }
+            }
+            break;
+        case 16:
+            {
+                action4();
+                $_ngcc_current_state = 15;
+                $runtime.sendLeaveElement(super._cookie, $__uri, $__local, $__qname);
+            }
+            break;
+        case 19:
+            {
+                $_ngcc_current_state = 18;
+                $runtime.sendLeaveElement(super._cookie, $__uri, $__local, $__qname);
+            }
+            break;
+        case 17:
+            {
+                if(((($ai = $runtime.getAttributeIndex("","form"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("attribute"))) || (($ai = $runtime.getAttributeIndex("","name"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("attribute"))))) {
+                    NGCCHandler h = new attributeDeclBody(this, super._source, $runtime, 473, locator,true,defaultValue,fixedValue);
+                    spawnChildFromLeaveElement(h, $__uri, $__local, $__qname);
+                }
+                else {
+                    if(($ai = $runtime.getAttributeIndex("","ref"))>=0) {
+                        $runtime.consumeAttribute($ai);
+                        $runtime.sendLeaveElement(super._cookie, $__uri, $__local, $__qname);
+                    }
+                    else {
+                        unexpectedLeaveElement($__qname);
+                    }
+                }
+            }
+            break;
+        case 8:
+            {
+                action2();
+                $_ngcc_current_state = 7;
+                $runtime.sendLeaveElement(super._cookie, $__uri, $__local, $__qname);
+            }
+            break;
+        case 1:
+            {
+                $_ngcc_current_state = 0;
+                $runtime.sendLeaveElement(super._cookie, $__uri, $__local, $__qname);
+            }
+            break;
+        case 2:
+            {
+                if(($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("anyAttribute"))) {
+                    $runtime.onLeaveElementConsumed($__uri, $__local, $__qname);
+                    $_ngcc_current_state = 0;
+                }
+                else {
+                    unexpectedLeaveElement($__qname);
+                }
+            }
+            break;
+        case 0:
+            {
+                revertToParentFromLeaveElement(this, super._cookie, $__uri, $__local, $__qname);
             }
             break;
         case 18:
             {
                 if(($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("attribute"))) {
-                    NGCCHandler h = new foreignAttributes(this, super._source, $runtime, 361, null);
+                    NGCCHandler h = new foreignAttributes(this, super._source, $runtime, 464, null);
                     spawnChildFromLeaveElement(h, $__uri, $__local, $__qname);
                 }
                 else {
@@ -498,10 +498,26 @@ class attributeUses extends NGCCHandler {
         $localName = $__local;
         $qname = $__qname;
         switch($_ngcc_current_state) {
-        case 9:
+        case 29:
             {
-                $_ngcc_current_state = 8;
-                $runtime.sendEnterAttribute(super._cookie, $__uri, $__local, $__qname);
+                if(($__uri.equals("") && $__local.equals("default"))) {
+                    $_ngcc_current_state = 31;
+                }
+                else {
+                    $_ngcc_current_state = 25;
+                    $runtime.sendEnterAttribute(super._cookie, $__uri, $__local, $__qname);
+                }
+            }
+            break;
+        case 3:
+            {
+                if((($__uri.equals("") && $__local.equals("processContents")) || ($__uri.equals("") && $__local.equals("namespace")))) {
+                    NGCCHandler h = new wildcardBody(this, super._source, $runtime, 448, wloc);
+                    spawnChildFromEnterAttribute(h, $__uri, $__local, $__qname);
+                }
+                else {
+                    unexpectedEnterAttribute($__qname);
+                }
             }
             break;
         case 13:
@@ -514,11 +530,21 @@ class attributeUses extends NGCCHandler {
                 }
             }
             break;
-        case 8:
+        case 9:
             {
-                action2();
-                $_ngcc_current_state = 7;
+                $_ngcc_current_state = 8;
                 $runtime.sendEnterAttribute(super._cookie, $__uri, $__local, $__qname);
+            }
+            break;
+        case 25:
+            {
+                if(($__uri.equals("") && $__local.equals("fixed"))) {
+                    $_ngcc_current_state = 27;
+                }
+                else {
+                    $_ngcc_current_state = 17;
+                    $runtime.sendEnterAttribute(super._cookie, $__uri, $__local, $__qname);
+                }
             }
             break;
         case 5:
@@ -538,12 +564,6 @@ class attributeUses extends NGCCHandler {
                 }
             }
             break;
-        case 19:
-            {
-                $_ngcc_current_state = 18;
-                $runtime.sendEnterAttribute(super._cookie, $__uri, $__local, $__qname);
-            }
-            break;
         case 16:
             {
                 action4();
@@ -551,21 +571,16 @@ class attributeUses extends NGCCHandler {
                 $runtime.sendEnterAttribute(super._cookie, $__uri, $__local, $__qname);
             }
             break;
-        case 25:
+        case 19:
             {
-                if(($__uri.equals("") && $__local.equals("fixed"))) {
-                    $_ngcc_current_state = 27;
-                }
-                else {
-                    $_ngcc_current_state = 17;
-                    $runtime.sendEnterAttribute(super._cookie, $__uri, $__local, $__qname);
-                }
+                $_ngcc_current_state = 18;
+                $runtime.sendEnterAttribute(super._cookie, $__uri, $__local, $__qname);
             }
             break;
         case 17:
             {
-                if((($__uri.equals("") && $__local.equals("name")) || ($__uri.equals("") && $__local.equals("form")))) {
-                    NGCCHandler h = new attributeDeclBody(this, super._source, $runtime, 370, locator,true,defaultValue,fixedValue);
+                if((($__uri.equals("") && $__local.equals("form")) || ($__uri.equals("") && $__local.equals("name")))) {
+                    NGCCHandler h = new attributeDeclBody(this, super._source, $runtime, 473, locator,true,defaultValue,fixedValue);
                     spawnChildFromEnterAttribute(h, $__uri, $__local, $__qname);
                 }
                 else {
@@ -578,20 +593,11 @@ class attributeUses extends NGCCHandler {
                 }
             }
             break;
-        case 0:
+        case 8:
             {
-                revertToParentFromEnterAttribute(this, super._cookie, $__uri, $__local, $__qname);
-            }
-            break;
-        case 3:
-            {
-                if((($__uri.equals("") && $__local.equals("processContents")) || ($__uri.equals("") && $__local.equals("namespace")))) {
-                    NGCCHandler h = new wildcardBody(this, super._source, $runtime, 345, wloc);
-                    spawnChildFromEnterAttribute(h, $__uri, $__local, $__qname);
-                }
-                else {
-                    unexpectedEnterAttribute($__qname);
-                }
+                action2();
+                $_ngcc_current_state = 7;
+                $runtime.sendEnterAttribute(super._cookie, $__uri, $__local, $__qname);
             }
             break;
         case 1:
@@ -600,15 +606,9 @@ class attributeUses extends NGCCHandler {
                 $runtime.sendEnterAttribute(super._cookie, $__uri, $__local, $__qname);
             }
             break;
-        case 29:
+        case 0:
             {
-                if(($__uri.equals("") && $__local.equals("default"))) {
-                    $_ngcc_current_state = 31;
-                }
-                else {
-                    $_ngcc_current_state = 25;
-                    $runtime.sendEnterAttribute(super._cookie, $__uri, $__local, $__qname);
-                }
+                revertToParentFromEnterAttribute(this, super._cookie, $__uri, $__local, $__qname);
             }
             break;
         default:
@@ -625,91 +625,6 @@ class attributeUses extends NGCCHandler {
         $localName = $__local;
         $qname = $__qname;
         switch($_ngcc_current_state) {
-        case 9:
-            {
-                $_ngcc_current_state = 8;
-                $runtime.sendLeaveAttribute(super._cookie, $__uri, $__local, $__qname);
-            }
-            break;
-        case 8:
-            {
-                action2();
-                $_ngcc_current_state = 7;
-                $runtime.sendLeaveAttribute(super._cookie, $__uri, $__local, $__qname);
-            }
-            break;
-        case 5:
-            {
-                $_ngcc_current_state = 1;
-                $runtime.sendLeaveAttribute(super._cookie, $__uri, $__local, $__qname);
-            }
-            break;
-        case 33:
-            {
-                $_ngcc_current_state = 29;
-                $runtime.sendLeaveAttribute(super._cookie, $__uri, $__local, $__qname);
-            }
-            break;
-        case 19:
-            {
-                $_ngcc_current_state = 18;
-                $runtime.sendLeaveAttribute(super._cookie, $__uri, $__local, $__qname);
-            }
-            break;
-        case 16:
-            {
-                action4();
-                $_ngcc_current_state = 15;
-                $runtime.sendLeaveAttribute(super._cookie, $__uri, $__local, $__qname);
-            }
-            break;
-        case 25:
-            {
-                $_ngcc_current_state = 17;
-                $runtime.sendLeaveAttribute(super._cookie, $__uri, $__local, $__qname);
-            }
-            break;
-        case 11:
-            {
-                if(($__uri.equals("") && $__local.equals("ref"))) {
-                    $_ngcc_current_state = 9;
-                }
-                else {
-                    unexpectedLeaveAttribute($__qname);
-                }
-            }
-            break;
-        case 30:
-            {
-                if(($__uri.equals("") && $__local.equals("default"))) {
-                    $_ngcc_current_state = 25;
-                }
-                else {
-                    unexpectedLeaveAttribute($__qname);
-                }
-            }
-            break;
-        case 0:
-            {
-                revertToParentFromLeaveAttribute(this, super._cookie, $__uri, $__local, $__qname);
-            }
-            break;
-        case 26:
-            {
-                if(($__uri.equals("") && $__local.equals("fixed"))) {
-                    $_ngcc_current_state = 17;
-                }
-                else {
-                    unexpectedLeaveAttribute($__qname);
-                }
-            }
-            break;
-        case 1:
-            {
-                $_ngcc_current_state = 0;
-                $runtime.sendLeaveAttribute(super._cookie, $__uri, $__local, $__qname);
-            }
-            break;
         case 29:
             {
                 $_ngcc_current_state = 25;
@@ -726,10 +641,95 @@ class attributeUses extends NGCCHandler {
                 }
             }
             break;
+        case 9:
+            {
+                $_ngcc_current_state = 8;
+                $runtime.sendLeaveAttribute(super._cookie, $__uri, $__local, $__qname);
+            }
+            break;
+        case 25:
+            {
+                $_ngcc_current_state = 17;
+                $runtime.sendLeaveAttribute(super._cookie, $__uri, $__local, $__qname);
+            }
+            break;
+        case 5:
+            {
+                $_ngcc_current_state = 1;
+                $runtime.sendLeaveAttribute(super._cookie, $__uri, $__local, $__qname);
+            }
+            break;
+        case 11:
+            {
+                if(($__uri.equals("") && $__local.equals("ref"))) {
+                    $_ngcc_current_state = 9;
+                }
+                else {
+                    unexpectedLeaveAttribute($__qname);
+                }
+            }
+            break;
+        case 33:
+            {
+                $_ngcc_current_state = 29;
+                $runtime.sendLeaveAttribute(super._cookie, $__uri, $__local, $__qname);
+            }
+            break;
+        case 16:
+            {
+                action4();
+                $_ngcc_current_state = 15;
+                $runtime.sendLeaveAttribute(super._cookie, $__uri, $__local, $__qname);
+            }
+            break;
+        case 26:
+            {
+                if(($__uri.equals("") && $__local.equals("fixed"))) {
+                    $_ngcc_current_state = 17;
+                }
+                else {
+                    unexpectedLeaveAttribute($__qname);
+                }
+            }
+            break;
+        case 19:
+            {
+                $_ngcc_current_state = 18;
+                $runtime.sendLeaveAttribute(super._cookie, $__uri, $__local, $__qname);
+            }
+            break;
         case 21:
             {
                 if(($__uri.equals("") && $__local.equals("ref"))) {
                     $_ngcc_current_state = 19;
+                }
+                else {
+                    unexpectedLeaveAttribute($__qname);
+                }
+            }
+            break;
+        case 8:
+            {
+                action2();
+                $_ngcc_current_state = 7;
+                $runtime.sendLeaveAttribute(super._cookie, $__uri, $__local, $__qname);
+            }
+            break;
+        case 1:
+            {
+                $_ngcc_current_state = 0;
+                $runtime.sendLeaveAttribute(super._cookie, $__uri, $__local, $__qname);
+            }
+            break;
+        case 0:
+            {
+                revertToParentFromLeaveAttribute(this, super._cookie, $__uri, $__local, $__qname);
+            }
+            break;
+        case 30:
+            {
+                if(($__uri.equals("") && $__local.equals("default"))) {
+                    $_ngcc_current_state = 25;
                 }
                 else {
                     unexpectedLeaveAttribute($__qname);
@@ -747,16 +747,42 @@ class attributeUses extends NGCCHandler {
     public void text(String $value) throws SAXException {
         int $ai;
         switch($_ngcc_current_state) {
-        case 9:
+        case 29:
             {
-                $_ngcc_current_state = 8;
-                $runtime.sendText(super._cookie, $value);
+                if(($ai = $runtime.getAttributeIndex("","default"))>=0) {
+                    $runtime.consumeAttribute($ai);
+                    $runtime.sendText(super._cookie, $value);
+                }
+                else {
+                    $_ngcc_current_state = 25;
+                    $runtime.sendText(super._cookie, $value);
+                }
             }
             break;
-        case 31:
+        case 3:
             {
-                defaultValue = $value;
-                $_ngcc_current_state = 30;
+                if(($ai = $runtime.getAttributeIndex("","namespace"))>=0) {
+                    NGCCHandler h = new wildcardBody(this, super._source, $runtime, 448, wloc);
+                    spawnChildFromText(h, $value);
+                }
+                else {
+                    if(($ai = $runtime.getAttributeIndex("","processContents"))>=0) {
+                        NGCCHandler h = new wildcardBody(this, super._source, $runtime, 448, wloc);
+                        spawnChildFromText(h, $value);
+                    }
+                }
+            }
+            break;
+        case 27:
+            {
+                fixedValue = $value;
+                $_ngcc_current_state = 26;
+            }
+            break;
+        case 12:
+            {
+                NGCCHandler h = new qname(this, super._source, $runtime, 458);
+                spawnChildFromText(h, $value);
             }
             break;
         case 13:
@@ -767,11 +793,28 @@ class attributeUses extends NGCCHandler {
                 }
             }
             break;
-        case 8:
+        case 31:
             {
-                action2();
-                $_ngcc_current_state = 7;
+                defaultValue = $value;
+                $_ngcc_current_state = 30;
+            }
+            break;
+        case 9:
+            {
+                $_ngcc_current_state = 8;
                 $runtime.sendText(super._cookie, $value);
+            }
+            break;
+        case 25:
+            {
+                if(($ai = $runtime.getAttributeIndex("","fixed"))>=0) {
+                    $runtime.consumeAttribute($ai);
+                    $runtime.sendText(super._cookie, $value);
+                }
+                else {
+                    $_ngcc_current_state = 17;
+                    $runtime.sendText(super._cookie, $value);
+                }
             }
             break;
         case 5:
@@ -792,12 +835,6 @@ class attributeUses extends NGCCHandler {
                 }
             }
             break;
-        case 19:
-            {
-                $_ngcc_current_state = 18;
-                $runtime.sendText(super._cookie, $value);
-            }
-            break;
         case 16:
             {
                 action4();
@@ -805,27 +842,21 @@ class attributeUses extends NGCCHandler {
                 $runtime.sendText(super._cookie, $value);
             }
             break;
-        case 25:
+        case 19:
             {
-                if(($ai = $runtime.getAttributeIndex("","fixed"))>=0) {
-                    $runtime.consumeAttribute($ai);
-                    $runtime.sendText(super._cookie, $value);
-                }
-                else {
-                    $_ngcc_current_state = 17;
-                    $runtime.sendText(super._cookie, $value);
-                }
+                $_ngcc_current_state = 18;
+                $runtime.sendText(super._cookie, $value);
             }
             break;
         case 17:
             {
-                if(($ai = $runtime.getAttributeIndex("","form"))>=0) {
-                    NGCCHandler h = new attributeDeclBody(this, super._source, $runtime, 370, locator,true,defaultValue,fixedValue);
+                if(($ai = $runtime.getAttributeIndex("","name"))>=0) {
+                    NGCCHandler h = new attributeDeclBody(this, super._source, $runtime, 473, locator,true,defaultValue,fixedValue);
                     spawnChildFromText(h, $value);
                 }
                 else {
-                    if(($ai = $runtime.getAttributeIndex("","name"))>=0) {
-                        NGCCHandler h = new attributeDeclBody(this, super._source, $runtime, 370, locator,true,defaultValue,fixedValue);
+                    if(($ai = $runtime.getAttributeIndex("","form"))>=0) {
+                        NGCCHandler h = new attributeDeclBody(this, super._source, $runtime, 473, locator,true,defaultValue,fixedValue);
                         spawnChildFromText(h, $value);
                     }
                     else {
@@ -837,35 +868,11 @@ class attributeUses extends NGCCHandler {
                 }
             }
             break;
-        case 0:
+        case 8:
             {
-                revertToParentFromText(this, super._cookie, $value);
-            }
-            break;
-        case 27:
-            {
-                fixedValue = $value;
-                $_ngcc_current_state = 26;
-            }
-            break;
-        case 3:
-            {
-                if(($ai = $runtime.getAttributeIndex("","namespace"))>=0) {
-                    NGCCHandler h = new wildcardBody(this, super._source, $runtime, 345, wloc);
-                    spawnChildFromText(h, $value);
-                }
-                else {
-                    if(($ai = $runtime.getAttributeIndex("","processContents"))>=0) {
-                        NGCCHandler h = new wildcardBody(this, super._source, $runtime, 345, wloc);
-                        spawnChildFromText(h, $value);
-                    }
-                }
-            }
-            break;
-        case 35:
-            {
-                use = $value;
-                $_ngcc_current_state = 34;
+                action2();
+                $_ngcc_current_state = 7;
+                $runtime.sendText(super._cookie, $value);
             }
             break;
         case 1:
@@ -874,28 +881,21 @@ class attributeUses extends NGCCHandler {
                 $runtime.sendText(super._cookie, $value);
             }
             break;
-        case 29:
-            {
-                if(($ai = $runtime.getAttributeIndex("","default"))>=0) {
-                    $runtime.consumeAttribute($ai);
-                    $runtime.sendText(super._cookie, $value);
-                }
-                else {
-                    $_ngcc_current_state = 25;
-                    $runtime.sendText(super._cookie, $value);
-                }
-            }
-            break;
         case 22:
             {
-                NGCCHandler h = new qname(this, super._source, $runtime, 366);
+                NGCCHandler h = new qname(this, super._source, $runtime, 469);
                 spawnChildFromText(h, $value);
             }
             break;
-        case 12:
+        case 35:
             {
-                NGCCHandler h = new qname(this, super._source, $runtime, 355);
-                spawnChildFromText(h, $value);
+                use = $value;
+                $_ngcc_current_state = 34;
+            }
+            break;
+        case 0:
+            {
+                revertToParentFromText(this, super._cookie, $value);
             }
             break;
         }
@@ -903,55 +903,55 @@ class attributeUses extends NGCCHandler {
 
     public void onChildCompleted(Object $__result__, int $__cookie__, boolean $__needAttCheck__)throws SAXException {
         switch($__cookie__) {
-        case 352:
-            {
-                $_ngcc_current_state = 8;
-            }
-            break;
-        case 363:
-            {
-                annotation = ((AnnotationImpl)$__result__);
-                $_ngcc_current_state = 18;
-            }
-            break;
-        case 361:
-            {
-                fa = ((ForeignAttributesImpl)$__result__);
-                $_ngcc_current_state = 16;
-            }
-            break;
-        case 366:
-            {
-                attDeclName = ((UName)$__result__);
-                action5();
-                $_ngcc_current_state = 21;
-            }
-            break;
-        case 355:
-            {
-                groupName = ((UName)$__result__);
-                $_ngcc_current_state = 11;
-            }
-            break;
-        case 370:
-            {
-                anonymousDecl = ((AttributeDeclImpl)$__result__);
-                action6();
-                $_ngcc_current_state = 16;
-            }
-            break;
-        case 345:
+        case 448:
             {
                 wildcard = ((WildcardImpl)$__result__);
                 action0();
                 $_ngcc_current_state = 2;
             }
             break;
+        case 466:
+            {
+                annotation = ((AnnotationImpl)$__result__);
+                $_ngcc_current_state = 18;
+            }
+            break;
+        case 473:
+            {
+                anonymousDecl = ((AttributeDeclImpl)$__result__);
+                action6();
+                $_ngcc_current_state = 16;
+            }
+            break;
+        case 464:
+            {
+                fa = ((ForeignAttributesImpl)$__result__);
+                $_ngcc_current_state = 16;
+            }
+            break;
+        case 458:
+            {
+                groupName = ((UName)$__result__);
+                $_ngcc_current_state = 11;
+            }
+            break;
+        case 455:
+            {
+                $_ngcc_current_state = 8;
+            }
+            break;
+        case 469:
+            {
+                attDeclName = ((UName)$__result__);
+                action5();
+                $_ngcc_current_state = 21;
+            }
+            break;
         }
     }
 
     public boolean accepted() {
-        return((($_ngcc_current_state == 0) || (($_ngcc_current_state == 5) || ($_ngcc_current_state == 1))));
+        return((($_ngcc_current_state == 0) || (($_ngcc_current_state == 1) || ($_ngcc_current_state == 5))));
     }
 
 

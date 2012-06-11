@@ -34,14 +34,14 @@ public interface XmlSchemaWriter
 {
 
 
+    XmlSchemaWriter location(String value);
+
     XmlSchemaWriter namespace(String value);
+
+    XmlNsWriter xmlns();
 
     XmlSchemaWriter elementFormDefault(XmlNsForm value);
 
     XmlSchemaWriter attributeFormDefault(XmlNsForm value);
-
-    XmlSchemaWriter location(String value);
-
-    XmlNsWriter xmlns();
 
 }

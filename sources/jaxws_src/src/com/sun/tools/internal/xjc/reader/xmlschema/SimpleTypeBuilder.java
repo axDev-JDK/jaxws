@@ -666,9 +666,11 @@ public final class SimpleTypeBuilder extends BindingComponent {
                     // look at the one attached to the facet object
                     mem = builder.getBindInfo(facet).get(BIEnumMember.class);
 
-                if( mem!=null ) {
+                if (mem!=null) {
                     name = mem.name;
-                    mdoc = mem.javadoc;
+                    if (mdoc != null) {
+                        mdoc = mem.javadoc;
+                    }
                 }
 
                 if(name==null) {

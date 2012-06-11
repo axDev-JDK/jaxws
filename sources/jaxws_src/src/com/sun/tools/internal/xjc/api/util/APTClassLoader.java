@@ -109,6 +109,12 @@ public final class APTClassLoader extends URLClassLoader {
             return defineClass(name,buf,0,buf.length);
         } catch (IOException e) {
             throw new ClassNotFoundException(name,e);
+        } finally {
+            try {
+                is.close();
+            } catch (IOException ioe) {
+                //ignore
+            }
         }
     }
 

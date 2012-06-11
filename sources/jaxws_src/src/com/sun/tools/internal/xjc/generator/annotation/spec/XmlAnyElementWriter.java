@@ -34,10 +34,10 @@ public interface XmlAnyElementWriter
 {
 
 
-    XmlAnyElementWriter lax(boolean value);
-
     XmlAnyElementWriter value(Class value);
 
     XmlAnyElementWriter value(JType value);
+
+    XmlAnyElementWriter lax(boolean value);
 
 }

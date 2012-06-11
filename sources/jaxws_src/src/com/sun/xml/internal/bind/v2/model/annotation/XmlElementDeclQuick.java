@@ -52,8 +52,20 @@ final class XmlElementDeclQuick
         return XmlElementDecl.class;
     }
 
+    public String name() {
+        return core.name();
+    }
+
+    public Class scope() {
+        return core.scope();
+    }
+
     public String namespace() {
         return core.namespace();
+    }
+
+    public String defaultValue() {
+        return core.defaultValue();
     }
 
     public String substitutionHeadNamespace() {
@@ -62,18 +74,6 @@ final class XmlElementDeclQuick
 
     public String substitutionHeadName() {
         return core.substitutionHeadName();
-    }
-
-    public String name() {
-        return core.name();
-    }
-
-    public String defaultValue() {
-        return core.defaultValue();
-    }
-
-    public Class scope() {
-        return core.scope();
     }
 
 }

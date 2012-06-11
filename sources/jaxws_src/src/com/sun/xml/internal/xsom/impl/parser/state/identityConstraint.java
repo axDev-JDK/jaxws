@@ -96,30 +96,7 @@ class identityConstraint extends NGCCHandler {
         $localName = $__local;
         $qname = $__qname;
         switch($_ngcc_current_state) {
-        case 16:
-            {
-                if(($ai = $runtime.getAttributeIndex("","name"))>=0) {
-                    $runtime.consumeAttribute($ai);
-                    $runtime.sendEnterElement(super._cookie, $__uri, $__local, $__qname, $attrs);
-                }
-                else {
-                    unexpectedEnterElement($__qname);
-                }
-            }
-            break;
-        case 8:
-            {
-                if(($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation"))) {
-                    NGCCHandler h = new annotation(this, super._source, $runtime, 252, null,AnnotationContext.IDENTITY_CONSTRAINT);
-                    spawnChildFromEnterElement(h, $__uri, $__local, $__qname, $attrs);
-                }
-                else {
-                    $_ngcc_current_state = 7;
-                    $runtime.sendEnterElement(super._cookie, $__uri, $__local, $__qname, $attrs);
-                }
-            }
-            break;
-        case 4:
+        case 1:
             {
                 if(($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("field"))) {
                     $runtime.onEnterElementConsumed($__uri, $__local, $__qname, $attrs);
@@ -133,36 +110,8 @@ class identityConstraint extends NGCCHandler {
         case 17:
             {
                 if((($ai = $runtime.getAttributeIndex("","name"))>=0 && (($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation")) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("selector"))))) {
-                    NGCCHandler h = new foreignAttributes(this, super._source, $runtime, 262, null);
+                    NGCCHandler h = new foreignAttributes(this, super._source, $runtime, 254, null);
                     spawnChildFromEnterElement(h, $__uri, $__local, $__qname, $attrs);
-                }
-                else {
-                    unexpectedEnterElement($__qname);
-                }
-            }
-            break;
-        case 1:
-            {
-                if(($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("field"))) {
-                    $runtime.onEnterElementConsumed($__uri, $__local, $__qname, $attrs);
-                    $_ngcc_current_state = 3;
-                }
-                else {
-                    unexpectedEnterElement($__qname);
-                }
-            }
-            break;
-        case 0:
-            {
-                revertToParentFromEnterElement(makeResult(), super._cookie, $__uri, $__local, $__qname, $attrs);
-            }
-            break;
-        case 18:
-            {
-                if(((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("key")) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("keyref"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("unique")))) {
-                    $runtime.onEnterElementConsumed($__uri, $__local, $__qname, $attrs);
-                    action2();
-                    $_ngcc_current_state = 17;
                 }
                 else {
                     unexpectedEnterElement($__qname);
@@ -172,8 +121,41 @@ class identityConstraint extends NGCCHandler {
         case 6:
             {
                 if(($ai = $runtime.getAttributeIndex("","xpath"))>=0) {
-                    NGCCHandler h = new xpath(this, super._source, $runtime, 249);
+                    NGCCHandler h = new xpath(this, super._source, $runtime, 241);
                     spawnChildFromEnterElement(h, $__uri, $__local, $__qname, $attrs);
+                }
+                else {
+                    unexpectedEnterElement($__qname);
+                }
+            }
+            break;
+        case 16:
+            {
+                if(($ai = $runtime.getAttributeIndex("","name"))>=0) {
+                    $runtime.consumeAttribute($ai);
+                    $runtime.sendEnterElement(super._cookie, $__uri, $__local, $__qname, $attrs);
+                }
+                else {
+                    unexpectedEnterElement($__qname);
+                }
+            }
+            break;
+        case 3:
+            {
+                if(($ai = $runtime.getAttributeIndex("","xpath"))>=0) {
+                    NGCCHandler h = new xpath(this, super._source, $runtime, 237);
+                    spawnChildFromEnterElement(h, $__uri, $__local, $__qname, $attrs);
+                }
+                else {
+                    unexpectedEnterElement($__qname);
+                }
+            }
+            break;
+        case 7:
+            {
+                if(($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("selector"))) {
+                    $runtime.onEnterElementConsumed($__uri, $__local, $__qname, $attrs);
+                    $_ngcc_current_state = 6;
                 }
                 else {
                     unexpectedEnterElement($__qname);
@@ -192,22 +174,40 @@ class identityConstraint extends NGCCHandler {
                 }
             }
             break;
-        case 7:
+        case 0:
             {
-                if(($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("selector"))) {
+                revertToParentFromEnterElement(makeResult(), super._cookie, $__uri, $__local, $__qname, $attrs);
+            }
+            break;
+        case 8:
+            {
+                if(($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation"))) {
+                    NGCCHandler h = new annotation(this, super._source, $runtime, 244, null,AnnotationContext.IDENTITY_CONSTRAINT);
+                    spawnChildFromEnterElement(h, $__uri, $__local, $__qname, $attrs);
+                }
+                else {
+                    $_ngcc_current_state = 7;
+                    $runtime.sendEnterElement(super._cookie, $__uri, $__local, $__qname, $attrs);
+                }
+            }
+            break;
+        case 18:
+            {
+                if(((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("key")) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("keyref"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("unique")))) {
                     $runtime.onEnterElementConsumed($__uri, $__local, $__qname, $attrs);
-                    $_ngcc_current_state = 6;
+                    action2();
+                    $_ngcc_current_state = 17;
                 }
                 else {
                     unexpectedEnterElement($__qname);
                 }
             }
             break;
-        case 3:
+        case 4:
             {
-                if(($ai = $runtime.getAttributeIndex("","xpath"))>=0) {
-                    NGCCHandler h = new xpath(this, super._source, $runtime, 245);
-                    spawnChildFromEnterElement(h, $__uri, $__local, $__qname, $attrs);
+                if(($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("field"))) {
+                    $runtime.onEnterElementConsumed($__uri, $__local, $__qname, $attrs);
+                    $_ngcc_current_state = 3;
                 }
                 else {
                     unexpectedEnterElement($__qname);
@@ -228,56 +228,6 @@ class identityConstraint extends NGCCHandler {
         $localName = $__local;
         $qname = $__qname;
         switch($_ngcc_current_state) {
-        case 16:
-            {
-                if(($ai = $runtime.getAttributeIndex("","name"))>=0) {
-                    $runtime.consumeAttribute($ai);
-                    $runtime.sendLeaveElement(super._cookie, $__uri, $__local, $__qname);
-                }
-                else {
-                    unexpectedLeaveElement($__qname);
-                }
-            }
-            break;
-        case 8:
-            {
-                $_ngcc_current_state = 7;
-                $runtime.sendLeaveElement(super._cookie, $__uri, $__local, $__qname);
-            }
-            break;
-        case 2:
-            {
-                if(($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("field"))) {
-                    $runtime.onLeaveElementConsumed($__uri, $__local, $__qname);
-                    $_ngcc_current_state = 1;
-                }
-                else {
-                    unexpectedLeaveElement($__qname);
-                }
-            }
-            break;
-        case 17:
-            {
-                if(($ai = $runtime.getAttributeIndex("","name"))>=0) {
-                    NGCCHandler h = new foreignAttributes(this, super._source, $runtime, 262, null);
-                    spawnChildFromLeaveElement(h, $__uri, $__local, $__qname);
-                }
-                else {
-                    unexpectedLeaveElement($__qname);
-                }
-            }
-            break;
-        case 5:
-            {
-                if(($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("selector"))) {
-                    $runtime.onLeaveElementConsumed($__uri, $__local, $__qname);
-                    $_ngcc_current_state = 4;
-                }
-                else {
-                    unexpectedLeaveElement($__qname);
-                }
-            }
-            break;
         case 1:
             {
                 if(((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("key")) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("keyref"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("unique")))) {
@@ -289,15 +239,43 @@ class identityConstraint extends NGCCHandler {
                 }
             }
             break;
-        case 0:
+        case 17:
             {
-                revertToParentFromLeaveElement(makeResult(), super._cookie, $__uri, $__local, $__qname);
+                if(($ai = $runtime.getAttributeIndex("","name"))>=0) {
+                    NGCCHandler h = new foreignAttributes(this, super._source, $runtime, 254, null);
+                    spawnChildFromLeaveElement(h, $__uri, $__local, $__qname);
+                }
+                else {
+                    unexpectedLeaveElement($__qname);
+                }
             }
             break;
         case 6:
             {
                 if((($ai = $runtime.getAttributeIndex("","xpath"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("selector")))) {
-                    NGCCHandler h = new xpath(this, super._source, $runtime, 249);
+                    NGCCHandler h = new xpath(this, super._source, $runtime, 241);
+                    spawnChildFromLeaveElement(h, $__uri, $__local, $__qname);
+                }
+                else {
+                    unexpectedLeaveElement($__qname);
+                }
+            }
+            break;
+        case 16:
+            {
+                if(($ai = $runtime.getAttributeIndex("","name"))>=0) {
+                    $runtime.consumeAttribute($ai);
+                    $runtime.sendLeaveElement(super._cookie, $__uri, $__local, $__qname);
+                }
+                else {
+                    unexpectedLeaveElement($__qname);
+                }
+            }
+            break;
+        case 3:
+            {
+                if((($ai = $runtime.getAttributeIndex("","xpath"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("field")))) {
+                    NGCCHandler h = new xpath(this, super._source, $runtime, 237);
                     spawnChildFromLeaveElement(h, $__uri, $__local, $__qname);
                 }
                 else {
@@ -317,15 +295,37 @@ class identityConstraint extends NGCCHandler {
                 }
             }
             break;
-        case 3:
+        case 5:
             {
-                if((($ai = $runtime.getAttributeIndex("","xpath"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("field")))) {
-                    NGCCHandler h = new xpath(this, super._source, $runtime, 245);
-                    spawnChildFromLeaveElement(h, $__uri, $__local, $__qname);
+                if(($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("selector"))) {
+                    $runtime.onLeaveElementConsumed($__uri, $__local, $__qname);
+                    $_ngcc_current_state = 4;
                 }
                 else {
                     unexpectedLeaveElement($__qname);
                 }
+            }
+            break;
+        case 0:
+            {
+                revertToParentFromLeaveElement(makeResult(), super._cookie, $__uri, $__local, $__qname);
+            }
+            break;
+        case 2:
+            {
+                if(($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("field"))) {
+                    $runtime.onLeaveElementConsumed($__uri, $__local, $__qname);
+                    $_ngcc_current_state = 1;
+                }
+                else {
+                    unexpectedLeaveElement($__qname);
+                }
+            }
+            break;
+        case 8:
+            {
+                $_ngcc_current_state = 7;
+                $runtime.sendLeaveElement(super._cookie, $__uri, $__local, $__qname);
             }
             break;
         default:
@@ -342,6 +342,28 @@ class identityConstraint extends NGCCHandler {
         $localName = $__local;
         $qname = $__qname;
         switch($_ngcc_current_state) {
+        case 17:
+            {
+                if(($__uri.equals("") && $__local.equals("name"))) {
+                    NGCCHandler h = new foreignAttributes(this, super._source, $runtime, 254, null);
+                    spawnChildFromEnterAttribute(h, $__uri, $__local, $__qname);
+                }
+                else {
+                    unexpectedEnterAttribute($__qname);
+                }
+            }
+            break;
+        case 6:
+            {
+                if(($__uri.equals("") && $__local.equals("xpath"))) {
+                    NGCCHandler h = new xpath(this, super._source, $runtime, 241);
+                    spawnChildFromEnterAttribute(h, $__uri, $__local, $__qname);
+                }
+                else {
+                    unexpectedEnterAttribute($__qname);
+                }
+            }
+            break;
         case 16:
             {
                 if(($__uri.equals("") && $__local.equals("name"))) {
@@ -352,32 +374,10 @@ class identityConstraint extends NGCCHandler {
                 }
             }
             break;
-        case 8:
-            {
-                $_ngcc_current_state = 7;
-                $runtime.sendEnterAttribute(super._cookie, $__uri, $__local, $__qname);
-            }
-            break;
-        case 17:
-            {
-                if(($__uri.equals("") && $__local.equals("name"))) {
-                    NGCCHandler h = new foreignAttributes(this, super._source, $runtime, 262, null);
-                    spawnChildFromEnterAttribute(h, $__uri, $__local, $__qname);
-                }
-                else {
-                    unexpectedEnterAttribute($__qname);
-                }
-            }
-            break;
-        case 0:
-            {
-                revertToParentFromEnterAttribute(makeResult(), super._cookie, $__uri, $__local, $__qname);
-            }
-            break;
-        case 6:
+        case 3:
             {
                 if(($__uri.equals("") && $__local.equals("xpath"))) {
-                    NGCCHandler h = new xpath(this, super._source, $runtime, 249);
+                    NGCCHandler h = new xpath(this, super._source, $runtime, 237);
                     spawnChildFromEnterAttribute(h, $__uri, $__local, $__qname);
                 }
                 else {
@@ -396,15 +396,15 @@ class identityConstraint extends NGCCHandler {
                 }
             }
             break;
-        case 3:
+        case 0:
             {
-                if(($__uri.equals("") && $__local.equals("xpath"))) {
-                    NGCCHandler h = new xpath(this, super._source, $runtime, 245);
-                    spawnChildFromEnterAttribute(h, $__uri, $__local, $__qname);
-                }
-                else {
-                    unexpectedEnterAttribute($__qname);
-                }
+                revertToParentFromEnterAttribute(makeResult(), super._cookie, $__uri, $__local, $__qname);
+            }
+            break;
+        case 8:
+            {
+                $_ngcc_current_state = 7;
+                $runtime.sendEnterAttribute(super._cookie, $__uri, $__local, $__qname);
             }
             break;
         default:
@@ -421,15 +421,14 @@ class identityConstraint extends NGCCHandler {
         $localName = $__local;
         $qname = $__qname;
         switch($_ngcc_current_state) {
-        case 8:
+        case 14:
             {
-                $_ngcc_current_state = 7;
-                $runtime.sendLeaveAttribute(super._cookie, $__uri, $__local, $__qname);
-            }
-            break;
-        case 0:
-            {
-                revertToParentFromLeaveAttribute(makeResult(), super._cookie, $__uri, $__local, $__qname);
+                if(($__uri.equals("") && $__local.equals("name"))) {
+                    $_ngcc_current_state = 10;
+                }
+                else {
+                    unexpectedLeaveAttribute($__qname);
+                }
             }
             break;
         case 11:
@@ -448,14 +447,15 @@ class identityConstraint extends NGCCHandler {
                 $runtime.sendLeaveAttribute(super._cookie, $__uri, $__local, $__qname);
             }
             break;
-        case 14:
+        case 0:
             {
-                if(($__uri.equals("") && $__local.equals("name"))) {
-                    $_ngcc_current_state = 10;
-                }
-                else {
-                    unexpectedLeaveAttribute($__qname);
-                }
+                revertToParentFromLeaveAttribute(makeResult(), super._cookie, $__uri, $__local, $__qname);
+            }
+            break;
+        case 8:
+            {
+                $_ngcc_current_state = 7;
+                $runtime.sendLeaveAttribute(super._cookie, $__uri, $__local, $__qname);
             }
             break;
         default:
@@ -469,6 +469,22 @@ class identityConstraint extends NGCCHandler {
     public void text(String $value) throws SAXException {
         int $ai;
         switch($_ngcc_current_state) {
+        case 17:
+            {
+                if(($ai = $runtime.getAttributeIndex("","name"))>=0) {
+                    NGCCHandler h = new foreignAttributes(this, super._source, $runtime, 254, null);
+                    spawnChildFromText(h, $value);
+                }
+            }
+            break;
+        case 6:
+            {
+                if(($ai = $runtime.getAttributeIndex("","xpath"))>=0) {
+                    NGCCHandler h = new xpath(this, super._source, $runtime, 241);
+                    spawnChildFromText(h, $value);
+                }
+            }
+            break;
         case 16:
             {
                 if(($ai = $runtime.getAttributeIndex("","name"))>=0) {
@@ -477,43 +493,18 @@ class identityConstraint extends NGCCHandler {
                 }
             }
             break;
-        case 8:
+        case 3:
             {
-                $_ngcc_current_state = 7;
-                $runtime.sendText(super._cookie, $value);
-            }
-            break;
-        case 12:
-            {
-                NGCCHandler h = new qname(this, super._source, $runtime, 255);
-                spawnChildFromText(h, $value);
-            }
-            break;
-        case 17:
-            {
-                if(($ai = $runtime.getAttributeIndex("","name"))>=0) {
-                    NGCCHandler h = new foreignAttributes(this, super._source, $runtime, 262, null);
+                if(($ai = $runtime.getAttributeIndex("","xpath"))>=0) {
+                    NGCCHandler h = new xpath(this, super._source, $runtime, 237);
                     spawnChildFromText(h, $value);
                 }
-            }
-            break;
-        case 0:
-            {
-                revertToParentFromText(makeResult(), super._cookie, $value);
             }
             break;
         case 15:
             {
                 name = $value;
                 $_ngcc_current_state = 14;
-            }
-            break;
-        case 6:
-            {
-                if(($ai = $runtime.getAttributeIndex("","xpath"))>=0) {
-                    NGCCHandler h = new xpath(this, super._source, $runtime, 249);
-                    spawnChildFromText(h, $value);
-                }
             }
             break;
         case 10:
@@ -528,12 +519,21 @@ class identityConstraint extends NGCCHandler {
                 }
             }
             break;
-        case 3:
+        case 0:
             {
-                if(($ai = $runtime.getAttributeIndex("","xpath"))>=0) {
-                    NGCCHandler h = new xpath(this, super._source, $runtime, 245);
-                    spawnChildFromText(h, $value);
-                }
+                revertToParentFromText(makeResult(), super._cookie, $value);
+            }
+            break;
+        case 12:
+            {
+                NGCCHandler h = new qname(this, super._source, $runtime, 247);
+                spawnChildFromText(h, $value);
+            }
+            break;
+        case 8:
+            {
+                $_ngcc_current_state = 7;
+                $runtime.sendText(super._cookie, $value);
             }
             break;
         }
@@ -541,36 +541,36 @@ class identityConstraint extends NGCCHandler {
 
     public void onChildCompleted(Object $__result__, int $__cookie__, boolean $__needAttCheck__)throws SAXException {
         switch($__cookie__) {
-        case 252:
+        case 241:
+            {
+                selector = ((XPathImpl)$__result__);
+                $_ngcc_current_state = 5;
+            }
+            break;
+        case 237:
+            {
+                field = ((XPathImpl)$__result__);
+                action0();
+                $_ngcc_current_state = 2;
+            }
+            break;
+        case 244:
             {
                 ann = ((AnnotationImpl)$__result__);
                 $_ngcc_current_state = 7;
             }
             break;
-        case 255:
+        case 247:
             {
                 ref = ((UName)$__result__);
                 action1();
                 $_ngcc_current_state = 11;
             }
             break;
-        case 262:
+        case 254:
             {
                 fa = ((ForeignAttributesImpl)$__result__);
                 $_ngcc_current_state = 16;
-            }
-            break;
-        case 249:
-            {
-                selector = ((XPathImpl)$__result__);
-                $_ngcc_current_state = 5;
-            }
-            break;
-        case 245:
-            {
-                field = ((XPathImpl)$__result__);
-                action0();
-                $_ngcc_current_state = 2;
             }
             break;
         }

@@ -131,26 +131,59 @@ class particle extends NGCCHandler {
         $localName = $__local;
         $qname = $__qname;
         switch($_ngcc_current_state) {
-        case 0:
+        case 4:
             {
-                revertToParentFromEnterElement(result, super._cookie, $__uri, $__local, $__qname, $attrs);
-            }
-            break;
-        case 20:
-            {
-                action5();
-                $_ngcc_current_state = 19;
-                $runtime.sendEnterElement(super._cookie, $__uri, $__local, $__qname, $attrs);
-            }
-            break;
-        case 26:
-            {
-                if(((($ai = $runtime.getAttributeIndex("","maxOccurs"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation"))) || ((($ai = $runtime.getAttributeIndex("","ref"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation"))) || (($ai = $runtime.getAttributeIndex("","minOccurs"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation")))))) {
-                    NGCCHandler h = new occurs(this, super._source, $runtime, 157);
+                if(((($ai = $runtime.getAttributeIndex("","minOccurs"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation"))) || ((($ai = $runtime.getAttributeIndex("","processContents"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation"))) || ((($ai = $runtime.getAttributeIndex("","maxOccurs"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation"))) || ((($ai = $runtime.getAttributeIndex("","namespace"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation"))))))) {
+                    NGCCHandler h = new occurs(this, super._source, $runtime, 618);
                     spawnChildFromEnterElement(h, $__uri, $__local, $__qname, $attrs);
                 }
                 else {
                     unexpectedEnterElement($__qname);
+                }
+            }
+            break;
+        case 3:
+            {
+                if((($ai = $runtime.getAttributeIndex("","processContents"))>=0 || (($ai = $runtime.getAttributeIndex("","namespace"))>=0 || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation"))))) {
+                    NGCCHandler h = new wildcardBody(this, super._source, $runtime, 617, wloc);
+                    spawnChildFromEnterElement(h, $__uri, $__local, $__qname, $attrs);
+                }
+                else {
+                    unexpectedEnterElement($__qname);
+                }
+            }
+            break;
+        case 30:
+            {
+                if(((($ai = $runtime.getAttributeIndex("","minOccurs"))>=0 && ((((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("element")) || ((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("all")) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("choice"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("sequence")))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("any"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("group")))) || (($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("group")) || ((($ai = $runtime.getAttributeIndex("","maxOccurs"))>=0 && ((((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("element")) || ((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("all")) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("choice"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("sequence")))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("any"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("group")))) || (($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation")) || (($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("any")) || (((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("all")) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("choice"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("sequence"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("element"))))))))) {
+                    NGCCHandler h = new occurs(this, super._source, $runtime, 648);
+                    spawnChildFromEnterElement(h, $__uri, $__local, $__qname, $attrs);
+                }
+                else {
+                    unexpectedEnterElement($__qname);
+                }
+            }
+            break;
+        case 26:
+            {
+                if(((($ai = $runtime.getAttributeIndex("","minOccurs"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation"))) || ((($ai = $runtime.getAttributeIndex("","maxOccurs"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation"))) || (($ai = $runtime.getAttributeIndex("","ref"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation")))))) {
+                    NGCCHandler h = new occurs(this, super._source, $runtime, 643);
+                    spawnChildFromEnterElement(h, $__uri, $__local, $__qname, $attrs);
+                }
+                else {
+                    unexpectedEnterElement($__qname);
+                }
+            }
+            break;
+        case 11:
+            {
+                if(($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation"))) {
+                    NGCCHandler h = new annotation(this, super._source, $runtime, 626, null,AnnotationContext.PARTICLE);
+                    spawnChildFromEnterElement(h, $__uri, $__local, $__qname, $attrs);
+                }
+                else {
+                    $_ngcc_current_state = 10;
+                    $runtime.sendEnterElement(super._cookie, $__uri, $__local, $__qname, $attrs);
                 }
             }
             break;
@@ -194,88 +227,14 @@ class particle extends NGCCHandler {
                 }
             }
             break;
-        case 16:
-            {
-                if(((($ai = $runtime.getAttributeIndex("","ref"))>=0 && (((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation")) || ((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("key")) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("keyref"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("unique")))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("complexType"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("simpleType")))) || ((($ai = $runtime.getAttributeIndex("","maxOccurs"))>=0 && (((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation")) || ((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("key")) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("keyref"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("unique")))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("complexType"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("simpleType")))) || ((($ai = $runtime.getAttributeIndex("","name"))>=0 && (((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation")) || ((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("key")) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("keyref"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("unique")))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("complexType"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("simpleType")))) || ((($ai = $runtime.getAttributeIndex("","default"))>=0 && (((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation")) || ((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("key")) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("keyref"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("unique")))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("complexType"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("simpleType")))) || ((($ai = $runtime.getAttributeIndex("","final"))>=0 && (((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation")) || ((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("key")) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("keyref"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("unique")))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("complexType"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("simpleType")))) || ((($ai = $runtime.getAttributeIndex("","block"))>=0 && (((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation")) || ((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("key")) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("keyref"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("unique")))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("complexType"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("simpleType")))) || ((($ai = $runtime.getAttributeIndex("","abstract"))>=0 && (((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation")) || ((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("key")) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("keyref"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("unique")))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("complexType"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("simpleType")))) || ((($ai = $runtime.getAttributeIndex("","fixed"))>=0 && (((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation")) || ((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("key")) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("keyref"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("unique")))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("complexType"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("simpleType")))) || ((($ai = $runtime.getAttributeIndex("","minOccurs"))>=0 && (((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation")) || ((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("key")) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("keyref"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("unique")))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("complexType"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("simpleType")))) || (($ai = $runtime.getAttributeIndex("","form"))>=0 && (((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation")) || ((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("key")) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("keyref"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("unique")))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("complexType"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("simpleType")))))))))))))) {
-                    NGCCHandler h = new occurs(this, super._source, $runtime, 146);
-                    spawnChildFromEnterElement(h, $__uri, $__local, $__qname, $attrs);
-                }
-                else {
-                    unexpectedEnterElement($__qname);
-                }
-            }
-            break;
         case 29:
             {
-                if((((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("all")) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("choice"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("sequence"))) || (($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("element")) || (($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("any")) || (($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("group")) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation"))))))) {
-                    NGCCHandler h = new modelGroupBody(this, super._source, $runtime, 161, loc,compositorName);
+                if((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("group")) || (($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation")) || (($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("any")) || (((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("all")) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("choice"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("sequence"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("element"))))))) {
+                    NGCCHandler h = new modelGroupBody(this, super._source, $runtime, 647, loc,compositorName);
                     spawnChildFromEnterElement(h, $__uri, $__local, $__qname, $attrs);
                 }
                 else {
                     unexpectedEnterElement($__qname);
-                }
-            }
-            break;
-        case 21:
-            {
-                if(($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation"))) {
-                    NGCCHandler h = new annotation(this, super._source, $runtime, 152, null,AnnotationContext.PARTICLE);
-                    spawnChildFromEnterElement(h, $__uri, $__local, $__qname, $attrs);
-                }
-                else {
-                    $_ngcc_current_state = 20;
-                    $runtime.sendEnterElement(super._cookie, $__uri, $__local, $__qname, $attrs);
-                }
-            }
-            break;
-        case 3:
-            {
-                if((($ai = $runtime.getAttributeIndex("","processContents"))>=0 || (($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation")) || ($ai = $runtime.getAttributeIndex("","namespace"))>=0))) {
-                    NGCCHandler h = new wildcardBody(this, super._source, $runtime, 131, wloc);
-                    spawnChildFromEnterElement(h, $__uri, $__local, $__qname, $attrs);
-                }
-                else {
-                    unexpectedEnterElement($__qname);
-                }
-            }
-            break;
-        case 11:
-            {
-                if(($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation"))) {
-                    NGCCHandler h = new annotation(this, super._source, $runtime, 140, null,AnnotationContext.PARTICLE);
-                    spawnChildFromEnterElement(h, $__uri, $__local, $__qname, $attrs);
-                }
-                else {
-                    $_ngcc_current_state = 10;
-                    $runtime.sendEnterElement(super._cookie, $__uri, $__local, $__qname, $attrs);
-                }
-            }
-            break;
-        case 4:
-            {
-                if(((($ai = $runtime.getAttributeIndex("","maxOccurs"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation"))) || ((($ai = $runtime.getAttributeIndex("","processContents"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation"))) || (($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation")) || ((($ai = $runtime.getAttributeIndex("","minOccurs"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation"))) || (($ai = $runtime.getAttributeIndex("","namespace"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation")))))))) {
-                    NGCCHandler h = new occurs(this, super._source, $runtime, 132);
-                    spawnChildFromEnterElement(h, $__uri, $__local, $__qname, $attrs);
-                }
-                else {
-                    unexpectedEnterElement($__qname);
-                }
-            }
-            break;
-        case 8:
-            {
-                if(($ai = $runtime.getAttributeIndex("","ref"))>=0) {
-                    $runtime.consumeAttribute($ai);
-                    $runtime.sendEnterElement(super._cookie, $__uri, $__local, $__qname, $attrs);
-                }
-                else {
-                    if((($ai = $runtime.getAttributeIndex("","name"))>=0 || (($ai = $runtime.getAttributeIndex("","default"))>=0 || (($ai = $runtime.getAttributeIndex("","final"))>=0 || (($ai = $runtime.getAttributeIndex("","block"))>=0 || (($ai = $runtime.getAttributeIndex("","abstract"))>=0 || (($ai = $runtime.getAttributeIndex("","fixed"))>=0 || ($ai = $runtime.getAttributeIndex("","form"))>=0))))))) {
-                        NGCCHandler h = new elementDeclBody(this, super._source, $runtime, 137, loc,false);
-                        spawnChildFromEnterElement(h, $__uri, $__local, $__qname, $attrs);
-                    }
-                    else {
-                        unexpectedEnterElement($__qname);
-                    }
                 }
             }
             break;
@@ -290,15 +249,56 @@ class particle extends NGCCHandler {
                 }
             }
             break;
-        case 30:
+        case 21:
             {
-                if(((($ai = $runtime.getAttributeIndex("","maxOccurs"))>=0 && ((((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation")) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("group"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("any"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("element"))) || ((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("all")) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("choice"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("sequence"))))) || (((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("all")) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("choice"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("sequence"))) || (($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("element")) || (($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("any")) || (($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("group")) || (($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation")) || (($ai = $runtime.getAttributeIndex("","minOccurs"))>=0 && ((((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation")) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("group"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("any"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("element"))) || ((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("all")) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("choice"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("sequence")))))))))))) {
-                    NGCCHandler h = new occurs(this, super._source, $runtime, 162);
+                if(($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation"))) {
+                    NGCCHandler h = new annotation(this, super._source, $runtime, 638, null,AnnotationContext.PARTICLE);
+                    spawnChildFromEnterElement(h, $__uri, $__local, $__qname, $attrs);
+                }
+                else {
+                    $_ngcc_current_state = 20;
+                    $runtime.sendEnterElement(super._cookie, $__uri, $__local, $__qname, $attrs);
+                }
+            }
+            break;
+        case 16:
+            {
+                if(((($ai = $runtime.getAttributeIndex("","name"))>=0 && (((((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("key")) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("keyref"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("unique"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("complexType"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("simpleType"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation")))) || ((($ai = $runtime.getAttributeIndex("","final"))>=0 && (((((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("key")) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("keyref"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("unique"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("complexType"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("simpleType"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation")))) || ((($ai = $runtime.getAttributeIndex("","minOccurs"))>=0 && (((((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("key")) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("keyref"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("unique"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("complexType"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("simpleType"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation")))) || ((($ai = $runtime.getAttributeIndex("","maxOccurs"))>=0 && (((((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("key")) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("keyref"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("unique"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("complexType"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("simpleType"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation")))) || ((($ai = $runtime.getAttributeIndex("","form"))>=0 && (((((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("key")) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("keyref"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("unique"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("complexType"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("simpleType"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation")))) || ((($ai = $runtime.getAttributeIndex("","block"))>=0 && (((((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("key")) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("keyref"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("unique"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("complexType"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("simpleType"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation")))) || ((($ai = $runtime.getAttributeIndex("","fixed"))>=0 && (((((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("key")) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("keyref"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("unique"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("complexType"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("simpleType"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation")))) || ((($ai = $runtime.getAttributeIndex("","default"))>=0 && (((((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("key")) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("keyref"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("unique"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("complexType"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("simpleType"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation")))) || ((($ai = $runtime.getAttributeIndex("","abstract"))>=0 && (((((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("key")) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("keyref"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("unique"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("complexType"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("simpleType"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation")))) || (($ai = $runtime.getAttributeIndex("","ref"))>=0 && (((((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("key")) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("keyref"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("unique"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("complexType"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("simpleType"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("annotation")))))))))))))) {
+                    NGCCHandler h = new occurs(this, super._source, $runtime, 632);
                     spawnChildFromEnterElement(h, $__uri, $__local, $__qname, $attrs);
                 }
                 else {
                     unexpectedEnterElement($__qname);
                 }
+            }
+            break;
+        case 8:
+            {
+                if(($ai = $runtime.getAttributeIndex("","ref"))>=0) {
+                    $runtime.consumeAttribute($ai);
+                    $runtime.sendEnterElement(super._cookie, $__uri, $__local, $__qname, $attrs);
+                }
+                else {
+                    if((($ai = $runtime.getAttributeIndex("","name"))>=0 || (($ai = $runtime.getAttributeIndex("","final"))>=0 || (($ai = $runtime.getAttributeIndex("","form"))>=0 || (($ai = $runtime.getAttributeIndex("","block"))>=0 || (($ai = $runtime.getAttributeIndex("","fixed"))>=0 || (($ai = $runtime.getAttributeIndex("","default"))>=0 || ($ai = $runtime.getAttributeIndex("","abstract"))>=0))))))) {
+                        NGCCHandler h = new elementDeclBody(this, super._source, $runtime, 623, loc,false);
+                        spawnChildFromEnterElement(h, $__uri, $__local, $__qname, $attrs);
+                    }
+                    else {
+                        unexpectedEnterElement($__qname);
+                    }
+                }
+            }
+            break;
+        case 20:
+            {
+                action5();
+                $_ngcc_current_state = 19;
+                $runtime.sendEnterElement(super._cookie, $__uri, $__local, $__qname, $attrs);
+            }
+            break;
+        case 0:
+            {
+                revertToParentFromEnterElement(result, super._cookie, $__uri, $__local, $__qname, $attrs);
             }
             break;
         default:
@@ -315,21 +315,31 @@ class particle extends NGCCHandler {
         $localName = $__local;
         $qname = $__qname;
         switch($_ngcc_current_state) {
-        case 0:
+        case 4:
             {
-                revertToParentFromLeaveElement(result, super._cookie, $__uri, $__local, $__qname);
+                if(((($ai = $runtime.getAttributeIndex("","minOccurs"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("any"))) || ((($ai = $runtime.getAttributeIndex("","processContents"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("any"))) || ((($ai = $runtime.getAttributeIndex("","maxOccurs"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("any"))) || ((($ai = $runtime.getAttributeIndex("","namespace"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("any"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("any"))))))) {
+                    NGCCHandler h = new occurs(this, super._source, $runtime, 618);
+                    spawnChildFromLeaveElement(h, $__uri, $__local, $__qname);
+                }
+                else {
+                    unexpectedLeaveElement($__qname);
+                }
             }
             break;
-        case 20:
+        case 3:
             {
-                action5();
-                $_ngcc_current_state = 19;
-                $runtime.sendLeaveElement(super._cookie, $__uri, $__local, $__qname);
+                if(((($ai = $runtime.getAttributeIndex("","processContents"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("any"))) || ((($ai = $runtime.getAttributeIndex("","namespace"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("any"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("any"))))) {
+                    NGCCHandler h = new wildcardBody(this, super._source, $runtime, 617, wloc);
+                    spawnChildFromLeaveElement(h, $__uri, $__local, $__qname);
+                }
+                else {
+                    unexpectedLeaveElement($__qname);
+                }
             }
             break;
-        case 2:
+        case 19:
             {
-                if(($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("any"))) {
+                if(($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("group"))) {
                     $runtime.onLeaveElementConsumed($__uri, $__local, $__qname);
                     $_ngcc_current_state = 0;
                 }
@@ -338,15 +348,32 @@ class particle extends NGCCHandler {
                 }
             }
             break;
-        case 26:
+        case 30:
             {
-                if(((($ai = $runtime.getAttributeIndex("","maxOccurs"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("group"))) || ((($ai = $runtime.getAttributeIndex("","ref"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("group"))) || (($ai = $runtime.getAttributeIndex("","minOccurs"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("group")))))) {
-                    NGCCHandler h = new occurs(this, super._source, $runtime, 157);
+                if(((($ai = $runtime.getAttributeIndex("","minOccurs"))>=0 && ((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("all")) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("choice"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("sequence")))) || (((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("all")) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("choice"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("sequence"))) || (($ai = $runtime.getAttributeIndex("","maxOccurs"))>=0 && ((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("all")) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("choice"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("sequence"))))))) {
+                    NGCCHandler h = new occurs(this, super._source, $runtime, 648);
                     spawnChildFromLeaveElement(h, $__uri, $__local, $__qname);
                 }
                 else {
                     unexpectedLeaveElement($__qname);
                 }
+            }
+            break;
+        case 26:
+            {
+                if(((($ai = $runtime.getAttributeIndex("","minOccurs"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("group"))) || ((($ai = $runtime.getAttributeIndex("","maxOccurs"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("group"))) || (($ai = $runtime.getAttributeIndex("","ref"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("group")))))) {
+                    NGCCHandler h = new occurs(this, super._source, $runtime, 643);
+                    spawnChildFromLeaveElement(h, $__uri, $__local, $__qname);
+                }
+                else {
+                    unexpectedLeaveElement($__qname);
+                }
+            }
+            break;
+        case 11:
+            {
+                $_ngcc_current_state = 10;
+                $runtime.sendLeaveElement(super._cookie, $__uri, $__local, $__qname);
             }
             break;
         case 10:
@@ -356,39 +383,11 @@ class particle extends NGCCHandler {
                 $runtime.sendLeaveElement(super._cookie, $__uri, $__local, $__qname);
             }
             break;
-        case 16:
+        case 2:
             {
-                if(((($ai = $runtime.getAttributeIndex("","ref"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("element"))) || ((($ai = $runtime.getAttributeIndex("","maxOccurs"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("element"))) || ((($ai = $runtime.getAttributeIndex("","name"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("element"))) || ((($ai = $runtime.getAttributeIndex("","default"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("element"))) || ((($ai = $runtime.getAttributeIndex("","final"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("element"))) || ((($ai = $runtime.getAttributeIndex("","block"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("element"))) || ((($ai = $runtime.getAttributeIndex("","abstract"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("element"))) || ((($ai = $runtime.getAttributeIndex("","fixed"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("element"))) || ((($ai = $runtime.getAttributeIndex("","minOccurs"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("element"))) || (($ai = $runtime.getAttributeIndex("","form"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("element"))))))))))))) {
-                    NGCCHandler h = new occurs(this, super._source, $runtime, 146);
-                    spawnChildFromLeaveElement(h, $__uri, $__local, $__qname);
-                }
-                else {
-                    unexpectedLeaveElement($__qname);
-                }
-            }
-            break;
-        case 29:
-            {
-                if(((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("all")) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("choice"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("sequence")))) {
-                    NGCCHandler h = new modelGroupBody(this, super._source, $runtime, 161, loc,compositorName);
-                    spawnChildFromLeaveElement(h, $__uri, $__local, $__qname);
-                }
-                else {
-                    unexpectedLeaveElement($__qname);
-                }
-            }
-            break;
-        case 21:
-            {
-                $_ngcc_current_state = 20;
-                $runtime.sendLeaveElement(super._cookie, $__uri, $__local, $__qname);
-            }
-            break;
-        case 3:
-            {
-                if((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("any")) || ((($ai = $runtime.getAttributeIndex("","processContents"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("any"))) || (($ai = $runtime.getAttributeIndex("","namespace"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("any")))))) {
-                    NGCCHandler h = new wildcardBody(this, super._source, $runtime, 131, wloc);
-                    spawnChildFromLeaveElement(h, $__uri, $__local, $__qname);
+                if(($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("any"))) {
+                    $runtime.onLeaveElementConsumed($__uri, $__local, $__qname);
+                    $_ngcc_current_state = 0;
                 }
                 else {
                     unexpectedLeaveElement($__qname);
@@ -406,16 +405,38 @@ class particle extends NGCCHandler {
                 }
             }
             break;
-        case 11:
+        case 29:
             {
-                $_ngcc_current_state = 10;
+                if(((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("all")) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("choice"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("sequence")))) {
+                    NGCCHandler h = new modelGroupBody(this, super._source, $runtime, 647, loc,compositorName);
+                    spawnChildFromLeaveElement(h, $__uri, $__local, $__qname);
+                }
+                else {
+                    unexpectedLeaveElement($__qname);
+                }
+            }
+            break;
+        case 25:
+            {
+                if(($ai = $runtime.getAttributeIndex("","ref"))>=0) {
+                    $runtime.consumeAttribute($ai);
+                    $runtime.sendLeaveElement(super._cookie, $__uri, $__local, $__qname);
+                }
+                else {
+                    unexpectedLeaveElement($__qname);
+                }
+            }
+            break;
+        case 21:
+            {
+                $_ngcc_current_state = 20;
                 $runtime.sendLeaveElement(super._cookie, $__uri, $__local, $__qname);
             }
             break;
-        case 4:
+        case 16:
             {
-                if(((($ai = $runtime.getAttributeIndex("","maxOccurs"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("any"))) || (($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("any")) || ((($ai = $runtime.getAttributeIndex("","processContents"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("any"))) || ((($ai = $runtime.getAttributeIndex("","minOccurs"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("any"))) || (($ai = $runtime.getAttributeIndex("","namespace"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("any")))))))) {
-                    NGCCHandler h = new occurs(this, super._source, $runtime, 132);
+                if(((($ai = $runtime.getAttributeIndex("","name"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("element"))) || ((($ai = $runtime.getAttributeIndex("","final"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("element"))) || ((($ai = $runtime.getAttributeIndex("","minOccurs"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("element"))) || ((($ai = $runtime.getAttributeIndex("","maxOccurs"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("element"))) || ((($ai = $runtime.getAttributeIndex("","form"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("element"))) || ((($ai = $runtime.getAttributeIndex("","block"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("element"))) || ((($ai = $runtime.getAttributeIndex("","fixed"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("element"))) || ((($ai = $runtime.getAttributeIndex("","default"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("element"))) || ((($ai = $runtime.getAttributeIndex("","abstract"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("element"))) || (($ai = $runtime.getAttributeIndex("","ref"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("element"))))))))))))) {
+                    NGCCHandler h = new occurs(this, super._source, $runtime, 632);
                     spawnChildFromLeaveElement(h, $__uri, $__local, $__qname);
                 }
                 else {
@@ -430,8 +451,8 @@ class particle extends NGCCHandler {
                     $runtime.sendLeaveElement(super._cookie, $__uri, $__local, $__qname);
                 }
                 else {
-                    if(((($ai = $runtime.getAttributeIndex("","name"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("element"))) || ((($ai = $runtime.getAttributeIndex("","default"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("element"))) || ((($ai = $runtime.getAttributeIndex("","final"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("element"))) || ((($ai = $runtime.getAttributeIndex("","block"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("element"))) || ((($ai = $runtime.getAttributeIndex("","abstract"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("element"))) || ((($ai = $runtime.getAttributeIndex("","fixed"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("element"))) || (($ai = $runtime.getAttributeIndex("","form"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("element")))))))))) {
-                        NGCCHandler h = new elementDeclBody(this, super._source, $runtime, 137, loc,false);
+                    if(((($ai = $runtime.getAttributeIndex("","name"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("element"))) || ((($ai = $runtime.getAttributeIndex("","final"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("element"))) || ((($ai = $runtime.getAttributeIndex("","form"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("element"))) || ((($ai = $runtime.getAttributeIndex("","block"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("element"))) || ((($ai = $runtime.getAttributeIndex("","fixed"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("element"))) || ((($ai = $runtime.getAttributeIndex("","default"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("element"))) || (($ai = $runtime.getAttributeIndex("","abstract"))>=0 && ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("element")))))))))) {
+                        NGCCHandler h = new elementDeclBody(this, super._source, $runtime, 623, loc,false);
                         spawnChildFromLeaveElement(h, $__uri, $__local, $__qname);
                     }
                     else {
@@ -451,37 +472,16 @@ class particle extends NGCCHandler {
                 }
             }
             break;
-        case 25:
+        case 20:
             {
-                if(($ai = $runtime.getAttributeIndex("","ref"))>=0) {
-                    $runtime.consumeAttribute($ai);
-                    $runtime.sendLeaveElement(super._cookie, $__uri, $__local, $__qname);
-                }
-                else {
-                    unexpectedLeaveElement($__qname);
-                }
+                action5();
+                $_ngcc_current_state = 19;
+                $runtime.sendLeaveElement(super._cookie, $__uri, $__local, $__qname);
             }
             break;
-        case 30:
+        case 0:
             {
-                if(((($ai = $runtime.getAttributeIndex("","maxOccurs"))>=0 && ((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("all")) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("choice"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("sequence")))) || (((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("all")) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("choice"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("sequence"))) || (($ai = $runtime.getAttributeIndex("","minOccurs"))>=0 && ((($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("all")) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("choice"))) || ($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("sequence"))))))) {
-                    NGCCHandler h = new occurs(this, super._source, $runtime, 162);
-                    spawnChildFromLeaveElement(h, $__uri, $__local, $__qname);
-                }
-                else {
-                    unexpectedLeaveElement($__qname);
-                }
-            }
-            break;
-        case 19:
-            {
-                if(($__uri.equals("http://www.w3.org/2001/XMLSchema") && $__local.equals("group"))) {
-                    $runtime.onLeaveElementConsumed($__uri, $__local, $__qname);
-                    $_ngcc_current_state = 0;
-                }
-                else {
-                    unexpectedLeaveElement($__qname);
-                }
+                revertToParentFromLeaveElement(result, super._cookie, $__uri, $__local, $__qname);
             }
             break;
         default:
@@ -498,35 +498,10 @@ class particle extends NGCCHandler {
         $localName = $__local;
         $qname = $__qname;
         switch($_ngcc_current_state) {
-        case 20:
+        case 4:
             {
-                action5();
-                $_ngcc_current_state = 19;
-                $runtime.sendEnterAttribute(super._cookie, $__uri, $__local, $__qname);
-            }
-            break;
-        case 0:
-            {
-                revertToParentFromEnterAttribute(result, super._cookie, $__uri, $__local, $__qname);
-            }
-            break;
-        case 11:
-            {
-                $_ngcc_current_state = 10;
-                $runtime.sendEnterAttribute(super._cookie, $__uri, $__local, $__qname);
-            }
-            break;
-        case 10:
-            {
-                action3();
-                $_ngcc_current_state = 7;
-                $runtime.sendEnterAttribute(super._cookie, $__uri, $__local, $__qname);
-            }
-            break;
-        case 26:
-            {
-                if((($__uri.equals("") && $__local.equals("maxOccurs")) || (($__uri.equals("") && $__local.equals("ref")) || ($__uri.equals("") && $__local.equals("minOccurs"))))) {
-                    NGCCHandler h = new occurs(this, super._source, $runtime, 157);
+                if((($__uri.equals("") && $__local.equals("minOccurs")) || (($__uri.equals("") && $__local.equals("processContents")) || (($__uri.equals("") && $__local.equals("maxOccurs")) || ($__uri.equals("") && $__local.equals("namespace")))))) {
+                    NGCCHandler h = new occurs(this, super._source, $runtime, 618);
                     spawnChildFromEnterAttribute(h, $__uri, $__local, $__qname);
                 }
                 else {
@@ -534,10 +509,16 @@ class particle extends NGCCHandler {
                 }
             }
             break;
-        case 4:
+        case 21:
             {
-                if((($__uri.equals("") && $__local.equals("maxOccurs")) || (($__uri.equals("") && $__local.equals("processContents")) || (($__uri.equals("") && $__local.equals("minOccurs")) || ($__uri.equals("") && $__local.equals("namespace")))))) {
-                    NGCCHandler h = new occurs(this, super._source, $runtime, 132);
+                $_ngcc_current_state = 20;
+                $runtime.sendEnterAttribute(super._cookie, $__uri, $__local, $__qname);
+            }
+            break;
+        case 3:
+            {
+                if((($__uri.equals("") && $__local.equals("processContents")) || ($__uri.equals("") && $__local.equals("namespace")))) {
+                    NGCCHandler h = new wildcardBody(this, super._source, $runtime, 617, wloc);
                     spawnChildFromEnterAttribute(h, $__uri, $__local, $__qname);
                 }
                 else {
@@ -547,8 +528,8 @@ class particle extends NGCCHandler {
             break;
         case 16:
             {
-                if((($__uri.equals("") && $__local.equals("ref")) || (($__uri.equals("") && $__local.equals("maxOccurs")) || (($__uri.equals("") && $__local.equals("name")) || (($__uri.equals("") && $__local.equals("default")) || (($__uri.equals("") && $__local.equals("final")) || (($__uri.equals("") && $__local.equals("block")) || (($__uri.equals("") && $__local.equals("abstract")) || (($__uri.equals("") && $__local.equals("fixed")) || (($__uri.equals("") && $__local.equals("minOccurs")) || ($__uri.equals("") && $__local.equals("form")))))))))))) {
-                    NGCCHandler h = new occurs(this, super._source, $runtime, 146);
+                if((($__uri.equals("") && $__local.equals("name")) || (($__uri.equals("") && $__local.equals("final")) || (($__uri.equals("") && $__local.equals("minOccurs")) || (($__uri.equals("") && $__local.equals("maxOccurs")) || (($__uri.equals("") && $__local.equals("form")) || (($__uri.equals("") && $__local.equals("block")) || (($__uri.equals("") && $__local.equals("fixed")) || (($__uri.equals("") && $__local.equals("default")) || (($__uri.equals("") && $__local.equals("abstract")) || ($__uri.equals("") && $__local.equals("ref")))))))))))) {
+                    NGCCHandler h = new occurs(this, super._source, $runtime, 632);
                     spawnChildFromEnterAttribute(h, $__uri, $__local, $__qname);
                 }
                 else {
@@ -562,8 +543,8 @@ class particle extends NGCCHandler {
                     $_ngcc_current_state = 14;
                 }
                 else {
-                    if((($__uri.equals("") && $__local.equals("name")) || (($__uri.equals("") && $__local.equals("default")) || (($__uri.equals("") && $__local.equals("final")) || (($__uri.equals("") && $__local.equals("block")) || (($__uri.equals("") && $__local.equals("abstract")) || (($__uri.equals("") && $__local.equals("fixed")) || ($__uri.equals("") && $__local.equals("form"))))))))) {
-                        NGCCHandler h = new elementDeclBody(this, super._source, $runtime, 137, loc,false);
+                    if((($__uri.equals("") && $__local.equals("name")) || (($__uri.equals("") && $__local.equals("final")) || (($__uri.equals("") && $__local.equals("form")) || (($__uri.equals("") && $__local.equals("block")) || (($__uri.equals("") && $__local.equals("fixed")) || (($__uri.equals("") && $__local.equals("default")) || ($__uri.equals("") && $__local.equals("abstract"))))))))) {
+                        NGCCHandler h = new elementDeclBody(this, super._source, $runtime, 623, loc,false);
                         spawnChildFromEnterAttribute(h, $__uri, $__local, $__qname);
                     }
                     else {
@@ -572,38 +553,57 @@ class particle extends NGCCHandler {
                 }
             }
             break;
-        case 21:
+        case 30:
             {
-                $_ngcc_current_state = 20;
-                $runtime.sendEnterAttribute(super._cookie, $__uri, $__local, $__qname);
-            }
-            break;
-        case 3:
-            {
-                if((($__uri.equals("") && $__local.equals("processContents")) || ($__uri.equals("") && $__local.equals("namespace")))) {
-                    NGCCHandler h = new wildcardBody(this, super._source, $runtime, 131, wloc);
+                if((($__uri.equals("") && $__local.equals("minOccurs")) || ($__uri.equals("") && $__local.equals("maxOccurs")))) {
+                    NGCCHandler h = new occurs(this, super._source, $runtime, 648);
                     spawnChildFromEnterAttribute(h, $__uri, $__local, $__qname);
                 }
                 else {
                     unexpectedEnterAttribute($__qname);
                 }
+            }
+            break;
+        case 11:
+            {
+                $_ngcc_current_state = 10;
+                $runtime.sendEnterAttribute(super._cookie, $__uri, $__local, $__qname);
+            }
+            break;
+        case 26:
+            {
+                if((($__uri.equals("") && $__local.equals("minOccurs")) || (($__uri.equals("") && $__local.equals("maxOccurs")) || ($__uri.equals("") && $__local.equals("ref"))))) {
+                    NGCCHandler h = new occurs(this, super._source, $runtime, 643);
+                    spawnChildFromEnterAttribute(h, $__uri, $__local, $__qname);
+                }
+                else {
+                    unexpectedEnterAttribute($__qname);
+                }
+            }
+            break;
+        case 10:
+            {
+                action3();
+                $_ngcc_current_state = 7;
+                $runtime.sendEnterAttribute(super._cookie, $__uri, $__local, $__qname);
+            }
+            break;
+        case 20:
+            {
+                action5();
+                $_ngcc_current_state = 19;
+                $runtime.sendEnterAttribute(super._cookie, $__uri, $__local, $__qname);
+            }
+            break;
+        case 0:
+            {
+                revertToParentFromEnterAttribute(result, super._cookie, $__uri, $__local, $__qname);
             }
             break;
         case 25:
             {
                 if(($__uri.equals("") && $__local.equals("ref"))) {
                     $_ngcc_current_state = 24;
-                }
-                else {
-                    unexpectedEnterAttribute($__qname);
-                }
-            }
-            break;
-        case 30:
-            {
-                if((($__uri.equals("") && $__local.equals("maxOccurs")) || ($__uri.equals("") && $__local.equals("minOccurs")))) {
-                    NGCCHandler h = new occurs(this, super._source, $runtime, 162);
-                    spawnChildFromEnterAttribute(h, $__uri, $__local, $__qname);
                 }
                 else {
                     unexpectedEnterAttribute($__qname);
@@ -624,21 +624,9 @@ class particle extends NGCCHandler {
         $localName = $__local;
         $qname = $__qname;
         switch($_ngcc_current_state) {
-        case 20:
+        case 21:
             {
-                action5();
-                $_ngcc_current_state = 19;
-                $runtime.sendLeaveAttribute(super._cookie, $__uri, $__local, $__qname);
-            }
-            break;
-        case 0:
-            {
-                revertToParentFromLeaveAttribute(result, super._cookie, $__uri, $__local, $__qname);
-            }
-            break;
-        case 11:
-            {
-                $_ngcc_current_state = 10;
+                $_ngcc_current_state = 20;
                 $runtime.sendLeaveAttribute(super._cookie, $__uri, $__local, $__qname);
             }
             break;
@@ -652,10 +640,23 @@ class particle extends NGCCHandler {
                 }
             }
             break;
+        case 11:
+            {
+                $_ngcc_current_state = 10;
+                $runtime.sendLeaveAttribute(super._cookie, $__uri, $__local, $__qname);
+            }
+            break;
         case 10:
             {
                 action3();
                 $_ngcc_current_state = 7;
+                $runtime.sendLeaveAttribute(super._cookie, $__uri, $__local, $__qname);
+            }
+            break;
+        case 20:
+            {
+                action5();
+                $_ngcc_current_state = 19;
                 $runtime.sendLeaveAttribute(super._cookie, $__uri, $__local, $__qname);
             }
             break;
@@ -669,10 +670,9 @@ class particle extends NGCCHandler {
                 }
             }
             break;
-        case 21:
+        case 0:
             {
-                $_ngcc_current_state = 20;
-                $runtime.sendLeaveAttribute(super._cookie, $__uri, $__local, $__qname);
+                revertToParentFromLeaveAttribute(result, super._cookie, $__uri, $__local, $__qname);
             }
             break;
         default:
@@ -686,36 +686,84 @@ class particle extends NGCCHandler {
     public void text(String $value) throws SAXException {
         int $ai;
         switch($_ngcc_current_state) {
-        case 0:
+        case 4:
             {
-                revertToParentFromText(result, super._cookie, $value);
+                if(($ai = $runtime.getAttributeIndex("","namespace"))>=0) {
+                    NGCCHandler h = new occurs(this, super._source, $runtime, 618);
+                    spawnChildFromText(h, $value);
+                }
+                else {
+                    if(($ai = $runtime.getAttributeIndex("","maxOccurs"))>=0) {
+                        NGCCHandler h = new occurs(this, super._source, $runtime, 618);
+                        spawnChildFromText(h, $value);
+                    }
+                    else {
+                        if(($ai = $runtime.getAttributeIndex("","processContents"))>=0) {
+                            NGCCHandler h = new occurs(this, super._source, $runtime, 618);
+                            spawnChildFromText(h, $value);
+                        }
+                        else {
+                            if(($ai = $runtime.getAttributeIndex("","minOccurs"))>=0) {
+                                NGCCHandler h = new occurs(this, super._source, $runtime, 618);
+                                spawnChildFromText(h, $value);
+                            }
+                        }
+                    }
+                }
             }
             break;
-        case 20:
+        case 3:
             {
-                action5();
-                $_ngcc_current_state = 19;
-                $runtime.sendText(super._cookie, $value);
+                if(($ai = $runtime.getAttributeIndex("","namespace"))>=0) {
+                    NGCCHandler h = new wildcardBody(this, super._source, $runtime, 617, wloc);
+                    spawnChildFromText(h, $value);
+                }
+                else {
+                    if(($ai = $runtime.getAttributeIndex("","processContents"))>=0) {
+                        NGCCHandler h = new wildcardBody(this, super._source, $runtime, 617, wloc);
+                        spawnChildFromText(h, $value);
+                    }
+                }
+            }
+            break;
+        case 30:
+            {
+                if(($ai = $runtime.getAttributeIndex("","maxOccurs"))>=0) {
+                    NGCCHandler h = new occurs(this, super._source, $runtime, 648);
+                    spawnChildFromText(h, $value);
+                }
+                else {
+                    if(($ai = $runtime.getAttributeIndex("","minOccurs"))>=0) {
+                        NGCCHandler h = new occurs(this, super._source, $runtime, 648);
+                        spawnChildFromText(h, $value);
+                    }
+                }
             }
             break;
         case 26:
             {
-                if(($ai = $runtime.getAttributeIndex("","minOccurs"))>=0) {
-                    NGCCHandler h = new occurs(this, super._source, $runtime, 157);
+                if(($ai = $runtime.getAttributeIndex("","ref"))>=0) {
+                    NGCCHandler h = new occurs(this, super._source, $runtime, 643);
                     spawnChildFromText(h, $value);
                 }
                 else {
-                    if(($ai = $runtime.getAttributeIndex("","ref"))>=0) {
-                        NGCCHandler h = new occurs(this, super._source, $runtime, 157);
+                    if(($ai = $runtime.getAttributeIndex("","maxOccurs"))>=0) {
+                        NGCCHandler h = new occurs(this, super._source, $runtime, 643);
                         spawnChildFromText(h, $value);
                     }
                     else {
-                        if(($ai = $runtime.getAttributeIndex("","maxOccurs"))>=0) {
-                            NGCCHandler h = new occurs(this, super._source, $runtime, 157);
+                        if(($ai = $runtime.getAttributeIndex("","minOccurs"))>=0) {
+                            NGCCHandler h = new occurs(this, super._source, $runtime, 643);
                             spawnChildFromText(h, $value);
                         }
                     }
                 }
+            }
+            break;
+        case 11:
+            {
+                $_ngcc_current_state = 10;
+                $runtime.sendText(super._cookie, $value);
             }
             break;
         case 10:
@@ -725,55 +773,75 @@ class particle extends NGCCHandler {
                 $runtime.sendText(super._cookie, $value);
             }
             break;
+        case 14:
+            {
+                NGCCHandler h = new qname(this, super._source, $runtime, 629);
+                spawnChildFromText(h, $value);
+            }
+            break;
+        case 25:
+            {
+                if(($ai = $runtime.getAttributeIndex("","ref"))>=0) {
+                    $runtime.consumeAttribute($ai);
+                    $runtime.sendText(super._cookie, $value);
+                }
+            }
+            break;
+        case 21:
+            {
+                $_ngcc_current_state = 20;
+                $runtime.sendText(super._cookie, $value);
+            }
+            break;
         case 16:
             {
-                if(($ai = $runtime.getAttributeIndex("","form"))>=0) {
-                    NGCCHandler h = new occurs(this, super._source, $runtime, 146);
+                if(($ai = $runtime.getAttributeIndex("","ref"))>=0) {
+                    NGCCHandler h = new occurs(this, super._source, $runtime, 632);
                     spawnChildFromText(h, $value);
                 }
                 else {
-                    if(($ai = $runtime.getAttributeIndex("","minOccurs"))>=0) {
-                        NGCCHandler h = new occurs(this, super._source, $runtime, 146);
+                    if(($ai = $runtime.getAttributeIndex("","abstract"))>=0) {
+                        NGCCHandler h = new occurs(this, super._source, $runtime, 632);
                         spawnChildFromText(h, $value);
                     }
                     else {
-                        if(($ai = $runtime.getAttributeIndex("","fixed"))>=0) {
-                            NGCCHandler h = new occurs(this, super._source, $runtime, 146);
+                        if(($ai = $runtime.getAttributeIndex("","default"))>=0) {
+                            NGCCHandler h = new occurs(this, super._source, $runtime, 632);
                             spawnChildFromText(h, $value);
                         }
                         else {
-                            if(($ai = $runtime.getAttributeIndex("","abstract"))>=0) {
-                                NGCCHandler h = new occurs(this, super._source, $runtime, 146);
+                            if(($ai = $runtime.getAttributeIndex("","fixed"))>=0) {
+                                NGCCHandler h = new occurs(this, super._source, $runtime, 632);
                                 spawnChildFromText(h, $value);
                             }
                             else {
                                 if(($ai = $runtime.getAttributeIndex("","block"))>=0) {
-                                    NGCCHandler h = new occurs(this, super._source, $runtime, 146);
+                                    NGCCHandler h = new occurs(this, super._source, $runtime, 632);
                                     spawnChildFromText(h, $value);
                                 }
                                 else {
-                                    if(($ai = $runtime.getAttributeIndex("","final"))>=0) {
-                                        NGCCHandler h = new occurs(this, super._source, $runtime, 146);
+                                    if(($ai = $runtime.getAttributeIndex("","form"))>=0) {
+                                        NGCCHandler h = new occurs(this, super._source, $runtime, 632);
                                         spawnChildFromText(h, $value);
                                     }
                                     else {
-                                        if(($ai = $runtime.getAttributeIndex("","default"))>=0) {
-                                            NGCCHandler h = new occurs(this, super._source, $runtime, 146);
+                                        if(($ai = $runtime.getAttributeIndex("","maxOccurs"))>=0) {
+                                            NGCCHandler h = new occurs(this, super._source, $runtime, 632);
                                             spawnChildFromText(h, $value);
                                         }
                                         else {
-                                            if(($ai = $runtime.getAttributeIndex("","name"))>=0) {
-                                                NGCCHandler h = new occurs(this, super._source, $runtime, 146);
+                                            if(($ai = $runtime.getAttributeIndex("","minOccurs"))>=0) {
+                                                NGCCHandler h = new occurs(this, super._source, $runtime, 632);
                                                 spawnChildFromText(h, $value);
                                             }
                                             else {
-                                                if(($ai = $runtime.getAttributeIndex("","maxOccurs"))>=0) {
-                                                    NGCCHandler h = new occurs(this, super._source, $runtime, 146);
+                                                if(($ai = $runtime.getAttributeIndex("","final"))>=0) {
+                                                    NGCCHandler h = new occurs(this, super._source, $runtime, 632);
                                                     spawnChildFromText(h, $value);
                                                 }
                                                 else {
-                                                    if(($ai = $runtime.getAttributeIndex("","ref"))>=0) {
-                                                        NGCCHandler h = new occurs(this, super._source, $runtime, 146);
+                                                    if(($ai = $runtime.getAttributeIndex("","name"))>=0) {
+                                                        NGCCHandler h = new occurs(this, super._source, $runtime, 632);
                                                         spawnChildFromText(h, $value);
                                                     }
                                                 }
@@ -787,64 +855,6 @@ class particle extends NGCCHandler {
                 }
             }
             break;
-        case 24:
-            {
-                NGCCHandler h = new qname(this, super._source, $runtime, 155);
-                spawnChildFromText(h, $value);
-            }
-            break;
-        case 21:
-            {
-                $_ngcc_current_state = 20;
-                $runtime.sendText(super._cookie, $value);
-            }
-            break;
-        case 3:
-            {
-                if(($ai = $runtime.getAttributeIndex("","namespace"))>=0) {
-                    NGCCHandler h = new wildcardBody(this, super._source, $runtime, 131, wloc);
-                    spawnChildFromText(h, $value);
-                }
-                else {
-                    if(($ai = $runtime.getAttributeIndex("","processContents"))>=0) {
-                        NGCCHandler h = new wildcardBody(this, super._source, $runtime, 131, wloc);
-                        spawnChildFromText(h, $value);
-                    }
-                }
-            }
-            break;
-        case 11:
-            {
-                $_ngcc_current_state = 10;
-                $runtime.sendText(super._cookie, $value);
-            }
-            break;
-        case 4:
-            {
-                if(($ai = $runtime.getAttributeIndex("","namespace"))>=0) {
-                    NGCCHandler h = new occurs(this, super._source, $runtime, 132);
-                    spawnChildFromText(h, $value);
-                }
-                else {
-                    if(($ai = $runtime.getAttributeIndex("","minOccurs"))>=0) {
-                        NGCCHandler h = new occurs(this, super._source, $runtime, 132);
-                        spawnChildFromText(h, $value);
-                    }
-                    else {
-                        if(($ai = $runtime.getAttributeIndex("","processContents"))>=0) {
-                            NGCCHandler h = new occurs(this, super._source, $runtime, 132);
-                            spawnChildFromText(h, $value);
-                        }
-                        else {
-                            if(($ai = $runtime.getAttributeIndex("","maxOccurs"))>=0) {
-                                NGCCHandler h = new occurs(this, super._source, $runtime, 132);
-                                spawnChildFromText(h, $value);
-                            }
-                        }
-                    }
-                }
-            }
-            break;
         case 8:
             {
                 if(($ai = $runtime.getAttributeIndex("","ref"))>=0) {
@@ -852,38 +862,38 @@ class particle extends NGCCHandler {
                     $runtime.sendText(super._cookie, $value);
                 }
                 else {
-                    if(($ai = $runtime.getAttributeIndex("","form"))>=0) {
-                        NGCCHandler h = new elementDeclBody(this, super._source, $runtime, 137, loc,false);
+                    if(($ai = $runtime.getAttributeIndex("","abstract"))>=0) {
+                        NGCCHandler h = new elementDeclBody(this, super._source, $runtime, 623, loc,false);
                         spawnChildFromText(h, $value);
                     }
                     else {
-                        if(($ai = $runtime.getAttributeIndex("","fixed"))>=0) {
-                            NGCCHandler h = new elementDeclBody(this, super._source, $runtime, 137, loc,false);
+                        if(($ai = $runtime.getAttributeIndex("","default"))>=0) {
+                            NGCCHandler h = new elementDeclBody(this, super._source, $runtime, 623, loc,false);
                             spawnChildFromText(h, $value);
                         }
                         else {
-                            if(($ai = $runtime.getAttributeIndex("","abstract"))>=0) {
-                                NGCCHandler h = new elementDeclBody(this, super._source, $runtime, 137, loc,false);
+                            if(($ai = $runtime.getAttributeIndex("","fixed"))>=0) {
+                                NGCCHandler h = new elementDeclBody(this, super._source, $runtime, 623, loc,false);
                                 spawnChildFromText(h, $value);
                             }
                             else {
                                 if(($ai = $runtime.getAttributeIndex("","block"))>=0) {
-                                    NGCCHandler h = new elementDeclBody(this, super._source, $runtime, 137, loc,false);
+                                    NGCCHandler h = new elementDeclBody(this, super._source, $runtime, 623, loc,false);
                                     spawnChildFromText(h, $value);
                                 }
                                 else {
-                                    if(($ai = $runtime.getAttributeIndex("","final"))>=0) {
-                                        NGCCHandler h = new elementDeclBody(this, super._source, $runtime, 137, loc,false);
+                                    if(($ai = $runtime.getAttributeIndex("","form"))>=0) {
+                                        NGCCHandler h = new elementDeclBody(this, super._source, $runtime, 623, loc,false);
                                         spawnChildFromText(h, $value);
                                     }
                                     else {
-                                        if(($ai = $runtime.getAttributeIndex("","default"))>=0) {
-                                            NGCCHandler h = new elementDeclBody(this, super._source, $runtime, 137, loc,false);
+                                        if(($ai = $runtime.getAttributeIndex("","final"))>=0) {
+                                            NGCCHandler h = new elementDeclBody(this, super._source, $runtime, 623, loc,false);
                                             spawnChildFromText(h, $value);
                                         }
                                         else {
                                             if(($ai = $runtime.getAttributeIndex("","name"))>=0) {
-                                                NGCCHandler h = new elementDeclBody(this, super._source, $runtime, 137, loc,false);
+                                                NGCCHandler h = new elementDeclBody(this, super._source, $runtime, 623, loc,false);
                                                 spawnChildFromText(h, $value);
                                             }
                                         }
@@ -895,32 +905,22 @@ class particle extends NGCCHandler {
                 }
             }
             break;
-        case 14:
+        case 24:
             {
-                NGCCHandler h = new qname(this, super._source, $runtime, 143);
+                NGCCHandler h = new qname(this, super._source, $runtime, 641);
                 spawnChildFromText(h, $value);
             }
             break;
-        case 25:
+        case 20:
             {
-                if(($ai = $runtime.getAttributeIndex("","ref"))>=0) {
-                    $runtime.consumeAttribute($ai);
-                    $runtime.sendText(super._cookie, $value);
-                }
+                action5();
+                $_ngcc_current_state = 19;
+                $runtime.sendText(super._cookie, $value);
             }
             break;
-        case 30:
+        case 0:
             {
-                if(($ai = $runtime.getAttributeIndex("","minOccurs"))>=0) {
-                    NGCCHandler h = new occurs(this, super._source, $runtime, 162);
-                    spawnChildFromText(h, $value);
-                }
-                else {
-                    if(($ai = $runtime.getAttributeIndex("","maxOccurs"))>=0) {
-                        NGCCHandler h = new occurs(this, super._source, $runtime, 162);
-                        spawnChildFromText(h, $value);
-                    }
-                }
+                revertToParentFromText(result, super._cookie, $value);
             }
             break;
         }
@@ -928,73 +928,73 @@ class particle extends NGCCHandler {
 
     public void onChildCompleted(Object $__result__, int $__cookie__, boolean $__needAttCheck__)throws SAXException {
         switch($__cookie__) {
-        case 146:
-            {
-                occurs = ((occurs)$__result__);
-                $_ngcc_current_state = 8;
-            }
-            break;
-        case 161:
-            {
-                term = ((ModelGroupImpl)$__result__);
-                action7();
-                $_ngcc_current_state = 28;
-            }
-            break;
-        case 155:
-            {
-                groupName = ((UName)$__result__);
-                $_ngcc_current_state = 23;
-            }
-            break;
-        case 131:
+        case 617:
             {
                 wcBody = ((WildcardImpl)$__result__);
                 action0();
                 $_ngcc_current_state = 2;
             }
             break;
-        case 140:
+        case 647:
             {
-                annotation = ((AnnotationImpl)$__result__);
-                $_ngcc_current_state = 10;
+                term = ((ModelGroupImpl)$__result__);
+                action7();
+                $_ngcc_current_state = 28;
             }
             break;
-        case 157:
+        case 632:
             {
                 occurs = ((occurs)$__result__);
-                $_ngcc_current_state = 25;
+                $_ngcc_current_state = 8;
             }
             break;
-        case 152:
-            {
-                annotation = ((AnnotationImpl)$__result__);
-                $_ngcc_current_state = 20;
-            }
-            break;
-        case 132:
+        case 618:
             {
                 occurs = ((occurs)$__result__);
                 $_ngcc_current_state = 3;
             }
             break;
-        case 137:
+        case 648:
+            {
+                occurs = ((occurs)$__result__);
+                $_ngcc_current_state = 29;
+            }
+            break;
+        case 643:
+            {
+                occurs = ((occurs)$__result__);
+                $_ngcc_current_state = 25;
+            }
+            break;
+        case 626:
+            {
+                annotation = ((AnnotationImpl)$__result__);
+                $_ngcc_current_state = 10;
+            }
+            break;
+        case 629:
+            {
+                elementTypeName = ((UName)$__result__);
+                $_ngcc_current_state = 13;
+            }
+            break;
+        case 638:
+            {
+                annotation = ((AnnotationImpl)$__result__);
+                $_ngcc_current_state = 20;
+            }
+            break;
+        case 623:
             {
                 anonymousElementDecl = ((ElementDecl)$__result__);
                 action2();
                 $_ngcc_current_state = 7;
             }
             break;
-        case 143:
+        case 641:
             {
-                elementTypeName = ((UName)$__result__);
-                $_ngcc_current_state = 13;
-            }
-            break;
-        case 162:
-            {
-                occurs = ((occurs)$__result__);
-                $_ngcc_current_state = 29;
+                groupName = ((UName)$__result__);
+                $_ngcc_current_state = 23;
             }
             break;
         }

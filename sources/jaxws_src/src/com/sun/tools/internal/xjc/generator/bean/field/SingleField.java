@@ -96,10 +96,17 @@ public class SingleField extends AbstractFieldWithVar {
         // if Type is a wrapper and we have a default value,
         // we can use the primitive type.
         JType getterType;
-        if (defaultValue!=null || forcePrimitiveAccess)
-            getterType = exposedType.unboxify();
-        else
-            getterType = exposedType;
+        if (getOptions().enableIntrospection) {
+            if (forcePrimitiveAccess)
+                getterType = exposedType.unboxify();
+            else
+                getterType = exposedType;
+        } else {
+            if (defaultValue != null || forcePrimitiveAccess)
+                getterType = exposedType.unboxify();
+            else
+                getterType = exposedType;
+        }
 
         JMethod $get = writer.declareMethod( getterType,getGetterMethod() );
         String javadoc = prop.javadoc;

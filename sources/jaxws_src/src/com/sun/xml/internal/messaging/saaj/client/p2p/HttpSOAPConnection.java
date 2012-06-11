@@ -49,7 +49,7 @@ import com.sun.xml.internal.messaging.saaj.util.*;
  */
 class HttpSOAPConnection extends SOAPConnection {
 
-    public static final String vmVendor = System.getProperty("java.vendor.url");
+    public static final String vmVendor = SAAJUtil.getSystemProperty("java.vendor.url");
     private static final String sunVmVendor = "http://java.sun.com/";
     private static final String ibmVmVendor = "http://www.ibm.com/";
     private static final boolean isSunVM = sunVmVendor.equals(vmVendor) ? true: false;
@@ -389,10 +389,7 @@ class HttpSOAPConnection extends SOAPConnection {
 
         if (endPoint instanceof URL)
             try {
-                PriviledgedGet pg = new PriviledgedGet(this, (URL) endPoint);
-                SOAPMessage response =
-                    (SOAPMessage) AccessController.doPrivileged(pg);
-
+                SOAPMessage response = doGet((URL)endPoint);
                 return response;
             } catch (Exception ex) {
                 throw new SOAPExceptionImpl(ex);
@@ -400,22 +397,7 @@ class HttpSOAPConnection extends SOAPConnection {
             throw new SOAPExceptionImpl("Bad endPoint type " + endPoint);
     }
 
-    static class PriviledgedGet implements PrivilegedExceptionAction {
-
-        HttpSOAPConnection c;
-        URL endPoint;
-
-        PriviledgedGet(HttpSOAPConnection c, URL endPoint) {
-            this.c = c;
-            this.endPoint = endPoint;
-        }
-
-        public Object run() throws Exception {
-            return c.get(endPoint);
-        }
-    }
-
-    SOAPMessage get(URL endPoint) throws SOAPException {
+    SOAPMessage doGet(URL endPoint) throws SOAPException {
         boolean isFailure = false;
 
         URL url = null;
@@ -587,7 +569,7 @@ class HttpSOAPConnection extends SOAPConnection {
 
     private void initHttps() {
         //if(!setHttps) {
-        String pkgs = System.getProperty("java.protocol.handler.pkgs");
+        String pkgs = SAAJUtil.getSystemProperty("java.protocol.handler.pkgs");
         log.log(Level.FINE,
                 "SAAJ0053.p2p.providers",
                 new String[] { pkgs });

@@ -52,12 +52,12 @@ final class XmlRootElementQuick
         return XmlRootElement.class;
     }
 
-    public String namespace() {
-        return core.namespace();
-    }
-
     public String name() {
         return core.name();
+    }
+
+    public String namespace() {
+        return core.namespace();
     }
 
 }

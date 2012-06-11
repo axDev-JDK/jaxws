@@ -125,7 +125,7 @@ public final class RuntimeInlineAnnotationReader extends AbstractInlineAnnotatio
             throw new IllegalAccessError(e.getMessage());
         } catch (InvocationTargetException e) {
             // impossible
-            throw new InternalError(e.getMessage());
+            throw new InternalError(Messages.CLASS_NOT_FOUND.format(a.annotationType(), e.getMessage()));
         } catch (NoSuchMethodException e) {
             throw new NoSuchMethodError(e.getMessage());
         }

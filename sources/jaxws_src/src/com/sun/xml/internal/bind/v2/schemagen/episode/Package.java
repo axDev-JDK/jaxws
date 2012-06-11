@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2011, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -23,23 +23,13 @@
  * questions.
  */
 
-package com.sun.xml.internal.bind.v2.schemagen.xmlschema;
+package com.sun.xml.internal.bind.v2.schemagen.episode;
 
 import com.sun.xml.internal.txw2.TypedXmlWriter;
 import com.sun.xml.internal.txw2.annotation.XmlAttribute;
 
-public interface Occurs
-    extends TypedXmlWriter
-{
-
+public interface Package extends TypedXmlWriter{
 
     @XmlAttribute
-    public Occurs minOccurs(int value);
-
-    @XmlAttribute
-    public Occurs maxOccurs(String value);
-
-    @XmlAttribute
-    public Occurs maxOccurs(int value);
-
+    void name(String packageName);
 }

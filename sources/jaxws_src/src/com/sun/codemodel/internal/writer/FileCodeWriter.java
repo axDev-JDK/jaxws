@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -56,13 +56,21 @@ public class FileCodeWriter extends CodeWriter {
         this(target,false);
     }
 
+    public FileCodeWriter( File target, String encoding ) throws IOException {
+        this(target,false, encoding);
+    }
+
     public FileCodeWriter( File target, boolean readOnly ) throws IOException {
+        this(target, readOnly, null);
+    }
+
+    public FileCodeWriter( File target, boolean readOnly, String encoding ) throws IOException {
         this.target = target;
         this.readOnly = readOnly;
+        this.encoding = encoding;
         if(!target.exists() || !target.isDirectory())
             throw new IOException(target + ": non-existent directory");
     }
-
 
     public OutputStream openBinary(JPackage pkg, String fileName) throws IOException {
         return new FileOutputStream(getFile(pkg,fileName));
